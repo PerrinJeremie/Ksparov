@@ -93,4 +93,7 @@ flycheck_*.el
 # directory configuration
 .dir-locals.el
 
+# test your code
+test.scala
+
 # End of https://www.gitignore.io/api/emacs
