@@ -64,7 +64,7 @@ class Board extends SimpleSwingApplication {
 	  }
 	  game_board(i).piece_name match {
         case "autre" => piece_path = ""
-		case "pawn" => piece_path = "pawn.png"
+		case "pawn" => piece_path = "Pawn.png"
 		case "queen" => piece_path = "Queen.png"
 		case "king" => piece_path = "King.png"
 		case "rook" => piece_path = "Rook.png"
