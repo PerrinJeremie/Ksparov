@@ -4,132 +4,186 @@ import java.awt.Dimension
 import java.awt.Color
 import scala.swing.BorderPanel.Position._
 
-object Constants {
-  val dim_case = new Dimension (80, 80)
-  val nb_case_border = 1
-  val nb_case_board = 8
-  val nb_case = nb_case_board + 2*nb_case_border
-  var selected_case = 0
-}
+/*J'ai organisé ce fichier en plusieurs objets selon ce qu'ils
+dessinent : Menu, Board ou Action.*/
 
-class BorderCase (x : Int, y : Int) extends Label {
-  icon = new javax.swing.ImageIcon("src/main/resources/wood_Texture_mini_2.png")
-  preferredSize = Constants.dim_case
-}
-
-/*Classe des cases, attention les cases commençent en 0,0 et finisse en 7,7,
- pour la suite, j'ai utilisé un seul entier pour référencer les cases, une case
- de coordonnées (x, y) est à la position 8*x+y*/
-class Case (x : Int, y : Int) extends Button {
-  preferredSize = Constants.dim_case
-  if ((x + y) % 2 == 0) {
-	background = Color.black
-  }
-  else {
-	background = Color.white
-  }
+/*Objet qui définit toutes les classes nécessaires pour 
+construire le menu. Si on veut charger le menu dans l'application,
+il faut créer une instance de la classe Menu*/
+object DrawMenu {
+  val size_button = new Dimension (210, 50)
+  val size_backgroud_cases = new Dimension (70,50)
+  val nb_menu_option = 6
   
-  action = Action ("") {
-	Constants.selected_case = x * 8 + y
-	println("Click case nb : " + Constants.selected_case.toString)
+  class Option extends Button { 
+    preferredSize = size_button
+  }
+
+  class Play_button extends Option {
+    action = Action ("Jouer") {
+      Ksparov.frame.contents = new DrawBoard.Board
+    }
+  }
+
+  class Replay_button extends Option {
+    action = Action ("Reprendre") {
+
+    }
+  }
+
+  class Load_button extends Option {
+    action = Action ("Charger") {
+      
+    }
+  }
+
+  class Score_button extends Option {
+    action = Action ("Scores") {
+      
+    }
+  }
+
+  class Option_button extends Option {
+    action = Action ("Options") {
+      
+    }
+  }
+
+  class Exit_button extends Option {
+    action = Action ("Quitter") {
+      
+    }
+  }
+
+  class BigBackground extends Label {
+    preferredSize = size_button
+  }
+
+  class SmallBackground extends Label {
+    preferredSize = size_backgroud_cases
+  }
+
+  class MenuGrid extends GridPanel (nb_menu_option * 2 + 1, 1) {
+    for( i <- 0 to nb_menu_option * 2 ) {
+      if (i % 2 == 0) {
+        contents += new BigBackground
+      } else { i match {
+        case 1 => contents += new Replay_button
+        case 3 => contents += new Play_button 
+        case 5 => contents += new Load_button
+        case 7 => contents += new Score_button 
+        case 9 => contents += new Option_button 
+        case 11 => contents += new Exit_button
+      }}
+    }
+  }
+
+  class BorderGrid extends GridPanel (nb_menu_option * 2 + 1, 1) {
+    for( i <- 0 to 10) {
+      contents += new SmallBackground
+    }
+  }
+
+  class Menu extends BorderPanel {
+    var e_item = new BorderGrid
+    var w_item = new BorderGrid
+    var c_item = new MenuGrid
+    layout (e_item) = East
+    layout (w_item) = West
+    layout (c_item) = Center
   }
 }
 
-/*Classe de test, la classe finale peut ne pas ressembler à ça ! Mais doit contenir ces infos.
-class Piece (name : String, play : Int, x : Int, y : Int) {
-  var pos_x = x
-  var pos_y = y
-  var piece_name = name
-  var player = play
-}*/
+/*Objet qui permet de dessiner le plateau, la classe pour le plateau entier est Board.*/
+object DrawBoard {
 
-class Board extends SimpleSwingApplication {
-  var coord = 0
-  var player_path = ""
-  var piece_path = ""
-  var resource_path = "src/main/resources/"
-  /*val piece1 = new Piece ("rook", 1, 4, 3)
-   val piece2 = new Piece ("pawn", 1, 4, 5)
-   var board_test = Array[Piece] (piece1, piece2) */
-
-  /*Prend une liste de pièces en entrées et dessine le plateau correspondant*/
-  def draw_game_board (game_board : Array[Piece]) {
-	for (i <- 0 to game_board.length - 1) {
-	  coord = (game_board(i).pos_x - 1) * 8 + (game_board(i).pos_y - 1)
-
-	  if (game_board(i).player == 1) {
-		player_path = "Pieces/White/"
-	  } else {
-		player_path = "Pieces/Red/"
-	  }
-	  game_board(i).piece_name match {
-        case "autre" => piece_path = ""
-		case "pawn" => piece_path = "Pawn.png"
-		case "queen" => piece_path = "Queen.png"
-		case "king" => piece_path = "King.png"
-		case "rook" => piece_path = "Rook.png"
-		case "knight" => piece_path = "Knight.png"
-		case "bishop" => piece_path = "Bishop.png"
-	  }
-	  grid_cases(coord).icon = new javax.swing.ImageIcon(resource_path + player_path + piece_path)
+	class BorderCase (x : Int, y : Int) extends Label {
+  		icon = new javax.swing.ImageIcon("src/main/resources/wood_Texture_mini_2.png")
+  		preferredSize = Constants.dim_case
 	}
-  }
 
-  var grid_cases = new Array[Case](Constants.nb_case_board * Constants.nb_case_board)
-  for (i <- 0 to Constants.nb_case_board - 1) {
-	for( j <- 0 to Constants.nb_case_board - 1) {
-	  grid_cases(i*8 + j) = new Case(i, j)
-	}
-  }
-
-  def board_grid = new GridPanel (Constants.nb_case, Constants.nb_case) {
-	for (i <- 0 to Constants.nb_case - 1) {
-	  for (j <- 0 to Constants.nb_case - 1) {
-		if (i < Constants.nb_case_border || i > Constants.nb_case - Constants.nb_case_border - 1 ||
-		  j < Constants.nb_case_border || j > Constants.nb_case - Constants.nb_case_border - 1) {
-		  contents += new BorderCase (i - Constants.nb_case_border, j - Constants.nb_case_border)
+	/*Classe des cases, attention les cases commençent en 0,0 et finisse en 7,7,
+	pour la suite, j'ai utilisé un seul entier pour référencer les cases, une case
+	de coordonnées (x, y) est à la position 8*x+y*/
+	class Case (x : Int, y : Int) extends Button {
+		preferredSize = Constants.dim_case
+		if ((x + y) % 2 == 0) {
+			background = Color.black
+		} else {
+			background = Color.white
+  		}
+		action = Action ("") {
+			Constants.selected_case = x * 8 + y
+			println("Click case nb : " + Constants.selected_case.toString)
 		}
-		else {
-		  contents += grid_cases((i - Constants.nb_case_border) * 8 + j - Constants.nb_case_border)
+	}
+
+	var grid_cases = new Array[Case](Constants.nb_case_board * Constants.nb_case_board) 
+	for (i <- 0 to Constants.nb_case_board - 1) {
+		for( j <- 0 to Constants.nb_case_board - 1) {
+			grid_cases(i * 8 + j) = new Case(i, j)
 		}
-	  }
 	}
-  }
 
-  /*var test_move = Array (1, 2, 3, 4, 5, 54)
-   
-   draw_possible_move (test_move)*/
-
-  def header = new GridPanel (2, 2) {
-	contents += new Button {text = "Jouer"}
-	contents += new Button {text = "Rejouer une partie"}
-	contents += new Button {text = "Quitter"}
-	contents += new Button {text = "Mes scores"}
-  }
-
-  def left = new GridPanel (Constants.nb_case, 1) {
-	for (i <- 0 to Constants.nb_case - 1) {
-	  contents += new BorderCase(i, 1)
+	class Grid extends GridPanel (Constants.nb_case, Constants.nb_case) {
+		for (i <- 0 to Constants.nb_case - 1) {
+			for (j <- 0 to Constants.nb_case - 1) {
+				if (i < Constants.nb_case_border || i > Constants.nb_case - Constants.nb_case_border - 1 ||
+				j < Constants.nb_case_border || j > Constants.nb_case - Constants.nb_case_border - 1) {
+					contents += new BorderCase (i - Constants.nb_case_border, j - Constants.nb_case_border)
+				} else {
+					contents += grid_cases((i - Constants.nb_case_border) * 8 + j - Constants.nb_case_border)
+				}
+			}
+		}
 	}
-  }
 
-  def right = new GridPanel (Constants.nb_case, 1) {
-	for (i <- 0 to Constants.nb_case - 1) {
-	  contents += new BorderCase(i, 1)
+	class Header extends GridPanel (2, 2) {
+		contents += new Button {text = "Jouer"}
+		contents += new Button {text = "Rejouer une partie"}
+		contents += new Button {text = "Quitter"}
+		contents += new Button {text = "Mes scores"}
 	}
-  }
 
-  def grid = new BorderPanel {
-	layout(header) = North
-	layout(board_grid) = Center
-	layout(left) = West
-	layout(right) = East
-  }
+	class Border extends GridPanel (Constants.nb_case, 1) {
+		for (i <- 0 to Constants.nb_case - 1) {
+			contents += new BorderCase(i, 1)
+		}
+	}
 
-  def top = new MainFrame {
-	title = "Ksparov"
-	contents = grid
-  }
+	class Board extends BorderPanel {
+		layout(new Header) = North
+		layout(new Border) = West
+		layout(new Border) = East
+		layout(new Grid) = Center
+	}
+}
 
+/*Objet comprenant les méthodes pour dessiner des actions : mouvement des pièces, etc !*/
+object DrawActions {
+	var coord = 0
+	var player_path = ""
+	var piece_path = ""
+	var resource_path = "src/main/resources/"
 
+	def draw_game_board (game_board : Array[Piece]) {
+		for (i <- 0 to game_board.length - 1) {
+			coord = (game_board(i).pos_x - 1) * 8 + (game_board(i).pos_y - 1)
+			if (game_board(i).player == 1) {
+				player_path = "Pieces/White/"
+			} else {
+				player_path = "Pieces/Red/"
+			}
+			game_board(i).piece_name match {
+        		case "autre" => piece_path = ""
+				case "pawn" => piece_path = "Pawn.png"
+				case "queen" => piece_path = "Queen.png"
+				case "king" => piece_path = "King.png"
+				case "rook" => piece_path = "Rook.png"
+				case "knight" => piece_path = "Knight.png"
+				case "bishop" => piece_path = "Bishop.png"
+			}
+			DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(resource_path + player_path + piece_path)
+		}
+	}
 }
