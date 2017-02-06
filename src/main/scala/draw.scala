@@ -25,7 +25,7 @@ object DrawMenu {
     }
   }
 
-  class Replay_button extends Option {
+  class Resume_button extends Option {
     action = Action ("Reprendre") {
 
     }
@@ -68,7 +68,7 @@ object DrawMenu {
       if (i % 2 == 0) {
         contents += new BigBackground
       } else { i match {
-        case 1 => contents += new Replay_button
+        case 1 => contents += new Resume_button
         case 3 => contents += new Play_button 
         case 5 => contents += new Load_button
         case 7 => contents += new Score_button 
