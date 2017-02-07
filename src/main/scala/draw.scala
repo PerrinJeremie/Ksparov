@@ -11,94 +11,145 @@ dessinent : Menu, Board ou Action.*/
 construire le menu. Si on veut charger le menu dans l'application,
 il faut créer une instance de la classe Menu*/
 object DrawMenu {
-  val size_button = new Dimension (210, 50)
-  val size_backgroud_cases = new Dimension (70,50)
-  val nb_menu_option = 6
-  
-  class Option extends Button { 
-    preferredSize = size_button
-  }
+	val size_button = new Dimension (240, 80)
+	val size_backgroud_cases = new Dimension (80,80)
+	val nb_menu_option = 6
 
-  class Play_button extends Option {
-    action = Action ("Jouer") {
-      Ksparov.frame.contents = new DrawBoard.Board
-    }
-  }
+	class Option extends Button { 
+		preferredSize = size_button
+	}
 
-  class Resume_button extends Option {
-    action = Action ("Reprendre") {
+	class Play_button extends Option {
+    	action = Action ("Jouer") {
+    		Ksparov.frame.contents = new DrawBoard.Board
+    	}
+	}
 
-    }
-  }
+	class Resume_button extends Option {
+    	action = Action ("Reprendre") {
+    		Ksparov.frame.contents = new DrawNotYet.NotYet
+    	}
+	}
 
-  class Load_button extends Option {
-    action = Action ("Charger") {
-      
-    }
-  }
+	class Load_button extends Option {
+    	action = Action ("Charger") {
+    		Ksparov.frame.contents = new DrawNotYet.NotYet      
+		}
+	}
 
-  class Score_button extends Option {
-    action = Action ("Scores") {
-      
-    }
-  }
+	class Score_button extends Option {
+    	action = Action ("Scores") {
+    		Ksparov.frame.contents = new DrawNotYet.NotYet      
+    	}
+	}
 
-  class Option_button extends Option {
-    action = Action ("Options") {
-      
-    }
-  }
+	class Option_button extends Option {
+    	action = Action ("Options") {
+    		Ksparov.frame.contents = new DrawNotYet.NotYet
+	    }
+	}
 
-  class Exit_button extends Option {
-    action = Action ("Quitter") {
-      
-    }
-  }
+	class Exit_button extends Option {
+    	action = Action ("Quitter") {
+    		Ksparov.frame.dispose()
+    	}
+	}
 
-  class BigBackground extends Label {
-    preferredSize = size_button
-  }
+	class BigBackground extends Label {
+    	preferredSize = size_button
+    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_double_2.png")
+	}
 
-  class SmallBackground extends Label {
-    preferredSize = size_backgroud_cases
-  }
+	class SmallBackground extends Label {
+    	preferredSize = size_backgroud_cases
+    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_simple_2.png")
+	}
 
-  class MenuGrid extends GridPanel (nb_menu_option * 2 + 1, 1) {
-    for( i <- 0 to nb_menu_option * 2 ) {
-      if (i % 2 == 0) {
-        contents += new BigBackground
-      } else { i match {
-        case 1 => contents += new Resume_button
-        case 3 => contents += new Play_button 
-        case 5 => contents += new Load_button
-        case 7 => contents += new Score_button 
-        case 9 => contents += new Option_button 
-        case 11 => contents += new Exit_button
-      }}
-    }
-  }
+	class MenuGrid extends GridPanel (nb_menu_option + 1, 3) {
+    	for( i <- 0 to nb_menu_option) {
+    		if (i % 2 == 0) {
+        		contents += new BigBackground
+        		contents += new BigBackground
+        		contents += new BigBackground
+    		} else { i match {
+	        case 1 => contents += new Resume_button
+			contents += new BigBackground
+        	contents += new Play_button 
+        	case 3 => contents += new Load_button
+        	contents += new BigBackground
+        	contents += new Score_button 
+        	case 5 => contents += new Option_button
+        	contents += new BigBackground 
+        	contents += new Exit_button
+    		}}
+    	}
+	}
 
-  class BorderGrid extends GridPanel (nb_menu_option * 2 + 1, 1) {
-    for( i <- 0 to 10) {
-      contents += new SmallBackground
-    }
-  }
+	class BorderGrid extends GridPanel (nb_menu_option + 1, 1) {
+    	for( i <- 0 to nb_menu_option) {
+    		contents += new SmallBackground
+    	}
+	}
 
-  class Menu extends BorderPanel {
-    var e_item = new BorderGrid
-    var w_item = new BorderGrid
-    var c_item = new MenuGrid
-    layout (e_item) = East
-    layout (w_item) = West
-    layout (c_item) = Center
-  }
+	class Menu extends BorderPanel {
+    	var e_item = new BorderGrid
+    	var w_item = new BorderGrid
+    	var c_item = new MenuGrid
+    	layout (e_item) = East
+    	layout (w_item) = West
+    	layout (c_item) = Center
+	}
+}
+
+object DrawNotYet {
+	val size_backgroud_cases = new Dimension (80,80)
+	val size_button = new Dimension (240, 80)
+
+	class BigBackground extends Label {
+    	preferredSize = size_button
+    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_double_2.png")
+	}
+
+	class SmallBackground extends Label {
+    	preferredSize = size_backgroud_cases
+    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_simple_2.png")
+	}
+
+	class CenterGrid extends GridPanel (5,1) {
+		for (i <- 0 to 4) {
+			if (i % 2 == 0) {
+				contents += new BigBackground
+			} else { i match {
+				case 1 => contents += new Label {
+					text = "<html>Cette fonctionnalité n'est pas<br>encore développée, veuillez<br>patienter quelque peu !</html>"
+				}
+				case 3 => contents += new Button {
+					action = Action("Revenir au menu") {
+						Ksparov.frame.contents = new DrawMenu.Menu
+					}
+				}
+			}}
+		}
+	}
+
+	class BorderGrid extends GridPanel (5, 1) {
+		for (i <- 0 to 4) {
+			contents += new SmallBackground
+		}
+	}
+
+	class NotYet extends BorderPanel {
+		layout (new BorderGrid) = East
+		layout (new BorderGrid) = West
+		layout (new CenterGrid) = Center
+	}
 }
 
 /*Objet qui permet de dessiner le plateau, la classe pour le plateau entier est Board.*/
 object DrawBoard {
 
 	class BorderCase (x : Int, y : Int) extends Label {
-  		icon = new javax.swing.ImageIcon("src/main/resources/wood_Texture_mini_2.png")
+  		icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_simple_2.png")
   		preferredSize = Constants.dim_case
 	}
 
