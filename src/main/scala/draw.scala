@@ -20,37 +20,37 @@ object DrawMenu {
 	}
 
 	class Play_button extends Option {
-    	action = Action ("Jouer") {
+    	action = Action ("Jouer une partie") {
     		Ksparov.frame.contents = new DrawBoard.Board
     	}
 	}
 
 	class Resume_button extends Option {
-    	action = Action ("Reprendre") {
+    	action = Action ("Reprendre la dernière partie") {
     		Ksparov.frame.contents = new DrawNotYet.NotYet
     	}
 	}
 
 	class Load_button extends Option {
-    	action = Action ("Charger") {
+    	action = Action ("Charger une partie") {
     		Ksparov.frame.contents = new DrawNotYet.NotYet      
 		}
 	}
 
 	class Score_button extends Option {
-    	action = Action ("Scores") {
+    	action = Action ("Voir les scores") {
     		Ksparov.frame.contents = new DrawNotYet.NotYet      
     	}
 	}
 
 	class Option_button extends Option {
-    	action = Action ("Options") {
+    	action = Action ("Gérer les paramètres") {
     		Ksparov.frame.contents = new DrawNotYet.NotYet
 	    }
 	}
 
 	class Exit_button extends Option {
-    	action = Action ("Quitter") {
+    	action = Action ("Quitter Ksparov") {
     		Ksparov.frame.dispose()
     	}
 	}
@@ -190,10 +190,26 @@ object DrawBoard {
 	}
 
 	class Header extends GridPanel (2, 2) {
-		contents += new Button {text = "Jouer"}
-		contents += new Button {text = "Rejouer une partie"}
-		contents += new Button {text = "Quitter"}
-		contents += new Button {text = "Mes scores"}
+		contents += new Button {
+			action = Action ("Recommencer une partie") {
+	    		Ksparov.frame.contents = new DrawNotYet.NotYet
+			}
+		}
+		contents += new Button {
+			action = Action ("Sauvegarder la partie") {
+				Ksparov.frame.contents = new DrawNotYet.NotYet
+			}
+		}
+		contents += new Button {
+			action = Action ("Revenir au menu principal") {
+				Ksparov.frame.contents = new DrawMenu.Menu
+			}
+		}
+		contents += new Button {
+			action = Action ("Quitter Ksparov") {
+	    		Ksparov.frame.dispose()
+			}
+		}
 	}
 
 	class Border extends GridPanel (Constants.nb_case, 1) {
