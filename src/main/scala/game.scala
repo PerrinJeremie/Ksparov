@@ -15,11 +15,12 @@ object Constants {
   val nb_case_border = 1
   val nb_case_board = 8
   var nb_case = nb_case_board + 2*nb_case_border
-  var selected_case = 0
   var resources_path = "src/main/resources/"
   var pieces_path = "Pieces/1/"
   var small_texture_path = "Texture_small_2.png"
   var big_texture_path = "Texture_big_2.png"
+  var selected_case = 0
+  var game_type = 0
 }
 
 object Ksparov {
