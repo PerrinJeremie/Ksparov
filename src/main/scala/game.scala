@@ -10,11 +10,16 @@ abstract class Player {
 }
 
 object Constants {
-  val dim_case = new Dimension (80, 80)
+  val dim_small = new Dimension (80, 80)
+  val dim_big = new Dimension (240, 80)
   val nb_case_border = 1
   val nb_case_board = 8
-  val nb_case = nb_case_board + 2*nb_case_border
+  var nb_case = nb_case_board + 2*nb_case_border
   var selected_case = 0
+  var resources_path = "src/main/resources/"
+  var pieces_path = "Pieces/1/"
+  var small_texture_path = "Wood_Texture_small_2.png"
+  var big_texture_path = "Wood_Texture_big_2.png"
 }
 
 object Ksparov {
