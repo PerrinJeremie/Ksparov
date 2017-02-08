@@ -159,9 +159,9 @@ object DrawBoard {
 	class Case (x : Int, y : Int) extends Button {
 		preferredSize = Constants.dim_case
 		if ((x + y) % 2 == 0) {
-			background = Color.black
-		} else {
 			background = Color.white
+		} else {
+			background = Color.black
   		}
 		action = Action ("") {
 			Constants.selected_case = x * 8 + y
