@@ -154,15 +154,12 @@ object DrawParameters {
 
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
-		opaque = true
-		background = Color.black
-		icon = new javax.swing.ImageIcon(Constants.resources_path + "Wood_Texture_small_" + number.toString + ".png")
-		action = Action ("") {
-			println (Constants.resources_path + "Wood_Texture_small_" + number.toString + ".png")
-			Constants.small_texture_path = "Wood_Texture_small_" + number.toString + ".png"
-			Constants.big_texture_path = "Wood_Texture_big_" + number.toString + ".png"
-			println (Constants.resources_path + "Wood_Texture_big_" + number.toString + ".png")
-			println (Constants.resources_path + "Wood_Texture_small_" + number.toString + ".png")
+		action = new Action("") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + "Wood_Texture_small_" + number.toString + ".png")
+			def apply = {
+				Constants.small_texture_path = "Wood_Texture_small_" + number.toString + ".png"
+				Constants.big_texture_path = "Wood_Texture_big_" + number.toString + ".png"
+			}
 		}
 	}
 
