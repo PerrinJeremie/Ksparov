@@ -139,7 +139,7 @@ object DrawNotYet {
 }
 
 object DrawParameters {
-	val nb_option_max = 2
+	val nb_option_max = 3
 
 	class SmallBackground extends Label {
     	preferredSize = Constants.dim_small
@@ -155,10 +155,10 @@ object DrawParameters {
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
 		action = new Action("") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + "Wood_Texture_small_" + number.toString + ".png")
+			icon = new javax.swing.ImageIcon(Constants.resources_path + "Texture_small_" + number.toString + ".png")
 			def apply = {
-				Constants.small_texture_path = "Wood_Texture_small_" + number.toString + ".png"
-				Constants.big_texture_path = "Wood_Texture_big_" + number.toString + ".png"
+				Constants.small_texture_path = "Texture_small_" + number.toString + ".png"
+				Constants.big_texture_path = "Texture_big_" + number.toString + ".png"
 			}
 		}
 	}
