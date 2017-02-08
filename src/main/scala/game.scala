@@ -18,8 +18,8 @@ object Constants {
   var selected_case = 0
   var resources_path = "src/main/resources/"
   var pieces_path = "Pieces/1/"
-  var small_texture_path = "Wood_Texture_small_2.png"
-  var big_texture_path = "Wood_Texture_big_2.png"
+  var small_texture_path = "Texture_small_2.png"
+  var big_texture_path = "Texture_big_2.png"
 }
 
 object Ksparov {
