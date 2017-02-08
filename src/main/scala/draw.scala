@@ -11,12 +11,10 @@ dessinent : Menu, Board ou Action.*/
 construire le menu. Si on veut charger le menu dans l'application,
 il faut créer une instance de la classe Menu*/
 object DrawMenu {
-	val size_button = new Dimension (240, 80)
-	val size_backgroud_cases = new Dimension (80,80)
 	val nb_menu_option = 6
 
 	class Option extends Button { 
-		preferredSize = size_button
+		preferredSize = Constants.dim_big
 	}
 
 	class Play_button extends Option {
@@ -45,7 +43,7 @@ object DrawMenu {
 
 	class Option_button extends Option {
     	action = Action ("Gérer les paramètres") {
-    		Ksparov.frame.contents = new DrawNotYet.NotYet
+    		Ksparov.frame.contents = new DrawParameters.Parameters
 	    }
 	}
 
@@ -56,13 +54,13 @@ object DrawMenu {
 	}
 
 	class BigBackground extends Label {
-    	preferredSize = size_button
-    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_double_2.png")
+    	preferredSize = Constants.dim_big
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
 	}
 
 	class SmallBackground extends Label {
-    	preferredSize = size_backgroud_cases
-    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_simple_2.png")
+    	preferredSize = Constants.dim_small
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 	}
 
 	class MenuGrid extends GridPanel (nb_menu_option + 1, 3) {
@@ -92,27 +90,22 @@ object DrawMenu {
 	}
 
 	class Menu extends BorderPanel {
-    	var e_item = new BorderGrid
-    	var w_item = new BorderGrid
-    	var c_item = new MenuGrid
-    	layout (e_item) = East
-    	layout (w_item) = West
-    	layout (c_item) = Center
+    	layout (new BorderGrid) = East
+    	layout (new BorderGrid) = West
+    	layout (new MenuGrid) = Center
 	}
 }
 
 object DrawNotYet {
-	val size_backgroud_cases = new Dimension (80,80)
-	val size_button = new Dimension (240, 80)
 
 	class BigBackground extends Label {
-    	preferredSize = size_button
-    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_double_2.png")
+    	preferredSize = Constants.dim_big
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
 	}
 
 	class SmallBackground extends Label {
-    	preferredSize = size_backgroud_cases
-    	icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_simple_2.png")
+    	preferredSize = Constants.dim_small
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 	}
 
 	class CenterGrid extends GridPanel (5,1) {
@@ -145,19 +138,77 @@ object DrawNotYet {
 	}
 }
 
+object DrawParameters {
+	val nb_option_max = 3
+
+	class SmallBackground extends Label {
+    	preferredSize = Constants.dim_small
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+	}
+
+	class BigBackground extends GridPanel (1, 2 * nb_option_max - 1) {
+		for( i <- 0 to 2 * nb_option_max - 2) {
+			contents += new SmallBackground
+		}
+	}
+
+	class TextureOption (number : Int) extends Button {
+		preferredSize = Constants.dim_small
+		action = new Action("") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + "Texture_small_" + number.toString + ".png")
+			def apply = {
+				Constants.small_texture_path = "Texture_small_" + number.toString + ".png"
+				Constants.big_texture_path = "Texture_big_" + number.toString + ".png"
+			}
+		}
+	}
+
+	class TextureGrid extends GridPanel (1, 2 * nb_option_max - 1) {
+		for( i <- 1 to 2 * nb_option_max - 1) {
+			if (i % 2 == 0) {
+				contents += new SmallBackground
+			} else {
+				contents += new TextureOption (Math.round(i / 2) + 1)
+			}
+		}
+		
+	}
+
+	class CenterGrid extends GridPanel (6, 1) {
+		contents += new BigBackground
+		contents += new Label ("Choissisez le fond")
+		contents += new TextureGrid
+		contents += new BigBackground
+		contents += new Button (Action("<html>Appliquer les changements<br>et revenir au menu</html>") {Ksparov.frame.contents = new DrawMenu.Menu})
+		contents += new BigBackground
+	}
+
+	class BorderGrid extends GridPanel (6, 1) {
+		for (i <- 0 to 5) {
+			contents += new SmallBackground
+		}
+	}
+
+	class Parameters extends BorderPanel {
+		layout (new BorderGrid) = East
+		layout (new CenterGrid) = Center
+		layout (new BorderGrid) = West
+	}
+}
+
 /*Objet qui permet de dessiner le plateau, la classe pour le plateau entier est Board.*/
 object DrawBoard {
 
 	class BorderCase (x : Int, y : Int) extends Label {
-  		icon = new javax.swing.ImageIcon("src/main/resources/Wood_Texture_simple_2.png")
-  		preferredSize = Constants.dim_case
+  		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
+  		preferredSize = Constants.dim_small
 	}
 
 	/*Classe des cases, attention les cases commençent en 0,0 et finisse en 7,7,
 	pour la suite, j'ai utilisé un seul entier pour référencer les cases, une case
 	de coordonnées (x, y) est à la position 8*x+y*/
 	class Case (x : Int, y : Int) extends Button {
-		preferredSize = Constants.dim_case
+		preferredSize = Constants.dim_small
 		if ((x + y) % 2 == 0) {
 			background = Color.white
 		} else {
@@ -231,15 +282,14 @@ object DrawActions {
 	var coord = 0
 	var player_path = ""
 	var piece_path = ""
-	var resource_path = "src/main/resources/"
 
 	def draw_game_board (game_board : Array[Piece]) {
 		for (i <- 0 to game_board.length - 1) {
 			coord = (game_board(i).pos_x - 1) * 8 + (game_board(i).pos_y - 1)
 			if (game_board(i).player == 1) {
-				player_path = "Pieces/White/"
+				player_path = "1/"
 			} else {
-				player_path = "Pieces/Red/"
+				player_path = "2/"
 			}
 			game_board(i).piece_name match {
         		case "autre" => piece_path = ""
@@ -250,7 +300,7 @@ object DrawActions {
 				case "knight" => piece_path = "Knight.png"
 				case "bishop" => piece_path = "Bishop.png"
 			}
-			DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(resource_path + player_path + piece_path)
+			DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player_path + piece_path)
 		}
 	}
 }
