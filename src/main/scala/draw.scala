@@ -19,7 +19,7 @@ object DrawMenu {
 
 	class Play_button extends Option {
     	action = Action ("Jouer une partie") {
-    		Ksparov.frame.contents = new DrawBoard.Board
+    		Ksparov.frame.contents = new DrawGameSelection.Menu
     	}
 	}
 
@@ -194,6 +194,54 @@ object DrawParameters {
 		layout (new CenterGrid) = Center
 		layout (new BorderGrid) = West
 	}
+}
+
+object DrawGameSelection {
+
+	class BigBackground extends Label {
+    	preferredSize = Constants.dim_big
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
+	}
+
+	class SmallBackground extends Label {
+    	preferredSize = Constants.dim_small
+    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+	}
+
+	class Option (name : String, num : Int) extends Button {
+		preferredSize = Constants.dim_big
+		action = Action (name) {
+			Constants.game_type = num
+			println (Constants.game_type.toString)
+    		Ksparov.frame.contents = new DrawBoard.Board			
+		}
+	}
+
+	class CenterGrid extends GridPanel (9, 1) {
+		for (i <- 0 to 8) {
+			if (i % 2 == 0) {
+				contents += new BigBackground
+			} else { i match {
+				case 1 => contents += new Option ("Humain vs Humain", 1)
+				case 3 => contents += new Option ("Humain vs IA", 2)
+				case 5 => contents += new Option ("IA vs IA", 3)
+				case 7 => contents += new Button (Action("Revenir au menu") {Ksparov.frame.contents = new DrawMenu.Menu})
+			}}
+		}
+		
+	}
+
+	class BorderGrid extends GridPanel (9, 1) {
+		for (i <- 0 to 8) {
+			contents += new SmallBackground
+		}
+	}
+
+	class Menu extends BorderPanel {
+		layout (new BorderGrid) = East
+		layout (new CenterGrid) = Center
+		layout (new BorderGrid) = West
+	}	
 }
 
 /*Objet qui permet de dessiner le plateau, la classe pour le plateau entier est Board.*/
