@@ -139,7 +139,7 @@ object DrawNotYet {
 }
 
 object DrawParameters {
-	val nb_option_max = 3
+	val nb_option_max = 5
 
 	class SmallBackground extends Label {
     	preferredSize = Constants.dim_small
@@ -159,6 +159,17 @@ object DrawParameters {
 			def apply = {
 				Constants.small_texture_path = "Texture_small_" + number.toString + ".png"
 				Constants.big_texture_path = "Texture_big_" + number.toString + ".png"
+				Ksparov.frame.contents = new DrawParameters.Parameters
+			}
+		}
+	}
+
+	class PieceOption (number : Int) extends Button {
+		preferredSize = Constants.dim_small
+		action = new Action ("") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
+			def apply {
+				Constants.pieces_path = "Pieces/" + number.toString + "/"
 			}
 		}
 	}
@@ -174,17 +185,31 @@ object DrawParameters {
 		
 	}
 
-	class CenterGrid extends GridPanel (6, 1) {
+	class PiecesGrid extends GridPanel (1, 2 * nb_option_max - 1) {
+		for( i <- 1 to 2 * nb_option_max - 1) {
+			if (i % 2 == 0) {
+				contents += new SmallBackground
+			} else {
+				contents += new PieceOption (Math.round(i / 2) + 1)
+			}
+		}
+		
+	}
+
+	class CenterGrid extends GridPanel (9, 1) {
 		contents += new BigBackground
 		contents += new Label ("Choissisez le fond")
 		contents += new TextureGrid
+		contents += new BigBackground
+		contents += new Label ("Choissisez le type de pièces")
+		contents += new PiecesGrid
 		contents += new BigBackground
 		contents += new Button (Action("<html>Appliquer les changements<br>et revenir au menu</html>") {Ksparov.frame.contents = new DrawMenu.Menu})
 		contents += new BigBackground
 	}
 
-	class BorderGrid extends GridPanel (6, 1) {
-		for (i <- 0 to 5) {
+	class BorderGrid extends GridPanel (9, 1) {
+		for (i <- 0 to 8) {
 			contents += new SmallBackground
 		}
 	}
@@ -212,7 +237,6 @@ object DrawGameSelection {
 		preferredSize = Constants.dim_big
 		action = Action (name) {
 			Constants.game_type = num
-			println (Constants.game_type.toString)
     		Ksparov.frame.contents = new DrawBoard.Board			
 		}
 	}
@@ -248,7 +272,7 @@ object DrawGameSelection {
 object DrawBoard {
 
 	class BorderCase (x : Int, y : Int) extends Label {
-  		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
+  		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
   		preferredSize = Constants.dim_small
 	}
 
@@ -333,7 +357,7 @@ object DrawActions {
 
 	def draw_game_board (game_board : Array[Piece]) {
 		for (i <- 0 to game_board.length - 1) {
-			coord = (game_board(i).pos_x - 1) * 8 + (game_board(i).pos_y - 1)
+			coord = game_board(i).pos_x * 8 + game_board(i).pos_y
 			if (game_board(i).player == 1) {
 				player_path = "1/"
 			} else {
@@ -348,6 +372,7 @@ object DrawActions {
 				case "knight" => piece_path = "Knight.png"
 				case "bishop" => piece_path = "Bishop.png"
 			}
+			println (Constants.pieces_path)
 			DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player_path + piece_path)
 		}
 	}
