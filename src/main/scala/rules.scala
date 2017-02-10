@@ -1,12 +1,10 @@
 object Aux{
   def on_board (x : Int, y : Int) = {
 	(0<=x)&&(x<=7)&&(0<=y)&&(y<=7);}
-  def checks_pre_move(x : Int, x_a : Int, y : Int, y_a : Int, f : (Int,Int)=>(Boolean))=
-    {!(x_a==x && y_a==y) && on_board(x_a, y_a) && f(x_a,y_a)}
+  def checks_pre_move(x_a : Int, x : Int, y_a : Int, y : Int, f : (Int,Int)=>(Boolean))=
+    {!(x_a==x && y_a==y) && on_board(x_a,y_a) && f(x_a,y_a)}
   def get_dirs (x_d : Int ,x_a : Int, y_d : Int, y_a : Int) : (Int,Int)=
      {(math.signum(x_a-x_d),math.signum(y_a-y_d))}
-  var cases = new Array[(Int,Int)](64)
-  for (i<-0 to 7){for(j<-0 to 7) {cases(8*i+j)=(i,j)}}
   }
 
 abstract class Piece (play : Int, x : Int, y : Int) {
@@ -61,10 +59,10 @@ abstract class Piece (play : Int, x : Int, y : Int) {
         var x_king = kings(2*color)
         var y_king = kings(2*color+1)
         //Checking the validity of the move :
-        if (Aux.checks_pre_move(x, x_king, y, y_king, p.pattern)){
-        var (dir_x,dir_y)= Aux.get_dirs(x, x_king, y, y_king)
+        if (Aux.checks_pre_move(x,x_king,y,y_king,p.pattern)){
+        var (dir_x,dir_y)= Aux.get_dirs(pos_x,x_king,pos_y,y_king)
         //Checking if the piece can actually attack the king :
-        var (clear,piece_on_arrival)=clear_path(x, y, x_king, y_king, g, dir_x, dir_y)
+        var (clear,piece_on_arrival)=clear_path(x,y,x_king,y_king,g,dir_x,dir_y)
         if (clear) {attacks(1-color)=attacks(1-color):+p}
        }
      }
@@ -72,20 +70,20 @@ abstract class Piece (play : Int, x : Int, y : Int) {
   attacks}
 
   /*Return the validity of movement, the piece taken or the reason why the move is invalid, and if the king is attacked*/
-  def pre_move(x_a : Int, y_a : Int, g :Array[Piece]) : (Boolean, Option[Piece], List[Piece])={
+  def move(x_a : Int, y_a : Int, g :Array[Piece]) : (Boolean, Option[Piece], List[Piece])={
 
   //Checking if the arrival or the piece is on board and if the pattern is respected
-	if (!(Aux.checks_pre_move(pos_x,x_a, pos_y, y_a, pattern))) {
+	if (!(Aux.checks_pre_move(x_a,pos_x,y_a,pos_y,pattern))) {
     (false,Some(this),Nil)}
     //Checking the path and the destination
     else {
-    var (dir_x, dir_y) = Aux.get_dirs(pos_x,x_a,pos_y,y_a)
-    var (clear, p_arrival) = clear_path(pos_x,pos_y,x_a,y_a,g,dir_x,dir_y)
+    var (dir_x,dir_y)=Aux.get_dirs(pos_x,x_a,pos_y,y_a)
+    var (clear,p_arrival)= clear_path(pos_x,pos_y,x_a,y_a,g,dir_x,dir_y)
     if (!clear){
-      (false, p_arrival, Nil)} //There is a friendly piece on the destination
+      (clear,p_arrival,Nil)} //There is a friendly piece on the destination
       else {
       //Saving current piece coordinates in case the move is invalid
-      var (old_x,old_y) = coords
+      var (old_x,old_y)=(pos_x,pos_y)
       var (old_x2,old_y2)=(0,0)
       pos_x = x_a
       pos_y = y_a
@@ -97,41 +95,19 @@ abstract class Piece (play : Int, x : Int, y : Int) {
        }
     //Checking if the king is attacked
     val checks = check_check(g)
-    pos_x = old_x
-    pos_y = old_y
-    if (p_arrival != None) {
-    p_arrival.get.pos_x = old_x2 ; p_arrival.get.pos_y= old_y2 }
     val pl = player
     if (!(checks(pl).isEmpty)){
+      var (pos_x,pos_y):(Int,Int)=(old_x,old_y)
+      if (p_arrival!=None)
+        { p_arrival.get.pos_x = old_x2 ; p_arrival.get.pos_y=old_y2 }
+      var king= (g find (p=> p.name=="king" && p.player==player)).get
       (false,checks(pl)(0),checks(pl)) //The king is attacked and this move doesn't protect the king
      }
      (true,p_arrival,checks(1-pl)) //This move is valid
     }
 	 }
  }
- def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece])={
-   var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
-   if (move_ok){
-     pos_x = x_a ;
-     println(x_a)
-     pos_y = y_a ;
-     println(y_a)
-     if (p_arrival != None) {
-     p_arrival.get.pos_x = (-1) ; p_arrival.get.pos_y= (-1) }
-   }
-   (move_ok, p_arrival, attackers)
-  }
-
- def aux( x : (Int,Int), g : Array[Piece])={
-   var (i,j) : (Int,Int) = x
-   var (clear, a , b) = pre_move (i, j, g)
-   clear
-  }
-
- def possible_moves (g:Array[Piece])={
-   Aux.cases.filter ( aux(_,g) )
-  }
- }
+}
 
 class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "pawn"
@@ -204,41 +180,33 @@ class Queen (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   }
 }
 
-/*object Checkmate {
+/*object Mate {
   def move_is_possible(p : Piece, x_a : Int, y_a : Int, g :Array[Piece] ) : Boolean ={
-    var (possible, a, b) = p.pre_move(x_a, y_a, g)
+    var current_game = g
+    var (possible,a,b)=p.move(x_a,y_a,g)
+    g = current_game
     possible
   }
   def check_mate(g : Array[Piece], pl : Int)={
-    var king:King = (g find (p=> p.name=="king" && p.player==pl)).get
+    var king = (g find (p=> p.name=="king" && p.player==pl)).get
     var (x_k,y_k) = king.coords
-    var checkmate = true
+    var not_checkmate = true
     for (i<-(-1) to 1){
       for(j<-(-1) to 1){
-        checkmate = checkmate && !(move_is_possible (king, x_k+i, y_k+j, g))
+        not_checkmate = not_checkmate || (move_is_possible (king, x_k+i, y_k+j, g))
       }
     }
-    if (checkmate){
-      if (king.attackers.size == 1){
-        var (x_att,y_att) = king.attackers(0).coords
-        for (g<-p){
-          checkmate = checkmate & !move_is_possible(p,x_att,y_att,g)
-        }
-      }
-
-    }
+    !not_checkmate
   }
 }
-
 object Program{
   def main(args:Array[String]):Unit={
   var black_king = new King(0,0,0)
   var white_king = new King(1,7,7)
   var white_bishop = new Bishop (1,3,3)
-  var black_rook = new Rook(0,3,3)
+  var black_rook = new Rook(0,4,3)
   var g=Array(white_bishop,black_rook,black_king,white_king)
-  for(x <-black_rook.possible_moves(g)){
-    println(x)
+  black_rook.move(3,3,g)
   }
-  }
-}*/
+}
+*/

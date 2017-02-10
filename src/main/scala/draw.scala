@@ -229,6 +229,14 @@ object DrawGameSelection {
 /*Objet qui permet de dessiner le plateau, la classe pour le plateau entier est Board.*/
 object DrawBoard {
 
+	class BackgroundCaseWithLabel(label : String) extends Label {
+		preferredSize = Constants.dim_small
+		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+		text = label
+		horizontalTextPosition = Alignment.Center
+		foreground = Color.white
+	}
+
 	class DeadCase (player : Int, piece : String) extends Label {
 		preferredSize = Constants.dim_small
 		background = new Color (121, 128, 129)
@@ -238,30 +246,23 @@ object DrawBoard {
 
 	}
 
-	class NumDeadCase (player : Int) extends Label {
+	class NumDeadCase (player : Int, number : Int) extends Label {
 		preferredSize = Constants.dim_small
 		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 		horizontalTextPosition = Alignment.Center
-		foreground = Color.red
-		font = new Font("Arial", 0, 40)
-		var value = 0
-		text = value.toString
-	}
-
-	/*Tableau des pièces mortes pour les 2 joueurs : chaque case donne le nombre de pièces mortes 
-	sachant que 0 Reine, 1 Fou, 2 Cavalier, 3 Tour et 4 Pion*/
-	var dead_pieces = Array(new Array[NumDeadCase](5), new Array[NumDeadCase](5))
-	for(i <- 0 to 1) {
-		for (j <- 0 to 4) {
-			dead_pieces(i)(j) = new NumDeadCase(i)
-		}
+		foreground = Color.white
+		font = new Font("Arial", 0, 25)
+		text = number.toString
 	}
 
 	/*Classe des cases, attention les cases commençent en 0,0 et finisse en 7,7,
 	pour la suite, j'ai utilisé un seul entier pour référencer les cases, une case
 	de coordonnées (x, y) est à la position 8*x+y*/
-	class Case (x : Int, y : Int) extends Button {
+	class Case (x : Int, y : Int, piece : String) extends Button {
 		preferredSize = Constants.dim_small
+		if (piece != "") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases (8 * x + y))
+		}
 		if ((x + y) % 2 == 0) {
 			background = Color.white
 		} else {
@@ -273,20 +274,26 @@ object DrawBoard {
 		}
 	}
 
-	var grid_cases = new Array[Case](Constants.nb_case_board * Constants.nb_case_board) 
-	for (i <- 0 to Constants.nb_case_board - 1) {
-		for( j <- 0 to Constants.nb_case_board - 1) {
-			grid_cases(i * 8 + j) = new Case(i, j)
-		}
-	}
-
-	class Grid extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board) {
+	class Grid extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 2) {
 		for (i <- -1 to Constants.nb_case_board) {
-			for (j <- 0 to Constants.nb_case_board - 1) {
-				if (i < 0 || i > Constants.nb_case_board - 1) {
-					contents += new BackgroundCase (1, 1)
-				} else {
-					contents += grid_cases(i * 8 + j)
+			if (i == - 1 || i == Constants.nb_case_board) {
+				contents += new BackgroundCase (1, 1)
+				contents += new BackgroundCaseWithLabel ("A")
+				contents += new BackgroundCaseWithLabel ("B")
+				contents += new BackgroundCaseWithLabel ("C")
+				contents += new BackgroundCaseWithLabel ("D")
+				contents += new BackgroundCaseWithLabel ("E")
+				contents += new BackgroundCaseWithLabel ("F")
+				contents += new BackgroundCaseWithLabel ("G")
+				contents += new BackgroundCaseWithLabel ("H")
+				contents += new BackgroundCase (1, 1)
+			} else {
+				for (j <- -1 to Constants.nb_case_board) {
+					if (j == -1 || j == Constants.nb_case_board) {
+						contents += new BackgroundCaseWithLabel ((i+1).toString)
+					} else {
+						contents += new Case (i, j, "")
+					}
 				}
 			}
 		}
@@ -315,27 +322,33 @@ object DrawBoard {
 		}
 	}
 
-	class Border1 extends GridPanel (Constants.nb_case, 2) {
+	class Border1 extends GridPanel (Constants.nb_case, 3) {
 		for(i <- 0 to Constants.nb_case - 1) {
 			if (i < 3 || i > 7) {
+				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
 				case 3 => 
 					contents += new DeadCase (1, "Queen")
-					contents += dead_pieces(1)(0)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
+					contents += new BackgroundCase (1, 1)
 				case 4 => 
 					contents += new DeadCase (1, "Bishop")
-					contents += dead_pieces(1)(1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
+					contents += new BackgroundCase (1, 1)
 				case 5 =>
 					contents += new DeadCase (1, "Knight")
-					contents += dead_pieces(1)(2)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
+					contents += new BackgroundCase (1, 1)
 				case 6 => 
 					contents += new DeadCase (1, "Rook")
-					contents += dead_pieces(1)(3)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
+					contents += new BackgroundCase (1, 1)
 				case 7 => 
 					contents += new DeadCase (1, "Pawn")
-					contents += dead_pieces(1)(4)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
+					contents += new BackgroundCase (1, 1)
 				}
 			}
 		}
@@ -343,24 +356,30 @@ object DrawBoard {
 
 	class Border0 extends GridPanel (Constants.nb_case, 2) {
 		for(i <- 0 to Constants.nb_case - 1) {
-			if (i < 3 || i > 7) {
+			if (i < 2 || i > 6) {
+				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
-				case 3 => 
-					contents += dead_pieces(0)(0)
+				case 2 => 
+					contents += new BackgroundCase (1, 1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
 					contents += new DeadCase (0, "Queen")
-				case 4 => 
-					contents += dead_pieces(0)(1)
+				case 3 => 
+					contents += new BackgroundCase (1, 1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
 					contents += new DeadCase (0, "Bishop")
-				case 5 =>
-					contents += dead_pieces(0)(2)
+				case 4 =>
+					contents += new BackgroundCase (1, 1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
 					contents += new DeadCase (0, "Knight")
-				case 6 => 
-					contents += dead_pieces(0)(3)
+				case 5 => 
+					contents += new BackgroundCase (1, 1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
 					contents += new DeadCase (0, "Rook")
-				case 7 => 
-					contents += dead_pieces(0)(4)
+				case 6 => 
+					contents += new BackgroundCase (1, 1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
 					contents += new DeadCase (0, "Pawn")
 				}
 			}
@@ -394,16 +413,18 @@ object DrawActions {
 					case "knight" => piece_path = "Knight.png"
 					case "bishop" => piece_path = "Bishop.png"
 				}
-				DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).toString + "/" + piece_path)
+				Constants.grid_cases(coord) = game_board(i).player.toString + "/" + piece_path
 			} else {
 				game_board(i).name match {
-					case "queen" => DrawBoard.dead_pieces(game_board(i).player)(0).value += 1
-					case "bishop" => DrawBoard.dead_pieces(game_board(i).player)(1).value += 1
-					case "knight" => DrawBoard.dead_pieces(game_board(i).player)(2).value += 1
-					case "rook" => DrawBoard.dead_pieces(game_board(i).player)(3).value += 1
-					case "pawn" => DrawBoard.dead_pieces(game_board(i).player)(4).value += 1 
+					case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
+					case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
+					case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
+					case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
+					case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1 
 				}
 			}
 		}
+		println("qs")
+		Ksparov.frame.contents = new DrawBoard.Board
 	}
 }
