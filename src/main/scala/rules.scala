@@ -198,7 +198,7 @@ class Queen (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
     }
     !not_checkmate
   }
-} */
+} 
 
 object Program{
   def main(args:Array[String]):Unit={
@@ -210,3 +210,4 @@ object Program{
   black_rook.move(3,3,g)
   }
 }
+*/
