@@ -55,10 +55,10 @@ object Ksparov {
   }
 
   def init_game(n : Int){
-    Ksparov.init_board()
     n match {
-      case 1 => Ksparov.init_board()
-                DrawActions.draw_game_board(Ksparov.board)
+      case 1 => 
+                /*Ksparov.init_board()*/
+                DrawActions.draw_game_board(Array(new Rook(0,4,4)))
       case _ => ()
     }
   }
