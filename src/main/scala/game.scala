@@ -34,6 +34,7 @@ object Ksparov {
   }
 
   var board : Array[Piece] = new Array[Piece](32)
+
   var joueur1 : Player = new Player(1)
   var joueur0 : Player = new Player(0)
 
@@ -49,16 +50,18 @@ object Ksparov {
       board( 11 + (1-p)*16) = new Knight(p,p*7,6)
       board( 12 + (1-p)*16) = new Bishop(p,p*7,2)
       board( 13 + (1-p)*16) = new Bishop(p,p*7,5)
-      board( 14 + (1-p)*16) = new King(p,p*7,3+(1-p))
-      board( 15 + (1-p)*16) = new Queen(p,p*7,4 - (1-p))
+      board( 14 + (1-p)*16) = new King(p,p*7,4)
+      board( 15 + (1-p)*16) = new Queen(p,p*7,3)
     }
   }
 
   def init_game(n : Int){
     n match {
       case 1 => 
-                /*Ksparov.init_board()*/
-                DrawActions.draw_game_board(Array(new Rook(0,4,4)))
+                Ksparov.init_board()
+                DrawActions.draw_game_board(Ksparov.board)
+                joueur1 = new Human(1)
+                joueur0 = new Human(0)
       case _ => ()
     }
   }
