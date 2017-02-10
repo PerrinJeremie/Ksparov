@@ -390,7 +390,7 @@ object DrawActions {
 				} else {
 					player_path = "2/"
 				}
-				game_board(i).piece_name match {
+				game_board(i).name match {
    		     		case "autre" => piece_path = ""
 					case "pawn" => piece_path = "Pawn.png"
 					case "queen" => piece_path = "Queen.png"
@@ -401,7 +401,7 @@ object DrawActions {
 				}
 				DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player_path + piece_path)
 			} else {
-				game_board(i).piece_name match {
+				game_board(i).name match {
 					case "queen" => DrawBoard.dead_pieces(game_board(i).player - 1)(0).value += 1
 					case "bishop" => DrawBoard.dead_pieces(game_board(i).player - 1)(1).value += 1
 					case "knight" => DrawBoard.dead_pieces(game_board(i).player - 1)(2).value += 1
