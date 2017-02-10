@@ -14,9 +14,9 @@ object Constants {
   val dim_big = new Dimension (240, 80)
   val nb_case_border = 1
   val nb_case_board = 8
-  var nb_case = nb_case_board + 2*nb_case_border
+  var nb_case = nb_case_board + 2 * nb_case_border
   var resources_path = "src/main/resources/"
-  var pieces_path = "Pieces/1/"
+  var pieces_path = "Pieces/2/"
   var small_texture_path = "Texture_small_2.png"
   var big_texture_path = "Texture_big_2.png"
   var selected_case = 0
@@ -40,7 +40,12 @@ object Ksparov {
     
     val piece1 = new Pawn("pawn",1,4,4)
     val piece2 = new Bishop("bishop",1,3,2)
-    var board_test = Array[Piece] (piece1, piece2)
+    val piece3 = new King ("king", 2, 5, 5)
+    val piece4 = new Rook ("rook", 2, 2, 0)
+    val piece5 = new Queen ("queen", 1, 1, 1)
+    val piece6 = new Pawn("pawn", 2, -1, -1)
+    var board_test = Array[Piece] (piece1, piece2, piece3, piece5, piece4, piece6)
     application.main(Array())
+    DrawActions.draw_game_board(board_test)
   }
 }
