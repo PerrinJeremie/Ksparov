@@ -19,9 +19,9 @@ object Constants {
   val dim_big = new Dimension (240, 80)
   val nb_case_border = 1
   val nb_case_board = 8
-  var nb_case = nb_case_board + 2*nb_case_border
+  var nb_case = nb_case_board + 2 * nb_case_border
   var resources_path = "src/main/resources/"
-  var pieces_path = "Pieces/1/"
+  var pieces_path = "Pieces/2/"
   var small_texture_path = "Texture_small_2.png"
   var big_texture_path = "Texture_big_2.png"
   var selected_case = 0
@@ -70,8 +70,5 @@ object Ksparov {
 
   def main(argv : Array[String]) {
     application.main(Array())
-    Ksparov.init_board()
-    DrawActions.draw_game_board(Ksparov.board)
-
   }
 }
