@@ -7,6 +7,17 @@ import scala.swing.BorderPanel.Position._
 /*J'ai organisé ce fichier en plusieurs objets selon ce qu'ils
 dessinent : Menu, Board ou Action.*/
 
+class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
+	for(k <- 0 to i - 1) {
+		for(l <- 0 to j - 1) {
+			contents += new Label {
+				preferredSize = Constants.dim_small
+				icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+			}
+		}
+	}
+}
+
 /*Objet qui définit toutes les classes nécessaires pour 
 construire le menu. Si on veut charger le menu dans l'application,
 il faut créer une instance de la classe Menu*/
@@ -54,65 +65,39 @@ object DrawMenu {
     	}
 	}
 
-	class BigBackground extends Label {
-    	preferredSize = Constants.dim_big
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
-	}
-
-	class SmallBackground extends Label {
-    	preferredSize = Constants.dim_small
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-	}
-
 	class MenuGrid extends GridPanel (nb_menu_option + 1, 3) {
     	for( i <- 0 to nb_menu_option) {
     		if (i % 2 == 0) {
-        		contents += new BigBackground
-        		contents += new BigBackground
-        		contents += new BigBackground
+        		contents += new BackgroundCase (1, 3)
+        		contents += new BackgroundCase (1, 3)
+        		contents += new BackgroundCase (1, 3)
     		} else { i match {
 	        case 1 => contents += new Resume_button
-			contents += new BigBackground
+			contents += new BackgroundCase (1, 3)
         	contents += new Play_button 
         	case 3 => contents += new Load_button
-        	contents += new BigBackground
+        	contents += new BackgroundCase (1, 3)
         	contents += new Score_button 
         	case 5 => contents += new Option_button
-        	contents += new BigBackground 
+        	contents += new BackgroundCase (1, 3)
         	contents += new Exit_button
     		}}
     	}
 	}
 
-	class BorderGrid extends GridPanel (nb_menu_option + 1, 1) {
-    	for( i <- 0 to nb_menu_option) {
-    		contents += new SmallBackground
-    	}
-	}
-
 	class Menu extends BorderPanel {
-    	layout (new BorderGrid) = East
-    	layout (new BorderGrid) = West
+    	layout (new BackgroundCase (nb_menu_option + 1, 1)) = East
+    	layout (new BackgroundCase (nb_menu_option + 1, 1)) = West
     	layout (new MenuGrid) = Center
 	}
 }
 
 object DrawNotYet {
 
-	class BigBackground extends Label {
-    	preferredSize = Constants.dim_big
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
-	}
-
-	class SmallBackground extends Label {
-    	preferredSize = Constants.dim_small
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-	}
-
 	class CenterGrid extends GridPanel (5,1) {
 		for (i <- 0 to 4) {
 			if (i % 2 == 0) {
-				contents += new BigBackground
+				contents += new BackgroundCase (1, 3)
 			} else { i match {
 				case 1 => contents += new Label {
 					text = "<html>Cette fonctionnalité n'est pas<br>encore développée, veuillez<br>patienter quelque peu !</html>"
@@ -126,32 +111,15 @@ object DrawNotYet {
 		}
 	}
 
-	class BorderGrid extends GridPanel (5, 1) {
-		for (i <- 0 to 4) {
-			contents += new SmallBackground
-		}
-	}
-
 	class NotYet extends BorderPanel {
-		layout (new BorderGrid) = East
-		layout (new BorderGrid) = West
+		layout (new BackgroundCase (5, 1)) = East
+		layout (new BackgroundCase (5, 1)) = West
 		layout (new CenterGrid) = Center
 	}
 }
 
 object DrawParameters {
 	val nb_option_max = 5
-
-	class SmallBackground extends Label {
-    	preferredSize = Constants.dim_small
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-	}
-
-	class BigBackground extends GridPanel (1, 2 * nb_option_max - 1) {
-		for( i <- 0 to 2 * nb_option_max - 2) {
-			contents += new SmallBackground
-		}
-	}
 
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
@@ -180,7 +148,7 @@ object DrawParameters {
 	class TextureGrid extends GridPanel (1, 2 * nb_option_max - 1) {
 		for( i <- 1 to 2 * nb_option_max - 1) {
 			if (i % 2 == 0) {
-				contents += new SmallBackground
+				contents += new BackgroundCase (1, 1)
 			} else {
 				contents += new TextureOption (Math.round(i / 2) + 1)
 			}
@@ -190,7 +158,7 @@ object DrawParameters {
 	class PiecesGrid extends GridPanel (1, 2 * nb_option_max - 1) {
 		for( i <- 1 to 2 * nb_option_max - 1) {
 			if (i % 2 == 0) {
-				contents += new SmallBackground
+				contents += new BackgroundCase (1, 1)
 			} else {
 				contents += new PieceOption (Math.round(i / 2) + 1)
 			}
@@ -198,49 +166,33 @@ object DrawParameters {
 	}
 
 	class CenterGrid extends GridPanel (9, 1) {
-		contents += new BigBackground
+		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Label ("Choissisez le fond") {
 			border = new javax.swing.border.LineBorder (Color.black, 2)
 			background = new Color (200, 200, 200)
 			opaque = true}
 		contents += new TextureGrid
-		contents += new BigBackground
+		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Label ("Choissisez le type de pièces") {
 			border = new javax.swing.border.LineBorder (Color.black, 2)
 			background = new Color (200, 200, 200)
 			opaque = true}
 		contents += new PiecesGrid
-		contents += new BigBackground
+		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
 			action = Action("<html>Appliquer les changements<br>et revenir au menu</html>") {Ksparov.frame.contents = new DrawMenu.Menu}
 			border = new javax.swing.border.LineBorder (Color.black, 2)}
-		contents += new BigBackground
-	}
-
-	class BorderGrid extends GridPanel (9, 1) {
-		for (i <- 0 to 8) {
-			contents += new SmallBackground
-		}
+		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 	}
 
 	class Parameters extends BorderPanel {
-		layout (new BorderGrid) = East
+		layout (new BackgroundCase (9, 1)) = East
 		layout (new CenterGrid) = Center
-		layout (new BorderGrid) = West
+		layout (new BackgroundCase (9, 1)) = West
 	}
 }
 
 object DrawGameSelection {
-
-	class BigBackground extends Label {
-    	preferredSize = Constants.dim_big
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.big_texture_path)
-	}
-
-	class SmallBackground extends Label {
-    	preferredSize = Constants.dim_small
-    	icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-	}
 
 	class Option (name : String, num : Int) extends Button {
 		preferredSize = Constants.dim_big
@@ -255,7 +207,7 @@ object DrawGameSelection {
 	class CenterGrid extends GridPanel (9, 1) {
 		for (i <- 0 to 8) {
 			if (i % 2 == 0) {
-				contents += new BigBackground
+				contents += new BackgroundCase (1, 3)
 			} else { i match {
 				case 1 => contents += new Option ("Humain vs Humain", 1)
 				case 3 => contents += new Option ("Humain vs IA", 2)
@@ -264,52 +216,45 @@ object DrawGameSelection {
 					border = new javax.swing.border.LineBorder (Color.black, 2)
 					action = Action ("Revenir au menu principal") {Ksparov.frame.contents = new DrawMenu.Menu}}
 			}}
-		}
-		
-	}
-
-	class BorderGrid extends GridPanel (9, 1) {
-		for (i <- 0 to 8) {
-			contents += new SmallBackground
-		}
+		}	
 	}
 
 	class Menu extends BorderPanel {
-		layout (new BorderGrid) = East
+		layout (new BackgroundCase (9, 1)) = East
 		layout (new CenterGrid) = Center
-		layout (new BorderGrid) = West
+		layout (new BackgroundCase (9, 1)) = West
 	}	
 }
 
 /*Objet qui permet de dessiner le plateau, la classe pour le plateau entier est Board.*/
 object DrawBoard {
 
-	class BorderCase extends Label {
-  		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-  		preferredSize = Constants.dim_small
-	} 
-
 	class DeadCase (player : Int, piece : String) extends Label {
 		preferredSize = Constants.dim_small
 		background = new Color (121, 128, 129)
 		opaque = true
 		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player.toString + "/" + piece + ".png")
+		border = new javax.swing.border.LineBorder (Color.black, 1)
+
+	}
+
+	class NumDeadCase (player : Int) extends Label {
+		preferredSize = Constants.dim_small
+		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 		horizontalTextPosition = Alignment.Center
 		foreground = Color.red
 		font = new Font("Arial", 0, 40)
-		border = new javax.swing.border.LineBorder (Color.black, 1)
-		text = "0"
+		var value = 0
+		text = value.toString
 	}
 
 	/*Tableau des pièces mortes pour les 2 joueurs : chaque case donne le nombre de pièces mortes 
 	sachant que 0 Reine, 1 Fou, 2 Cavalier, 3 Tour et 4 Pion*/
-	var dead_pieces = Array(new Array[DeadCase](5), new Array[DeadCase](5))
+	var dead_pieces = Array(new Array[NumDeadCase](5), new Array[NumDeadCase](5))
 	for(i <- 0 to 1) {
-		dead_pieces(i)(0) = new DeadCase (i + 1, "Queen")
-		dead_pieces(i)(1) = new DeadCase (i + 1, "Bishop")
-		dead_pieces(i)(2) = new DeadCase (i + 1, "Knight")
-		dead_pieces(i)(3) = new DeadCase (i + 1, "Rook")
-		dead_pieces(i)(4) = new DeadCase (i + 1, "Pawn")
+		for (j <- 0 to 4) {
+			dead_pieces(i)(j) = new NumDeadCase(i)
+		}
 	}
 
 	/*Classe des cases, attention les cases commençent en 0,0 et finisse en 7,7,
@@ -335,14 +280,13 @@ object DrawBoard {
 		}
 	}
 
-	class Grid extends GridPanel (Constants.nb_case, Constants.nb_case) {
-		for (i <- 0 to Constants.nb_case - 1) {
-			for (j <- 0 to Constants.nb_case - 1) {
-				if (i < Constants.nb_case_border || i > Constants.nb_case - Constants.nb_case_border - 1 ||
-				j < Constants.nb_case_border || j > Constants.nb_case - Constants.nb_case_border - 1) {
-					contents += new BorderCase 
+	class Grid extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board) {
+		for (i <- -1 to Constants.nb_case_board) {
+			for (j <- 0 to Constants.nb_case_board - 1) {
+				if (i < 0 || i > Constants.nb_case_board - 1) {
+					contents += new BackgroundCase (1, 1)
 				} else {
-					contents += grid_cases((i - Constants.nb_case_border) * 8 + j - Constants.nb_case_border)
+					contents += grid_cases(i * 8 + j)
 				}
 			}
 		}
@@ -371,24 +315,62 @@ object DrawBoard {
 		}
 	}
 
-	class Border (player : Int) extends GridPanel (Constants.nb_case, 1) {
-		contents += new BorderCase
-		contents += new BorderCase
-		contents += new BorderCase
-		contents += dead_pieces(player - 1)(0)
-		contents += dead_pieces(player - 1)(1)
-		contents += dead_pieces(player - 1)(2)
-		contents += dead_pieces(player - 1)(3)
-		contents += dead_pieces(player - 1)(4)
-		contents += new BorderCase
-		contents += new BorderCase
+	class Border1 (player : Int) extends GridPanel (Constants.nb_case, 2) {
+		for(i <- 0 to Constants.nb_case - 1) {
+			if (i < 3 || i > 7) {
+				contents += new BackgroundCase (1, 1)
+				contents += new BackgroundCase (1, 1)
+			} else { i match {
+				case 3 => 
+					contents += new DeadCase (1, "Queen")
+					contents += dead_pieces(1)(0)
+				case 4 => 
+					contents += new DeadCase (1, "Bishop")
+					contents += dead_pieces(1)(1)
+				case 5 =>
+					contents += new DeadCase (1, "Knight")
+					contents += dead_pieces(1)(2)
+				case 6 => 
+					contents += new DeadCase (1, "Rook")
+					contents += dead_pieces(1)(3)
+				case 7 => 
+					contents += new DeadCase (1, "Pawn")
+					contents += dead_pieces(1)(4)
+				}
+			}
+		}
+	}
 
+	class Border2 (player : Int) extends GridPanel (Constants.nb_case, 2) {
+		for(i <- 0 to Constants.nb_case - 1) {
+			if (i < 3 || i > 7) {
+				contents += new BackgroundCase (1, 1)
+				contents += new BackgroundCase (1, 1)
+			} else { i match {
+				case 3 => 
+					contents += dead_pieces(0)(0)
+					contents += new DeadCase (2, "Queen")
+				case 4 => 
+					contents += dead_pieces(0)(1)
+					contents += new DeadCase (2, "Bishop")
+				case 5 =>
+					contents += dead_pieces(0)(2)
+					contents += new DeadCase (2, "Knight")
+				case 6 => 
+					contents += dead_pieces(0)(3)
+					contents += new DeadCase (2, "Rook")
+				case 7 => 
+					contents += dead_pieces(0)(4)
+					contents += new DeadCase (2, "Pawn")
+				}
+			}
+		}
 	}
 
 	class Board extends BorderPanel {
 		layout(new Header) = North
-		layout(new Border(1)) = West
-		layout(new Border(2)) = East
+		layout(new Border1(1)) = West
+		layout(new Border2(2)) = East
 		layout(new Grid) = Center
 	}
 }
@@ -420,11 +402,11 @@ object DrawActions {
 				DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player_path + piece_path)
 			} else {
 				game_board(i).piece_name match {
-					case "queen" => DrawBoard.dead_pieces(game_board(i).player - 1)(0).text = (DrawBoard.dead_pieces(game_board(i).player - 1)(0).text.toInt + 1).toString
-					case "bishop" => DrawBoard.dead_pieces(game_board(i).player - 1)(1).text = (DrawBoard.dead_pieces(game_board(i).player - 1)(1).text.toInt + 1).toString
-					case "knight" => DrawBoard.dead_pieces(game_board(i).player - 1)(2).text = (DrawBoard.dead_pieces(game_board(i).player - 1)(2).text.toInt + 1).toString
-					case "rook" => DrawBoard.dead_pieces(game_board(i).player - 1)(3).text = (DrawBoard.dead_pieces(game_board(i).player - 1)(3).text.toInt + 1).toString
-					case "pawn" => DrawBoard.dead_pieces(game_board(i).player - 1)(4).text = (DrawBoard.dead_pieces(game_board(i).player - 1)(4).text.toInt + 1).toString 
+					case "queen" => DrawBoard.dead_pieces(game_board(i).player - 1)(0).value += 1
+					case "bishop" => DrawBoard.dead_pieces(game_board(i).player - 1)(1).value += 1
+					case "knight" => DrawBoard.dead_pieces(game_board(i).player - 1)(2).value += 1
+					case "rook" => DrawBoard.dead_pieces(game_board(i).player - 1)(3).value += 1
+					case "pawn" => DrawBoard.dead_pieces(game_board(i).player - 1)(4).value += 1 
 				}
 			}
 		}
