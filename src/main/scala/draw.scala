@@ -315,7 +315,7 @@ object DrawBoard {
 		}
 	}
 
-	class Border1 (player : Int) extends GridPanel (Constants.nb_case, 2) {
+	class Border1 extends GridPanel (Constants.nb_case, 2) {
 		for(i <- 0 to Constants.nb_case - 1) {
 			if (i < 3 || i > 7) {
 				contents += new BackgroundCase (1, 1)
@@ -341,7 +341,7 @@ object DrawBoard {
 		}
 	}
 
-	class Border2 (player : Int) extends GridPanel (Constants.nb_case, 2) {
+	class Border0 extends GridPanel (Constants.nb_case, 2) {
 		for(i <- 0 to Constants.nb_case - 1) {
 			if (i < 3 || i > 7) {
 				contents += new BackgroundCase (1, 1)
@@ -349,19 +349,19 @@ object DrawBoard {
 			} else { i match {
 				case 3 => 
 					contents += dead_pieces(0)(0)
-					contents += new DeadCase (2, "Queen")
+					contents += new DeadCase (0, "Queen")
 				case 4 => 
 					contents += dead_pieces(0)(1)
-					contents += new DeadCase (2, "Bishop")
+					contents += new DeadCase (0, "Bishop")
 				case 5 =>
 					contents += dead_pieces(0)(2)
-					contents += new DeadCase (2, "Knight")
+					contents += new DeadCase (0, "Knight")
 				case 6 => 
 					contents += dead_pieces(0)(3)
-					contents += new DeadCase (2, "Rook")
+					contents += new DeadCase (0, "Rook")
 				case 7 => 
 					contents += dead_pieces(0)(4)
-					contents += new DeadCase (2, "Pawn")
+					contents += new DeadCase (0, "Pawn")
 				}
 			}
 		}
@@ -369,8 +369,8 @@ object DrawBoard {
 
 	class Board extends BorderPanel {
 		layout(new Header) = North
-		layout(new Border1(1)) = West
-		layout(new Border2(2)) = East
+		layout(new Border1) = West
+		layout(new Border0) = East
 		layout(new Grid) = Center
 	}
 }
@@ -385,11 +385,6 @@ object DrawActions {
 		for (i <- 0 to game_board.length - 1) {
 			coord = game_board(i).pos_x * 8 + game_board(i).pos_y
 			if (coord >= 0) {
-				if (game_board(i).player == 1) {
-					player_path = "1/"
-				} else {
-					player_path = "2/"
-				}
 				game_board(i).name match {
    		     		case "autre" => piece_path = ""
 					case "pawn" => piece_path = "Pawn.png"
@@ -399,14 +394,14 @@ object DrawActions {
 					case "knight" => piece_path = "Knight.png"
 					case "bishop" => piece_path = "Bishop.png"
 				}
-				DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player_path + piece_path)
+				DrawBoard.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).toString + "/" + piece_path)
 			} else {
 				game_board(i).name match {
-					case "queen" => DrawBoard.dead_pieces(game_board(i).player - 1)(0).value += 1
-					case "bishop" => DrawBoard.dead_pieces(game_board(i).player - 1)(1).value += 1
-					case "knight" => DrawBoard.dead_pieces(game_board(i).player - 1)(2).value += 1
-					case "rook" => DrawBoard.dead_pieces(game_board(i).player - 1)(3).value += 1
-					case "pawn" => DrawBoard.dead_pieces(game_board(i).player - 1)(4).value += 1 
+					case "queen" => DrawBoard.dead_pieces(game_board(i).player)(0).value += 1
+					case "bishop" => DrawBoard.dead_pieces(game_board(i).player)(1).value += 1
+					case "knight" => DrawBoard.dead_pieces(game_board(i).player)(2).value += 1
+					case "rook" => DrawBoard.dead_pieces(game_board(i).player)(3).value += 1
+					case "pawn" => DrawBoard.dead_pieces(game_board(i).player)(4).value += 1 
 				}
 			}
 		}
