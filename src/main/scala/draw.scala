@@ -247,7 +247,8 @@ object DrawGameSelection {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
 			Constants.game_type = num
-    		Ksparov.frame.contents = new DrawBoard.Board			
+    		Ksparov.frame.contents = new DrawBoard.Board	
+		    Ksparov.init_game(num)
 		}
 	}
 
