@@ -38,17 +38,17 @@ object Ksparov {
   var board : Array[Piece] = new Array[Piece](32)
   def init_board(){
     for (p <- 0 to 1) {
-      for(i <- 1 to 8) {
-        board((1-p)*16 + (i-1)) = new Pawn(p+1,1+p*5,i-1)
+      for(i <- 0 to 7) {
+        board((1-p)*16 + i) = new Pawn(p,1+p*5,i)
         }
-      board( 8 + (1-p)*16) = new Rook(p+1,1+p*7,1)
-      board( 9 + (1-p)*16) = new Rook(p+1,1+p*7,8)
-      board( 10 + (1-p)*16) = new Knight(p+1,1+p*7,2)
-      board( 11 + (1-p)*16) = new Knight(p+1,1+p*7,7)
-      board( 12 + (1-p)*16) = new Bishop(p+1,1+p*7,3)
-      board( 13 + (1-p)*16) = new Bishop(p+1,1+p*7,6)
-      board( 14 + (1-p)*16) = new King(p+1,1+p*7,4+(1-p))
-      board( 15 + (1-p)*16) = new Queen(p+1,1+p*7,5 - (1-p))
+      board( 8 + (1-p)*16) = new Rook(p,p*7,0)
+      board( 9 + (1-p)*16) = new Rook(p+1,p*7,7)
+      board( 10 + (1-p)*16) = new Knight(p+1,p*7,1)
+      board( 11 + (1-p)*16) = new Knight(p+1,p*7,6)
+      board( 12 + (1-p)*16) = new Bishop(p+1,p*7,2)
+      board( 13 + (1-p)*16) = new Bishop(p+1,p*7,5)
+      board( 14 + (1-p)*16) = new King(p+1,p*7,3+(1-p))
+      board( 15 + (1-p)*16) = new Queen(p+1,p*7,4 - (1-p))
     }
   }
 
