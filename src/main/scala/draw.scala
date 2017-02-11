@@ -258,19 +258,18 @@ object DrawBoard {
 	/*Classe des cases, attention les cases commençent en 0,0 et finisse en 7,7,
 	pour la suite, j'ai utilisé un seul entier pour référencer les cases, une case
 	de coordonnées (x, y) est à la position 8*x+y*/
-	class Case (x : Int, y : Int, piece : String) extends Button {
+	class Case (x : Int, y : Int) extends Button {
 		preferredSize = Constants.dim_small
-		if (piece != "") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases (8 * x + y))
-		}
 		if ((x + y) % 2 == 0) {
 			background = Color.white
 		} else {
 			background = Color.black
   		}
-		action = Action ("") {
-			Constants.selected_case = x * 8 + y
-			println("Click case nb : " + Constants.selected_case.toString)
+		action = new Action ("") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases(8 * x + y))
+			def apply = {
+				Constants.selected_case = x * 8 + y
+			}
 		}
 	}
 
@@ -292,7 +291,7 @@ object DrawBoard {
 					if (j == -1 || j == Constants.nb_case_board) {
 						contents += new BackgroundCaseWithLabel ((i+1).toString)
 					} else {
-						contents += new Case (i, j, "")
+						contents += new Case (i, j)
 					}
 				}
 			}
@@ -424,7 +423,6 @@ object DrawActions {
 				}
 			}
 		}
-		println("qs")
 		Ksparov.frame.contents = new DrawBoard.Board
 	}
 }
