@@ -24,6 +24,8 @@ object Constants {
   var big_texture_path = "Texture_big_2.png"
   var selected_case = 0
   var game_type = 0
+  var grid_cases = new Array[String](nb_case_board*nb_case_board)
+  var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 }
 
 object Ksparov {
