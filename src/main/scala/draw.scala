@@ -128,7 +128,6 @@ object DrawParameters {
 	for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
     	lines (i) = line.toString
     	i += 1
-    	println ("Ok")
 	}
 
 	def write_parameters () = {
@@ -145,10 +144,10 @@ object DrawParameters {
 		action = new Action("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Texture_small_" + number.toString + ".png")
 			def apply = {
-				Constants.small_texture_path = "Texture_small_" + number.toString + ".png"
-				Ksparov.frame.contents = new DrawParameters.Parameters
 				lines(1) = number.toString
 				write_parameters ()
+				Constants.apply_parameters 
+				Ksparov.frame.contents = new DrawParameters.Parameters
 			}
 		}
 	}
@@ -254,7 +253,7 @@ object DrawBoard {
 		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 		text = label
 		horizontalTextPosition = Alignment.Center
-		foreground = Color.white
+		foreground = Constants.text_color
 	}
 
 	class DeadCase (player : Int, piece : String) extends Label {
@@ -270,7 +269,7 @@ object DrawBoard {
 		preferredSize = Constants.dim_small
 		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 		horizontalTextPosition = Alignment.Center
-		foreground = Color.white
+		foreground = Constants.text_color
 		font = new Font("Arial", 0, 25)
 		text = number.toString
 	}

@@ -14,14 +14,6 @@ class Human(n:Int) extends Player(n:Int) {
 }
 
 object Constants {
-  /* Reading the defaults parameters form the parameters file */
-  var lines = new Array[String](4)
-  var i = 0
-  for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
-    lines (i) = line.toString
-    println (lines(i))
-    i += 1
-  }
 
   /* Defining the dimension for the cases */
   val dim_small = new Dimension (80, 80)
@@ -32,9 +24,29 @@ object Constants {
 
   /* Defining the path to find every resource used in the programm */
   var resources_path = "src/main/resources/"
-  var pieces_path = "Pieces/" + lines(0) + "/"
-  var small_texture_path = "Texture_small_" + lines(1) + ".png"
+  var pieces_path = ""
+  var small_texture_path = ""
+  var text_color = Color.black
 
+  def apply_parameters = {
+    var lines = new Array[String](4)
+    var i = 0
+    for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
+      lines (i) = line.toString
+      i += 1
+    }
+    pieces_path = "Pieces/" + lines(0) + "/"
+    small_texture_path = "Texture_small_" + lines(1) + ".png"
+    text_color = Color.black
+    lines(1).toInt match {
+      case 1 => text_color = Color.white
+      case 2 => text_color = Color.white
+      case 3 => text_color = Color.black
+      case 4 => text_color = Color.black
+      case 5 => text_color = Color.red
+    }
+  }
+  
   /* Game variables: the case selected by the player, the type of setup for the game
      and arrays for the game board and the dead pieces */
   var selected_case = 0
@@ -44,6 +56,7 @@ object Constants {
 }
 
 object Ksparov {
+  Constants.apply_parameters
 
   var frame = new MainFrame {
     title = "Ksparov"
