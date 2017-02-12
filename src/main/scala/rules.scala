@@ -226,7 +226,7 @@ class Queen (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
 
     }
   }
-} */
+} 
 
 object Program{
   def main(args:Array[String]):Unit={
@@ -237,3 +237,4 @@ object Program{
   var g = Array(white_bishop,black_rook,black_king,white_king)
   }
  }
+*/

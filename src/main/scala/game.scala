@@ -3,6 +3,7 @@ import swing.event._
 import java.awt.Dimension
 import java.awt.Color
 import scala.swing.BorderPanel.Position._
+import scala.io.Source
 
 class Player(n:Int) {
   val id:Int = n
@@ -13,15 +14,29 @@ class Human(n:Int) extends Player(n:Int) {
 }
 
 object Constants {
+  /* Reading the defaults parameters form the parameters file */
+  var lines = new Array[String](4)
+  var i = 0
+  for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
+    lines (i) = line.toString
+    println (lines(i))
+    i += 1
+  }
+
+  /* Defining the dimension for the cases */
   val dim_small = new Dimension (80, 80)
   val dim_big = new Dimension (240, 80)
   val nb_case_border = 1
   val nb_case_board = 8
   var nb_case = nb_case_board + 2 * nb_case_border
+
+  /* Defining the path to find every resource used in the programm */
   var resources_path = "src/main/resources/"
-  var pieces_path = "Pieces/2/"
-  var small_texture_path = "Texture_small_2.png"
-  var big_texture_path = "Texture_big_2.png"
+  var pieces_path = "Pieces/" + lines(0) + "/"
+  var small_texture_path = "Texture_small_" + lines(1) + ".png"
+
+  /* Game variables: the case selected by the player, the type of setup for the game
+     and arrays for the game board and the dead pieces */
   var selected_case = 0
   var game_type = 0
   var grid_cases = new Array[String](nb_case_board*nb_case_board)

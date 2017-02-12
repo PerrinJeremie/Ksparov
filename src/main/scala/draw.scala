@@ -3,6 +3,9 @@ import swing.event._
 import java.awt.Dimension
 import java.awt.Color
 import scala.swing.BorderPanel.Position._
+import scala.io.Source
+import java.io.File
+import java.io.PrintWriter
 
 /*J'ai organisé ce fichier en plusieurs objets selon ce qu'ils
 dessinent : Menu, Board ou Action.*/
@@ -35,8 +38,8 @@ object DrawMenu {
     	}
 	}
 
-	class Resume_button extends Option {
-    	action = Action ("Reprendre la dernière partie") {
+	class Rules_button extends Option {
+    	action = Action ("Voir les règles du jeu") {
     		Ksparov.frame.contents = new DrawNotYet.NotYet
     	}
 	}
@@ -72,12 +75,12 @@ object DrawMenu {
         		contents += new BackgroundCase (1, 3)
         		contents += new BackgroundCase (1, 3)
     		} else { i match {
-	        case 1 => contents += new Resume_button
+	        case 1 => contents += new Play_button
 			contents += new BackgroundCase (1, 3)
-        	contents += new Play_button 
-        	case 3 => contents += new Load_button
+        	contents += new  Load_button
+        	case 3 => contents += new Score_button
         	contents += new BackgroundCase (1, 3)
-        	contents += new Score_button 
+        	contents += new Rules_button
         	case 5 => contents += new Option_button
         	contents += new BackgroundCase (1, 3)
         	contents += new Exit_button
@@ -120,7 +123,22 @@ object DrawNotYet {
 
 object DrawParameters {
 	val nb_option_max = 5
+	var lines = new Array[String](4)
+	var i = 0
+	for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
+    	lines (i) = line.toString
+    	i += 1
+    	println ("Ok")
+	}
 
+	def write_parameters () = {
+		var writer = new PrintWriter(new File ("src/main/resources/Parameters"))
+		for (i <- 0 to 3) {
+			writer.write(lines(i) + "\n")
+		}
+		writer.close
+	}
+	
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
 		border = new javax.swing.border.LineBorder (Color.black, 3)
@@ -128,8 +146,9 @@ object DrawParameters {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Texture_small_" + number.toString + ".png")
 			def apply = {
 				Constants.small_texture_path = "Texture_small_" + number.toString + ".png"
-				Constants.big_texture_path = "Texture_big_" + number.toString + ".png"
 				Ksparov.frame.contents = new DrawParameters.Parameters
+				lines(1) = number.toString
+				write_parameters ()
 			}
 		}
 	}
@@ -141,6 +160,7 @@ object DrawParameters {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
 			def apply {
 				Constants.pieces_path = "Pieces/" + number.toString + "/"
+				lines(0) = number.toString
 			}
 		}
 	}
