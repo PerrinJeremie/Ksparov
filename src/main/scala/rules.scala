@@ -160,10 +160,10 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   /*A pawn can go one (or two if it is on its starting case) case forward and eventually in diagonal to attack another piece*/
   def pattern(x_a : Int, y_a : Int)={
     if (player == 1) {
-      pos_x==x_a && (y_a==pos_y+1 || y_a==pos_y+2 && y_a==1) || ( (y_a==pos_y+1) && (math.abs(pos_x-x_a)==1) )
+      pos_x==x_a && (y_a==pos_y+1 || y_a==pos_y+2 && pos_y == 1) || ( (y_a==pos_y+1) && (math.abs(pos_x-x_a)==1) )
     }
     else {
-      pos_x==x_a && (y_a==pos_y-1 || y_a==pos_y-2 && y_a==6) || ( (y_a==pos_y-1) && (math.abs(pos_x-x_a)==1) )
+      pos_x==x_a && (y_a==pos_y-1 || y_a==pos_y-2 && pos_y == 6) || ( (y_a==pos_y-1) && (math.abs(pos_x-x_a)==1) )
     }
   }
 
