@@ -26,6 +26,7 @@ object Constants {
   var game_type = 0
   var grid_cases = new Array[String](nb_case_board*nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+  var curr_player = 1
 }
 
 object Ksparov {
@@ -57,13 +58,31 @@ object Ksparov {
     }
   }
 
+  def isHis(x : Int, y : Int){
+    var b = false
+    Constants.curr_player match {
+      case 1 =>
+        for (i<- 0 to 15){
+          b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
+        }
+      case 2 =>
+        for (i<- 16 to 31){
+          b = b || (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y)
+        }
+    }
+  }
+
+  def play_move(x : Int, y : Int){
+    
+  }
+
   def init_game(n : Int){
+    Ksparov.init_board()
+    DrawActions.draw_game_board(Ksparov.board)
     n match {
-      case 1 => 
-                Ksparov.init_board()
-                DrawActions.draw_game_board(Ksparov.board)
-                joueur1 = new Human(1)
-                joueur0 = new Human(0)
+      case 1 =>
+        joueur1 = new Human(1)
+        joueur0 = new Human(0)
       case _ => ()
     }
   }

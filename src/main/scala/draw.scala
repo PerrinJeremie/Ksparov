@@ -269,6 +269,7 @@ object DrawBoard {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases(8 * x + y))
 			def apply = {
 				Constants.selected_case = x * 8 + y
+                Ksparov.play_move(x,y)
 			}
 		}
 	}
