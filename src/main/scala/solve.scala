@@ -12,16 +12,11 @@ class AI(player : Int) extends Player(player){
         Ksparov.board(ind).move(i,j,Ksparov.board)
       }
     }
-    
-    if (Constants.game_type == 3){
-      Thread.sleep(1000)
-    }
-
-    if (id == 1 ){
-      Ksparov.joueur0.getmove
-    }
-    else{
-      Ksparov.joueur1.getmove
+    DrawActions.draw_game_board(Ksparov.board)
+    Constants.game_type match {
+      case 3 => 
+        Switches.curr_player = 1 - id
+      case _ => Ksparov.joueur1.getmove
     }
   }
 }

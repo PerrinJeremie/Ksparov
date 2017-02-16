@@ -124,24 +124,30 @@ object Ksparov {
     println ("m1 " +  Switches.move1.toString )
     println ("m2 " + Switches.move2.toString )
     println (Switches.curr_player)
-
-    if (isHis(x,y) && Switches.move1) {
-      Switches.move2 = true
-      Switches.move1 = false
-      get_piece_of_pos(x,y)
-    }
-    else{
-      if ( Switches.move2 ) {
-        var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
-        if (b &&( Switches.curr_player == 1)){
-          DrawActions.draw_game_board(Ksparov.board)
-          joueur0.getmove
+    Constants.game_type match {
+      case 3 => Switches.curr_player match {
+        case 1 => joueur1.getmove
+        case 0 => joueur0.getmove
+      }
+      case _ =>
+        if (isHis(x,y) && Switches.move1) {
+          Switches.move2 = true
+          Switches.move1 = false
+          get_piece_of_pos(x,y)
         }
         else{
-          DrawActions.draw_game_board(Ksparov.board)
-          joueur1.getmove
+          if ( Switches.move2 ) {
+            var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
+            if (b &&( Switches.curr_player == 1)){
+              DrawActions.draw_game_board(Ksparov.board)
+              joueur0.getmove
+            }
+            else{
+              DrawActions.draw_game_board(Ksparov.board)
+              joueur1.getmove
+            }
+          }
         }
-      }
     }
   }
 
