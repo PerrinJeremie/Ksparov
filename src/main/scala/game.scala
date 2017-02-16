@@ -11,6 +11,10 @@ class Player(n:Int) {
 }
 
 class Human(n:Int) extends Player(n:Int) {
+  override def getmove : Unit ={
+    Switches.move1 = true
+    Switches.move2 = false
+    Switches.curr_player = id}
 }
 
 object Constants {
@@ -50,10 +54,16 @@ object Constants {
   /* Game variables: the case selected by the player, the type of setup for the game
      and arrays for the game board and the dead pieces */
   var selected_case = 0
+  var selected_piece = -1
   var game_type = 0
   var grid_cases = new Array[String](nb_case_board*nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+}
+
+object Switches {
   var curr_player = 1
+  var move1 = false
+  var move2 = false
 }
 
 object Ksparov {
@@ -86,22 +96,51 @@ object Ksparov {
     }
   }
 
-  def isHis(x : Int, y : Int){
-    var b = false
-    Constants.curr_player match {
+  def isHis(x : Int, y : Int) : Boolean = {
+    var b = false 
+    Switches.curr_player match {
       case 1 =>
         for (i<- 0 to 15){
           b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
         }
-      case 2 =>
+      case 0 =>
         for (i<- 16 to 31){
-          b = b || (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y)
+          b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
         }
+    }
+    return b
+  }
+
+  def get_piece_of_pos(x:Int,y:Int){
+    for (i <- 0 to 31){
+      if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y){
+        Constants.selected_piece = i
+      }
     }
   }
 
-  def play_move(x : Int, y : Int){
-    
+  def play_move(x : Int, y : Int) {
+    println ("m1 " +  Switches.move1.toString )
+    println ("m2 " + Switches.move2.toString )
+    println (Switches.curr_player)
+    if (isHis(x,y) && Switches.move1) {
+      Switches.move2 = true
+      Switches.move1 = false
+      get_piece_of_pos(x,y)
+    }
+    else{
+      if ( Switches.move2 ) {
+        var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
+        if (b &&( Switches.curr_player == 1)){
+          DrawActions.draw_game_board(Ksparov.board)
+          joueur0.getmove
+        }
+        else{
+          DrawActions.draw_game_board(Ksparov.board)
+          joueur1.getmove
+        }
+      }
+    }
   }
 
   def init_game(n : Int){
@@ -111,6 +150,19 @@ object Ksparov {
       case 1 =>
         joueur1 = new Human(1)
         joueur0 = new Human(0)
+        Switches.move1 = true
+        Switches.move2 = false
+        Switches.curr_player = 1
+      case 2 => 
+        joueur1 = new Human(1)
+        joueur0 = new AI(0)
+        Switches.move1 = true
+        Switches.move2 = false
+        Switches.curr_player = 1
+      case 3 =>
+        joueur1 = new AI(1)
+        joueur0 = new AI(0)
+        joueur1.getmove
       case _ => ()
     }
   }

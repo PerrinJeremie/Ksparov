@@ -420,6 +420,7 @@ object DrawActions {
 		var coord = 0
 		var player_path = ""
 		var piece_path = ""
+        Constants.grid_cases = new Array[String](Constants.nb_case_board*Constants.nb_case_board)
 		for (i <- 0 to game_board.length - 1) {
 			coord = game_board(i).pos_x * 8 + game_board(i).pos_y
 			if (coord >= 0) {
