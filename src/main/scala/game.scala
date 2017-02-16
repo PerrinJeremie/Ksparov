@@ -14,7 +14,7 @@ class Human(n:Int) extends Player(n:Int) {
   override def getmove : Unit ={
     Switches.move1 = true
     Switches.move2 = false
-    Switches.curr_player = id}
+    Switches.curr_player =id}
 }
 
 object Constants {
@@ -62,6 +62,7 @@ object Constants {
 
 object Switches {
   var curr_player = 1
+  var aIready = true
   var move1 = false
   var move2 = false
 }
@@ -123,6 +124,7 @@ object Ksparov {
     println ("m1 " +  Switches.move1.toString )
     println ("m2 " + Switches.move2.toString )
     println (Switches.curr_player)
+
     if (isHis(x,y) && Switches.move1) {
       Switches.move2 = true
       Switches.move1 = false
@@ -162,7 +164,6 @@ object Ksparov {
       case 3 =>
         joueur1 = new AI(1)
         joueur0 = new AI(0)
-        joueur1.getmove
       case _ => ()
     }
   }
