@@ -1,0 +1,15 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}L'organisation du code}{2}
+\contentsline {subsection}{\numberline {1.1}draw.scala ou l'interface utilisateur}{2}
+\contentsline {paragraph}{Les fonctionnalit\IeC {\'e}s de l'interface :}{2}
+\contentsline {paragraph}{L'organisation g\IeC {\'e}n\IeC {\'e}rale d'un objet Draw... :}{2}
+\contentsline {paragraph}{Les param\IeC {\`e}tres :}{2}
+\contentsline {paragraph}{Le plateau de jeu :}{2}
+\contentsline {subsection}{\numberline {1.2}rules.scala ou l'impl\IeC {\'e}mentation des r\IeC {\`e}gles des \IeC {\'e}checs}{3}
+\contentsline {subsection}{\numberline {1.3}game.scala ou la partie qui n'avance pas}{3}
+\contentsline {subsection}{\numberline {1.4}solve.scala ou la partie, pour le moment, sans int\IeC {\'e}r\IeC {\^e}t}{3}
+\contentsline {section}{\numberline {2}Les points cl\IeC {\'e}s de l'impl\IeC {\'e}mentation}{3}
+\contentsline {section}{\numberline {3}Les d\IeC {\'e}fauts et erreurs connus}{3}
+\contentsline {section}{\numberline {4}Pourquoi le design est magnifique}{3}
+\contentsline {section}{\numberline {5}Pourquoi je suis beau}{3}
+\contentsline {section}{\numberline {6}Pourquoi pas ?}{3}

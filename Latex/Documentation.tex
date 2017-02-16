@@ -1,0 +1,112 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc} 
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{caption} 
+\usepackage{geometry}
+\usepackage{ulem}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{changepage}
+\usepackage{eurosym}
+\usepackage{dsfont}
+\usepackage{stmaryrd}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{turnstile}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\geometry{hmargin=2.5cm,vmargin=1.8cm}
+
+\begin{document}
+\begin{titlepage}
+~\\
+BOUSSIDAN Aaron, PERRIN Jérémie et REY Simon\\[5cm]
+\begin{center}
+\HRule 
+\\[0.4cm]{\huge\bfseries Projet de Programmation 2 - Ksparov\\[0.4cm]}
+\HRule \\[0.5cm] 
+Année 2016-2017, Semestre 2\\[12cm]
+\includegraphics[scale=0.7]{Images/Logo_ENS_PS.jpg}
+\end{center}
+\end{titlepage}
+\tableofcontents
+
+\newpage
+
+De tout temps les Hommes ont cherché à jouer aux échecs ! Depuis les début de l'informatique moderne et le développement grand public des micro-processeur de nombreuses applications ont vu le jour pour permettre à tout le monde de jouer aux échecs. \\
+
+En effet qui ne rêve pas de pouvoir s'entraîner sans relâche pour atteindre le niveau d'un Bobby Fischer, ou de pouvoir revivre des parties de légende comme la finale de 1985 opposant Kasparov à Karpov. \\
+
+Vous faire vivre cela, et bien plus encore, a été notre leitmotiv durant le développement de cette application. Voici la première version du meilleur jeu d'échec jamais créé, voici Ksparov !
+
+\begin{flushright}
+\textit{Le plus grand jeu de l'esprit jamais inventé, plus vous l'apprenez, plus vous y prenez du plaisir.}\\
+
+Garry Kasparov
+\end{flushright}
+
+\section{L'organisation du code}
+
+Le code de notre projet a été divisé en quatre parties (chacune dans un fichier) qui correspondent chacune à une fonction particulière du code. On retrouve donc : 
+\begin{itemize}
+\item draw.scala qui comprend tout ce qui concerne l'affichage de l'interface du jeu
+\item rules.scala qui implémente toutes les règles du jeu pour chaque pièce
+\item game.scala qui gère le lancement du jeu et qui fait l'interface entre les règles et l'application
+\item solve.scala qui défini ce qui a trait à la résolution par l'intelligence artificielle
+\end{itemize}~ 
+
+Nous allons donc à présent étudier en détail chacun de ces fichiers. 
+
+\subsection{draw.scala ou l'interface utilisateur}
+
+Le code a ici été séparé en plusieurs objets, chaque objet comprend tout ce qui concerne l'affichage d'une fenêtre particulière. Nous retrouvons donc un objet pour le menu initial, un pour le réglage des paramètres, un pour le plateau de jeu... 
+
+\paragraph{Les fonctionnalités de l'interface :}L'interface a été créé de manière à pouvoir implémenter tout le projet, les trois parties, sans avoir à la modifiée à chaque phase. Ainsi le jeu s'ouvre sur un menu général permettant pour le moment de lancer une partie, de modifier les paramètres et de quitter le jeu. Des boutons existent déjà pour le chargement d'une partie, les scores des joueurs... mais ne sont pas fonctionnel. \\
+
+Le lancement d'une partie fait appel à un autre menu, celui qui permet de choisir le mode de jeu pour la partie : Humain/Humain, Humain/IA ou IA/IA. 
+
+\paragraph{L'organisation générale d'un objet Draw... :}Chaque objet du fichier draw.scala a un nom construit comme DrawFenetre où Fenetre est l'élément affiché par cet objet (DrawParameters, DrawMenu, DrawBoard...). Tous les objets sont construits de la même manière et on y retrouve les mêmes classes : tout les éléments d'une fenêtre sont des extensions de GridPanel qui sont ensuite organisés par via un BorderPanel. Au total toute fenêtre est découpée en carré de 80 pixel. \\
+
+Pour avoir un code plus propre une classe commune à tous les objets a été créé : BackgroundCase qui étend un GridPanel et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond. 
+
+\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétique mais ceci est un autre problème. Les paramètres sont enregistrés dans un fichier : src/main/resources/Parameters ce qui permet de conserver les choix pour chaque ouverture de l'application. 
+
+\paragraph{Le plateau de jeu :}Le plateau de jeu est, heureusement, la fenêtre la plus complète, on y retrouve plusieurs éléments. \\
+
+Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces se rajoutent via une icône. La particularité étant que le plateau dessine aussi les pièces lorsque l'on en créé une nouvelle instance. \\
+
+Sur chaque coté du plateau on retrouve un compte des pièces mortes pour chaque joueur. Ceci est fait par le dessin des pièces en considérant que les positions négatives correspondent aux pièces mortes. \\
+
+Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le moment simplement de revenir au menu. 
+
+\subsection{rules.scala ou l'implémentation des règles des échecs}
+
+\subsection{game.scala ou la partie qui n'avance pas}
+
+\subsection{solve.scala ou la partie, pour le moment, sans intérêt}
+
+\section{Les points clés de l'implémentation}
+
+Là et là !
+
+\section{Les défauts et erreurs connus}
+
+L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
+
+A vous ! 
+
+\section{Pourquoi le design est magnifique}
+
+Parce que je l'ai réalisé !
+
+\section{Pourquoi je suis beau}
+
+Parce que !
+
+\section{Pourquoi pas ?}
+
+Et oui !
+
+\end{document}
