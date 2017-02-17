@@ -84,17 +84,17 @@ object Ksparov {
   def init_board(){
     for (p <- 0 to 1) {
       for(i <- 0 to 7) {
-        board((1-p)*16 + i) = new Pawn(p,1+p*5,i)
+        board((1-p)*16 + i) = new Pawn(p,i,1+(1-p)*5)
         }
-      board( 8 + (1-p)*16) = new Rook(p,p*7,0)
-      board( 9 + (1-p)*16) = new Rook(p,p*7,7)
-      board( 10 + (1-p)*16) = new Knight(p,p*7,1)
-      board( 11 + (1-p)*16) = new Knight(p,p*7,6)
-      board( 12 + (1-p)*16) = new Bishop(p,p*7,2)
-      board( 13 + (1-p)*16) = new Bishop(p,p*7,5)
-      board( 14 + (1-p)*16) = new King(p,p*7,4)
-      board( 15 + (1-p)*16) = new Queen(p,p*7,3)
-    }
+      board( 8 + (1-p)*16) = new Rook(p,0, (1-p)*7)
+      board( 9 + (1-p)*16) = new Rook(p,7,(1-p)*7)
+      board( 10 + (1-p)*16) = new Knight(p,1,(1-p)*7)
+      board( 11 + (1-p)*16) = new Knight(p,6,(1-p)*7)
+      board( 12 + (1-p)*16) = new Bishop(p,2,(1-p)*7)
+      board( 13 + (1-p)*16) = new Bishop(p,5,(1-p)*7)
+      board( 14 + (1-p)*16) = new King(p,4,(1-p)*7)
+      board( 15 + (1-p)*16) = new Queen(p,3,(1-p)*7)
+    }    
   }
 
   def isHis(x : Int, y : Int) : Boolean = {
@@ -138,13 +138,16 @@ object Ksparov {
         else{
           if ( Switches.move2 ) {
             var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
-            if (b &&( Switches.curr_player == 1)){
+            if (b){
               DrawActions.draw_game_board(Ksparov.board)
-              joueur0.getmove
+              Switches.curr_player match {
+                case 1 => joueur0.getmove
+                case 0 => joueur1.getmove
+              }
             }
-            else{
-              DrawActions.draw_game_board(Ksparov.board)
-              joueur1.getmove
+            else {
+              Switches.move1 = true
+              Switches.move2 = false
             }
           }
         }

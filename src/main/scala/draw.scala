@@ -285,9 +285,9 @@ object DrawBoard {
 			background = Color.black
   		}
 		action = new Action ("") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases(8 * x + y))
+			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases(x + y * 8))
 			def apply = {
-				Constants.selected_case = x * 8 + y
+				Constants.selected_case = x + y * 8
                 Ksparov.play_move(x,y)
 			}
 		}
@@ -311,7 +311,8 @@ object DrawBoard {
 					if (j == -1 || j == Constants.nb_case_board) {
 						contents += new BackgroundCaseWithLabel ((i+1).toString)
 					} else {
-						contents += new Case (i, j)
+						/*Using 7 - i here because we want a "classic" repère (je sais pas comment le traduire en anglais)*/
+						contents += new Case (j, 7 - i)
 					}
 				}
 			}
@@ -420,9 +421,11 @@ object DrawActions {
 		var coord = 0
 		var player_path = ""
 		var piece_path = ""
+		/*Reinitializing the dead piece array */
+		Constants.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
         Constants.grid_cases = new Array[String](Constants.nb_case_board*Constants.nb_case_board)
 		for (i <- 0 to game_board.length - 1) {
-			coord = game_board(i).pos_x * 8 + game_board(i).pos_y
+			coord = game_board(i).pos_x + game_board(i).pos_y * 8
 			if (coord >= 0) {
 				game_board(i).name match {
    		     		case "autre" => piece_path = ""
