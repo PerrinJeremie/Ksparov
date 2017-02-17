@@ -47,7 +47,7 @@ object Constants {
       case 2 => text_color = Color.white
       case 3 => text_color = Color.black
       case 4 => text_color = Color.black
-      case 5 => text_color = Color.red
+      case 5 => text_color = Color.red 
     }
   }
   
@@ -56,7 +56,7 @@ object Constants {
   var selected_case = 0
   var selected_piece = -1
   var game_type = 0
-  var grid_cases = new Array[String](nb_case_board*nb_case_board)
+  var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 }
 
@@ -94,7 +94,7 @@ object Ksparov {
       board( 13 + (1-p)*16) = new Bishop(p,5,(1-p)*7)
       board( 14 + (1-p)*16) = new King(p,4,(1-p)*7)
       board( 15 + (1-p)*16) = new Queen(p,3,(1-p)*7)
-    }    
+    }
   }
 
   def isHis(x : Int, y : Int) : Boolean = {
@@ -134,6 +134,7 @@ object Ksparov {
           Switches.move2 = true
           Switches.move1 = false
           get_piece_of_pos(x,y)
+          DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
         }
         else{
           if ( Switches.move2 ) {

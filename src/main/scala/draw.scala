@@ -176,7 +176,7 @@ object DrawParameters {
 
 	class PiecesGrid extends GridPanel (1, 2 * nb_option_max - 1) {
 		for( i <- 1 to 2 * nb_option_max - 1) {
-			if (i % 2 == 0) {
+			if (i % 2 == 0 || i > 4) {
 				contents += new BackgroundCase (1, 1)
 			} else {
 				contents += new PieceOption (Math.round(i / 2) + 1)
@@ -218,8 +218,8 @@ object DrawGameSelection {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
 			Constants.game_type = num
-    		Ksparov.frame.contents = new DrawBoard.Board	
 		    Ksparov.init_game(num)
+    		Ksparov.frame.contents = new DrawBoard.Board	
 		}
 	}
 
@@ -280,15 +280,23 @@ object DrawBoard {
 	class Case (x : Int, y : Int) extends Button {
 		preferredSize = Constants.dim_small
 		if ((x + y) % 2 == 0) {
-			background = Color.white
-		} else {
 			background = Color.black
+		} else {
+			background = Color.white
   		}
 		action = new Action ("") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + Constants.grid_cases(x + y * 8))
 			def apply = {
 				Constants.selected_case = x + y * 8
+				background = Color.red
                 Ksparov.play_move(x,y)
+			}
+		}
+	}
+
+	def create_grid_cases {
+		for (i <- 0 to Constants.nb_case_board - 1) {
+			for (j <- 0 to Constants.nb_case_board - 1) {
+				Constants.grid_cases (i + j * 8) = new Case (i, j)
 			}
 		}
 	}
@@ -311,8 +319,8 @@ object DrawBoard {
 					if (j == -1 || j == Constants.nb_case_board) {
 						contents += new BackgroundCaseWithLabel ((i+1).toString)
 					} else {
-						/*Using 7 - i here because we want a "classic" repère (je sais pas comment le traduire en anglais)*/
-						contents += new Case (j, 7 - i)
+						/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top */
+						contents += Constants.grid_cases (j + (7 - i) * 8)
 					}
 				}
 			}
@@ -344,28 +352,28 @@ object DrawBoard {
 
 	class Border1 extends GridPanel (Constants.nb_case, 3) {
 		for(i <- 0 to Constants.nb_case - 1) {
-			if (i < 3 || i > 7) {
+			if (i < 4 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
-				case 3 => 
+				case 4 => 
 					contents += new DeadCase (1, "Queen")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
 					contents += new BackgroundCase (1, 1)
-				case 4 => 
+				case 5 => 
 					contents += new DeadCase (1, "Bishop")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
 					contents += new BackgroundCase (1, 1)
-				case 5 =>
+				case 6 =>
 					contents += new DeadCase (1, "Knight")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
 					contents += new BackgroundCase (1, 1)
-				case 6 => 
+				case 7 => 
 					contents += new DeadCase (1, "Rook")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
 					contents += new BackgroundCase (1, 1)
-				case 7 => 
+				case 8 => 
 					contents += new DeadCase (1, "Pawn")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
 					contents += new BackgroundCase (1, 1)
@@ -376,28 +384,28 @@ object DrawBoard {
 
 	class Border0 extends GridPanel (Constants.nb_case, 2) {
 		for(i <- 0 to Constants.nb_case - 1) {
-			if (i < 2 || i > 6) {
+			if (i < 1 || i > 5) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
-				case 2 => 
+				case 1 => 
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
 					contents += new DeadCase (0, "Queen")
-				case 3 => 
+				case 2 => 
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
 					contents += new DeadCase (0, "Bishop")
-				case 4 =>
+				case 3 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
 					contents += new DeadCase (0, "Knight")
-				case 5 => 
+				case 4 => 
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
 					contents += new DeadCase (0, "Rook")
-				case 6 => 
+				case 5 => 
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
 					contents += new DeadCase (0, "Pawn")
@@ -423,12 +431,11 @@ object DrawActions {
 		var piece_path = ""
 		/*Reinitializing the dead piece array */
 		Constants.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
-        Constants.grid_cases = new Array[String](Constants.nb_case_board*Constants.nb_case_board)
+		DrawBoard.create_grid_cases
 		for (i <- 0 to game_board.length - 1) {
 			coord = game_board(i).pos_x + game_board(i).pos_y * 8
 			if (coord >= 0) {
 				game_board(i).name match {
-   		     		case "autre" => piece_path = ""
 					case "pawn" => piece_path = "Pawn.png"
 					case "queen" => piece_path = "Queen.png"
 					case "king" => piece_path = "King.png"
@@ -436,7 +443,7 @@ object DrawActions {
 					case "knight" => piece_path = "Knight.png"
 					case "bishop" => piece_path = "Bishop.png"
 				}
-				Constants.grid_cases(coord) = game_board(i).player.toString + "/" + piece_path
+				Constants.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
 			} else {
 				game_board(i).name match {
 					case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
@@ -448,5 +455,13 @@ object DrawActions {
 			}
 		}
 		Ksparov.frame.contents = new DrawBoard.Board
+	}
+
+	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int) {
+		Constants.grid_cases(pice_position_x + piece_position_y * 8).background = Color.red
+        for (i <- 0 to case_list.length - 1) {
+            var (k, l) = case_list(i)
+            Constants.grid_cases(k + 8 * l).background = Color.red
+        }
 	}
 }
