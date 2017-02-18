@@ -6,6 +6,7 @@ import scala.swing.BorderPanel.Position._
 import scala.io.Source
 import java.io.File
 import java.io.PrintWriter
+import scala.util.matching.Regex
 
 /*J'ai organisé ce fichier en plusieurs objets selon ce qu'ils
 dessinent : Menu, Board ou Action.*/
@@ -123,20 +124,6 @@ object DrawNotYet {
 
 object DrawParameters {
 	val nb_option_max = 5
-	var lines = new Array[String](4)
-	var i = 0
-	for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
-    	lines (i) = line.toString
-    	i += 1
-	}
-
-	def write_parameters () = {
-		var writer = new PrintWriter(new File ("src/main/resources/Parameters"))
-		for (i <- 0 to 3) {
-			writer.write(lines(i) + "\n")
-		}
-		writer.close
-	}
 	
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
@@ -144,8 +131,7 @@ object DrawParameters {
 		action = new Action("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Texture_small_" + number.toString + ".png")
 			def apply = {
-				lines(1) = number.toString
-				write_parameters ()
+				Constants.write_parameters ((Constants.pattern findAllIn Constants.pieces_path).mkString (","), number.toString)
 				Constants.apply_parameters 
 				Ksparov.frame.contents = new DrawParameters.Parameters
 			}
@@ -158,8 +144,8 @@ object DrawParameters {
 		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
 			def apply {
-				Constants.pieces_path = "Pieces/" + number.toString + "/"
-				lines(0) = number.toString
+				Constants.write_parameters (number.toString, (Constants.pattern findAllIn Constants.small_texture_path).mkString (","))
+				Constants.apply_parameters
 			}
 		}
 	}

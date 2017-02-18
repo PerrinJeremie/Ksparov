@@ -4,6 +4,9 @@ import java.awt.Dimension
 import java.awt.Color
 import scala.swing.BorderPanel.Position._
 import scala.io.Source
+import java.io.File
+import java.io.PrintWriter
+import scala.util.matching.Regex
 
 class Player(n:Int) {
   val id:Int = n
@@ -32,24 +35,34 @@ object Constants {
   var pieces_path = ""
   var small_texture_path = ""
   var text_color = Color.black
+  val pattern = new Regex("\\d")
 
   def apply_parameters = {
-    var lines = new Array[String](4)
+    var lines = new Array[String](3)
     var i = 0
     for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
       lines (i) = line.toString
       i += 1
     }
-    pieces_path = "Pieces/" + lines(0) + "/"
-    small_texture_path = "Texture_small_" + lines(1) + ".png"
+    pieces_path = "Pieces/" + lines(1) + "/"
+    small_texture_path = "Texture_small_" + lines(2) + ".png"
     text_color = Color.black
-    lines(1).toInt match {
+    lines(2).toInt match {
       case 1 => text_color = Color.white
       case 2 => text_color = Color.white
       case 3 => text_color = Color.black
       case 4 => text_color = Color.black
       case 5 => text_color = Color.red 
     }
+  }
+
+  def write_parameters (piece : String, texture : String) {
+    var writer = new PrintWriter(new File ("src/main/resources/Parameters"))
+    writer.write ("Lines of this file : 1 - Pieces, 2 - Texture\n")
+    writer.write (piece + "\n")
+    writer.write (texture + "\n")
+    writer.close
+
   }
   
   /* Game variables: the case selected by the player, the type of setup for the game
