@@ -477,10 +477,12 @@ object DrawActions {
 		}
 	}
 
-	/* Draw a given message on the board, the type of message is 1 for who have to play, 
-	   2 it there is check and 3 for mate */
+	/* Draw a given message on the board, the type of message is : 0 for the initial message 
+	   1 for who have to play, 2 if there is check and 3 for mate */
 	def draw_messages (message_type : Int) {
 		message_type match {
+			case 0 => Constants.message_drawer.text = "Bienvenu dans Ksparov, les blancs commençent la partie !"
+					Constants.message_drawer.foreground = Color.black
 			case 1 => Switches.curr_player match {
 				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
 					Constants.message_drawer.foreground = Color.black

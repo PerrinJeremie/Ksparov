@@ -72,6 +72,7 @@ object Constants {
   var game_type = 0
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+  var game_won = false
 
   var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur blanc !")
 }
@@ -137,13 +138,9 @@ object Ksparov {
   }
 
   def play_move(x : Int, y : Int) {
-    println("Y a t il echec et mat ?")
-    if (Checkmate.check_mate (Ksparov.board, 0) || Checkmate.check_mate (Ksparov.board, 1)) {
-      DrawActions.draw_messages (3)
-      println("Echec et mat")
-    } else {
-      println("Non")
-      println("")
+    if (Constants.game_won) {
+
+      } else {
     Constants.game_type match {
       case 3 => Switches.curr_player match {
         case 1 => joueur1.getmove
@@ -163,9 +160,14 @@ object Ksparov {
             if (b){
               DrawActions.draw_game_board(Ksparov.board)
               DrawActions.draw_messages (1)
-              Switches.curr_player match {
-                case 1 => joueur0.getmove
-                case 0 => joueur1.getmove
+              if (Checkmate.check_mate (Ksparov.board, 0) || Checkmate.check_mate (Ksparov.board, 1)) {
+                DrawActions.draw_messages (3)
+                Constants.game_won = true
+              } else {
+                Switches.curr_player match {
+                  case 1 => joueur0.getmove
+                  case 0 => joueur1.getmove
+                }
               }
             }
             else {
@@ -199,6 +201,8 @@ object Ksparov {
         joueur0 = new AI(0)
       case _ => ()
     }
+    Constants.game_won = false
+    DrawActions.draw_messages (0)
   }
 
   /*On ne fait qu'une application, c'est simplement que l'on change de 
