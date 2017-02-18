@@ -338,7 +338,7 @@ object DrawBoard {
 
 	class MessageDrawer (message : String) extends Label {
 		preferredSize = new Dimension (400, 80)
-		background = new Color (200, 200, 200)
+		background = new Color (220, 220, 220)
 		opaque = true
 		foreground = Color.black
 		text = message
@@ -474,6 +474,20 @@ object DrawActions {
 			} else {
 				Constants.grid_cases(i).background = Color.white
 			}
+		}
+	}
+
+	/* Draw a given message on the board, the type of message is 1 for who have to play, 
+	   2 it there is check and 3 for mate */
+	def draw_messages (message_type : Int) {
+		message_type match {
+			case 1 => Switches.curr_player match {
+				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
+				case 1 => Constants.message_drawer.text = "La main est au joueur noir !"
+			}
+			case 2 => Constants.message_drawer.text = "Le joueur est en échec !"
+			case 3 => Constants.message_drawer.text = "Echec et mat, victoire pour le joueur !"
+				Constants.message_drawer.foreground = Color.red
 		}
 	}
 }

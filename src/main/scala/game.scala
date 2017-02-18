@@ -72,7 +72,8 @@ object Constants {
   var game_type = 0
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
-  var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur 0")
+
+  var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur blanc !")
 }
 
 object Switches {
@@ -157,7 +158,7 @@ object Ksparov {
             var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
             if (b){
               DrawActions.draw_game_board(Ksparov.board)
-              Constants.message_drawer.text = "La main est au joueur " + Switches.curr_player.toString
+              DrawActions.draw_messages (1)
               Switches.curr_player match {
                 case 1 => joueur0.getmove
                 case 0 => joueur1.getmove
