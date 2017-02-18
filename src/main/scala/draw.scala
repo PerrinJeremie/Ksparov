@@ -336,6 +336,21 @@ object DrawBoard {
 		}
 	}
 
+	class MessageDrawer (message : String) extends Label {
+		preferredSize = new Dimension (400, 80)
+		background = new Color (200, 200, 200)
+		opaque = true
+		foreground = Color.black
+		text = message
+		border = new javax.swing.border.LineBorder (Color.black, 1)
+	}
+
+	class Footer extends BorderPanel {
+		layout(new BackgroundCase (1, 5)) = East
+		layout(new BackgroundCase (1, 5)) = West
+		layout(Constants.message_drawer) = Center
+	}
+
 	class Border1 extends GridPanel (Constants.nb_case, 3) {
 		for(i <- 0 to Constants.nb_case - 1) {
 			if (i < 4 || i > 8) {
@@ -404,6 +419,7 @@ object DrawBoard {
 		layout(new Header) = North
 		layout(new Border1) = West
 		layout(new Border0) = East
+		layout(new Footer) = South
 		layout(new Grid) = Center
 	}
 }
