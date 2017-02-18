@@ -330,7 +330,7 @@ object DrawBoard {
 	class Header extends GridPanel (2, 2) {
 		contents += new Button {
 			action = Action ("Recommencer une partie") {
-	    		Ksparov.frame.contents = new DrawNotYet.NotYet
+	    		Ksparov.frame.contents = new DrawGameSelection.Menu
 			}
 		}
 		contents += new Button {

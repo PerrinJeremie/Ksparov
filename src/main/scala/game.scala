@@ -7,6 +7,7 @@ import scala.io.Source
 
 class Player(n:Int) {
   val id:Int = n
+  var ia = false
   def getmove = ()
 }
 

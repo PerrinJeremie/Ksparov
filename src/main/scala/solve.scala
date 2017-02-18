@@ -1,4 +1,5 @@
 class AI(player : Int) extends Player(player){
+	ia = true
   override def getmove(){
     val r = scala.util.Random
     var b = true
