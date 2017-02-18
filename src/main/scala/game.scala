@@ -222,6 +222,7 @@ object Ksparov {
     }
     Constants.game_won = false
     DrawActions.draw_messages (0)
+    Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
   }
 
   /*On ne fait qu'une application, c'est simplement que l'on change de 
