@@ -483,11 +483,22 @@ object DrawActions {
 		message_type match {
 			case 1 => Switches.curr_player match {
 				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
+					Constants.message_drawer.foreground = Color.black
 				case 1 => Constants.message_drawer.text = "La main est au joueur noir !"
+					Constants.message_drawer.foreground = Color.black
 			}
-			case 2 => Constants.message_drawer.text = "Le joueur est en échec !"
-			case 3 => Constants.message_drawer.text = "Echec et mat, victoire pour le joueur !"
-				Constants.message_drawer.foreground = Color.red
+			case 2 => Switches.curr_player match {
+				case 0 => Constants.message_drawer.text = "Le joueur noir est en échec !"
+					Constants.message_drawer.foreground = Color.red
+				case 1 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
+					Constants.message_drawer.foreground = Color.red
+			}
+			case 3 => Switches.curr_player match {
+				case 0 => Constants.message_drawer.text = "Echec et mat, le joueur noir gagne la partie !"
+					Constants.message_drawer.foreground = Color.red
+				case 1 => Constants.message_drawer.text = "Echec et mat, le joueur blanc gagne la partie !"
+					Constants.message_drawer.foreground = Color.red
+			}
 		}
 	}
 }

@@ -46,7 +46,10 @@ object Aux{
           var (dir_x,dir_y)= Aux.get_dirs(x, x_king, y, y_king)
           //Checking if the piece can actually attack the king :
           var (clear,piece_on_arrival) = p.clear_path(x, y, x_king, y_king, g, dir_x, dir_y)
-          if (clear) {attacks(1-color) = attacks(1-color):+p}
+          if (clear) {
+            attacks(1-color) = attacks(1-color):+p
+            DrawActions.draw_messages (2)
+          }
         }
       }
     }
