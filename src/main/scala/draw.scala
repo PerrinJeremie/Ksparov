@@ -450,4 +450,14 @@ object DrawActions {
             Constants.grid_cases(k + 8 * l).background = Color.red
         }
 	}
+
+	def clear_possible_moves () {
+		for (i <- 0 to 63) {
+			if ((i % 8 + i / 8) % 2 == 0) {
+				Constants.grid_cases(i).background = Color.black
+			} else {
+				Constants.grid_cases(i).background = Color.white
+			}
+		}
+	}
 }

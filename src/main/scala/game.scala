@@ -165,6 +165,7 @@ object Ksparov {
               Switches.move2 = false
             }
           }
+          DrawActions.clear_possible_moves
         }
     }
   }
