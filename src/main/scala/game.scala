@@ -72,7 +72,7 @@ object Constants {
   var game_type = 0
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
-  var message_drawer = new DrawBoard.MessageDrawer ("")
+  var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur 0")
 }
 
 object Switches {
