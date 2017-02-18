@@ -8,7 +8,7 @@ object Aux{
 
   /*Checks if basic conditions for a piece movement are satisfied */
   def checks_pre_move(x : Int, x_a : Int, y : Int, y_a : Int, f : (Int,Int)=>(Boolean)) = {
-    f(x_a,y_a) &&  on_board(x, y) && !(x_a==x && y_a==y)
+    f(x_a,y_a) &&  on_board(x, y) && on_board(x_a, y_a) && !(x_a == x && y_a == y)
   }
 
   /*Returns the directions of a movement (-1, 0 or 1) */
@@ -43,7 +43,7 @@ object Aux{
         var y_king = kings(2*color+1)
         //Checking the validity of the move :
         if (Aux.checks_pre_move(x, x_king, y, y_king, p.pattern)){
-          var (dir_x,dir_y)= Aux.get_dirs(x, x_king, y, y_king)
+          var (dir_x,dir_y) = Aux.get_dirs(x, x_king, y, y_king)
           //Checking if the piece can actually attack the king :
           var (clear,piece_on_arrival) = p.clear_path(x, y, x_king, y_king, g, dir_x, dir_y)
           if (clear) {
@@ -140,8 +140,8 @@ def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece])={
     pos_y = y_a ;
     if (p_arrival != None) {
       p_arrival.get.pos_x = (-1) ; p_arrival.get.pos_y= (-1) }
-      var king = ( g find ( p => (p.name == "king" && p.player==(1-player)))).get
-      king.asInstanceOf[King].attackers = attackers
+    var king = ( g find ( p => (p.name == "king" && p.player==(1-player)))).get
+    king.asInstanceOf[King].attackers = attackers
     }
     (move_ok, p_arrival)
   }
@@ -223,7 +223,7 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "king"
   var attackers : List[Piece] = Nil
   var has_moved:Boolean = false
-  def attacked = !attackers.isEmpty
+  def attacked = attackers.nonEmpty
   def pattern(x_a : Int, y_a : Int)={
     (math.abs(pos_x-x_a)<=1) && (math.abs(pos_y-y_a)<=1)
   }
@@ -275,13 +275,13 @@ object Checkmate {
     var king = (g find ( p => (p.name == "king" && p.player==pl))).get
     var (x_king, y_king) = king.coords
     var checkmate = king.asInstanceOf[King].attacked
-    for (i<-(-1) to 1 ; j<-(-1) to 1){
+    for (i<-(-1) to 1 ; j<-(-1) to 1 if checkmate){
       checkmate = checkmate && !(move_is_possible (king, x_king+i, y_king+j, g))
     }
     var attackers = king.asInstanceOf[King].attackers
     if (checkmate && (attackers.size == 1) ) {
       var (x_att,y_att) = attackers(0).coords
-      for (p<-g if checkmate && p.player == pl){
+      for (p <- g if checkmate && p.player == pl){
         var (x,y) = (x_att, y_att)
         var (dir_x,dir_y) = Aux.get_dirs(x_att, x_king, y_att, y_king)
         if (attackers(0).name != "knight") {
