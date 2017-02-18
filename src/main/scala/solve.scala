@@ -3,7 +3,6 @@ class AI(player : Int) extends Player(player){
   override def getmove(){
     val r = scala.util.Random
     var b = true
-    println(0)
     while (b) {
       var ind = (1-id)*16 + r.nextInt(16)
       var t = Ksparov.board(ind).possible_moves(Ksparov.board)

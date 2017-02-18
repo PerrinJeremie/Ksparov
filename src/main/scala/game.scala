@@ -15,10 +15,10 @@ class Player(n:Int) {
 }
 
 class Human(n:Int) extends Player(n:Int) {
-  override def getmove : Unit ={
+  override def getmove : Unit = {
     Switches.move1 = true
     Switches.move2 = false
-    Switches.curr_player =id}
+    Switches.curr_player = id}
 }
 
 object Constants {
@@ -72,6 +72,7 @@ object Constants {
   var game_type = 0
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+  var kings = Array(new King (0, 4, 7), new King (1, 4, 0))
   var game_won = false
 
   var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur blanc !")
@@ -109,7 +110,7 @@ object Ksparov {
       board( 11 + (1-p)*16) = new Knight(p,6,(1-p)*7)
       board( 12 + (1-p)*16) = new Bishop(p,2,(1-p)*7)
       board( 13 + (1-p)*16) = new Bishop(p,5,(1-p)*7)
-      board( 14 + (1-p)*16) = new King(p,4,(1-p)*7)
+      board( 14 + (1-p)*16) = Constants.kings(p)
       board( 15 + (1-p)*16) = new Queen(p,3,(1-p)*7)
     }
   }
@@ -138,47 +139,65 @@ object Ksparov {
   }
 
   def play_move(x : Int, y : Int) {
+    /* Checking if the game has been won */
     if (Constants.game_won) {
-
-      } else {
-    Constants.game_type match {
-      case 3 => Switches.curr_player match {
-        case 1 => joueur1.getmove
-        case 0 => joueur0.getmove
-      }
-      case _ =>
-        if (isHis(x,y)) {
-          Switches.move2 = true
-          Switches.move1 = false
-          get_piece_of_pos(x,y)
-          DrawActions.clear_possible_moves
-          DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
+      /* Don't do anything, just wait for other button */
+    } else {
+      Constants.game_type match {
+        /* If we are IA vs IA */
+        case 3 => Switches.curr_player match {
+          case 1 => joueur1.getmove
+          case 0 => joueur0.getmove
         }
-        else{
-          if (Switches.move2) {
-            var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
-            if (b){
-              DrawActions.draw_game_board(Ksparov.board)
-              DrawActions.draw_messages (1)
-              if (Checkmate.check_mate (Ksparov.board, 0) || Checkmate.check_mate (Ksparov.board, 1)) {
-                DrawActions.draw_messages (3)
-                Constants.game_won = true
-              } else {
-                Switches.curr_player match {
-                  case 1 => joueur0.getmove
-                  case 0 => joueur1.getmove
+        /* Else : a least one human */
+        case _ =>
+          /* Check if the selected piece is own by the current player */
+          if (isHis(x,y)) {
+            /* If so validate the first clic and open the second click*/
+            Switches.move2 = true
+            Switches.move1 = false
+            /* Then select the piece of position and draw possible moves */
+            get_piece_of_pos(x,y)
+            DrawActions.clear_possible_moves
+            DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
+          } else {
+            /* If we are looking for the second click (the position) */
+            if (Switches.move2) {
+              /* b check if the move is valid, and p is the optionnal piece taken */
+              var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
+              if (b) {
+                /* If the move is valid, apply the new board */
+                DrawActions.draw_game_board(Ksparov.board)
+                /* Check if there is a mate after the move */
+                if (Checkmate.check_mate (Ksparov.board, 1 - Switches.curr_player)) {
+                  /* If so, finish the game */
+                  DrawActions.draw_messages (3)
+                  Constants.game_won = true
+                } else {
+                  /* Else check if there is check */
+                  if (Constants.kings(1 - Switches.curr_player).attacked) {
+                    DrawActions.draw_messages (2)
+                  } else {
+                    DrawActions.draw_messages (1)
+                  }
+                  /* Wait for the next move */
+                  Switches.curr_player match {
+                    case 1 => joueur0.getmove
+                    case 0 => joueur1.getmove
+                  }
                 }
+              /* If the move is invalid, research for a first click */
+              } else {
+                Switches.move1 = true
+                Switches.move2 = false
               }
             }
-            else {
-              Switches.move1 = true
-              Switches.move2 = false
-            }
+            /* Clear the possibles moves coloring */
+            DrawActions.clear_possible_moves
           }
-          DrawActions.clear_possible_moves
         }
+      }
     }
-  }}
 
   def init_game(n : Int){
     Ksparov.init_board()

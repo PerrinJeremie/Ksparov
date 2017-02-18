@@ -273,7 +273,6 @@ object DrawBoard {
 		action = new Action ("") {
 			def apply = {
 				Constants.selected_case = x + y * 8
-				background = Color.red
                 Ksparov.play_move(x,y)
 			}
 		}
@@ -452,7 +451,7 @@ object DrawActions {
 					case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
 					case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
 					case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
-					case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1 
+					case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1
 				}
 			}
 		}
@@ -490,9 +489,9 @@ object DrawActions {
 					Constants.message_drawer.foreground = Color.black
 			}
 			case 2 => Switches.curr_player match {
-				case 0 => Constants.message_drawer.text = "Le joueur noir est en échec !"
+				case 0 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
+				case 1 => Constants.message_drawer.text = "Le joueur noir est en échec !"
 					Constants.message_drawer.foreground = Color.red
 			}
 			case 3 => Switches.curr_player match {
