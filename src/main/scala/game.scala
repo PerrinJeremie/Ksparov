@@ -144,14 +144,15 @@ object Ksparov {
         case 0 => joueur0.getmove
       }
       case _ =>
-        if (isHis(x,y) && Switches.move1) {
+        if (isHis(x,y)) {
           Switches.move2 = true
           Switches.move1 = false
           get_piece_of_pos(x,y)
+          DrawActions.clear_possible_moves
           DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
         }
         else{
-          if ( Switches.move2 ) {
+          if (Switches.move2) {
             var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
             if (b){
               DrawActions.draw_game_board(Ksparov.board)
