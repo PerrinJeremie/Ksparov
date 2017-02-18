@@ -137,9 +137,13 @@ object Ksparov {
   }
 
   def play_move(x : Int, y : Int) {
-    println ("m1 " +  Switches.move1.toString )
-    println ("m2 " + Switches.move2.toString )
-    println (Switches.curr_player)
+    println("Y a t il echec et mat ?")
+    if (Checkmate.check_mate (Ksparov.board, 0) || Checkmate.check_mate (Ksparov.board, 1)) {
+      DrawActions.draw_messages (3)
+      println("Echec et mat")
+    } else {
+      println("Non")
+      println("")
     Constants.game_type match {
       case 3 => Switches.curr_player match {
         case 1 => joueur1.getmove
@@ -172,7 +176,7 @@ object Ksparov {
           DrawActions.clear_possible_moves
         }
     }
-  }
+  }}
 
   def init_game(n : Int){
     Ksparov.init_board()

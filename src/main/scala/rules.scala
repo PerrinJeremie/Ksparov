@@ -271,7 +271,7 @@ object Checkmate {
     possible
   }
   /*Checks if player pl has lost the game. */
-  def check_mate(g : Array[Piece], pl : Int) = {
+  def check_mate(g : Array[Piece], pl : Int) : Boolean = {
     var king = (g find ( p => (p.name == "king" && p.player==pl))).get
     var (x_king, y_king) = king.coords
     var checkmate = king.asInstanceOf[King].attacked
