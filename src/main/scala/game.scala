@@ -112,6 +112,7 @@ object Constants {
   var players = new Array[Player](2)
   var curr_player = 1
   var piece_choice_open = true
+  var game_nulle = false
   var game_won = false
 
   var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur blanc !")
@@ -169,6 +170,9 @@ object Ksparov {
           DrawActions.draw_messages (3)
           Constants.game_won = true
         } else {
+          if (Constants.game_nulle) {
+            DrawActions.draw_messages (5)
+          } else {
           /* Else check if there is check */
           if (Constants.kings(1 - Constants.curr_player).attacked) {
             DrawActions.draw_messages (2)
@@ -177,7 +181,7 @@ object Ksparov {
           }
           Constants.curr_player = 1 - Constants.curr_player
           Constants.piece_choice_open = true
-        }
+        }}
       }
       if (Constants.players(Constants.curr_player).ai && Constants.game_type != 3) {
         play_move (0, 0)
@@ -203,6 +207,7 @@ object Ksparov {
         DrawActions.draw_messages (4)
     }
     Constants.game_won = false
+    Constants.game_nulle = false
     Constants.curr_player = 1 
   }
 
