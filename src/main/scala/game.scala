@@ -170,7 +170,7 @@ object Ksparov {
           Constants.game_won = true
         } else {
           /* Else check if there is check */
-          if (Constants.kings(0).attacked || Constants.kings(1).attacked) {
+          if (Constants.kings(1 - Constants.curr_player).attacked) {
             DrawActions.draw_messages (2)
           } else {
             DrawActions.draw_messages (1)
