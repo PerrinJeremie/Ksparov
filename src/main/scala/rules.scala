@@ -138,9 +138,15 @@ def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece])={
     pos_x = x_a ;
     pos_y = y_a ;
     if (p_arrival != None) {
-      p_arrival.get.pos_x = (-1) ; p_arrival.get.pos_y= (-1) }
+      p_arrival.get.pos_x = (-1) ; p_arrival.get.pos_y= (-1)
+    }
     var king = ( g find ( p => (p.name == "king" && p.player==(1-player)))).get
     king.asInstanceOf[King].attackers = attackers
+    name match {
+      case "rook" => this.asInstanceOf[Rook].has_moved = true
+      case "king" => this.asInstanceOf[King].has_moved = true
+      case _ => ()
+     }
     }
     (move_ok, p_arrival)
   }
@@ -227,9 +233,9 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
     (math.abs(pos_x-x_a)<=1) && (math.abs(pos_y-y_a)<=1)
   }
 
- /*An override is neccesary to handle the case of castling*/
-  /*override def pre_move (x_a : Int, y_a : Int, g : Array[Piece]) = {
-    if (!has_moved && !attacked && math.abs(pos_x-x_a) == 2) {
+  /*An override is neccesary to handle the case of castling*/
+  override def pre_move (x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
+    if (!has_moved && !attacked && math.abs(pos_x-x_a) == 2 && pos_y == y_a) {
       var dir_x = math.signum (x_a-pos_x)
       var x_rook = dir_x match {
         case 1 => 7
@@ -238,23 +244,42 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
       }
       var rook = Aux.piece_of_coord(x_rook, pos_y, g)
       var right_neighbor = Aux.piece_of_coord(x_rook + 1, pos_y, g)
-      if (rook != None && rook.get.name == "rook" && !rook.get.asInstanceOf[Rook].has_moved && right_neighbor == None){ //Lazy evaluation FTW !
+      if ( (rook != None) && (rook.get.name == "rook") && !rook.get.asInstanceOf[Rook].has_moved && (right_neighbor == None)) { //Lazy evaluation FTW !
         var (move_ok1, p_arrival1, l1) = super.pre_move(pos_x + dir_x, pos_y, g)
-        pos_x+= x_dir
+        pos_x += dir_x
         var (move_ok2, p_arrival2, l2) = super.pre_move(pos_x + dir_x, pos_y, g)
-        pos_x-= x_dir
-        if (clear1 && clear2 && p_arrival1 == None && p_arrival2 == None){
-          (true, None, l2)
-        }
-        else{
-          (false, p_arrival1, l2)
-        }
+        pos_x -= dir_x
+        (move_ok1 && move_ok2 && p_arrival1 == None && p_arrival2 == None, rook, l2)
       }
+     else {
+       (false, rook, Nil)
      }
-    else{
-    super.pre_move (x_a, y_a, g)
+    }
+    else {
+      super.pre_move (x_a, y_a, g)
+    }
   }
-} */
+
+  override def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece]) = {
+    var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
+    if (move_ok && math.abs(pos_x-x_a) == 2) {
+      pos_x = x_a ;
+      pos_y = y_a ;
+      var (x_rook, y_rook) = p_arrival.get.coords
+      p_arrival.get.pos_x = x_rook match {
+        case 0 => 3
+        case 7 => 5
+      }
+      p_arrival.get.asInstanceOf[Rook].has_moved = true
+      has_moved = true
+      var king = ( g find ( p => (p.name == "king" && p.player==(1-player)))).get
+      king.asInstanceOf[King].attackers = attackers
+      (move_ok, None)
+    }
+    else {
+      super.move (x_a, y_a, g)
+    }
+  }
 }
 
 class Queen (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
