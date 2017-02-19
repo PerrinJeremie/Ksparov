@@ -1,10 +1,10 @@
 \documentclass[a4paper]{article}
-\usepackage[T1]{fontenc} 
-\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage{graphicx}
 \usepackage{wrapfig}
-\usepackage{caption} 
+\usepackage{caption}
 \usepackage{geometry}
 \usepackage{ulem}
 \usepackage{amsmath,amsfonts,amssymb}
@@ -24,9 +24,9 @@
 ~\\
 BOUSSIDAN Aaron, PERRIN Jérémie et REY Simon\\[5cm]
 \begin{center}
-\HRule 
+\HRule
 \\[0.4cm]{\huge\bfseries Projet de Programmation 2 - Ksparov\\[0.4cm]}
-\HRule \\[0.5cm] 
+\HRule \\[0.5cm]
 Année 2016-2017, Semestre 2\\[12cm]
 \includegraphics[scale=0.7]{Images/Logo_ENS_PS.jpg}
 \end{center}
@@ -49,29 +49,29 @@ Garry Kasparov
 
 \section{L'organisation du code}
 
-Le code de notre projet a été divisé en quatre parties (chacune dans un fichier) qui correspondent chacune à une fonction particulière du code. On retrouve donc : 
+Le code de notre projet a été divisé en quatre parties (chacune dans un fichier) qui correspondent chacune à une fonction particulière du code. On retrouve donc :
 \begin{itemize}
 \item draw.scala qui comprend tout ce qui concerne l'affichage de l'interface du jeu
 \item rules.scala qui implémente toutes les règles du jeu pour chaque pièce
 \item game.scala qui gère le lancement du jeu et qui fait l'interface entre les règles et l'application
-\item solve.scala qui défini ce qui a trait à la résolution par l'intelligence artificielle
-\end{itemize}~ 
+\item solve.scala qui définit ce qui a trait à la résolution par l'intelligence artificielle
+\end{itemize}~
 
-Nous allons donc à présent étudier en détail chacun de ces fichiers. 
+Nous allons donc à présent étudier en détail chacun de ces fichiers.
 
 \subsection{draw.scala ou l'interface utilisateur}
 
-Le code a ici été séparé en plusieurs objets, chaque objet comprend tout ce qui concerne l'affichage d'une fenêtre particulière. Nous retrouvons donc un objet pour le menu initial, un pour le réglage des paramètres, un pour le plateau de jeu... 
+Le code a ici été séparé en plusieurs objets, chaque objet comprend tout ce qui concerne l'affichage d'une fenêtre particulière. Nous retrouvons donc un objet pour le menu initial, un pour le réglage des paramètres, un pour le plateau de jeu...
 
 \paragraph{Les fonctionnalités de l'interface :}L'interface a été créé de manière à pouvoir implémenter tout le projet, les trois parties, sans avoir à la modifiée à chaque phase. Ainsi le jeu s'ouvre sur un menu général permettant pour le moment de lancer une partie, de modifier les paramètres et de quitter le jeu. Des boutons existent déjà pour le chargement d'une partie, les scores des joueurs... mais ne sont pas fonctionnel. \\
 
-Le lancement d'une partie fait appel à un autre menu, celui qui permet de choisir le mode de jeu pour la partie : Humain/Humain, Humain/IA ou IA/IA. 
+Le lancement d'une partie fait appel à un autre menu, celui qui permet de choisir le mode de jeu pour la partie : Humain/Humain, Humain/IA ou IA/IA.
 
 \paragraph{L'organisation générale d'un objet Draw... :}Chaque objet du fichier draw.scala a un nom construit comme DrawFenetre où Fenetre est l'élément affiché par cet objet (DrawParameters, DrawMenu, DrawBoard...). Tous les objets sont construits de la même manière et on y retrouve les mêmes classes : tout les éléments d'une fenêtre sont des extensions de GridPanel qui sont ensuite organisés par via un BorderPanel. Au total toute fenêtre est découpée en carré de 80 pixel. \\
 
-Pour avoir un code plus propre une classe commune à tous les objets a été créé : BackgroundCase qui étend un GridPanel et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond. 
+Pour avoir un code plus propre une classe commune à tous les objets a été créé : BackgroundCase qui étend un GridPanel et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond.
 
-\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétique mais ceci est un autre problème. Les paramètres sont enregistrés dans un fichier : src/main/resources/Parameters ce qui permet de conserver les choix pour chaque ouverture de l'application. 
+\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétique mais ceci est un autre problème. Les paramètres sont enregistrés dans un fichier : src/main/resources/Parameters ce qui permet de conserver les choix pour chaque ouverture de l'application.
 
 \paragraph{Le plateau de jeu :}Le plateau de jeu est, heureusement, la fenêtre la plus complète, on y retrouve plusieurs éléments. \\
 
@@ -79,9 +79,26 @@ Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces s
 
 Sur chaque coté du plateau on retrouve un compte des pièces mortes pour chaque joueur. Ceci est fait par le dessin des pièces en considérant que les positions négatives correspondent aux pièces mortes. \\
 
-Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le moment simplement de revenir au menu. 
+Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le moment simplement de revenir au menu.
 
 \subsection{rules.scala ou l'implémentation des règles des échecs}
+
+\paragraph{Les fonctionnalités} Toutes les règles de base des échecs sont présentes, à l'exception de la prise en passant, de la promotion, et des règles conduisant à une égalité. (Notamment, il est possible de roquer dans le jeu !)
+
+\paragraph {Structure de rules} Toutes les pièces héritent d'une classe abstraite Piece, qui contient principalement une méthode utile pour le reste du jeu : la fonction move, qui effectue un mouvement. \\
+Chaque pièce particulière (pion, tours,..) hérite ensuite de Piece et se distingue par un "pattern" particulier, qui traduit l'ensemble de ses mouvements possibles.  \\
+Des méthodes plus générales sont présentes dans move, et ce qui concerne la vérification de l'échec et mat appartient à Checkmate.
+
+\paragraph {La fonction move, et ses fonctions auxiliaires} La fonction move sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
+Elle appelle pour cela une fonction pre_move, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
+pre_move vérifie plusieurs critères : si le mouvement est conforme aux déplacements de la pièce et à quelques règles basiques (ceci est effectué par Aux.checks_pre_move), si le chemin que veut suivre la pièce est libre et s'il y a une pièce adverse à l'arrivée (effectué par clear_path), et si ce mouvement met un ou deux rois en échec (effectué par check_check). \\
+
+\paragraph {Spécificité de certaines pièces} Le pion, qui est la seule pièce à avoir un déplacement non symétrique, possède un pattern un peu différent, qui est obligé de référer au joueur le contrôlant. \\
+Le cavalier, quant à lui, peut passer au dessus des autres pièces, et nécessite donc une modification de clear_path. \\
+Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, des booléens indiquant s'il est en échec et s'il a bougé, et a une version de move différente pour gérer le cas du roque.  \\
+
+\paragraph {check_mate, vérification de l'échec et mat} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction Checkmate.check_mate vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant (voir le prendre)
+
 
 \subsection{game.scala ou la partie qui n'avance pas}
 
@@ -91,11 +108,11 @@ Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le 
 
 Là et là !
 
-\section{Les défauts et erreurs connus}
+\section{Les défauts et erreurs connues}
 
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
 
-A vous ! 
+A vous !
 
 \section{Pourquoi le design est magnifique}
 
