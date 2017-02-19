@@ -9,16 +9,52 @@ import java.io.PrintWriter
 import scala.util.matching.Regex
 
 class Player(n:Int) {
-  val id:Int = n
-  var ia = false
+  val id : Int = n
+  var moved = false
+  var ai = false
   def getmove = ()
 }
 
-class Human(n:Int) extends Player(n:Int) {
+class Human(n : Int) extends Player(n : Int) {
+
+  def isHis(x : Int, y : Int) : Boolean = {
+    var b = false 
+    for (i <- (1 - id) * 16 to (2 - id) * 16 - 1) {
+      b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
+    }
+    return b
+  }
+
   override def getmove : Unit = {
-    Switches.move1 = true
-    Switches.move2 = false
-    Switches.curr_player = id}
+    /* Converting the case selected into x and y */
+    var x = Constants.selected_case % 8
+    var y = Constants.selected_case / 8
+    /* First click */
+      if (isHis(x,y)) {
+        /* If so validate the first clic and open the second click*/
+        Constants.piece_choice_open = false
+        /* Then select the piece of position and draw possible moves */
+        Ksparov.get_piece_of_pos(x,y)
+        DrawActions.clear_possible_moves
+        DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
+      } else {
+    /* Second click */
+    if (!Constants.piece_choice_open) {
+      /* valid check if the move is valid, and p is the optionnal piece taken */
+      var (valid,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
+      if (valid) {
+        /* If the move is valid, apply the new board */
+        DrawActions.draw_game_board(Ksparov.board)
+        Constants.players(Constants.curr_player).moved = true
+      /* If the move is invalid, research for a first click */
+      } else {
+        Constants.piece_choice_open = true
+        DrawActions.clear_possible_moves
+      }
+    }
+  }
+    /* Clear the possibles moves coloring */
+  }
 }
 
 object Constants {
@@ -73,16 +109,12 @@ object Constants {
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
   var kings = Array(new King (0, 4, 7), new King (1, 4, 0))
+  var players = new Array[Player](2)
+  var curr_player = 1
+  var piece_choice_open = true
   var game_won = false
 
   var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur blanc !")
-}
-
-object Switches {
-  var curr_player = 1
-  var aIready = true
-  var move1 = false
-  var move2 = false
 }
 
 object Ksparov {
@@ -115,21 +147,6 @@ object Ksparov {
     }
   }
 
-  def isHis(x : Int, y : Int) : Boolean = {
-    var b = false 
-    Switches.curr_player match {
-      case 1 =>
-        for (i<- 0 to 15){
-          b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
-        }
-      case 0 =>
-        for (i<- 16 to 31){
-          b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
-        }
-    }
-    return b
-  }
-
   def get_piece_of_pos(x:Int,y:Int){
     for (i <- 0 to 31){
       if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y){
@@ -143,86 +160,53 @@ object Ksparov {
     if (Constants.game_won) {
       /* Don't do anything, just wait for other button */
     } else {
-      Constants.game_type match {
-        /* If we are IA vs IA */
-        case 3 => Switches.curr_player match {
-          case 1 => joueur1.getmove
-          case 0 => joueur0.getmove
-        }
-        /* Else : a least one human */
-        case _ =>
-          /* Check if the selected piece is own by the current player */
-          if (isHis(x,y)) {
-            /* If so validate the first clic and open the second click*/
-            Switches.move2 = true
-            Switches.move1 = false
-            /* Then select the piece of position and draw possible moves */
-            get_piece_of_pos(x,y)
-            DrawActions.clear_possible_moves
-            DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
+      Constants.players(Constants.curr_player).getmove
+      if (Constants.players(Constants.curr_player).moved) {
+        Constants.players(Constants.curr_player).moved = false
+        /* Check if there is a mate after the move */
+        if (Checkmate.check_mate (Ksparov.board, 1 - Constants.curr_player)) {
+          /* If so, finish the game */
+          DrawActions.draw_messages (3)
+          Constants.game_won = true
+        } else {
+          /* Else check if there is check */
+          println(Constants.curr_player.toString + " actif")
+          if (Constants.kings(0).attacked || Constants.kings(1).attacked) {
+          println((1 - Constants.curr_player).toString + " est attaqué")
+            DrawActions.draw_messages (2)
           } else {
-            /* If we are looking for the second click (the position) */
-            if (Switches.move2) {
-              /* b check if the move is valid, and p is the optionnal piece taken */
-              var (b,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
-              if (b) {
-                /* If the move is valid, apply the new board */
-                DrawActions.draw_game_board(Ksparov.board)
-                /* Check if there is a mate after the move */
-                if (Checkmate.check_mate (Ksparov.board, 1 - Switches.curr_player)) {
-                  /* If so, finish the game */
-                  DrawActions.draw_messages (3)
-                  Constants.game_won = true
-                } else {
-                  /* Else check if there is check */
-                  if (Constants.kings(1 - Switches.curr_player).attacked) {
-                    DrawActions.draw_messages (2)
-                  } else {
-                    DrawActions.draw_messages (1)
-                  }
-                  /* Wait for the next move */
-                  Switches.curr_player match {
-                    case 1 => joueur0.getmove
-                    case 0 => joueur1.getmove
-                  }
-                }
-              /* If the move is invalid, research for a first click */
-              } else {
-                Switches.move1 = true
-                Switches.move2 = false
-              }
-            }
-            /* Clear the possibles moves coloring */
-            DrawActions.clear_possible_moves
+            DrawActions.draw_messages (1)
           }
+          Constants.curr_player = 1 - Constants.curr_player
+          Constants.piece_choice_open = true
         }
       }
+      if (Constants.players(Constants.curr_player).ai && Constants.game_type != 3) {
+        play_move (0, 0)
+      }
     }
+  }
 
-  def init_game(n : Int){
+  def init_game(n : Int) {
     Ksparov.init_board()
     DrawActions.draw_game_board(Ksparov.board)
+    DrawActions.draw_messages (0)
     n match {
       case 1 =>
-        joueur1 = new Human(1)
-        joueur0 = new Human(0)
-        Switches.move1 = true
-        Switches.move2 = false
-        Switches.curr_player = 1
-      case 2 => 
-        joueur1 = new Human(1)
-        joueur0 = new AI(0)
-        Switches.move1 = true
-        Switches.move2 = false
-        Switches.curr_player = 1
+        Constants.players(0) = new Human(0)
+        Constants.players(1) = new Human(1)
+      case 2 =>
+        Constants.players(1) = new Human(1)
+        Constants.players(0) = new AI(0)
       case 3 =>
-        joueur1 = new AI(1)
-        joueur0 = new AI(0)
+        Constants.players(0) = new AI(0)
+        Constants.players(1) = new AI(1)
+        DrawActions.draw_messages (4)
       case _ => ()
     }
     Constants.game_won = false
-    DrawActions.draw_messages (0)
     Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
+    Constants.curr_player = 1 
   }
 
   /*On ne fait qu'une application, c'est simplement que l'on change de 
