@@ -162,7 +162,7 @@ object DrawParameters {
 
 	class PiecesGrid extends GridPanel (1, 2 * nb_option_max - 1) {
 		for( i <- 1 to 2 * nb_option_max - 1) {
-			if (i % 2 == 0 || i > 4) {
+			if (i % 2 == 0 || i > 6) {
 				contents += new BackgroundCase (1, 1)
 			} else {
 				contents += new PieceOption (Math.round(i / 2) + 1)

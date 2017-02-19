@@ -83,8 +83,26 @@ Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le 
 
 \subsection{rules.scala ou l'implémentation des règles des échecs}
 
-\subsection{game.scala ou la partie qui n'avance pas}
+\subsection{game.scala, où alterner est important}
 
+Tout le soucis de cette partie est de bien alterner les différentes phases du jeu et ce de manière intuitive, comme l'éxecution n'est pas linéaire, a cause de l'action des joueurs sur l'interface, il faut un système de "pare-feux" qui fonctionne en s'appuyant sur le principe des sémaphores. Un objet Switches régule donc les différentes parties du programme qui sont  : \\
+
+\begin{itemize}
+	\item (1) le premier clic de séléction d'une piéce
+	\item (2) le deuxiéme clic qui peut être :
+		\begin{itemize}
+		\item	(a) un coup valide donc (3)
+		\item	(b) un coup invalide donc retour au (1)
+		\item   (c) la séléction d'une autre piéce donc (2)
+				
+		\end{itemize}
+	\item (3) le changement de joueur puis (1)
+\end{itemize}
+\vspace{0.5 cm}
+
+Pour cela trois variables binaires, la première se charge de stocker qui est le joueur courant, la deuxième si l'on doit attendre un clic de sélection de pièce, la troisième si l'on attend un clic de choix de mouvement. \\
+
+Autre spécificité de cette partie, elle fait le lien entre l'interface et les règles c'est donc là que se trouvent les constantes utiles à l'ensemble du programme.
 \subsection{solve.scala ou la partie, pour le moment, sans intérêt}
 
 \section{Les points clés de l'implémentation}
