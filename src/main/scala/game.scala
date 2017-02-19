@@ -108,7 +108,7 @@ object Constants {
   var game_type = 0
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
-  var kings = Array(new King (0, 4, 7), new King (1, 4, 0))
+  var kings = new Array[King](2)
   var players = new Array[Player](2)
   var curr_player = 1
   var piece_choice_open = true
@@ -170,9 +170,7 @@ object Ksparov {
           Constants.game_won = true
         } else {
           /* Else check if there is check */
-          println(Constants.curr_player.toString + " actif")
           if (Constants.kings(0).attacked || Constants.kings(1).attacked) {
-          println((1 - Constants.curr_player).toString + " est attaqué")
             DrawActions.draw_messages (2)
           } else {
             DrawActions.draw_messages (1)
@@ -188,6 +186,7 @@ object Ksparov {
   }
 
   def init_game(n : Int) {
+    Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
     Ksparov.init_board()
     DrawActions.draw_game_board(Ksparov.board)
     DrawActions.draw_messages (0)
@@ -202,10 +201,8 @@ object Ksparov {
         Constants.players(0) = new AI(0)
         Constants.players(1) = new AI(1)
         DrawActions.draw_messages (4)
-      case _ => ()
     }
     Constants.game_won = false
-    Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
     Constants.curr_player = 1 
   }
 

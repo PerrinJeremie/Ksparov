@@ -48,6 +48,7 @@ object Aux{
           var (clear,piece_on_arrival) = p.clear_path(x, y, x_king, y_king, g, dir_x, dir_y)
           if (clear) {
             attacks(1-color) = attacks(1-color):+p
+            println("Moi je peut t'attaquer")
           }
         }
       }
