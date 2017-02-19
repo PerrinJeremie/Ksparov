@@ -302,7 +302,7 @@ object DrawBoard {
 			} else {
 				for (j <- -1 to Constants.nb_case_board) {
 					if (j == -1 || j == Constants.nb_case_board) {
-						contents += new BackgroundCaseWithLabel ((i+1).toString)
+						contents += new BackgroundCaseWithLabel ((8 - i).toString)
 					} else {
 						/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top */
 						contents += Constants.grid_cases (j + (7 - i) * 8)
