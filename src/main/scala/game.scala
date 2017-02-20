@@ -158,7 +158,7 @@ object Ksparov {
 
   def play_move(x : Int, y : Int) {
     /* Checking if the game has been won */
-    if (Constants.game_won) {
+    if (Constants.game_won || Constants.game_nulle) {
       /* Don't do anything, just wait for other button */
     } else {
       Constants.players(Constants.curr_player).getmove
@@ -167,17 +167,17 @@ object Ksparov {
         /* Check if there is a mate after the move */
         if (Checkmate.check_mate (Ksparov.board, 1 - Constants.curr_player)) {
           /* If so, finish the game */
-          DrawActions.draw_messages (3)
+          DrawActions.draw_messages (6)
           Constants.game_won = true
         } else {
           if (Constants.game_nulle) {
-            DrawActions.draw_messages (5)
+            DrawActions.draw_messages (7)
           } else {
           /* Else check if there is check */
           if (Constants.kings(1 - Constants.curr_player).attacked) {
-            DrawActions.draw_messages (2)
+            DrawActions.draw_messages (5)
           } else {
-            DrawActions.draw_messages (1)
+            DrawActions.draw_messages (4)
           }
           Constants.curr_player = 1 - Constants.curr_player
           Constants.piece_choice_open = true
@@ -193,18 +193,25 @@ object Ksparov {
     Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
     Ksparov.init_board()
     DrawActions.draw_game_board(Ksparov.board)
-    DrawActions.draw_messages (0)
     n match {
       case 1 =>
         Constants.players(0) = new Human(0)
         Constants.players(1) = new Human(1)
+        DrawActions.draw_messages (0)
       case 2 =>
-        Constants.players(1) = new Human(1)
-        Constants.players(0) = new AI(0)
+        if (scala.util.Random.nextInt(2) == 0) {
+          Constants.players(0) = new Human(0)
+          Constants.players(1) = new AI(1)
+        DrawActions.draw_messages (1)
+        } else {
+          Constants.players(1) = new Human(1)
+          Constants.players(0) = new AI(0)
+        DrawActions.draw_messages (2)
+         }
       case 3 =>
-        Constants.players(0) = new AI(0)
         Constants.players(1) = new AI(1)
-        DrawActions.draw_messages (4)
+        Constants.players(0) = new AI(0)
+        DrawActions.draw_messages (3)
     }
     Constants.game_won = false
     Constants.game_nulle = false
