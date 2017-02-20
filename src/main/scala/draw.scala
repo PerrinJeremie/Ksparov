@@ -104,7 +104,7 @@ object DrawNotYet {
 				contents += new BackgroundCase (1, 3)
 			} else { i match {
 				case 1 => contents += new Label {
-					text = "<html>Cette fonctionnalité n'est pas<br>encore développée, veuillez<br>patienter quelque peu !</html>"
+					text = "<html><div style='text-align : center;'>Cette fonctionnalité n'est pas<br>encore développée, veuillez<br>patienter quelque peu !</div></html>"
 				}
 				case 3 => contents += new Button {
 					action = Action("Revenir au menu") {
@@ -341,6 +341,8 @@ object DrawBoard {
 		opaque = true
 		foreground = Color.black
 		text = message
+		horizontalTextPosition = Alignment.Center
+		verticalTextPosition = Alignment.Center
 		border = new javax.swing.border.LineBorder (Color.black, 1)
 	}
 
@@ -476,34 +478,43 @@ object DrawActions {
 		}
 	}
 
-	/* Draw a given message on the board, the type of message is : 0 for the initial message 
-	   1 for who have to play, 2 if there is check, 3 for mate, 4 for the special games of IA vs IA, 
-	   5 for nulle games */
+	/* Draw a given message on the board, the message depends on the argument passed */
 	def draw_messages (message_type : Int) {
 		message_type match {
 			case 0 => Constants.message_drawer.text = "Bienvenu dans Ksparov, les blancs commençent la partie !"
 				Constants.message_drawer.foreground = Color.black
-			case 1 => Constants.curr_player match {
+
+			case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>"
+				Constants.message_drawer.foreground = Color.black
+
+			case 2 => Constants.message_drawer.text = "Bienvenu dans Ksparov, vous jouez les blancs !"
+				Constants.message_drawer.foreground = Color.black
+
+			case 3 => Constants.message_drawer.text = "Mode IA vs IA : cliquez pour voir le prochain coup !" 
+				Constants.message_drawer.foreground = Color.black
+
+			case 4 => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
 					Constants.message_drawer.foreground = Color.black
 				case 1 => Constants.message_drawer.text = "La main est au joueur noir !"
 					Constants.message_drawer.foreground = Color.black
 			}
-			case 2 => Constants.curr_player match {
+
+			case 5 => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
 					Constants.message_drawer.foreground = Color.red
 				case 1 => Constants.message_drawer.text = "Le joueur noir est en échec !"
 					Constants.message_drawer.foreground = Color.red
 			}
-			case 3 => Constants.curr_player match {
+
+			case 6 => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "Echec et mat, le joueur noir gagne la partie !"
 					Constants.message_drawer.foreground = Color.red
 				case 1 => Constants.message_drawer.text = "Echec et mat, le joueur blanc gagne la partie !"
 					Constants.message_drawer.foreground = Color.red
 			}
-			case 4 => Constants.message_drawer.text = "Mode IA vs IA : cliquer pour voir le prochain coup !" 
-				Constants.message_drawer.foreground = Color.black
-			case 5 => Constants.message_drawer.text = "La partie est nulle, l'IA ne peut plus bouger !"
+
+			case 7 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA ne peut plus bouger !"
 				Constants.message_drawer.foreground = Color.red 
 		}
 	}
