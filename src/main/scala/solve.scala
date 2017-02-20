@@ -19,7 +19,7 @@ class AI(player : Int) extends Player(player){
         var t = Ksparov.board ((1 - id) * 16 + ind).possible_moves (Ksparov.board)
         if (t.nonEmpty) {
           b = false
-          var (i,j) = t(0)
+          var (i,j) = t(r.nextInt(t.size))
           Ksparov.board((1 - id) * 16 + ind).move(i,j,Ksparov.board)
         }
 
