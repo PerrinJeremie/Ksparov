@@ -18,6 +18,14 @@ class AI(player : Int) extends Player(player){
           Ksparov.board((1 - id) * 16 + ind).move(i,j,Ksparov.board)
         }
       }
+      println()
+      for(i <- 0 to 15) {
+        println(already_check(i))
+      }
+      if (!((already_check.find (p => p == false)).nonEmpty)) {
+        b = false
+        Constants.game_nulle = true
+      }
     }
     DrawActions.draw_game_board(Ksparov.board)
     Constants.players(Constants.curr_player).moved = true

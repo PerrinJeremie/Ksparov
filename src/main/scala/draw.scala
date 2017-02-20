@@ -477,11 +477,12 @@ object DrawActions {
 	}
 
 	/* Draw a given message on the board, the type of message is : 0 for the initial message 
-	   1 for who have to play, 2 if there is check, 3 for mate, 4 for the special games of IA vs IA */
+	   1 for who have to play, 2 if there is check, 3 for mate, 4 for the special games of IA vs IA, 
+	   5 for nulle games */
 	def draw_messages (message_type : Int) {
 		message_type match {
 			case 0 => Constants.message_drawer.text = "Bienvenu dans Ksparov, les blancs commençent la partie !"
-					Constants.message_drawer.foreground = Color.black
+				Constants.message_drawer.foreground = Color.black
 			case 1 => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
 					Constants.message_drawer.foreground = Color.black
@@ -501,6 +502,9 @@ object DrawActions {
 					Constants.message_drawer.foreground = Color.red
 			}
 			case 4 => Constants.message_drawer.text = "Mode IA vs IA : cliquer pour voir le prochain coup !" 
+				Constants.message_drawer.foreground = Color.black
+			case 5 => Constants.message_drawer.text = "La partie est nulle, l'IA ne peut plus bouger !"
+				Constants.message_drawer.foreground = Color.red 
 		}
 	}
 }
