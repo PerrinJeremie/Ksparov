@@ -26,9 +26,7 @@ class AI(player : Int) extends Player(player){
         if (!((already_check.find (p => p == false)).nonEmpty) && b) {
           b = false
           Constants.game_nulle = true
-        }
-        println()
-        
+        }        
       }
     }
     DrawActions.draw_game_board(Ksparov.board)
