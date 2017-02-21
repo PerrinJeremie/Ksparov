@@ -95,7 +95,7 @@ A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique
 \paragraph{Structure de rules :} Toutes les pièces héritent d'une classe abstraite \textit{Piece}, qui contient principalement une méthode utile pour le reste du jeu : la fonction \textit{move}, qui effectue un mouvement. \\
 Chaque pièce particulière (pion, tours,..) hérite ensuite de \textit{Piece} et se distingue par un "pattern" particulier, qui traduit l'ensemble de ses mouvements possibles. \\
 
-Des méthodes plus générales sont présentes dans \textit{move}, et ce qui concerne la vérification de l'échec et mat appartient à \textit{Checkmate}.
+Des méthodes plus générales sont présentes dans \textit{Aux}, et ce qui concerne la vérification de l'échec et mat appartient à \textit{Checkmate}.
 
 \paragraph{La fonction \textit{move}, et ses fonctions auxiliaires :} La fonction \textit{move} sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
 Elle appelle pour cela une fonction \textit{pre\_move}, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
@@ -157,6 +157,7 @@ Si un mouvement est possible, elle choisit alors une des cases possibles aléato
 
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
 
-De même pour chaque nouvelle fenêtre, chaque nouveau mouvement un grand nombre de classes sont instanciées, principalement dans la partie graphique, ce qui peut être lourd en mémoire. 
+De même pour chaque nouvelle fenêtre, chaque nouveau mouvement un grand nombre de classes sont instanciées, principalement dans la partie graphique, ce qui peut être lourd en mémoire. \\ 
 
+En ce qui concerne rules, l'implémentation du roque est quelque peu lourde, et demande quelques répétitions de code.
 \end{document}
