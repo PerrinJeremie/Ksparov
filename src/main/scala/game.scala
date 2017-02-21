@@ -116,7 +116,6 @@ object Constants {
     writer.write (piece + "\n")
     writer.write (texture + "\n")
     writer.close
-
   }
 
   var selected_case = 0
@@ -225,10 +224,10 @@ object Ksparov {
   }
 
   /* Define the variable for a new game, called after the game type selection. */
-  def init_game(n : Int) {
+  def init_game (n : Int) {
     /* Instantiate the kings and then the new board. */
     Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
-    Ksparov.init_board()
+    Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
     /* Defines the welcome message and types of players depending on the game type chosen. */
     n match {

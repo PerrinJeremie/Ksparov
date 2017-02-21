@@ -98,6 +98,7 @@ Chaque pièce particulière (pion, tours,..) hérite ensuite de \textit{Piece} e
 Des méthodes plus générales sont présentes dans \textit{Aux}, et ce qui concerne la vérification de l'échec et mat appartient à \textit{Checkmate}.
 
 \paragraph{La fonction \textit{move}, et ses fonctions auxiliaires :} La fonction \textit{move} sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
+
 Elle appelle pour cela une fonction \textit{pre\_move}, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
 \textit{pre\_move} vérifie plusieurs critères : si le mouvement est conforme aux déplacements de la pièce et à quelques règles basiques (ceci est effectué par \textit{Aux.checks\_pre\_move}), si le chemin que veut suivre la pièce est libre et s'il y a une pièce adverse à l'arrivée (effectué par \textit{clear\_path}), et si ce mouvement met un ou deux rois en échec (effectué par \textit{check\_check}).
 
