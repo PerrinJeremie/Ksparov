@@ -392,8 +392,8 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the white player. */
-	class Border1 extends GridPanel (Constants.nb_case, 3) {
-		for(i <- 0 to Constants.nb_case - 1) {
+	class Border1 extends GridPanel (Constants.nb_case_board + 2, 3) {
+		for(i <- 0 to Constants.nb_case_board + 1) {
 			if (i < 4 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
@@ -425,8 +425,8 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the black player. */
-	class Border0 extends GridPanel (Constants.nb_case, 2) {
-		for(i <- 0 to Constants.nb_case - 1) {
+	class Border0 extends GridPanel (Constants.nb_case_board + 2, 2) {
+		for(i <- 0 to Constants.nb_case_board + 1) {
 			if (i < 1 || i > 5) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
