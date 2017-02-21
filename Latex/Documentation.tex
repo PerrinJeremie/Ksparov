@@ -85,19 +85,19 @@ Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le 
 
 \paragraph{Les fonctionnalités} Toutes les règles de base des échecs sont présentes, à l'exception de la prise en passant, de la promotion, et des règles conduisant à une égalité. (Notamment, il est possible de roquer dans le jeu !)
 
-\paragraph {Structure de rules} Toutes les pièces héritent d'une classe abstraite Piece, qui contient principalement une méthode utile pour le reste du jeu : la fonction move, qui effectue un mouvement. \\
+\paragraph{Structure de rules} Toutes les pièces héritent d'une classe abstraite Piece, qui contient principalement une méthode utile pour le reste du jeu : la fonction move, qui effectue un mouvement. \\
 Chaque pièce particulière (pion, tours,..) hérite ensuite de Piece et se distingue par un "pattern" particulier, qui traduit l'ensemble de ses mouvements possibles.  \\
 Des méthodes plus générales sont présentes dans move, et ce qui concerne la vérification de l'échec et mat appartient à Checkmate.
 
-\paragraph {La fonction move, et ses fonctions auxiliaires} La fonction move sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
-Elle appelle pour cela une fonction pre_move, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
-pre_move vérifie plusieurs critères : si le mouvement est conforme aux déplacements de la pièce et à quelques règles basiques (ceci est effectué par Aux.checks_pre_move), si le chemin que veut suivre la pièce est libre et s'il y a une pièce adverse à l'arrivée (effectué par clear_path), et si ce mouvement met un ou deux rois en échec (effectué par check_check). \\
+\paragraph{La fonction move, et ses fonctions auxiliaires} La fonction move sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
+Elle appelle pour cela une fonction pre\_move, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
+pre\_move vérifie plusieurs critères : si le mouvement est conforme aux déplacements de la pièce et à quelques règles basiques (ceci est effectué par Aux.checks\_pre\_move), si le chemin que veut suivre la pièce est libre et s'il y a une pièce adverse à l'arrivée (effectué par clear\_path), et si ce mouvement met un ou deux rois en échec (effectué par check\_check). \\
 
-\paragraph {Spécificité de certaines pièces} Le pion, qui est la seule pièce à avoir un déplacement non symétrique, possède un pattern un peu différent, qui est obligé de référer au joueur le contrôlant. \\
-Le cavalier, quant à lui, peut passer au dessus des autres pièces, et nécessite donc une modification de clear_path. \\
+\paragraph{Spécificité de certaines pièces} Le pion, qui est la seule pièce à avoir un déplacement non symétrique, possède un pattern un peu différent, qui est obligé de référer au joueur le contrôlant. \\
+Le cavalier, quant à lui, peut passer au dessus des autres pièces, et nécessite donc une modification de clear\_path. \\
 Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, des booléens indiquant s'il est en échec et s'il a bougé, et a une version de move différente pour gérer le cas du roque.  \\
 
-\paragraph {check_mate, vérification de l'échec et mat} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction Checkmate.check_mate vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant (voir le prendre)
+\paragraph{check\_mate, vérification de l'échec et mat} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction Checkmate.check\_mate vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant (voir le prendre)
 
 
 \subsection{game.scala, où alterner est important}
@@ -106,17 +106,16 @@ Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, d
 
 \paragraph{Faire tourner la partie} Tout le soucis de cette partie est de bien alterner les différentes phases du jeu et ce de manière intuitive, comme l'éxecution n'est pas linéaire, a cause de l'action des joueurs sur l'interface, il faut un système de "pare-feux" qui fonctionne en s'appuyant sur le principe des sémaphores. Un objet Switches régule donc les différentes parties du programme qui sont  : \\
 
-\begin{itemize}
-	\item (1) le premier clic de séléction d'une piéce
-	\item (2) le deuxiéme clic qui peut être :
-		\begin{itemize}
-		\item	(a) un coup valide donc (3)
-		\item	(b) un coup invalide donc retour au (1)
-		\item   (c) la séléction d'une autre piéce donc (2)
-				
-		\end{itemize}
-	\item (3) le changement de joueur puis (1)
-\end{itemize}
+\begin{enumerate}
+	\item le premier clic de séléction d'une piéce
+	\item le deuxiéme clic qui peut être :
+		\begin{enumerate}
+		\item un coup valide donc (3)
+		\item un coup invalide donc retour au (1)
+		\item la séléction d'une autre piéce donc (2)
+		\end{enumerate}
+	\item le changement de joueur puis (1)
+\end{enumerate}
 \vspace{0.5 cm}
 
 Pour cela trois variables binaires, la première se charge de stocker qui est le joueur courant, la deuxième si l'on doit attendre un clic de sélection de pièce, la troisième si l'on attend un clic de choix de mouvement.\\
@@ -136,17 +135,5 @@ Là et là !
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
 
 A vous !
-
-\section{Pourquoi le design est magnifique}
-
-Parce que je l'ai réalisé !
-
-\section{Pourquoi je suis beau}
-
-Parce que !
-
-\section{Pourquoi pas ?}
-
-Et oui !
 
 \end{document}

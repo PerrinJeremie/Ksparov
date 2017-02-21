@@ -5,7 +5,7 @@ class AI(player : Int) extends Player(player){
     /* This array is used not to try several times the same piece. 
        If the piece is dead, it should not be tried. */
     for(i <- 0 to 15) {
-      if (Ksparov.board(i).pos_x < 0) {
+      if (Ksparov.board((1 - id) * 16 + i).pos_x < 0) {
         already_check (i) = true
       } else {
         already_check (i) = false
