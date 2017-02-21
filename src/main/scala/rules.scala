@@ -323,26 +323,3 @@ object Checkmate {
   checkmate
   }
 }
-
-/*object Program {
-def main(args:Array[String]):Unit={
-var board : Array[Piece] = new Array[Piece](32)
-for (p <- 0 to 1) {
-for(i <- 0 to 7) {
-board((1-p)*16 + i) = new Pawn(p,1+p*5,i)
-}
-board( 8 + (1-p)*16) = new Rook(p,p*7,0)
-board( 9 + (1-p)*16) = new Rook(p,p*7,7)
-board( 10 + (1-p)*16) = new Knight(p,p*7,1)
-board( 11 + (1-p)*16) = new Knight(p,p*7,6)
-board( 12 + (1-p)*16) = new Bishop(p,p*7,2)
-board( 13 + (1-p)*16) = new Bishop(p,p*7,5)
-board( 14 + (1-p)*16) = new King(p,p*7,4)
-board( 15 + (1-p)*16) = new Queen(p,p*7,3)
-}
-var l = board(10).possible_moves(board)
-for (x <-l){
-println(x)
-}
-}
-}*/

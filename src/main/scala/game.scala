@@ -160,7 +160,7 @@ object Ksparov {
   var board = new Array[Piece](32)
 
   /* Define the initial board, 0 for player black and 1 for white with the black player on the top of the chessboard. */
-  def init_board(){
+  def init_board {
     for (p <- 0 to 1) {
       for(i <- 0 to 7) {
         board((1-p)*16 + i) = new Pawn(p,i,1+(1-p)*5)

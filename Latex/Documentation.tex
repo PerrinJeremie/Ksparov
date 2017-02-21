@@ -25,21 +25,20 @@
 BOUSSIDAN Aaron, PERRIN Jérémie et REY Simon\\[5cm]
 \begin{center}
 \HRule
-\\[0.4cm]{\huge\bfseries Projet de Programmation 2 - Ksparov\\[0.4cm]}
+\\[0.4cm]{\huge\bfseries Projet de Programmation 2 - Ksparov 1.0\\[0.4cm]}
 \HRule \\[0.5cm]
 Année 2016-2017, Semestre 2\\[12cm]
 \includegraphics[scale=0.7]{Images/Logo_ENS_PS.jpg}
 \end{center}
 \end{titlepage}
-\tableofcontents
 
-\newpage
-
-De tout temps les Hommes ont cherché à jouer aux échecs ! Depuis les début de l'informatique moderne et le développement grand public des micro-processeur de nombreuses applications ont vu le jour pour permettre à tout le monde de jouer aux échecs. \\
+Depuis les début de l'informatique moderne et le développement grand public des micro-processeur de nombreuses applications ont vu le jour pour permettre à tout le monde de jouer aux échecs. \\
 
 En effet qui ne rêve pas de pouvoir s'entraîner sans relâche pour atteindre le niveau d'un Bobby Fischer, ou de pouvoir revivre des parties de légende comme la finale de 1985 opposant Kasparov à Karpov. \\
 
-Vous faire vivre cela, et bien plus encore, a été notre leitmotiv durant le développement de cette application. Voici la première version du meilleur jeu d'échec jamais créé, voici Ksparov !
+Vous faire vivre cela, et bien plus encore, a été notre leitmotiv durant le développement de cette application. Voici la première version, la version 1.0, du meilleur jeu d'échec jamais créé, voici Ksparov ! \\
+
+Plus sérieusement ce document a pour vocation de décrire les choix d'implémentation fait et de présenter les fonctionnalités de notre application. 
 
 \begin{flushright}
 \textit{Le plus grand jeu de l'esprit jamais inventé, plus vous l'apprenez, plus vous y prenez du plaisir.}\\
@@ -47,100 +46,117 @@ Vous faire vivre cela, et bien plus encore, a été notre leitmotiv durant le d�
 Garry Kasparov
 \end{flushright}
 
-\section{L'organisation du code}
+\section{L'organisation générale du code}
 
 Le code de notre projet a été divisé en quatre parties (chacune dans un fichier) qui correspondent chacune à une fonction particulière du code. On retrouve donc :
 \begin{itemize}
-\item draw.scala qui comprend tout ce qui concerne l'affichage de l'interface du jeu
-\item rules.scala qui implémente toutes les règles du jeu pour chaque pièce
-\item game.scala qui gère le lancement du jeu et qui fait l'interface entre les règles et l'application
-\item solve.scala qui définit ce qui a trait à la résolution par l'intelligence artificielle
+\item \textbf{draw.scala} qui comprend tout ce qui concerne l'affichage de l'interface du jeu
+\item \textbf{rules.scala} qui implémente toutes les règles du jeu pour chaque pièce
+\item \textbf{game.scala} qui gère le lancement du jeu et qui fait l'interface entre les règles et l'application
+\item \textbf{solve.scala} qui définit ce qui a trait à la résolution par l'intelligence artificielle
 \end{itemize}~
 
 Nous allons donc à présent étudier en détail chacun de ces fichiers.
 
-\subsection{draw.scala ou l'interface utilisateur}
+\section{draw.scala ou l'interface utilisateur}
 
-Le code a ici été séparé en plusieurs objets, chaque objet comprend tout ce qui concerne l'affichage d'une fenêtre particulière. Nous retrouvons donc un objet pour le menu initial, un pour le réglage des paramètres, un pour le plateau de jeu...
+Le code a ici été séparé en plusieurs objets, chaque objet comprend tout ce qui concerne l'affichage d'une fenêtre en particulier. Nous retrouvons donc un objet pour le menu initial, un pour le réglage des paramètres, un pour le plateau de jeu...
 
-\paragraph{Les fonctionnalités de l'interface :}L'interface a été créé de manière à pouvoir implémenter tout le projet, les trois parties, sans avoir à la modifiée à chaque phase. Ainsi le jeu s'ouvre sur un menu général permettant pour le moment de lancer une partie, de modifier les paramètres et de quitter le jeu. Des boutons existent déjà pour le chargement d'une partie, les scores des joueurs... mais ne sont pas fonctionnel. \\
+\paragraph{Les fonctionnalités de l'interface :}L'interface a été créé de manière à pouvoir implémenter tout le projet, les trois parties, sans avoir à la modifier à chaque phase. Ainsi le jeu s'ouvre sur un menu général permettant pour le moment de lancer une partie, de modifier les paramètres et de quitter le jeu. Des boutons existent déjà pour le chargement d'une partie, les scores des joueurs... mais ne sont pas fonctionnels. \\
 
-Le lancement d'une partie fait appel à un autre menu, celui qui permet de choisir le mode de jeu pour la partie : Humain/Humain, Humain/IA ou IA/IA.
+Le lancement d'une partie fait appel à un autre menu, celui qui permet de choisir le mode de jeu pour la partie : Humain/Humain, Humain/IA ou IA/IA. Après tout ces choix, l'échiquier apparaît enfin !
 
-\paragraph{L'organisation générale d'un objet Draw... :}Chaque objet du fichier draw.scala a un nom construit comme DrawFenetre où Fenetre est l'élément affiché par cet objet (DrawParameters, DrawMenu, DrawBoard...). Tous les objets sont construits de la même manière et on y retrouve les mêmes classes : tout les éléments d'une fenêtre sont des extensions de GridPanel qui sont ensuite organisés par via un BorderPanel. Au total toute fenêtre est découpée en carré de 80 pixel. \\
+\paragraph{L'organisation générale d'un objet DrawQuelquechose :}Chaque objet du fichier \textit{draw.scala} a un nom construit comme \textit{DrawUnechose} où \textit{Unechose} est l'élément affiché par cet objet (\textit{DrawParameters}, \textit{DrawMenu}, \textit{DrawBoard}...). Tous les objets sont construits de la même manière : tout les éléments d'une fenêtre sont des extensions de \textit{GridPanel} qui sont ensuite organisés via un \textit{BorderPanel} dans l'interface. Au final, toute fenêtre est découpée en carré de 80 pixel. \\
 
-Pour avoir un code plus propre une classe commune à tous les objets a été créé : BackgroundCase qui étend un GridPanel et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond.
+Pour avoir un code plus propre une classe commune à tous les objets a été créé : \textit{BackgroundCase} qui étend un \textit{GridPanel} et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond.
 
-\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétique mais ceci est un autre problème. Les paramètres sont enregistrés dans un fichier : src/main/resources/Parameters ce qui permet de conserver les choix pour chaque ouverture de l'application.
+\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétiques mais ceci est un autre problème. Les paramètres et leurs modifications sont enregistrés dans un fichier : \textit{src/main/resources/Parameters} ce qui permet de conserver les choix précédent à chaque ouverture de l'application.
 
 \paragraph{Le plateau de jeu :}Le plateau de jeu est, heureusement, la fenêtre la plus complète, on y retrouve plusieurs éléments. \\
 
-Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces se rajoutent via une icône. La particularité étant que le plateau dessine aussi les pièces lorsque l'on en créé une nouvelle instance. \\
+Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces se rajoutent via une icône. La particularité étant que le plateau ne dessine pasles pièces lorsque l'on en créé une nouvelle instance, il faut appeler \textbf{DrawActions.draw\_board} pour cela. \\
 
-Sur chaque coté du plateau on retrouve un compte des pièces mortes pour chaque joueur. Ceci est fait par le dessin des pièces en considérant que les positions négatives correspondent aux pièces mortes. \\
+Sur chaque coté du plateau on retrouve un compte des pièces mortes pour chaque joueur. Ceci est fait par le dessin des pièces via \textit{DrawActions.draw\_board} pour lequel les pièces ayant des positions négatives sont mortes. \\
+
+Sous l'échiquier on retrouve un simple encart qui permet d'afficher des messages, c'est ici que les échecs et échecs et mat s'affichent. \\
 
 Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le moment simplement de revenir au menu.
 
-\subsection{rules.scala ou l'implémentation des règles des échecs}
+\paragraph{Les actions dynamiques de l'interface :}Le plateau de jeu est plus ou moins dynamique pour afin en temps réel les mouvements des pièces, les messages et le nombre de pièce morte. Tout cela est défini dans l'objet \textit{DrawActions}. \\
 
-\paragraph{Les fonctionnalités} Toutes les règles de base des échecs sont présentes, à l'exception de la prise en passant, de la promotion, et des règles conduisant à une égalité. (Notamment, il est possible de roquer dans le jeu !)
+L'affichage des pièces passe par l'appel de la méthode \textit{DrawActions.draw\_board}. Cette méthode prend chaque pièce et définit l'icône correspondante sur la case des coordonnées de la pièces. Les pièces ayant des coordonnées négatives sont des pièces mortes et donc \textit{draw\_board} actualise le compte des pièces mortes à chaque fois qu'il en trouve une. La méthode fini par une actualisation de la fenêtre ce qui permet d'afficher les pièces sur le plateau et le compte des pièces mortes. \\
 
-\paragraph{Structure de rules} Toutes les pièces héritent d'une classe abstraite Piece, qui contient principalement une méthode utile pour le reste du jeu : la fonction move, qui effectue un mouvement. \\
-Chaque pièce particulière (pion, tours,..) hérite ensuite de Piece et se distingue par un "pattern" particulier, qui traduit l'ensemble de ses mouvements possibles.  \\
-Des méthodes plus générales sont présentes dans move, et ce qui concerne la vérification de l'échec et mat appartient à Checkmate.
+A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique le déplacement, vérifie si un évènement s'est produit suite à ce mouvement (échec, échec et mat ou pat). Si elle détecte un évènement elle affiche le message correspondant, sinon et affiche un message indiquant que la main est pour le joueur suivant.
 
-\paragraph{La fonction move, et ses fonctions auxiliaires} La fonction move sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
-Elle appelle pour cela une fonction pre\_move, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
-pre\_move vérifie plusieurs critères : si le mouvement est conforme aux déplacements de la pièce et à quelques règles basiques (ceci est effectué par Aux.checks\_pre\_move), si le chemin que veut suivre la pièce est libre et s'il y a une pièce adverse à l'arrivée (effectué par clear\_path), et si ce mouvement met un ou deux rois en échec (effectué par check\_check). \\
+\section{rules.scala ou l'implémentation des règles des échecs}
 
-\paragraph{Spécificité de certaines pièces} Le pion, qui est la seule pièce à avoir un déplacement non symétrique, possède un pattern un peu différent, qui est obligé de référer au joueur le contrôlant. \\
-Le cavalier, quant à lui, peut passer au dessus des autres pièces, et nécessite donc une modification de clear\_path. \\
-Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, des booléens indiquant s'il est en échec et s'il a bougé, et a une version de move différente pour gérer le cas du roque.  \\
+\paragraph{Les fonctionnalités :} Toutes les règles de base des échecs sont présentes, à l'exception de la prise en passant, de la promotion, et des règles conduisant à une égalité (l'égalité est partiellement codée pour les IA). Notamment, il est possible de roquer dans le jeu, qui est un des mouvements du roi !
 
-\paragraph{check\_mate, vérification de l'échec et mat} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction Checkmate.check\_mate vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant (voir le prendre)
+\paragraph{Structure de rules :} Toutes les pièces héritent d'une classe abstraite \textit{Piece}, qui contient principalement une méthode utile pour le reste du jeu : la fonction \textit{move}, qui effectue un mouvement. \\
+Chaque pièce particulière (pion, tours,..) hérite ensuite de \textit{Piece} et se distingue par un "pattern" particulier, qui traduit l'ensemble de ses mouvements possibles. \\
 
+Des méthodes plus générales sont présentes dans \textit{move}, et ce qui concerne la vérification de l'échec et mat appartient à \textit{Checkmate}.
 
-\subsection{game.scala, où alterner est important}
+\paragraph{La fonction \textit{move}, et ses fonctions auxiliaires :} La fonction \textit{move} sert à vérifier si un mouvement est valable, à l'appliquer si cela est le cas, et à modifier la plateau en conséquence (suppression de pièces, échec...). \\
+Elle appelle pour cela une fonction \textit{pre\_move}, qui vérifie la faisabilité du mouvement sans modifier le plateau (avoir une telle fonction se révèle utile pour, par exemple, afficher l'ensemble des cases atteignables par une pièce).
+\textit{pre\_move} vérifie plusieurs critères : si le mouvement est conforme aux déplacements de la pièce et à quelques règles basiques (ceci est effectué par \textit{Aux.checks\_pre\_move}), si le chemin que veut suivre la pièce est libre et s'il y a une pièce adverse à l'arrivée (effectué par \textit{clear\_path}), et si ce mouvement met un ou deux rois en échec (effectué par \textit{check\_check}).
 
-\paragraph{Les joueurs} La classe joueur est ici définie, pour l'instant seulement un attribut, son identifiant 0 ou 1, et une méthode. La méthode gère l'alternance des joueurs, pour un humain elle récupère le mouvement,en implémentant ce qui est défini précédemment, et donne la main. Pour une IA elle calcul le mouvement à faire et rend la main aussi.
+\paragraph{Spécificité de certaines pièces :} Le pion, qui est la seule pièce à avoir un déplacement non symétrique, possède un pattern un peu différent, qui est obligé de référer au joueur le contrôlant.
+Le cavalier, quant à lui, peut passer au dessus des autres pièces, et nécessite donc une modification de \textit{clear\_path}.
+Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, des booléens indiquant s'il est en échec et s'il a bougé, et a une version de \textit{move} différente pour gérer le cas du roque. 
 
-\paragraph{L'objet Ksparov}
+\paragraph{\textit{check\_mate}, vérification de l'échec et mat :} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction \textit{Checkmate.check\_mate} vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant, voir le prendre.
 
-\subparagraph{Le board} Tableau des 32 pièces qui représente l'échiquier, avec comme convention un position négative si la pièce est morte.
-\subparagraph{Le main} Lance l'application codée dans l'interface.
+\section{game.scala ou l'on peut enfin jouer}
 
-\subparagraph{Les inits} Appellé en début de partie, ils remplissent le boardent et définissent les joueurs en fonction du type de partie choisit.
-\subparagraph{Méthode play\_move} C'est la méthode appellée lors d'un clic, qui vérifie les cas d'échecs etc... pour appliquer ensuite le get\_move du joueur courant.
+\paragraph{L'objet \textit{Constants} :}L'un des objets du fichier game.scala est \textit{Constants}. C'est un objet qui contient toutes les variables qui sont utilisés par les différentes parties du code. On y retrouve donc la plupart des booléens nécessaires à l'exécution de la partie, mais aussi des constants comme les chemin vers les icônes, la couleur du text, la taille des cases... L'idée a été ici de regrouper tout ce qui est en commun avec plusieurs objets dans un seul et même objet. \\
 
+Notons par ailleurs que bien qu'il s'appelle \textit{Constants} une bonne partie des variables de cet objet sont variables. 
 
-\paragraph{Faire tourner la partie} Tout le soucis de cette partie est de bien alterner les différentes phases du jeu et ce de manière intuitive, comme l'éxecution n'est pas linéaire, a cause de l'action des joueurs sur l'interface, il faut un système de "pare-feux" qui fonctionne en s'appuyant sur le principe des sémaphores. Un objet Switches régule donc les différentes parties du programme qui sont  : \\
+\paragraph{Les joueurs :} La classe \textit{Player} est une classe abstraite qui contient l'identifiant du joueur (0 pour le noir et 1 pour le blanc), des booléens utiles pour le déplacement (\textit{ai} et \textit{move}) ainsi que la méthode \textit{get\_move} qui permet le déplacement des pièces. \\
 
-\begin{enumerate}
-	\item le premier clic de séléction d'une piéce
-	\item le deuxiéme clic qui peut être :
-		\begin{enumerate}
-		\item un coup valide donc (3)
-		\item un coup invalide donc retour au (1)
-		\item la séléction d'une autre piéce donc (2)
-		\end{enumerate}
-	\item le changement de joueur puis (1)
-\end{enumerate}
-\vspace{0.5 cm}
+Cette classe est étendue en deux : \textit{AI} pour les joueurs de type intelligence artificielle et \textit{Human} pour les joueurs humains. La classe \textit{AI} est présenté en section 5 sur le fichier solve.scala. 
 
-Pour cela trois variables binaires, la première se charge de stocker qui est le joueur courant, la deuxième si l'on doit attendre un clic de sélection de pièce, la troisième si l'on attend un clic de choix de mouvement.\\
+\paragraph{La méthode \textit{get\_move} de la classe \textit{Human} :}Pour un joueur humain le déplacement se fait en deux étapes : sélection de la pièce et sélection de la case où se déplacer. La méthode \textit{get\_move} s'applique pour une case sur laquelle le joueur a cliqué, elle commence par vérifier que la pièce sélectionnée appartient bien au joueur (méthode \textit{isHis}). Si tel est le cas, le booléen \textit{Constants.first\_choice\_done} passe à \textit{true} ce qui ouvre la sélection de la case, et les cases possibles du déplacement se colorie en rouge par appel de la méthode \textit{DrawActions.draw\_possiblie\_moves}. \\
 
-\paragraph{Les constantes} Autre spécificité de cette partie, elle fait le lien entre l'interface et les règles c'est donc là que se trouvent les constantes utiles à l'ensemble du programme.
+Lorsque le joueur clique sur une deuxième case \textit{get\_move} est à nouveau appelée, puisque l'on ne peut pas se déplacer sur une case contenant une de nos pièce, elle passe la première sélection (\textit{isHis} renvoi false) et si le premier choix a été fait elle teste si la case est atteignable par la pièce dans ce cas elle applique le mouvement, sinon elle repasse \textit{Constants.first\_choice\_done} à \textit{false}. 
 
-\subsection{solve.scala ou la partie, pour le moment, sans intérêt}
+\paragraph{L'objet \textit{Ksparov}:}C'est l'objet central de notre application, c'est lui qui définit tout et qui fait appel au reste du code. Il comprend plusieurs éléments différents. 
 
-\section{Les points clés de l'implémentation}
+\paragraph{L'interface graphique :}La variable \textit{frame} définie dans \textit{Ksparov} est la variable de base de l'interface graphique, c'est elle dont le contenu change pour changer de fenêtre. La fonction \textit{main} fait simplement appel à la méthode \textit{application.main(Array())} qui lance l'application en elle même avec la première frame, à savoir le menu principal. 
 
-Là et là !
+\paragraph{L'initialisation des pièces :}On retrouve dans \textit{Ksparov} la variable \textit{board} qui est un tableau de 32 pièces contenant toutes les pièces du jeu, les 16 premières cases étant les pièces du joueur blanc et les 16 dernières celle du joueur noir. La méthode \textit{Ksparov.init\_board} permet de définir le tableau initial avec toutes les pièces à leur position initiale.
+
+\paragraph{L'initialisation du jeu :}La méthode \textit{Ksparov.init\_game} est appelée après le choix du type de jeu dans le second menu de sélection, elle initialise les variables nécessaires pour commencer une partie. Elle commence par initialiser les pièces (via \textit{Ksparov.init\_board}) ensuite selon le type de jeu choisi elle définit les variables des joueurs correspondantes, enfin elle modifie les booléens aux bonnes valeurs. On peut noter ici que dans le cas d'une partie opposant une IA et un humain le choix de la couleur des joueurs est aléatoire. 
+
+\paragraph{Jouer un mouvement :}Lorsqu'un joueur clique sur une case la méthode \textit{Ksparov.play\_move} est appelée, c'est elle qui gère tous les déplacements, son exécution est une longue série de conditions imbriquées. Tout d'abord elle vérifie si la partie n'a pas déjà été gagnée par un des joueurs (le booléen \textit{Constants.game\_won}), dans ce cas elle ne fait rien. En effet dans ce cas les cases ne doivent pas répondre aux clics des joueurs. \\
+
+Dans un second temps elle vérifie si l'IA n'est pas en pat à travers le booléen \textit{Constants.game\_nulle}). En effet étant aléatoire l'IA finit souvent à n'avoir plus aucuns mouvements possibles, le pat a donc été implémenté pour l'IA, de manière à ne pas boucler à l'infini dans le choix du mouvement de l'IA. \\
+
+Si ces deux conditions ne sont pas vérifiées \textit{Ksparov.play\_move} appelle la méthode \textit{get\_move} du joueur actif sur la case sélectionnée. Si à l'issu de \textit{get\_move} le joueur s'est déplacé (booléen \textit{moved} du joueur), il faut vérifier l'état de la partie après ce déplacement. \\ 
+
+Il y a alors une série de test qui vérifient, dans l'ordre d'exécution, s'il y a échec et mat, si l'IA peut toujours se déplacer ou s'il y a échec. Dans chacun de ces cas un message particulier est affiché donnant l'évènement en question et les booléens correspondant sont mis à jour. \\ 
+
+Si aucun de ces tests n'est validés, alors la main passe au joueur suivant et le booléen \textit{Constants.first\_choice\_done} est remis à \textit{false}.\\
+
+Enfin si l'on dans le cas d'une partie entre un joueur et une IA et que le joueur courant (donc après déplacement du joueur qui vient de cliquer) est l'IA, on appelle directement la méthode \textit{get\_move} de l'IA. \\ 
+
+Il est important de noter que dans le cas d'une partie entre deux IA il faut cliquer sur une case pour obtenir le prochain mouvement, ce qui n'est pas le cas lors d'un matche entre une IA et un humain. 
+
+\section{solve.scala ou l'intelligence limitée}
+
+\paragraph{L'intelligence artificielle :}Pour le moment l'intelligence artificielle est encore pas très au point puisqu'elle choisit aléatoirement ses coups à chaque mouvement, mais elle permet de jouer contre quelqu'un. Son code a malgré tout été relativement optimisé. 
+
+\paragraph{La méthode \textit{get\_move} de l'IA :}L'IA choisit son coup aléatoirement parmi les différents mouvements possible. Elle commence donc par choisir une pièce aléatoirement entre ses pièces et elle choisit ensuite lequel de ses mouvements elle applique. \\ 
+
+Plus précisément, la méthode maintient un tableau de booléen à jour définissant si la pièce sélectionnée à déjà été testée. Ce tableau est initialisée en retirant les pièces mortes pour ne pas perdre de temps. Un nombre aléatoire en 1 et 16 est tiré, si la pièce n'a pas été testée (case du tableau \textit{already\_check} à \textit{false}) alors la méthode cherche à savoir si un mouvement est possible. \\
+
+Si un mouvement est possible, elle choisit alors une des cases possibles aléatoirement, sinon, si aucun mouvement n'a été appliqué, on vérifie s'il reste des mouvement possibles (s'il existe une case à \textit{false} dans \textit{already\_check}), si tel est le cas on boucle, sinon l'IA est en pat. 
 
 \section{Les défauts et erreurs connues}
 
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
 
-A vous !
+De même pour chaque nouvelle fenêtre, chaque nouveau mouvement un grand nombre de classes sont instanciées, principalement dans la partie graphique, ce qui peut être lourd en mémoire. 
 
 \end{document}

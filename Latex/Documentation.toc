@@ -1,22 +1,23 @@
 \select@language {french}
-\contentsline {section}{\numberline {1}L'organisation du code}{2}
+\contentsline {section}{\numberline {1}L'organisation g\IeC {\'e}n\IeC {\'e}rale du code}{2}
 \contentsline {subsection}{\numberline {1.1}draw.scala ou l'interface utilisateur}{2}
 \contentsline {paragraph}{Les fonctionnalit\IeC {\'e}s de l'interface :}{2}
-\contentsline {paragraph}{L'organisation g\IeC {\'e}n\IeC {\'e}rale d'un objet Draw... :}{2}
+\contentsline {paragraph}{L'organisation g\IeC {\'e}n\IeC {\'e}rale d'un objet DrawQuelquechose :}{2}
 \contentsline {paragraph}{Les param\IeC {\`e}tres :}{2}
 \contentsline {paragraph}{Le plateau de jeu :}{2}
+\contentsline {paragraph}{Les actions dynamiques de l'interface :}{3}
 \contentsline {subsection}{\numberline {1.2}rules.scala ou l'impl\IeC {\'e}mentation des r\IeC {\`e}gles des \IeC {\'e}checs}{3}
-\contentsline {paragraph}{Les fonctionnalit\IeC {\'e}s}{3}
-\contentsline {paragraph}{Structure de rules}{3}
-\contentsline {paragraph}{La fonction move, et ses fonctions auxiliaires}{3}
-\contentsline {paragraph}{Sp\IeC {\'e}cificit\IeC {\'e} de certaines pi\IeC {\`e}ces}{3}
-\contentsline {paragraph}{check\_mate, v\IeC {\'e}rification de l'\IeC {\'e}chec et mat}{3}
-\contentsline {subsection}{\numberline {1.3}game.scala, o\IeC {\`u} alterner est important}{3}
-\contentsline {paragraph}{Les joueurs}{3}
-\contentsline {paragraph}{L'objet Ksparov}{3}
-\contentsline {subparagraph}{Le board}{3}
-\contentsline {subparagraph}{Le main}{3}
-\contentsline {subparagraph}{Les inits}{3}
+\contentsline {paragraph}{Les fonctionnalit\IeC {\'e}s :}{3}
+\contentsline {paragraph}{Structure de rules :}{3}
+\contentsline {paragraph}{La fonction \textit {move}, et ses fonctions auxiliaires :}{3}
+\contentsline {paragraph}{Sp\IeC {\'e}cificit\IeC {\'e} de certaines pi\IeC {\`e}ces :}{3}
+\contentsline {paragraph}{\textit {check\_mate}, v\IeC {\'e}rification de l'\IeC {\'e}chec et mat :}{3}
+\contentsline {subsection}{\numberline {1.3}game.scala, o\IeC {\`u} alterner est important}{4}
+\contentsline {paragraph}{Les joueurs :}{4}
+\contentsline {paragraph}{L'objet Ksparov}{4}
+\contentsline {subparagraph}{Le board}{4}
+\contentsline {subparagraph}{Le main}{4}
+\contentsline {subparagraph}{Les inits}{4}
 \contentsline {subparagraph}{M\IeC {\'e}thode play\_move}{4}
 \contentsline {paragraph}{Faire tourner la partie}{4}
 \contentsline {paragraph}{Les constantes}{4}
