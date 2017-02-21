@@ -102,7 +102,16 @@ Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, d
 
 \subsection{game.scala, où alterner est important}
 
-\paragraph{Le main} Lance l'application codée dans l'interface.
+\paragraph{Les joueurs} La classe joueur est ici définie, pour l'instant seulement un attribut, son identifiant 0 ou 1, et une méthode. La méthode gère l'alternance des joueurs, pour un humain elle récupère le mouvement,en implémentant ce qui est défini précédemment, et donne la main. Pour une IA elle calcul le mouvement à faire et rend la main aussi.
+
+\paragraph{L'objet Ksparov}
+
+\subparagraph{Le board} Tableau des 32 pièces qui représente l'échiquier, avec comme convention un position négative si la pièce est morte.
+\subparagraph{Le main} Lance l'application codée dans l'interface.
+
+\subparagraph{Les inits} Appellé en début de partie, ils remplissent le boardent et définissent les joueurs en fonction du type de partie choisit.
+\subparagraph{Méthode play\_move} C'est la méthode appellée lors d'un clic, qui vérifie les cas d'échecs etc... pour appliquer ensuite le get\_move du joueur courant.
+
 
 \paragraph{Faire tourner la partie} Tout le soucis de cette partie est de bien alterner les différentes phases du jeu et ce de manière intuitive, comme l'éxecution n'est pas linéaire, a cause de l'action des joueurs sur l'interface, il faut un système de "pare-feux" qui fonctionne en s'appuyant sur le principe des sémaphores. Un objet Switches régule donc les différentes parties du programme qui sont  : \\
 
@@ -119,8 +128,6 @@ Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, d
 \vspace{0.5 cm}
 
 Pour cela trois variables binaires, la première se charge de stocker qui est le joueur courant, la deuxième si l'on doit attendre un clic de sélection de pièce, la troisième si l'on attend un clic de choix de mouvement.\\
-
-\paragraph{Les joueurs} La classe joueur est ici définie, pour l'instant seulement un attribut, son identifiant 0 ou 1, et une méthode. La méthode gère l'alternance des joueurs, pour un humain elle récupère le mouvement,en implémentant ce qui est défini précédemment, et donne la main. Pour une IA elle calcul le mouvement à faire et rend la main aussi.
 
 \paragraph{Les constantes} Autre spécificité de cette partie, elle fait le lien entre l'interface et les règles c'est donc là que se trouvent les constantes utiles à l'ensemble du programme.
 
