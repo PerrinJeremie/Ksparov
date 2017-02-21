@@ -17,12 +17,14 @@ class Player(n:Int) {
 
 class Human(n : Int) extends Player(n : Int) {
 
+  /* Take a couple of positions and return true if the piece is owned by the player */
   def isHis(x : Int, y : Int) : Boolean = {
-    var b = false 
+    var done = false 
+    /* We run from 0 to 15 for the player 1 (white) and from 16 to 31 for the player 0 (black) */
     for (i <- (1 - id) * 16 to (2 - id) * 16 - 1) {
-      b = b || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
+      done = done || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
     }
-    return b
+    return done
   }
 
   override def getmove : Unit = {
@@ -32,15 +34,15 @@ class Human(n : Int) extends Player(n : Int) {
     /* First click */
       if (isHis(x,y)) {
         /* If so validate the first clic and open the second click*/
-        Constants.piece_choice_open = false
+        Constants.first_choice_done = true
         /* Then select the piece of position and draw possible moves */
         Ksparov.get_piece_of_pos(x,y)
         DrawActions.clear_possible_moves
         DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
       } else {
     /* Second click */
-    if (!Constants.piece_choice_open) {
-      /* valid check if the move is valid, and p is the optionnal piece taken */
+    if (Constants.first_choice_done) {
+      /* The variable valid check if the move is valid, and p is the optionnal piece taken */
       var (valid,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
       if (valid) {
         /* If the move is valid, apply the new board */
@@ -48,7 +50,7 @@ class Human(n : Int) extends Player(n : Int) {
         Constants.players(Constants.curr_player).moved = true
       /* If the move is invalid, research for a first click */
       } else {
-        Constants.piece_choice_open = true
+        Constants.first_choice_done = false
         DrawActions.clear_possible_moves
       }
     }
@@ -111,11 +113,11 @@ object Constants {
   var kings = new Array[King](2)
   var players = new Array[Player](2)
   var curr_player = 1
-  var piece_choice_open = true
+  var first_choice_done = false
   var game_nulle = false
   var game_won = false
 
-  var message_drawer = new DrawBoard.MessageDrawer ("La main est au joueur blanc !")
+  var message_drawer = new DrawBoard.MessageDrawer ("")
 }
 
 object Ksparov {
@@ -136,7 +138,7 @@ object Ksparov {
     for (p <- 0 to 1) {
       for(i <- 0 to 7) {
         board((1-p)*16 + i) = new Pawn(p,i,1+(1-p)*5)
-        }
+      }
       board( 8 + (1-p)*16) = new Rook(p,0, (1-p)*7)
       board( 9 + (1-p)*16) = new Rook(p,7,(1-p)*7)
       board( 10 + (1-p)*16) = new Knight(p,1,(1-p)*7)
@@ -148,7 +150,8 @@ object Ksparov {
     }
   }
 
-  def get_piece_of_pos(x:Int,y:Int){
+  /* Return the index in the game_board of the piece of position (x, y) */
+  def get_piece_of_pos (x : Int, y : Int) {
     for (i <- 0 to 31){
       if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y){
         Constants.selected_piece = i
@@ -180,7 +183,7 @@ object Ksparov {
             DrawActions.draw_messages (4)
           }
           Constants.curr_player = 1 - Constants.curr_player
-          Constants.piece_choice_open = true
+          Constants.first_choice_done = false
         }}
       }
       if (Constants.players(Constants.curr_player).ai && Constants.game_type != 3) {
