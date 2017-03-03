@@ -524,23 +524,11 @@ object DrawActions {
 	}
 
 	/* Draw a given message on the board, the message depends on the argument passed */
-	def draw_messages (message_type : Int) {
+	def draw_messages (message_type : String) {
 		message_type match {
-			/* 0 to 3 draw the welcome message depending on the type of game selected. */
-			case 0 => Constants.message_drawer.text = "Bienvenu dans Ksparov, les blancs commençent la partie !"
-				Constants.message_drawer.foreground = Color.black
-
-			case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>"
-				Constants.message_drawer.foreground = Color.black
-
-			case 2 => Constants.message_drawer.text = "Bienvenu dans Ksparov, vous jouez les blancs !"
-				Constants.message_drawer.foreground = Color.black
-
-			case 3 => Constants.message_drawer.text = "Mode IA vs IA : cliquez pour voir le prochain coup !" 
-				Constants.message_drawer.foreground = Color.black
 
 			/* Draw who's player the turn is. */
-			case 4 => Constants.curr_player match {
+			case "Current_turn" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
 					Constants.message_drawer.foreground = Color.black
 				case 1 => Constants.message_drawer.text = "La main est au joueur noir !"
@@ -548,7 +536,7 @@ object DrawActions {
 			}
 
 			/* Draw if a player is in check. */
-			case 5 => Constants.curr_player match {
+			case "Check" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
 					Constants.message_drawer.foreground = Color.red
 				case 1 => Constants.message_drawer.text = "Le joueur noir est en échec !"
@@ -556,7 +544,7 @@ object DrawActions {
 			}
 
 			/* Draw if a player is mate. */
-			case 6 => Constants.curr_player match {
+			case "Mate" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "Echec et mat, le joueur noir gagne la partie !"
 					Constants.message_drawer.foreground = Color.red
 				case 1 => Constants.message_drawer.text = "Echec et mat, le joueur blanc gagne la partie !"
@@ -564,7 +552,7 @@ object DrawActions {
 			}
 
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
-			case 7 => Constants.curr_player match {
+			case "Pat" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA noire ne peut plus bouger !"
 					Constants.message_drawer.foreground = Color.red 
 				case 1 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA blanche ne peut plus bouger !"

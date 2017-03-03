@@ -197,19 +197,19 @@ object Ksparov {
         /* Check if there is a mate after the move. */
         if (Checkmate.check_mate (Ksparov.board, 1 - Constants.curr_player)) {
           /* If so, finish the game. */
-          DrawActions.draw_messages (6)
+          DrawActions.draw_messages ("Mate")
           Constants.game_won = true
         } else {
           /* Check if the AI still can move. */
           if (Constants.game_nulle) {
-            DrawActions.draw_messages (7)
+            DrawActions.draw_messages ("Pat")
           } else {
             /* Else check if there is check. */
             if (Constants.kings(1 - Constants.curr_player).attacked) {
-              DrawActions.draw_messages (5)
+              DrawActions.draw_messages ("Check")
             } else {
               /* Else, else, else ... Continue and give the hand to the other player. */
-              DrawActions.draw_messages (4)
+              DrawActions.draw_messages ("Current_turn")
             }
             Constants.curr_player = 1 - Constants.curr_player
             Constants.first_choice_done = false
@@ -234,22 +234,22 @@ object Ksparov {
       case 1 =>
         Constants.players(0) = new Human(0)
         Constants.players(1) = new Human(1)
-        DrawActions.draw_messages (0)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("Bienvenu dans Ksparov, les blancs commençent la partie !")
       case 2 =>
         /* Draw a random number to know the color of each players. */
         if (scala.util.Random.nextInt(2) == 0) {
           Constants.players(0) = new Human(0)
           Constants.players(1) = new AI(1)
-        DrawActions.draw_messages (1)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
         } else {
           Constants.players(1) = new Human(1)
           Constants.players(0) = new AI(0)
-        DrawActions.draw_messages (2)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("Bienvenu dans Ksparov, vous jouez les blancs !")
          }
       case 3 =>
         Constants.players(1) = new AI(1)
         Constants.players(0) = new AI(0)
-        DrawActions.draw_messages (3)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("Mode IA vs IA : cliquez pour voir le prochain coup !")
     }
     /* Defines the game as not yet won, and the white player as the first player. */
     Constants.game_won = false
