@@ -68,6 +68,7 @@ abstract class Piece (play : Int, x : Int, y : Int) {
   var pos_y = y
   def coords = (pos_x, pos_y)
   var name : String
+  var piece_path : String
   var player = play
   def pattern(x_a : Int, y_a : Int) : Boolean
 
@@ -173,6 +174,7 @@ def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece])={
 
 class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "pawn"
+  var piece_path = "Pawn.png"
   /*A pawn can go one (or two if it is on its starting case) case forward and eventually in diagonal to attack another piece*/
   def pattern(x_a : Int, y_a : Int)={
     if (player == 1) {
@@ -201,6 +203,7 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
 
 class Rook(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "rook"
+  var piece_path = "Rook.png"
   var has_moved = false
   def pattern (x_a : Int, y_a : Int) = {
     (x_a == pos_x) || (y_a == pos_y)
@@ -209,6 +212,7 @@ class Rook(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
 
 class Knight(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "knight" //I still argue black knights should be called Batmans
+  var piece_path = "Knight.png"
   var has_moved = false;
   def pattern (x_a : Int, y_a : Int)= { //A knight can reach a case if it is at distance 3 and not aligned with its position
     math.abs(pos_x - x_a) + math.abs(pos_y - y_a) == 3 && (pos_x != x_a) && (pos_y != y_a)
@@ -227,6 +231,7 @@ class Knight(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
 
 class Bishop(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0){
   var name = "bishop"
+  var piece_path = "Bishop.png"
   def pattern(x_a : Int, y_a : Int) = {
     (pos_x - x_a)==(pos_y - y_a) || (pos_x - x_a)== (y_a - pos_y)
   }
@@ -234,6 +239,7 @@ class Bishop(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0){
 
 class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "king"
+  var piece_path = "King.png"
   var attackers : List[Piece] = Nil //A list of the pieces attacking the king. Updated during at each move.
   var has_moved : Boolean = false
   def attacked = attackers.nonEmpty
@@ -297,6 +303,7 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
 
 class Queen (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   var name = "queen"
+  var piece_path = "Queen.png"
   def pattern(x_a:Int,y_a:Int)={
     (x_a == pos_x) || (y_a == pos_y) || (pos_x - x_a) == (pos_y - y_a) || (pos_x - x_a) == (y_a - pos_y)
   }

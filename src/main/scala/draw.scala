@@ -109,7 +109,6 @@ object DrawNotYet {
 
 	/* A simple layout : the center grid between two columns of background cases. */
 	class NotYet (name : String) extends BorderPanel {
-		println (name)
 		layout (new BackgroundCase (5, 1)) = East
 		layout (new BackgroundCase (5, 1)) = West
 		layout (new CenterGrid (name)) = Center
@@ -485,14 +484,7 @@ object DrawActions {
 			coord = game_board(i).pos_x + game_board(i).pos_y * 8
 			/* If the piece is alive, update the icon of the case of its position. */
 			if (coord >= 0) {
-				game_board(i).name match {
-					case "pawn" => piece_path = "Pawn.png"
-					case "queen" => piece_path = "Queen.png"
-					case "king" => piece_path = "King.png"
-					case "rook" => piece_path = "Rook.png"
-					case "knight" => piece_path = "Knight.png"
-					case "bishop" => piece_path = "Bishop.png"
-				}
+				piece_path = game_board(i).piece_path
 				Constants.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
 			/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
 			} else {
