@@ -67,8 +67,20 @@ class Human(n : Int) extends Player(n : Int) {
 object Constants {
 
   /* Defining the dimension and numbers of the cases */
-  val dim_small = new Dimension (80, 80)
-  val dim_big = new Dimension (240, 80)
+  val resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+  println(resolution.getHeight)
+
+  var dim_small = new Dimension (40, 40)
+  var dim_big = new Dimension (120, 40)
+
+  if (resolution.getHeight < 1000.0) {
+    dim_small = new Dimension (40, 40)
+    dim_big = new Dimension (120, 40)
+  } else {
+    dim_small = new Dimension (80, 80)
+    dim_big = new Dimension (240, 80)
+  }
   val nb_case_board = 8
 
   /* Defining the path to find every resource used in the programm */

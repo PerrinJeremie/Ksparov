@@ -35,7 +35,7 @@ object Aux {
       var (x, y, color) = (p.pos_x, p.pos_y, p.player)
       //Checking if the piece isn't dead :
       if (Aux.on_board(x, y)){
-        var x_king = kings(2 * color)
+        var x_king = kings(2 * color) 
         var y_king = kings(2 * color + 1)
         //Checking the validity of the move :
         if (p.checks_pre_move(x_king, y_king)){
