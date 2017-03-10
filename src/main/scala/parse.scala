@@ -24,12 +24,11 @@ object Save{
 
   def is_valid : Boolean = {
     var res : String = "ls " + Constants.resources_path + Constants.save_path !!;
-    println (res)
-    return true
+    return (res.indexOf(Save_constants.curr_save) == -1)
   }
 
   def main(argv : Array[String]) {
-    var b = is_valid
+    println (is_valid)
   }
 }
 
