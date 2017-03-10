@@ -1,9 +1,11 @@
 import java.io._
+import sys.process._
+
 
 object Save_constants {
 
   var can_overwrite = false
-  var curr_save = ""
+  var curr_save = "coucou"
 
   def init : Unit = {
     val r = scala.util.Random
@@ -18,9 +20,16 @@ object Save_constants {
 }
 
 object Save{
-  var writer = new PrintWriter (new File (Constants.ressources_path + Save_constants.curr_save))
-  def init : Unit = {
-    writer = new PrintWriter (new 
+  var writer = new PrintWriter (new File (Constants.resources_path + Constants.save_path + Save_constants.curr_save))
+
+  def is_valid : Boolean = {
+    var res : String = "ls " + Constants.resources_path + Constants.save_path !!;
+    println (res)
+    return true
+  }
+
+  def main(argv : Array[String]) {
+    var b = is_valid
   }
 }
 
