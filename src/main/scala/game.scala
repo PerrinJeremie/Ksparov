@@ -22,7 +22,7 @@ class Human(n : Int) extends Player(n : Int) {
 
   /* Take a couple of positions and return true if the piece is owned by the player. */
   def isHis(x : Int, y : Int) : Boolean = {
-    var done = false 
+    var done = false
     /* We run from 0 to 15 for the player 1 (white) and from 16 to 31 for the player 0 (black) */
     for (i <- (1 - id) * 16 to (2 - id) * 16 - 1) {
       done = done || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
@@ -48,7 +48,7 @@ class Human(n : Int) extends Player(n : Int) {
          Second click, checking if the first has been done. */
       if (Constants.first_choice_done) {
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
-        var (valid,p) = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
+        var valid = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
         if (valid) {
           /* If the move is valid, apply the new board */
           DrawActions.draw_game_board(Ksparov.board)
@@ -105,7 +105,7 @@ object Constants {
       case 2 => text_color = Color.white
       case 3 => text_color = Color.black
       case 4 => text_color = Color.black
-      case 5 => text_color = Color.red 
+      case 5 => text_color = Color.red
     }
   }
 
@@ -128,7 +128,7 @@ object Constants {
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 
-  /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */ 
+  /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
   var kings = new Array[King](2)
   var players = new Array[Player](2)
 
@@ -182,6 +182,22 @@ object Ksparov {
         Constants.selected_piece = i
       }
     }
+  }
+
+  def promotion( p : Pawn ) = {
+    var new_piece_name : String = DrawActions.draw_promotion //temporaire
+    val pawn_index = Ksparov.board.indexOf(p)
+    var new_piece = new_piece_name match {
+     case "knight" => new Knight (Constants.curr_player, p.pos_x, p.pos_y)
+     case "bishop" => new Bishop (Constants.curr_player, p.pos_x, p.pos_y)
+     case "rook" => new Rook (Constants.curr_player, p.pos_x, p.pos_y)
+     case "queen" => new Queen (Constants.curr_player, p.pos_x, p.pos_y)
+   }
+   board (pawn_index) = new_piece
+   var king = Constants.kings(1-Constants.curr_player)
+   if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
+     king.attackers = king.attackers :+ new_piece
+   }
   }
 
   /* Called when click on a case of the board, defines the movment action. */
@@ -254,7 +270,7 @@ object Ksparov {
     /* Defines the game as not yet won, and the white player as the first player. */
     Constants.game_won = false
     Constants.game_nulle = false
-    Constants.curr_player = 1 
+    Constants.curr_player = 1
   }
 
   /* The Swing application with frame in it. */

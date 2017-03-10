@@ -142,7 +142,7 @@ def pre_move(x_a : Int, y_a : Int, g :Array[Piece]) : (Boolean, Option[Piece], L
 }
 
 /*Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.*/
-def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece])={
+def move(x_a : Int, y_a : Int, g : Array[Piece]) : Boolean={
   var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
   if (move_ok){
     pos_x = x_a ;
@@ -158,7 +158,7 @@ def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece])={
       case _ => ()
      }
     }
-    (move_ok, p_arrival)
+    move_ok
   }
 
   /* Auxiliary function for possible_moves returning the possibility of a move */
@@ -199,6 +199,14 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
         case _ => (p.get.player != player, Some(p.get))
       }
     }
+  }
+  /*We override move to handle the case of promotion*/
+  override def move (x_a : Int, y_a : Int, g : Array[Piece])={
+    var move_ok = super.move( x_a, y_a, g)
+    if (y_a ==  7 * player){
+      Ksparov.promotion( this )
+    }
+    move_ok
   }
 }
 
@@ -280,7 +288,7 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   }
 
   /*Since castling needs to move two pieces, we have to override move too*/
-  override def move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece]) = {
+  override def move(x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
     var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
     if (move_ok && math.abs(pos_x - x_a) == 2) {
       pos_x = x_a ;
@@ -294,7 +302,7 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
       has_moved = true
       var king = Constants.kings(1 - player)
       king.attackers = attackers
-      (move_ok, None)
+      move_ok
     }
     else {
       super.move (x_a, y_a, g)

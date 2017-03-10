@@ -11,8 +11,8 @@ import scala.util.matching.Regex
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Kasparov.frame in game.scala. */
 
-/* The exception of the above rule : this class defines a grid of background cases, 
-   each background is juste a set of this grid. */  
+/* The exception of the above rule : this class defines a grid of background cases,
+   each background is juste a set of this grid. */
 class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	for(k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
@@ -30,9 +30,9 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 object DrawMenu {
 	val nb_menu_option = 6
 
-	/* The generic class for the buttons, the role of a particular is defined 
+	/* The generic class for the buttons, the role of a particular is defined
 	   depending on the parameter passed to the class. */
-	class Option (name : String) extends Button { 
+	class Option (name : String) extends Button {
 		preferredSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
@@ -76,7 +76,7 @@ object DrawMenu {
 	}
 }
 
-/* An object no so useful, it draws a message telling the users that functionnality has not been programmed. 
+/* An object no so useful, it draws a message telling the users that functionnality has not been programmed.
    We use it for keeping place to the future upgrades of the game. */
 object DrawNotYet {
 
@@ -121,7 +121,7 @@ object DrawNotYet {
 object DrawParameters {
 
 	val nb_option_max = 5
-	
+
 	/* Buttons for the texture choice, the parameter defines which texture the button stands for. */
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
@@ -139,7 +139,7 @@ object DrawParameters {
 				/* When the button is pushed, we write the new parameters in the src/main/resources/Parameters file.
 				   After doing this, we apply the new parameters to that choice is dynamic. */
 				Constants.write_parameters ((Constants.pattern findAllIn Constants.pieces_path).mkString, number.toString)
-				Constants.apply_parameters 
+				Constants.apply_parameters
 				Ksparov.frame.contents = new DrawParameters.Parameters
 			}
 		}
@@ -225,7 +225,7 @@ object DrawGameSelection {
 			Constants.game_type = num
 			/* Launched a game. */
 		    Ksparov.init_game(num)
-    		Ksparov.frame.contents = new DrawBoard.Board	
+    		Ksparov.frame.contents = new DrawBoard.Board
 		}
 	}
 
@@ -242,7 +242,7 @@ object DrawGameSelection {
 					border = new javax.swing.border.LineBorder (Color.black, 2)
 					action = Action ("Revenir au menu principal") {Ksparov.frame.contents = new DrawMenu.Menu}}
 			}}
-		}	
+		}
 	}
 
 	/* The final class with background. */
@@ -250,7 +250,7 @@ object DrawGameSelection {
 		layout (new BackgroundCase (9, 1)) = East
 		layout (new CenterGrid) = Center
 		layout (new BackgroundCase (9, 1)) = West
-	}	
+	}
 }
 
 /* The most important class : draw the board itself ! */
@@ -266,7 +266,7 @@ object DrawBoard {
 		foreground = Constants.text_color
 	}
 
-	/* These cases just have an icon a piece (except king), they are on the left and right side of the bord 
+	/* These cases just have an icon a piece (except king), they are on the left and right side of the bord
 	    and they are used to count the number of each dead piece for each player. */
 	class DeadCase (player : Int, piece : String) extends Label {
 		preferredSize = Constants.dim_small
@@ -308,7 +308,7 @@ object DrawBoard {
 		}
 	}
 
-	/* The board with its 63 cases, it is represented as an Array in Constants.grid_cases, 
+	/* The board with its 63 cases, it is represented as an Array in Constants.grid_cases,
 	   we need it in an array to change the icon variable depending on board.
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 	def create_grid_cases {
@@ -398,11 +398,11 @@ object DrawBoard {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
-				case 4 => 
+				case 4 =>
 					contents += new DeadCase (1, "Queen")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
 					contents += new BackgroundCase (1, 1)
-				case 5 => 
+				case 5 =>
 					contents += new DeadCase (1, "Bishop")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
 					contents += new BackgroundCase (1, 1)
@@ -410,11 +410,11 @@ object DrawBoard {
 					contents += new DeadCase (1, "Knight")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
 					contents += new BackgroundCase (1, 1)
-				case 7 => 
+				case 7 =>
 					contents += new DeadCase (1, "Rook")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
 					contents += new BackgroundCase (1, 1)
-				case 8 => 
+				case 8 =>
 					contents += new DeadCase (1, "Pawn")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
 					contents += new BackgroundCase (1, 1)
@@ -431,11 +431,11 @@ object DrawBoard {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
-				case 1 => 
+				case 1 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
 					contents += new DeadCase (0, "Queen")
-				case 2 => 
+				case 2 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
 					contents += new DeadCase (0, "Bishop")
@@ -443,11 +443,11 @@ object DrawBoard {
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
 					contents += new DeadCase (0, "Knight")
-				case 4 => 
+				case 4 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
 					contents += new DeadCase (0, "Rook")
-				case 5 => 
+				case 5 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
 					contents += new DeadCase (0, "Pawn")
@@ -469,6 +469,11 @@ object DrawBoard {
 /* Special object here which contains every methods for drawing actions to the board. */
 object DrawActions {
 
+	//FAIS MOI CETTE FONCTION SIMON FDP//
+	def draw_promotion () : String = {
+		"queen"
+	}
+
 	/* Draw a game board (an array of pieces) on the chessboard. */
 	def draw_game_board (game_board : Array[Piece]) {
 		var coord = 0
@@ -480,7 +485,7 @@ object DrawActions {
 		DrawBoard.create_grid_cases
 		/* For each piece in the game board. */
 		for (i <- 0 to game_board.length - 1) {
-			/* Transcripting coordinates in one dimension. */ 
+			/* Transcripting coordinates in one dimension. */
 			coord = game_board(i).pos_x + game_board(i).pos_y * 8
 			/* If the piece is alive, update the icon of the case of its position. */
 			if (coord >= 0) {
@@ -554,9 +559,9 @@ object DrawActions {
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
 			case "Pat" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA noire ne peut plus bouger !"
-					Constants.message_drawer.foreground = Color.red 
+					Constants.message_drawer.foreground = Color.red
 				case 1 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA blanche ne peut plus bouger !"
-					Constants.message_drawer.foreground = Color.red 
+					Constants.message_drawer.foreground = Color.red
 			}
 		}
 	}
