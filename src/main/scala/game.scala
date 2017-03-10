@@ -66,25 +66,31 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  /* Defining the dimension and numbers of the cases */
-  val resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+  var dim_small = new Dimension (0, 0)
+  var dim_big = new Dimension (0, 0)
+  var dim_path = ""
+  var resources_path = ""
 
-  println(resolution.getHeight)
+  def apply_resolution {
 
-  var dim_small = new Dimension (40, 40)
-  var dim_big = new Dimension (120, 40)
+    /* Defining the dimension and numbers of the cases */
+    val resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
-  if (resolution.getHeight < 1000.0) {
-    dim_small = new Dimension (40, 40)
-    dim_big = new Dimension (120, 40)
-  } else {
-    dim_small = new Dimension (80, 80)
-    dim_big = new Dimension (240, 80)
+    if (resolution.getHeight < 1000.0) {
+      dim_path = "Min/"
+      dim_small = new Dimension (50, 50)
+      dim_big = new Dimension (150, 50)
+    } else {
+      dim_path = "Max/"
+      dim_small = new Dimension (80, 80)
+      dim_big = new Dimension (240, 80)
+    }
+  resources_path = "src/main/resources/" + dim_path
   }
+
   val nb_case_board = 8
 
   /* Defining the path to find every resource used in the programm */
-  var resources_path = "src/main/resources/"
   var pieces_path = ""
   var save_path = "saves/"
   var small_texture_path = ""
@@ -159,6 +165,8 @@ object Constants {
 
 /* The main object of the application. */
 object Ksparov {
+
+  Constants.apply_resolution
   /* Reading the parameters from the file. */
   Constants.apply_parameters
 
