@@ -97,7 +97,7 @@ object Constants {
 
   /* Defining the path to find every resource used in the programm */
   var pieces_path = ""
-  var save_path = "saves/"
+  var save_path = "Saves/"
   var small_texture_path = ""
 
   /* Defining the color of the text on the board. */

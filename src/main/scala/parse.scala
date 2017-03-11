@@ -11,10 +11,11 @@ object Save{
   /* Liste de triplets (irock,prom,piece_prom,piece,p1,p2) avec 
    - irock=0 si pas de roque, = 1 si grand, = -1 si petit. 
    - prom = true si il y a promotion, alors piece_prom indique la piece.
-   - piece la piece qui bouge.
+   - piece la piece qui bouge (K king ,Q queen ,B bishop ,N knight ,R rook).
    - attack = vrai si une piece est mangée
+   - check s'il y a echec
    - p1 la position initiale, p2 la position d'arrivée */
-  type Moves = (Int , Boolean , String , String , Boolean, (Int,Int), (Int,Int))
+  type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
   var list_of_moves : List[Moves] = List()
 
   def is_valid (s:String) : Boolean = {
@@ -44,6 +45,10 @@ object Save{
     writer.write( "[ Result \"" + result + "\"]\n\n")
   }
 
+  def pos_to_PGN (p : (Int,Int)) : String = {
+    (97 + p._1).toChar + (p._2 + 1).toString
+  }
+
   def write_moves(writer : PrintWriter, result : String) : Unit = {
 
     def write_move(i : Int, move: Moves) : Unit = {
@@ -53,7 +58,18 @@ object Save{
       move._1 match{
         case -1 => writer.write( " O-O " )
         case 1 => writer.write( " O-O-O " )
-        case 0 => writer.write( " coup " )
+        case 0 => 
+          if (move._2){
+            writer.write( " =" + move._3)
+          }
+          writer.write( move._4 + pos_to_PGN(move._7))
+          if(move._5){
+            writer.write("x")
+          }
+          writer.write(pos_to_PGN(move._8))
+          if(move._6){
+            writer.write("+ ")
+          }
       }
       if (i % 2 == 0){
         writer.write( "\n")
