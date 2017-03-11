@@ -121,7 +121,10 @@ object Save{
           if (move._2){
             writer.write( " =" + move._3)
           }
-          writer.write( " " + move._4 + pos_to_PGN(move._7))
+          else{
+            writer.write(" ")
+          }
+          writer.write( move._4 + pos_to_PGN(move._7))
           if(move._5){
             writer.write("x")
           }
