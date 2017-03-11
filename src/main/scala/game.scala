@@ -76,7 +76,7 @@ object Constants {
   var dim_path = ""
   var resources_path = "src/main/resources/"
 
-  var text_font = new Font ("Serif", 0, 14)
+  var text_font = new Font ("Gill Sans Cyr MT", 1, 16)
   var num_dead_font = new Font("Arial", 0, 25)
 
   def apply_resolution {
@@ -89,12 +89,12 @@ object Constants {
       dim_small = new Dimension (50, 50)
       dim_big = new Dimension (150, 50)
       dim_message_drawer = new Dimension (250, 50)
-      text_font = new Font ("Gill Sans Cyr MT", 0, 12)
+      text_font = new Font ("Gill Sans Cyr MT", 1, 11)
       num_dead_font = new Font("Arial", 0, 20)
     } else {
       dim_path = "Max/"
     }
-  resources_path = resources_path + dim_path
+  resources_path = "src/main/resources/" + dim_path
   }
 
   val nb_case_board = 8
@@ -148,6 +148,8 @@ object Constants {
 
   var selected_case = 0
   var selected_piece = -1
+  var promoted_piece = new Pawn (0, -1, -1)
+  var selected_promotion = ""
 
   /* The type of game chosen : 0 for Human vs Human, 1 for Hhuman vs AI and 2 for AI vs AI. */
   var game_type = 0
@@ -155,6 +157,7 @@ object Constants {
   /* Arrays for the game : one with the 63 cases, one which counts the dead pieces for each player. */
   var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+  var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
 
   /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
   var kings = new Array[King](2)
@@ -167,6 +170,7 @@ object Constants {
   /* Game variable : is the game won or nulle. */
   var game_nulle = false
   var game_won = false
+  var promotion = false
 
   /* The message drawer is instantiated here so we can change its text in DrawActions.draw_messages. */
   var message_drawer = new DrawBoard.MessageDrawer ("")
@@ -214,27 +218,27 @@ object Ksparov {
     }
   }
 
-  def promotion( p : Pawn ) = {
-    var new_piece_name : String = DrawActions.draw_promotion //temporaire
-    val pawn_index = Ksparov.board.indexOf(p)
+  def promotion = {
+    var new_piece_name : String = Constants.selected_promotion
+    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)
     var new_piece = new_piece_name match {
-     case "knight" => new Knight (Constants.curr_player, p.pos_x, p.pos_y)
-     case "bishop" => new Bishop (Constants.curr_player, p.pos_x, p.pos_y)
-     case "rook" => new Rook (Constants.curr_player, p.pos_x, p.pos_y)
-     case "queen" => new Queen (Constants.curr_player, p.pos_x, p.pos_y)
+     case "Knight" => new Knight (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Bishop" => new Bishop (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Rook" => new Rook (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Queen" => new Queen (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
    }
    board (pawn_index) = new_piece
-   Save.add_prom_to_move(new_piece_name)
-   var king = Constants.kings(1-Constants.curr_player)
+   var king = Constants.kings(1 - Constants.curr_player)
    if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
      king.attackers = king.attackers :+ new_piece
    }
+   DrawActions.disable_promotion (1 - Constants.curr_player)
   }
 
   /* Called when click on a case of the board, defines the movment action. */
   def play_move(x : Int, y : Int) {
     /* Checking if the game has been won. */
-    if (Constants.game_won || Constants.game_nulle) {
+    if (Constants.game_won || Constants.game_nulle || Constants.promotion) {
       /* If so, don't do anything, just wait for other button to be pressed. */
     } else {
       /* Else get the move, and if the player has moved, go on. */

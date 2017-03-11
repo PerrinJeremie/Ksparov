@@ -280,15 +280,20 @@ object DrawBoard {
 
 	/* These cases just have an icon a piece (except king), they are on the left and right side of the bord
 	    and they are used to count the number of each dead piece for each player. */
-	class DeadCase (player : Int, piece : String) extends Label {
+	class DeadCase (player : Int, piece : String) extends Button {
 		preferredSize = Constants.dim_small
 		/* They are colored in a grey close to the lead color. */
 		background = new Color (121, 128, 129)
-		/* By default labels are not opaque at all, giving them no color... */
-		opaque = true
-		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player.toString + "/" + piece + ".png")
-		border = new javax.swing.border.LineBorder (Color.black, 1)
-
+		action = new Action ("") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player.toString + "/" + piece + ".png")
+			disabledIcon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player.toString + "/" + piece + ".png")
+			border = new javax.swing.border.LineBorder (Color.black, 1)
+			enabled = false
+			def apply = {
+				Constants.selected_promotion = piece
+				Ksparov.promotion
+			}
+		}
 	}
 
 	/* These cases are the just next to the previous one, they are numbers of dead pieces. */
@@ -331,6 +336,15 @@ object DrawBoard {
 		}
 	}
 
+	def create_grid_dead {
+		for (j <- 0 to 1) {
+			Constants.promotion_buttons(j)(0) = new DeadCase (j, "Queen")
+			Constants.promotion_buttons(j)(1) = new DeadCase (j, "Bishop")
+			Constants.promotion_buttons(j)(2) = new DeadCase (j, "Knight")
+			Constants.promotion_buttons(j)(3) = new DeadCase (j, "Rook")
+		}
+	}
+
 	/* The center grid with the board and background with label around. */
 	class Grid extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 2) {
 		for (i <- -1 to Constants.nb_case_board) {
@@ -369,7 +383,6 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
-                Save.write_to_file("Essais_de_Sauvegarde","ENChess","Cachan","AAAA.MM.JJ", "1","Jérémie","Jérémie","*") 
 				Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir à la partie")
 			}
 		}
@@ -417,19 +430,19 @@ object DrawBoard {
 				contents += new BackgroundCase (1, 1)
 			} else { i match {
 				case 4 =>
-					contents += new DeadCase (1, "Queen")
+					contents += Constants.promotion_buttons(1)(0)
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
 					contents += new BackgroundCase (1, 1)
 				case 5 =>
-					contents += new DeadCase (1, "Bishop")
+					contents += Constants.promotion_buttons(1)(1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
 					contents += new BackgroundCase (1, 1)
 				case 6 =>
-					contents += new DeadCase (1, "Knight")
+					contents += Constants.promotion_buttons(1)(2)
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
 					contents += new BackgroundCase (1, 1)
 				case 7 =>
-					contents += new DeadCase (1, "Rook")
+					contents += Constants.promotion_buttons(1)(3)
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
 					contents += new BackgroundCase (1, 1)
 				case 8 =>
@@ -452,19 +465,19 @@ object DrawBoard {
 				case 1 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
-					contents += new DeadCase (0, "Queen")
+					contents += Constants.promotion_buttons(0)(0)
 				case 2 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
-					contents += new DeadCase (0, "Bishop")
+					contents += Constants.promotion_buttons(0)(1)
 				case 3 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
-					contents += new DeadCase (0, "Knight")
+					contents += Constants.promotion_buttons(0)(2)
 				case 4 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
-					contents += new DeadCase (0, "Rook")
+					contents += Constants.promotion_buttons(0)(3)
 				case 5 =>
 					contents += new BackgroundCase (1, 1)
 					contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
@@ -476,6 +489,7 @@ object DrawBoard {
 
 	/* The final board with everything. */
 	class Board extends BorderPanel {
+		create_grid_dead
 		layout(new Header) = North
 		layout(new Border1) = West
 		layout(new Border0) = East
@@ -522,6 +536,26 @@ object DrawActions {
 		}
 		/* Draw the new board. */
 		Ksparov.frame.contents = new DrawBoard.Board
+	}
+
+	def enable_promotion (p : Int) {
+		draw_messages ("Promotion")
+		Constants.promotion = true
+		for (i <- 0 to 3) {
+			Constants.promotion_buttons(p)(i).enabled = true
+			Constants.promotion_buttons(p)(i).background = Color.red
+		}
+	}
+
+	def disable_promotion (p : Int) {
+		Constants.promotion = false
+		for (i <- 0 to 3) {
+			Constants.promotion_buttons(p)(i).enabled = false
+			Constants.promotion_buttons(p)(i).background = new Color (121, 128, 129)
+		}
+		draw_game_board (Ksparov.board)
+		Ksparov.frame.contents = new DrawBoard.Board
+		draw_messages ("Current_turn")
 	}
 
 	/* Color in red the reachables cases. */
@@ -581,6 +615,11 @@ object DrawActions {
 				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>l'IA blanche ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
+
+			case "Promotion" => Constants.curr_player match {
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
+			} 
 		}
 	}
 }
