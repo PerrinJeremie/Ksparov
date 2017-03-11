@@ -203,7 +203,8 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   /*We override move to handle the case of promotion*/
   override def move (x_a : Int, y_a : Int, g : Array[Piece])={
     var move_ok = super.move( x_a, y_a, g)
-    if (y_a ==  7 * player){
+    if (y_a ==  7 * player && move_ok ){
+      println("Promotion !!")
       Constants.promoted_piece = this
       DrawActions.enable_promotion (Constants.curr_player)
     }

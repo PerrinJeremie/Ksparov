@@ -183,6 +183,8 @@ object Ksparov {
   /* Reading the parameters from the file. */
   Constants.apply_parameters
 
+  DrawBoard.create_grid_dead
+
   /* Define the first frame, later the contents variables will be change to display other frame. */
   var frame = new MainFrame {
     title = "Ksparov"
@@ -222,10 +224,10 @@ object Ksparov {
     var new_piece_name : String = Constants.selected_promotion
     val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)
     var new_piece = new_piece_name match {
-     case "Knight" => new Knight (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-     case "Bishop" => new Bishop (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-     case "Rook" => new Rook (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-     case "Queen" => new Queen (Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Knight" => new Knight (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Bishop" => new Bishop (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Rook" => new Rook (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+     case "Queen" => new Queen (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
    }
    board (pawn_index) = new_piece
    var king = Constants.kings(1 - Constants.curr_player)
@@ -261,6 +263,9 @@ object Ksparov {
             } else {
               /* Else, else, else ... Continue and give the hand to the other player. */
               DrawActions.draw_messages ("Current_turn")
+            }
+            if (Constants.promotion) {
+              DrawActions.draw_messages ("Promotion")
             }
             Constants.curr_player = 1 - Constants.curr_player
             Constants.first_choice_done = false

@@ -489,7 +489,6 @@ object DrawBoard {
 
 	/* The final board with everything. */
 	class Board extends BorderPanel {
-		create_grid_dead
 		layout(new Header) = North
 		layout(new Border1) = West
 		layout(new Border0) = East
@@ -500,11 +499,6 @@ object DrawBoard {
 
 /* Special object here which contains every methods for drawing actions to the board. */
 object DrawActions {
-
-	//FAIS MOI CETTE FONCTION SIMON FDP//
-	def draw_promotion () : String = {
-		"queen"
-	}
 
 	/* Draw a game board (an array of pieces) on the chessboard. */
 	def draw_game_board (game_board : Array[Piece]) {
@@ -539,12 +533,12 @@ object DrawActions {
 	}
 
 	def enable_promotion (p : Int) {
-		draw_messages ("Promotion")
 		Constants.promotion = true
 		for (i <- 0 to 3) {
 			Constants.promotion_buttons(p)(i).enabled = true
 			Constants.promotion_buttons(p)(i).background = Color.red
 		}
+		Ksparov.frame.contents = new DrawBoard.Board
 	}
 
 	def disable_promotion (p : Int) {
@@ -555,7 +549,9 @@ object DrawActions {
 		}
 		draw_game_board (Ksparov.board)
 		Ksparov.frame.contents = new DrawBoard.Board
+		Constants.curr_player = 1 - Constants.curr_player
 		draw_messages ("Current_turn")
+		Constants.curr_player = 1 - Constants.curr_player
 	}
 
 	/* Color in red the reachables cases. */
@@ -617,8 +613,8 @@ object DrawActions {
 			}
 
 			case "Promotion" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
 			} 
 		}
 	}
