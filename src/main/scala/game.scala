@@ -233,6 +233,7 @@ object Ksparov {
     if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
       king.attackers = king.attackers :+ new_piece
     }
+    Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
   }
 

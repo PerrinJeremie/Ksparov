@@ -383,6 +383,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
+                Save.write_to_file("Essai","ENSChess","Cachan","2017.03.11","1","Jérémie","Jérémie","*")
 				Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir à la partie")
 			}
 		}

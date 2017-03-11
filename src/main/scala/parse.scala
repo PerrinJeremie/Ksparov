@@ -70,16 +70,17 @@ object Save{
     list_of_moves = curr_move :: list_of_moves
   }
 
-  def add_prom_to_move( s: String) : Unit ={
+  def add_prom_to_move( s: String, b:Boolean) : Unit ={
    val piece_prom : String =  
      s match {
-       case "knight" => "N"
-       case "bishop" => "B"
-       case "rook" => "R"
-       case "queen" => "Q"
+       case "Knight" => "N"
+       case "Bishop" => "B"
+       case "Rook" => "R"
+       case "Queen" => "Q"
      }
-    
-    curr_move = (curr_move._1,true,piece_prom,curr_move._4,curr_move._5,curr_move._6,curr_move._7,curr_move._8)
+    list_of_moves = list_of_moves.tail
+    curr_move = (curr_move._1,true,piece_prom,curr_move._4,curr_move._5,curr_move._6 || b,curr_move._7,curr_move._8)
+    list_of_moves = curr_move :: list_of_moves
   }
  
 /*  def init : String = {
