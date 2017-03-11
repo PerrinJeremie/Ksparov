@@ -47,9 +47,13 @@ class Human(n : Int) extends Player(n : Int) {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
       if (Constants.first_choice_done) {
+        /* loads part of the move to be added but has to wait for promotion information */
+        Save.add_move1( Constants.selected_piece, (x,y))
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
         var valid = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
         if (valid) {
+          /* the move being valid addit to the list of moves */
+          Save.add_move2
           /* If the move is valid, apply the new board */
           DrawActions.draw_game_board(Ksparov.board)
           Constants.players(Constants.curr_player).moved = true
@@ -97,7 +101,7 @@ object Constants {
 
   /* Defining the path to find every resource used in the programm */
   var pieces_path = ""
-  var save_path = "Saves/"
+  var save_path = "src/main/resources/Saves/"
   var small_texture_path = ""
 
   /* Defining the color of the text on the board. */
@@ -220,6 +224,7 @@ object Ksparov {
      case "queen" => new Queen (Constants.curr_player, p.pos_x, p.pos_y)
    }
    board (pawn_index) = new_piece
+   Save.add_prom_to_move(new_piece_name)
    var king = Constants.kings(1-Constants.curr_player)
    if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
      king.attackers = king.attackers :+ new_piece
@@ -271,6 +276,7 @@ object Ksparov {
     Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
+    Save.init 
     /* Defines the welcome message and types of players depending on the game type chosen. */
     n match {
       case 1 =>

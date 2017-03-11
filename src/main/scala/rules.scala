@@ -271,16 +271,16 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
       //In case this is a queenside castling, checking the emptiness of the case next to the rook. If it is kingside, the case will be off board anyway.
       var right_neighbor = Aux.piece_of_coord(x_rook + 1, pos_y, g)
       if ( (rook != None) && (rook.get.name == "rook") && !rook.get.asInstanceOf[Rook].has_moved && (right_neighbor == None)) { //Lazy evaluation FTW !
-        //If the conditions are ok, we have to check if the king is not attacked during its movement. We use the super method for this.
+                                                                                                                                //If the conditions are ok, we have to check if the king is not attacked during its movement. We use the super method for this.
         var (move_ok1, p_arrival1, l1) = super.pre_move(pos_x + dir_x, pos_y, g)
         pos_x += dir_x
         var (move_ok2, p_arrival2, l2) = super.pre_move(pos_x + dir_x, pos_y, g)
         pos_x -= dir_x
         (move_ok1 && move_ok2 && p_arrival1 == None && p_arrival2 == None, rook, l2)
       }
-     else {
-       (false, rook, Nil)
-     }
+      else {
+        (false, rook, Nil)
+      }
     }
     else {
       super.pre_move (x_a, y_a, g)

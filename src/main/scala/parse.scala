@@ -17,15 +17,71 @@ object Save{
    - p1 la position initiale, p2 la position d'arrivée */
   type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
   var list_of_moves : List[Moves] = List()
+  var curr_move : Moves = (0,false,"","",false,false,(0,0),(0,0))
 
   def is_valid (s:String) : Boolean = {
-    var res : String = ("ls " + Constants.resources_path + Constants.save_path) !!;
+    var res : String = ("ls " + Constants.save_path) !!;
     return (res.indexOf(s) == -1)
   }
 
   def init : Unit = {
-    var list_of_moves = List()
+    list_of_moves = List()
   }
+
+  def init_curr_move : Unit = {
+    curr_move = (0,false,"","",false,false,(0,0),(0,0))
+  }
+
+  def add_move1 (pos_piece : Int, p : (Int,Int)) : Unit = {
+    val piece : Piece = Ksparov.board(pos_piece)
+    val pre_information : (Boolean, Option[Piece], List[Piece]) = piece.pre_move(p._1,p._2, Ksparov.board)
+    val s = piece.name match {
+      case "pawn" => ""
+      case "rook" => "R"
+      case "bishop" => "B"
+      case "queen" => "Q"
+      case "knight" => "N"
+      case "king" => "K"
+    }
+    init_curr_move
+    if (pre_information._1){
+
+      curr_move = ( curr_move._1, curr_move._2, curr_move._3, s , curr_move._5,!pre_information._3.isEmpty,piece.coords,p)
+
+      pre_information._2 match{
+        case None => ()
+        case Some(piece_mange) =>
+          if (piece_mange.player == piece.player){
+            if (piece_mange.pos_x == 7){
+              curr_move = ( -1 , curr_move._2, curr_move._3, curr_move._4, curr_move._5,curr_move._6,curr_move._7,curr_move._8 )
+            }
+            else{
+              curr_move = ( 1, curr_move._2, curr_move._3, curr_move._4, curr_move._5,curr_move._6,curr_move._7,curr_move._8 )
+            }
+          }
+          else{
+            curr_move = ( curr_move._1, curr_move._2, curr_move._3, curr_move._4, true,curr_move._6,curr_move._7,curr_move._8 )
+          }
+      }
+    }
+  }
+
+  def add_move2 : Unit = {
+    list_of_moves = curr_move :: list_of_moves
+  }
+
+  def add_prom_to_move( s: String) : Unit ={
+   val piece_prom : String =  
+     s match {
+       case "knight" => "N"
+       case "bishop" => "B"
+       case "rook" => "R"
+       case "queen" => "Q"
+     }
+    
+    curr_move = (curr_move._1,true,piece_prom,curr_move._4,curr_move._5,curr_move._6,curr_move._7,curr_move._8)
+  }
+ 
 /*  def init : String = {
     val r = scala.util.Random
     var name  = "0000000000000000"
@@ -98,7 +154,7 @@ object Save{
 
   def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String,result:String) : Int = {
     if (is_valid(s+".pgn")) {
-      val writer = new PrintWriter (new File (Constants.resources_path + Constants.save_path + s + ".pgn" ))
+      val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
       write_tags(writer,event,site,date,round,white,black,result)
       write_moves(writer,result)
       writer.close()
