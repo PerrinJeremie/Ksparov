@@ -23,6 +23,9 @@ object Save{
     return (res.indexOf(s) == -1)
   }
 
+  def init : Unit = {
+    var list_of_moves = List()
+  }
 /*  def init : String = {
     val r = scala.util.Random
     var name  = "0000000000000000"
@@ -62,7 +65,7 @@ object Save{
           if (move._2){
             writer.write( " =" + move._3)
           }
-          writer.write( move._4 + pos_to_PGN(move._7))
+          writer.write( " " + move._4 + pos_to_PGN(move._7))
           if(move._5){
             writer.write("x")
           }
@@ -86,10 +89,12 @@ object Save{
         return 1
       }
     }
+    val _ = rec_writing(list_of_moves)
   }
 
   /* returns 0 if all went well, -1 if it's not the case. 
-   Informations have to be filled by players except for result which is the result of the game : with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
+   Informations have to be filled by players except for result which is the result of the game : 
+   with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
 
   def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String,result:String) : Int = {
     if (is_valid(s+".pgn")) {
@@ -104,8 +109,19 @@ object Save{
     }
   }
 
-  def main(argv : Array[String]) {
-    write_to_file( "coucou", "ENChess", "Cachan", "2017.03.11", "?", "????", "????", "*")
-  }
 }
 
+object Load {
+
+  type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
+  var list_of_moves : List[Moves] = List()
+
+  var event : String = "" 
+  var site : String = ""
+  var date : String = ""
+  var white : String = ""
+  var black : String = ""
+  var result : String = "" 
+
+
+}
