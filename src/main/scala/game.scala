@@ -70,7 +70,7 @@ object Constants {
   var dim_big = new Dimension (140, 80)
   var dim_message_drawer = new Dimension (400, 80)
   var dim_path = ""
-  var resources_path = ""
+  var resources_path = "src/main/resources/"
 
   var text_font = new Font ("Serif", 0, 14)
   var num_dead_font = new Font("Arial", 0, 25)
@@ -90,7 +90,7 @@ object Constants {
     } else {
       dim_path = "Max/"
     }
-  resources_path = "src/main/resources/" + dim_path
+  resources_path = resources_path + dim_path
   }
 
   val nb_case_board = 8
