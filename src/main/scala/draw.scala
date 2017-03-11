@@ -291,7 +291,7 @@ object DrawBoard {
 			enabled = false
 			def apply = {
 				Constants.selected_promotion = piece
-				Ksparov.promotion
+				Ksparov.promotion (1 - Constants.curr_player)
 			}
 		}
 	}

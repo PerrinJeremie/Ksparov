@@ -45,3 +45,17 @@ class AI (player : Int) extends Player (player) {
     Constants.players(Constants.curr_player).moved = true
   }
 }
+
+object AI_methods {
+  def ai_promotion {
+    val rand = scala.util.Random
+    rand.nextInt(4) match {
+      case 0 => Constants.selected_promotion = "Queen"
+      case 1 => Constants.selected_promotion = "Bishop"
+      case 2 => Constants.selected_promotion = "Knight"
+      case 3 => Constants.selected_promotion = "Rook"
+    }
+    println(rand.nextInt(3))
+    Ksparov.promotion (Constants.curr_player)
+  } 
+}

@@ -204,9 +204,12 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   override def move (x_a : Int, y_a : Int, g : Array[Piece])={
     var move_ok = super.move( x_a, y_a, g)
     if (y_a ==  7 * player && move_ok ){
-      println("Promotion !!")
       Constants.promoted_piece = this
-      DrawActions.enable_promotion (Constants.curr_player)
+      if (Constants.players(Constants.curr_player).ai) {
+        AI_methods.ai_promotion
+      } else {
+        DrawActions.enable_promotion (Constants.curr_player)
+      }
     }
     move_ok
   }

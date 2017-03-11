@@ -220,21 +220,20 @@ object Ksparov {
     }
   }
 
-  def promotion = {
-    var new_piece_name : String = Constants.selected_promotion
-    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)
-    var new_piece = new_piece_name match {
-     case "Knight" => new Knight (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-     case "Bishop" => new Bishop (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-     case "Rook" => new Rook (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-     case "Queen" => new Queen (1 - Constants.curr_player, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-   }
-   board (pawn_index) = new_piece
-   var king = Constants.kings(1 - Constants.curr_player)
-   if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
-     king.attackers = king.attackers :+ new_piece
-   }
-   DrawActions.disable_promotion (1 - Constants.curr_player)
+  def promotion (p : Int) = {
+    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)  
+    var new_piece = Constants.selected_promotion match {
+      case "Knight" => new Knight (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+      case "Bishop" => new Bishop (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+      case "Rook" => new Rook (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+      case "Queen" => new Queen (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+    }
+    board (pawn_index) = new_piece
+    var king = Constants.kings(p)
+    if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
+      king.attackers = king.attackers :+ new_piece
+    }
+    DrawActions.disable_promotion (p)
   }
 
   /* Called when click on a case of the board, defines the movment action. */
