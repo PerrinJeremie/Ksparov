@@ -20,6 +20,8 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 				/* The size of a grid (the same for the entire application) is difined in the object Constants
 				   in game.scala, idem for paths to resources. */
 				preferredSize = Constants.dim_small
+				minimumSize = Constants.dim_small
+				maximumSize = Constants.dim_small
 				icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 			}
 		}
@@ -33,6 +35,7 @@ object DrawMenu {
 	/* The generic class for the buttons, the role of a particular is defined
 	   depending on the parameter passed to the class. */
 	class Option (name : String) extends Button {
+		font = Constants.text_font
 		preferredSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
@@ -83,6 +86,8 @@ object DrawNotYet {
 	/* The button to come back where you were in the application menu or in a game. */
 	class ComeBack (name : String) extends Button {
 		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
 			name match {
@@ -99,6 +104,7 @@ object DrawNotYet {
 				contents += new BackgroundCase (1, 3)
 			} else { i match {
 				case 1 => contents += new Label {
+					font = Constants.text_font
 					/* The beauty of scala : using HTML langage to format text and to have a carriage return (\n does not work...) */
 					text = "<html><div style='text-align : center;'>Cette fonctionnalité n'est pas<br>encore développée, veuillez<br>patienter quelque peu !</div></html>"
 				}
@@ -189,12 +195,14 @@ object DrawParameters {
 	class CenterGrid extends GridPanel (9, 1) {
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Label ("Choissisez le fond") {
+			font = Constants.text_font
 			border = new javax.swing.border.LineBorder (Color.black, 2)
 			background = new Color (200, 200, 200)
 			opaque = true}
 		contents += new TextureGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Label ("Choissisez le type de pièces") {
+			font = Constants.text_font
 			border = new javax.swing.border.LineBorder (Color.black, 2)
 			background = new Color (200, 200, 200)
 			opaque = true}
@@ -220,6 +228,9 @@ object DrawGameSelection {
 	/* The button for the choice selection : change the value of Constants.game_type when pressed. */
 	class Option (name : String, num : Int) extends Button {
 		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		font = Constants.text_font
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
 			Constants.game_type = num
@@ -239,8 +250,9 @@ object DrawGameSelection {
 				case 3 => contents += new Option ("Humain vs IA", 2)
 				case 5 => contents += new Option ("IA vs IA", 3)
 				case 7 => contents += new Button {
+					font = Constants.text_font
 					border = new javax.swing.border.LineBorder (Color.black, 2)
-					action = Action ("Revenir au menu principal") {Ksparov.frame.contents = new DrawMenu.Menu}}
+					action = Action ("Revenir au menu") {Ksparov.frame.contents = new DrawMenu.Menu}}
 			}}
 		}
 	}
@@ -285,7 +297,7 @@ object DrawBoard {
 		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
 		horizontalTextPosition = Alignment.Center
 		foreground = Constants.text_color
-		font = new Font("Arial", 0, 25)
+		font = Constants.num_dead_font
 		text = number.toString
 	}
 
@@ -349,21 +361,25 @@ object DrawBoard {
 	/* The board has a menu on his top defined here. */
 	class Header extends GridPanel (2, 2) {
 		contents += new Button {
+		font = Constants.text_font
 			action = Action ("Recommencer une partie") {
 	    		Ksparov.frame.contents = new DrawGameSelection.Menu
 			}
 		}
 		contents += new Button {
+		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
 				Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir à la partie")
 			}
 		}
 		contents += new Button {
+		font = Constants.text_font
 			action = Action ("Revenir au menu principal") {
 				Ksparov.frame.contents = new DrawMenu.Menu
 			}
 		}
 		contents += new Button {
+		font = Constants.text_font
 			action = Action ("Quitter Ksparov") {
 	    		Ksparov.frame.dispose()
 			}
@@ -372,7 +388,8 @@ object DrawBoard {
 
 	/* Behind the board, there is the message drawer, which is a label where messages like "check", "mat"... are displayed. */
 	class MessageDrawer (message : String) extends Label {
-		preferredSize = new Dimension (400, 80)
+		font = Constants.text_font
+		preferredSize = Constants.dim_message_drawer
 		background = new Color (220, 220, 220)
 		opaque = true
 		foreground = Color.black
@@ -550,17 +567,17 @@ object DrawActions {
 
 			/* Draw if a player is mate. */
 			case "Mate" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "Echec et mat, le joueur noir gagne la partie !"
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur noir gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "Echec et mat, le joueur blanc gagne la partie !"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur blanc gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
 			case "Pat" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA noire ne peut plus bouger !"
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>l'IA noire ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "Pat : la partie est nulle, l'IA blanche ne peut plus bouger !"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>l'IA blanche ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 		}

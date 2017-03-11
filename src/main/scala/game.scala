@@ -66,10 +66,14 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var dim_small = new Dimension (0, 0)
-  var dim_big = new Dimension (0, 0)
+  var dim_small = new Dimension (80, 80)
+  var dim_big = new Dimension (140, 80)
+  var dim_message_drawer = new Dimension (400, 80)
   var dim_path = ""
   var resources_path = ""
+
+  var text_font = new Font ("Serif", 0, 14)
+  var num_dead_font = new Font("Arial", 0, 25)
 
   def apply_resolution {
 
@@ -80,10 +84,11 @@ object Constants {
       dim_path = "Min/"
       dim_small = new Dimension (50, 50)
       dim_big = new Dimension (150, 50)
+      dim_message_drawer = new Dimension (250, 50)
+      text_font = new Font ("Gill Sans Cyr MT", 0, 12)
+      num_dead_font = new Font("Arial", 0, 20)
     } else {
       dim_path = "Max/"
-      dim_small = new Dimension (80, 80)
-      dim_big = new Dimension (240, 80)
     }
   resources_path = "src/main/resources/" + dim_path
   }
@@ -271,7 +276,7 @@ object Ksparov {
       case 1 =>
         Constants.players(0) = new Human(0)
         Constants.players(1) = new Human(1)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("Bienvenu dans Ksparov, les blancs commençent la partie !")
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
       case 2 =>
         /* Draw a random number to know the color of each players. */
         if (scala.util.Random.nextInt(2) == 0) {
