@@ -235,6 +235,10 @@ object Ksparov {
     }
     Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
+
+    if (Constants.players(Constants.curr_player).ai && Constants.game_type == 2) {
+      play_move (0, 0)
+    }
   }
 
   /* Called when click on a case of the board, defines the movment action. */
