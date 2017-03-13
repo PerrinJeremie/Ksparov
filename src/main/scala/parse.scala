@@ -179,14 +179,43 @@ object Save{
 object Load {
 
   type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
+
+  val matchtag = "[ \s \"\s\"]".r
+
   var list_of_moves : List[Moves] = List()
+  
+  var infos :  Array[String] = Array("","","","","","","","")
 
   var event : String = "" 
   var site : String = ""
   var date : String = ""
+  var round : String = ""
   var white : String = ""
   var black : String = ""
   var result : String = "" 
+/*
+  def get_list_move_from_file (filename : String)  : Unit {
+
+    infos(0) = filename
+
+    var i = 1
+
+    for (lines <- Source.fromFile(filename).getLines()){
+      if (i<= 7){
+        match lines {
+          case matchtag(tag, tagvalue) => infos(i) = tagvalue
+        }
+        i = i + 1
+      }
+      else{
+        match lines {
+          case matchtag(_*) => ()
+          case 
+      }
+    }
+
+  }
+ */
 
 
 }

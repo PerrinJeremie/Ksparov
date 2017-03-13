@@ -121,6 +121,66 @@ object DrawNotYet {
 	}
 }
 
+object DrawSave {
+
+  class TextField2(default:String,col: Int) extends TextField(default,col){
+    override def font = Constants.text_font 
+  }
+
+  val TextFileName  = new TextField2 ("File Name", 0)
+  val TextEvent  = new TextField2 ("Event", 0)
+  val TextSite  = new TextField2 ("Site", 0)
+  val TextDate  = new TextField2 ("Date", 0)
+  val TextRound  = new TextField2 ("Round", 0)
+  val TextWhite  = new TextField2 ("White", 0)
+  val TextBlack  = new TextField2 ("Black", 0)
+
+
+  class ComeBack (name : String) extends Button {
+	preferredSize = Constants.dim_big
+	minimumSize = Constants.dim_big
+	maximumSize = Constants.dim_big
+	border = new javax.swing.border.LineBorder (Color.black, 2)
+	action = Action (name) {
+      if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){
+		name match {
+		  case "Revenir au menu" => Ksparov.frame.contents = new DrawMenu.Menu
+		  case "Revenir à la partie" => Ksparov.frame.contents = new DrawBoard.Board
+		}
+      }
+        else{
+          TextFileName.text = "ALREADY USED NAME"
+        }
+      
+	}
+  }
+
+  class CenterGrid (name : String) extends GridPanel (17,1) {
+	for (i <- 0 to 16) {
+	  if (i % 2 == 0) {
+		contents += new BackgroundCase (1, 3)
+	  } else {
+        i match {
+		  case 1 => contents += TextFileName
+          case 3 => contents += TextEvent
+          case 5 => contents += TextSite
+          case 7 => contents += TextDate
+          case 9 => contents += TextRound
+          case 11 => contents += TextWhite
+          case 13 => contents += TextBlack
+		  case 15 => contents += new ComeBack (name)
+	    }
+      }
+	}
+  }
+
+  class Dsave (name: String) extends BorderPanel {
+    layout (new BackgroundCase (17,1)) = East
+    layout (new BackgroundCase (17,1)) = West
+    layout (new CenterGrid(name)) = Center
+  }
+}
+
 /* The window to choose and modify the parameters of the application : type of texture and type of pieces.
    Every parameter is recorded in the src/main/resources/Parameters file so they are kept from one gmae to the other.
    Other options will be added soon. */
@@ -383,8 +443,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
-                Save.write_to_file("Essai","ENSChess","Cachan","2017.03.11","1","Jérémie","Jérémie","*")
-				Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir à la partie")
+				Ksparov.frame.contents = new DrawSave.Dsave ("Revenir à la partie")
 			}
 		}
 		contents += new Button {
