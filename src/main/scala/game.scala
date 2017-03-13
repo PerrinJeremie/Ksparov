@@ -229,7 +229,7 @@ object Ksparov {
       case "Queen" => new Queen (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
     }
     board (pawn_index) = new_piece
-    var king = Constants.kings(p)
+    var king = Constants.kings(1-p)
     if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
       king.attackers = king.attackers :+ new_piece
     }
