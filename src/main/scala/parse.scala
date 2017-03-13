@@ -180,7 +180,7 @@ object Load {
 
   type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
 
-  val matchtag = "[ \s \"\s\"]".r
+ /* val matchtag = "[ \s \"\s\"]".r
 
   var list_of_moves : List[Moves] = List()
   
@@ -193,7 +193,7 @@ object Load {
   var white : String = ""
   var black : String = ""
   var result : String = "" 
-/*
+
   def get_list_move_from_file (filename : String)  : Unit {
 
     infos(0) = filename
