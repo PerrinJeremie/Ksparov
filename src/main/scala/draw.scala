@@ -416,10 +416,9 @@ object DrawBoard {
 	}
 
 	/* The center grid with the board and background with label around. */
-	class Simple_Grid (grid_id : Int) extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 2) {
+	class Simple_Grid (grid_id : Int) extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board) {
 		for (i <- -1 to Constants.nb_case_board) {
 			if (i == - 1 || i == Constants.nb_case_board) {
-				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCaseWithLabel ("A")
 				contents += new BackgroundCaseWithLabel ("B")
 				contents += new BackgroundCaseWithLabel ("C")
@@ -428,23 +427,32 @@ object DrawBoard {
 				contents += new BackgroundCaseWithLabel ("F")
 				contents += new BackgroundCaseWithLabel ("G")
 				contents += new BackgroundCaseWithLabel ("H")
-				contents += new BackgroundCase (1, 1)
 			} else {
-				for (j <- -1 to Constants.nb_case_board) {
-					if (j == -1 || j == Constants.nb_case_board) {
-						contents += new BackgroundCaseWithLabel ((8 - i).toString)
-					} else {
-						/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top. */
-						contents += Constants.grids (grid_id) (j + (7 - i) * 8)
-					}
+				for (j <- 0 to Constants.nb_case_board- 1) {
+					/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top. */
+					contents += Constants.grids (grid_id) (j + (7 - i) * 8)
 				}
 			}
 		}
 	}
 
-	class Grid extends GridPanel (1, Constants.nb_grid) {
-		for (i <- 0 to Constants.nb_grid - 1) {
-			contents += new Simple_Grid (i)
+	class Number_column extends GridPanel (Constants.nb_case_board + 2, 1) {
+		for (i <- 0 to Constants.nb_case_board + 1) {
+			if (i < 1 || i > 8) {
+				contents += new BackgroundCase (1, 1)
+			} else {
+				contents += new BackgroundCaseWithLabel ((9 - i).toString)
+			}
+		} 
+	}
+
+	class Grid extends BorderPanel {
+		Constants.nb_grid match {
+			case 1 => layout (new Simple_Grid (0)) = Center
+			case 2 => 
+				layout (new Simple_Grid (0)) = West
+				layout (new Number_column) = Center 
+				layout (new Simple_Grid (1)) = East 
 		}
 	}
 
@@ -498,66 +506,92 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the white player. */
-	class Border1 extends GridPanel (Constants.nb_case_board + 2, 3) {
+	class Border1 extends GridPanel (Constants.nb_case_board + 2, 4) {
 		for(i <- 0 to Constants.nb_case_board + 1) {
-			if (i < 4 || i > 8) {
+			if (i < 1 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
-			} else { i match {
-				case 4 =>
-					contents += Constants.promotion_buttons(1)(0)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
+				contents += new BackgroundCase (1, 1)
+			} else { 
+				if (i < 4) {
 					contents += new BackgroundCase (1, 1)
-				case 5 =>
-					contents += Constants.promotion_buttons(1)(1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
 					contents += new BackgroundCase (1, 1)
-				case 6 =>
-					contents += Constants.promotion_buttons(1)(2)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
 					contents += new BackgroundCase (1, 1)
-				case 7 =>
-					contents += Constants.promotion_buttons(1)(3)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
-					contents += new BackgroundCase (1, 1)
-				case 8 =>
-					contents += new DeadCase (1, "Pawn")
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
-					contents += new BackgroundCase (1, 1)
+					contents += new BackgroundCaseWithLabel ((9 - i).toString)
+				} else { i match {
+					case 4 =>
+						contents += Constants.promotion_buttons(1)(0)
+						contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
+						contents += new BackgroundCase (1, 1)
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						case 5 =>
+						contents += Constants.promotion_buttons(1)(1)
+						contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
+						contents += new BackgroundCase (1, 1)
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+					case 6 =>
+						contents += Constants.promotion_buttons(1)(2)
+						contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
+						contents += new BackgroundCase (1, 1)
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+					case 7 =>
+						contents += Constants.promotion_buttons(1)(3)
+						contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
+						contents += new BackgroundCase (1, 1)
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+					case 8 =>
+						contents += new DeadCase (1, "Pawn")
+						contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
+						contents += new BackgroundCase (1, 1)
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+					}
 				}
 			}
 		}
 	}
 
 	/* Border grid with dead pieces for the black player. */
-	class Border0 extends GridPanel (Constants.nb_case_board + 2, 2) {
+	class Border0 extends GridPanel (Constants.nb_case_board + 2, 4) {
 		for(i <- 0 to Constants.nb_case_board + 1) {
-			if (i < 1 || i > 5) {
+			if (i < 1 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
-			} else { i match {
-				case 1 =>
+				contents += new BackgroundCase (1, 1)
+			} else {
+				if (i > 5) {
+					contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					contents += new BackgroundCase (1, 1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
-					contents += Constants.promotion_buttons(0)(0)
-				case 2 =>
 					contents += new BackgroundCase (1, 1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
-					contents += Constants.promotion_buttons(0)(1)
-				case 3 =>
 					contents += new BackgroundCase (1, 1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
-					contents += Constants.promotion_buttons(0)(2)
-				case 4 =>
-					contents += new BackgroundCase (1, 1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
-					contents += Constants.promotion_buttons(0)(3)
-				case 5 =>
-					contents += new BackgroundCase (1, 1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
-					contents += new DeadCase (0, "Pawn")
+				} else { i match {
+					case 1 =>
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						contents += new BackgroundCase (1, 1)
+						contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
+						contents += Constants.promotion_buttons(0)(0)
+					case 2 =>
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						contents += new BackgroundCase (1, 1)
+						contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
+						contents += Constants.promotion_buttons(0)(1)
+					case 3 =>
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						contents += new BackgroundCase (1, 1)
+						contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
+						contents += Constants.promotion_buttons(0)(2)
+					case 4 =>
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						contents += new BackgroundCase (1, 1)
+						contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
+						contents += Constants.promotion_buttons(0)(3)
+					case 5 =>
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						contents += new BackgroundCase (1, 1)
+						contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
+						contents += new DeadCase (0, "Pawn")
+					}
 				}
 			}
 		}

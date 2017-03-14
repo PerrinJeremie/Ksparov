@@ -70,9 +70,9 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var dim_small = new Dimension (80, 80)
-  var dim_big = new Dimension (140, 80)
-  var dim_message_drawer = new Dimension (400, 80)
+  var dim_small = new Dimension (70, 70)
+  var dim_big = new Dimension (210, 70)
+  var dim_message_drawer = new Dimension (350, 70)
   var dim_path = ""
   var resources_path = "src/main/resources/"
 
@@ -98,7 +98,7 @@ object Constants {
   }
 
   val nb_case_board = 8
-  var nb_grid = 1
+  var nb_grid = 2
 
   /* Defining the path to find every resource used in the programm */
   var pieces_path = ""
