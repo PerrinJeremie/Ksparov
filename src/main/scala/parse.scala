@@ -19,6 +19,8 @@ object Save{
   var list_of_moves : List[Moves] = List()
   var curr_move : Moves = (0,false,"","",false,false,(0,0),(0,0))
 
+  var add2_happened = false
+
   def is_valid (s:String) : Boolean = {
     var res : String = ("ls " + Constants.save_path) !!;
     return (res.indexOf(s) == -1)
@@ -29,6 +31,7 @@ object Save{
   }
 
   def init_curr_move : Unit = {
+    add2_happened = false
     curr_move = (0,false,"","",false,false,(0,0),(0,0))
   }
 
@@ -67,6 +70,7 @@ object Save{
   }
 
   def add_move2 : Unit = {
+    add2_happened = true
     list_of_moves = curr_move :: list_of_moves
   }
 
@@ -78,9 +82,10 @@ object Save{
        case "Rook" => "R"
        case "Queen" => "Q"
      }
-    list_of_moves = list_of_moves.tail
     curr_move = (curr_move._1,true,piece_prom,curr_move._4,curr_move._5,curr_move._6 || b,curr_move._7,curr_move._8)
-    list_of_moves = curr_move :: list_of_moves
+    if ( add2_happened) {
+      list_of_moves = curr_move :: list_of_moves.tail
+    }
   }
  
 /*  def init : String = {
@@ -174,14 +179,43 @@ object Save{
 object Load {
 
   type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
+
+ /* val matchtag = "[ \s \"\s\"]".r
+
   var list_of_moves : List[Moves] = List()
+  
+  var infos :  Array[String] = Array("","","","","","","","")
 
   var event : String = "" 
   var site : String = ""
   var date : String = ""
+  var round : String = ""
   var white : String = ""
   var black : String = ""
   var result : String = "" 
+
+  def get_list_move_from_file (filename : String)  : Unit {
+
+    infos(0) = filename
+
+    var i = 1
+
+    for (lines <- Source.fromFile(filename).getLines()){
+      if (i<= 7){
+        match lines {
+          case matchtag(tag, tagvalue) => infos(i) = tagvalue
+        }
+        i = i + 1
+      }
+      else{
+        match lines {
+          case matchtag(_*) => ()
+          case 
+      }
+    }
+
+  }
+ */
 
 
 }

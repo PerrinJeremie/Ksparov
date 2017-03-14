@@ -31,6 +31,9 @@ class AI (player : Int) extends Player (player) {
         if (t.nonEmpty) {
           done = false
           var (i,j) = t(r.nextInt(t.size))
+          /* Save move */
+          Save.add_move1((1-id)*16 + ind, (i,j))
+          /* Play move */
           Ksparov.board((1 - id) * 16 + ind).move(i,j,Ksparov.board)
         }
         /* If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle */
@@ -40,6 +43,7 @@ class AI (player : Int) extends Player (player) {
         }        
       }
     }
+    Save.add_move2
     /* Draw the new board */
     DrawActions.draw_game_board(Ksparov.board)
     Constants.players(Constants.curr_player).moved = true
