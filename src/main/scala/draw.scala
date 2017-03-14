@@ -316,6 +316,7 @@ object DrawBoard {
 			background = Color.white
   		}
 		action = new Action ("") {
+			/*icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + "1/Queen.png")*/
 			def apply = {
 				/* When we click one a case, Constants.selected_case receive it in a one dimension way.
 				   Then we launched the movment method in game.scala. */
@@ -328,10 +329,19 @@ object DrawBoard {
 	/* The board with its 63 cases, it is represented as an Array in Constants.grid_cases,
 	   we need it in an array to change the icon variable depending on board.
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
+
+	def init_grids {
+		for(i <- 0 to Constants.nb_grid - 1) {
+			Constants.grids (i) = new Array [Case] (Constants.nb_case_board * Constants.nb_case_board)
+		} 
+	}
+
 	def create_grid_cases {
-		for (i <- 0 to Constants.nb_case_board - 1) {
-			for (j <- 0 to Constants.nb_case_board - 1) {
-				Constants.grid_cases (i + j * 8) = new Case (i, j)
+		for (k <- 0 to Constants.nb_grid - 1) {
+			for (i <- 0 to Constants.nb_case_board - 1) {
+				for (j <- 0 to Constants.nb_case_board - 1) {
+					Constants.grids (k) (i + j * 8) = new Case (i, j)
+				}
 			}
 		}
 	}
@@ -346,7 +356,7 @@ object DrawBoard {
 	}
 
 	/* The center grid with the board and background with label around. */
-	class Grid extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 2) {
+	class Simple_Grid (grid_id : Int) extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 2) {
 		for (i <- -1 to Constants.nb_case_board) {
 			if (i == - 1 || i == Constants.nb_case_board) {
 				contents += new BackgroundCase (1, 1)
@@ -365,10 +375,16 @@ object DrawBoard {
 						contents += new BackgroundCaseWithLabel ((8 - i).toString)
 					} else {
 						/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top. */
-						contents += Constants.grid_cases (j + (7 - i) * 8)
+						contents += Constants.grids (grid_id) (j + (7 - i) * 8)
 					}
 				}
 			}
+		}
+	}
+
+	class Grid extends GridPanel (1, Constants.nb_grid) {
+		for (i <- 0 to Constants.nb_grid - 1) {
+			contents += new Simple_Grid (i)
 		}
 	}
 
@@ -502,7 +518,7 @@ object DrawBoard {
 object DrawActions {
 
 	/* Draw a game board (an array of pieces) on the chessboard. */
-	def draw_game_board (game_board : Array[Piece]) {
+	def draw_game_board (game_board : Array[Piece]) {	
 		var coord = 0
 		var player_path = ""
 		var piece_path = ""
@@ -510,22 +526,24 @@ object DrawActions {
 		Constants.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 		/* Initilizing the array of cases. */
 		DrawBoard.create_grid_cases
-		/* For each piece in the game board. */
-		for (i <- 0 to game_board.length - 1) {
-			/* Transcripting coordinates in one dimension. */
-			coord = game_board(i).pos_x + game_board(i).pos_y * 8
-			/* If the piece is alive, update the icon of the case of its position. */
-			if (coord >= 0) {
-				piece_path = game_board(i).piece_path
-				Constants.grid_cases(coord).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
-			/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
-			} else {
-				game_board(i).name match {
-					case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
-					case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
-					case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
-					case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
-					case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1
+		for (k <- 0 to Constants.nb_grid - 1) {
+			/* For each piece in the game board. */
+			for (i <- 0 to game_board.length - 1) {
+				/* Transcripting coordinates in one dimension. */
+				coord = game_board(i).pos_x + game_board(i).pos_y * 8
+				/* If the piece is alive, update the icon of the case of its position. */
+				if (coord >= 0) {
+					piece_path = game_board(i).piece_path
+					Constants.grids(k)(coord).action.icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
+				/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
+				} else {
+					game_board(i).name match {
+						case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
+						case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
+						case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
+						case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
+						case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1
+					}
 				}
 			}
 		}
@@ -556,23 +574,23 @@ object DrawActions {
 	}
 
 	/* Color in red the reachables cases. */
-	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int) {
+	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, grid_id : Int) {
 		/* Coloring the selected case in red. */
-		Constants.grid_cases(pice_position_x + piece_position_y * 8).background = Color.red
+		Constants.grids (grid_id) (pice_position_x + piece_position_y * 8).background = Color.red
 		/* For each reachable case, colors it into red. */
         for (i <- 0 to case_list.length - 1) {
             var (k, l) = case_list(i)
-            Constants.grid_cases(k + 8 * l).background = Color.red
+            Constants.grids (grid_id) (k + 8 * l).background = Color.red
         }
 	}
 
 	/* Recolor as "normal" cases : white and black. */
-	def clear_possible_moves () {
+	def clear_possible_moves (grid_id : Int) {
 		for (i <- 0 to 63) {
 			if ((i % 8 + i / 8) % 2 == 0) {
-				Constants.grid_cases(i).background = Color.black
+				Constants.grids (grid_id) (i).background = Color.black
 			} else {
-				Constants.grid_cases(i).background = Color.white
+				Constants.grids (grid_id) (i).background = Color.white
 			}
 		}
 	}

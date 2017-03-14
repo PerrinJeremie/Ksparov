@@ -41,8 +41,8 @@ class Human(n : Int) extends Player(n : Int) {
       Constants.first_choice_done = true
       /* Then select the piece of position and draw possible moves. */
       Ksparov.get_piece_of_pos(x,y)
-      DrawActions.clear_possible_moves
-      DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y)
+      DrawActions.clear_possible_moves (0)
+      DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y, 0)
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
@@ -60,7 +60,7 @@ class Human(n : Int) extends Player(n : Int) {
         } else {
           /* If the move is invalid, research for a first click */
           Constants.first_choice_done = false
-          DrawActions.clear_possible_moves
+          DrawActions.clear_possible_moves (0)
         }
       }
     }
@@ -98,6 +98,7 @@ object Constants {
   }
 
   val nb_case_board = 8
+  var nb_grid = 1
 
   /* Defining the path to find every resource used in the programm */
   var pieces_path = ""
@@ -155,7 +156,7 @@ object Constants {
   var game_type = 0
 
   /* Arrays for the game : one with the 63 cases, one which counts the dead pieces for each player. */
-  var grid_cases = new Array[DrawBoard.Case] (nb_case_board * nb_case_board)
+  var grids = new Array [Array[DrawBoard.Case]] (nb_grid)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
   var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
 
@@ -287,6 +288,7 @@ object Ksparov {
   def init_game (n : Int) {
     /* Instantiate the kings and then the new board. */
     Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
+    DrawBoard.init_grids
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
     Save.init 
