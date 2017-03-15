@@ -77,6 +77,7 @@ class Human(n : Int) extends Player(n : Int) {
       sum = sum + Ksparov.board(i + 16 * id).possible_moves(Ksparov.board).length
     }
     if (sum == 0) {
+      Constants.game_nulle = true
       true
     } else {
       false
