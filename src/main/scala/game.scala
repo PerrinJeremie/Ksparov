@@ -342,6 +342,10 @@ object Ksparov {
         Constants.players(1) = new AI(1)
         Constants.players(0) = new AI(0)
         Constants.message_drawer = new DrawBoard.MessageDrawer ("Mode IA vs IA : cliquez pour voir le prochain coup !")
+      case 6 =>
+        Constants.players(1) = new AI(1)
+        Constants.players(0) = new AI(0)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("Mode Spectateur : cliquez pour voir le prochain coup !")
     }
     /* Defines the game as not yet won, and the white player as the first player. */
     Constants.game_won = false

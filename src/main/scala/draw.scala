@@ -10,6 +10,7 @@ import scala.util.matching.Regex
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import sys.process._
 
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Kasparov.frame in game.scala. */
@@ -47,7 +48,8 @@ object DrawMenu {
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
 					Ksparov.frame.contents = new DrawGameSelection.Menu
-				case "Charger une partie" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
+				case "Charger une partie" => Constants.nb_grid = 1
+                    Ksparov.frame.contents = new DrawCharge.Dcharge
 				case "Voir les scores" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
 				case "Gérer les paramètres" => Ksparov.frame.contents = new DrawParameters.Parameters
 				case "Quitter Ksparov" => Ksparov.frame.dispose()
@@ -126,11 +128,68 @@ object DrawNotYet {
 	}
 }
 
+object DrawCharge{
+
+    def shorten( s :String): String ={
+        return s.substring(0,s.length -4)
+    }
+
+    var result = ("ls " + Constants.save_path) !!;
+    val listgame = result.split('\n').map(shorten).toList
+    val scroll = new ComboBox(listgame)
+
+  	class Option (text : String, return_type : String) extends Button {
+		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		action = Action (text) {
+				return_type match {
+					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+					case "Game" => 
+                    Constants.game_type = 6
+                    Ksparov.init_game(6)
+                    Ksparov.frame.contents = new DrawBoard.Board
+				}
+		}
+	}
+
+	class CenterGrid extends GridPanel (8,1) {
+		for (i <- 0 to 7) {
+			if (i == 0 || i % 2 == 1 && i != 1) {
+				contents += new BackgroundCase (1, 3)
+			} else {
+       	 		i match {
+		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle nom donner<br> à la sauvegarde ?</html>")
+		  			case 2 => contents += scroll
+		  			case 4 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")
+		  			case 6 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
+	    		}
+    		}
+		}
+	}
+
+	class Dcharge extends BorderPanel {
+    	layout (new BackgroundCase (8,1)) = East
+    	layout (new BackgroundCase (8,1)) = West
+    	layout (new CenterGrid) = Center
+	}
+}
+
 object DrawSave {
 
 	class TextField2 (default : String, col : Int) extends TextField (default, col) {
 		override def font = Constants.text_font 
   	}
+
+    def resultgame(p : Int, gw : Boolean, gn : Boolean) : String = {
+      (p,gw,gn) match{
+        case (_,_,true) => "1/2-1/2"
+        case (1,true,_) => "1-0"
+        case (0,true,_) => "0-1"
+        case _ => "*"
+      }
+    }
 
 	val TextFileName = new TextField2 ("", 0)
 	/*val TextEvent = new TextField2 ("Event", 0)
@@ -146,7 +205,7 @@ object DrawSave {
 		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (text) {
-      		if (Save.write_to_file(TextFileName.text, "Ksparov Game", "Ksparov Software", new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), "1", "White_player", "Black_player", "*") == 0) {
+      		if (Save.write_to_file(TextFileName.text, "Ksparov Game", "Ksparov Software", new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), "1", "White_player", "Black_player", resultgame(Constants.curr_player, Constants.game_won,Constants.game_nulle) ) == 0) {
       		/*if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){*/
 				return_type match {
 					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu

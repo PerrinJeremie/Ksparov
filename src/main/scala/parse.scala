@@ -1,4 +1,5 @@
 import java.io._
+import scala.io.Source
 import sys.process._
 
 /* On se base sur une version de PGN non ambigue donc chaque mouvement est de la forme (hormis les mouvements spéciaux tels que le roque et la promotion) : 
@@ -23,7 +24,7 @@ object Save{
 
   def is_valid (s:String) : Boolean = {
     var res : String = ("ls " + Constants.save_path) !!;
-    return (res.indexOf(s) == -1)
+    return (res.indexOf(s) == -1 && s.length <= 24)
   }
 
   def init : Unit = {
@@ -180,9 +181,13 @@ object Load {
 
   type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
 
- /* val matchtag = "[ \s \"\s\"]".r
+  /* regexs to parse words and lines */
 
-  var list_of_moves : List[Moves] = List()
+  val matchtag = """"(.*)"""".r
+  val tourtag = """[0-9]+[.]""".r
+
+
+  var list_of_moves : List[String] = List()
   
   var infos :  Array[String] = Array("","","","","","","","")
 
@@ -194,28 +199,49 @@ object Load {
   var black : String = ""
   var result : String = "" 
 
-  def get_list_move_from_file (filename : String)  : Unit {
+  var player : Int = 1
+
+  def main( argv : Array[String]) {
+    get_list_move_from_file("test")
+  }
+
+  def parse_word (w : String) : Unit = {
+    w match {
+      case tourtag(_*) => ()
+      case _ => println(w)
+    }
+  }
+
+  def get_list_move_from_file (filename : String)  : Unit = {
 
     infos(0) = filename
 
     var i = 1
 
-    for (lines <- Source.fromFile(filename).getLines()){
+    for (lines <- Source.fromFile(Constants.save_path + filename + ".pgn").getLines()){
       if (i<= 7){
-        match lines {
-          case matchtag(tag, tagvalue) => infos(i) = tagvalue
+        matchtag.findFirstIn(lines) match {
+          case Some(s) => 
+            infos(i) = s
+            i = i + 1
+          case None => ()
         }
-        i = i + 1
       }
       else{
-        match lines {
-          case matchtag(_*) => ()
-          case 
+        matchtag.findFirstIn(lines) match {
+          case Some(s) => println("pb")
+          case None =>
+            val array_of_words = lines.split(' ')
+            for (i <- 0 to array_of_words.length -1) {
+              array_of_words(i) match {
+                case tourtag(_*) => ()
+                case _ => list_of_moves = array_of_words(i) :: list_of_moves
+              }
+            }
+        }
       }
     }
-
   }
- */
 
 
 }
