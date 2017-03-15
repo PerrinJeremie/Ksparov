@@ -7,6 +7,9 @@ import scala.io.Source
 import java.io.File
 import java.io.PrintWriter
 import scala.util.matching.Regex
+import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Kasparov.frame in game.scala. */
@@ -129,24 +132,25 @@ object DrawSave {
 		override def font = Constants.text_font 
   	}
 
-	val TextFileName = new TextField2 ("File Name", 0)
-	val TextEvent = new TextField2 ("Event", 0)
+	val TextFileName = new TextField2 ("", 0)
+	/*val TextEvent = new TextField2 ("Event", 0)
 	val TextSite = new TextField2 ("Site", 0)
 	val TextDate = new TextField2 ("Date", 0)
 	val TextRound = new TextField2 ("Round", 0)
 	val TextWhite = new TextField2 ("White", 0)
-	val TextBlack = new TextField2 ("Black", 0)
+	val TextBlack = new TextField2 ("Black", 0)*/
 
-	class ComeBack (name : String) extends Button {
+	class ComeBack (text : String, return_type : String) extends Button {
 		preferredSize = Constants.dim_big
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
-		action = Action (name) {
-      		if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){
-				name match {
-					case "Revenir au menu" => Ksparov.frame.contents = new DrawMenu.Menu
-					case "Revenir à la partie" => Ksparov.frame.contents = new DrawBoard.Board
+		action = Action (text) {
+      		if (Save.write_to_file(TextFileName.text, "Ksparov Game", "Ksparov Software", new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), "1", "White_player", "Black_player", "*") == 0) {
+      		/*if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){*/
+				return_type match {
+					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+					case "Game" => Ksparov.frame.contents = new DrawBoard.Board
 				}
       		} else {
 		        TextFileName.text = "ALREADY USED NAME"
@@ -154,29 +158,25 @@ object DrawSave {
 		}
 	}
 
-	class CenterGrid (name : String) extends GridPanel (17,1) {
-		for (i <- 0 to 16) {
-			if (i % 2 == 0) {
+	class CenterGrid extends GridPanel (8,1) {
+		for (i <- 0 to 7) {
+			if (i == 0 || i % 2 == 1 && i != 1) {
 				contents += new BackgroundCase (1, 3)
 			} else {
-        		i match {
-		  			case 1 => contents += TextFileName
-    			    case 3 => contents += TextEvent
-    			    case 5 => contents += TextSite
-    				case 7 => contents += TextDate
-    		    	case 9 => contents += TextRound
-    		    	case 11 => contents += TextWhite
-	    	 	   	case 13 => contents += TextBlack
-					case 15 => contents += new ComeBack (name)
+       	 		i match {
+		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle nom donner<br> à la sauvegarde ?</html>")
+		  			case 2 => contents += TextFileName
+		  			case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
 	    		}
     		}
 		}
 	}
 
-	class Dsave (name: String) extends BorderPanel {
-    	layout (new BackgroundCase (17,1)) = East
-    	layout (new BackgroundCase (17,1)) = West
-    	layout (new CenterGrid(name)) = Center
+	class Dsave extends BorderPanel {
+    	layout (new BackgroundCase (8,1)) = East
+    	layout (new BackgroundCase (8,1)) = West
+    	layout (new CenterGrid) = Center
 	}
 }
 
@@ -268,7 +268,7 @@ object DrawParameters {
 		contents += new PiecesGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
-			action = Action("<html>Appliquer les changements<br>et revenir au menu</html>") {Ksparov.frame.contents = new DrawMenu.Menu}
+			action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {Ksparov.frame.contents = new DrawMenu.Menu}
 			border = new javax.swing.border.LineBorder (Color.black, 2)}
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 	}
@@ -476,7 +476,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
-				Ksparov.frame.contents = new DrawSave.Dsave ("Revenir à la partie")
+				Ksparov.frame.contents = new DrawSave.Dsave
 			}
 		}
 		contents += new Button {

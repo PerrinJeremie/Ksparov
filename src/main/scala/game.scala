@@ -7,6 +7,9 @@ import scala.io.Source
 import java.io.File
 import java.io.PrintWriter
 import scala.util.matching.Regex
+import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 /* The class that defines a player, it will be extended in Human just below and in AI in rules.scala. */
 abstract class Player(n:Int) {
