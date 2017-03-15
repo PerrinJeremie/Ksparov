@@ -40,8 +40,10 @@ object DrawMenu {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
 			name match {
-				case "Jouer une partie" => Ksparov.frame.contents = new DrawGameSelection.Menu
-				case "Voir les règles du jeu" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
+				case "<html><div style='text-align : center;'>Jouer une partie<br>classique</html>" => Constants.nb_grid = 1
+					Ksparov.frame.contents = new DrawGameSelection.Menu
+				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
+					Ksparov.frame.contents = new DrawGameSelection.Menu
 				case "Charger une partie" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
 				case "Voir les scores" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
 				case "Gérer les paramètres" => Ksparov.frame.contents = new DrawParameters.Parameters
@@ -58,12 +60,12 @@ object DrawMenu {
         		contents += new BackgroundCase (1, 3)
         		contents += new BackgroundCase (1, 3)
     		} else { i match {
-	        case 1 => contents += new Option ("Jouer une partie")
+	        case 1 => contents += new Option ("<html><div style='text-align : center;'>Jouer une partie<br>classique</html>")
 			contents += new BackgroundCase (1, 3)
-        	contents += new Option ("Charger une partie")
-        	case 3 => contents += new Option ("Voir les scores")
+        	contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
+        	case 3 => contents += new Option ("Charger une partie")
         	contents += new BackgroundCase (1, 3)
-        	contents += new Option ("Voir les règles du jeu")
+        	contents += new Option ("Voir les scores")
         	case 5 => contents += new Option ("Gérer les paramètres")
         	contents += new BackgroundCase (1, 3)
         	contents += new Option ("Quitter Ksparov")
@@ -123,62 +125,59 @@ object DrawNotYet {
 
 object DrawSave {
 
-  class TextField2(default:String,col: Int) extends TextField(default,col){
-    override def font = Constants.text_font 
-  }
+	class TextField2 (default : String, col : Int) extends TextField (default, col) {
+		override def font = Constants.text_font 
+  	}
 
-  val TextFileName  = new TextField2 ("File Name", 0)
-  val TextEvent  = new TextField2 ("Event", 0)
-  val TextSite  = new TextField2 ("Site", 0)
-  val TextDate  = new TextField2 ("Date", 0)
-  val TextRound  = new TextField2 ("Round", 0)
-  val TextWhite  = new TextField2 ("White", 0)
-  val TextBlack  = new TextField2 ("Black", 0)
+	val TextFileName = new TextField2 ("File Name", 0)
+	val TextEvent = new TextField2 ("Event", 0)
+	val TextSite = new TextField2 ("Site", 0)
+	val TextDate = new TextField2 ("Date", 0)
+	val TextRound = new TextField2 ("Round", 0)
+	val TextWhite = new TextField2 ("White", 0)
+	val TextBlack = new TextField2 ("Black", 0)
 
-
-  class ComeBack (name : String) extends Button {
-	preferredSize = Constants.dim_big
-	minimumSize = Constants.dim_big
-	maximumSize = Constants.dim_big
-	border = new javax.swing.border.LineBorder (Color.black, 2)
-	action = Action (name) {
-      if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){
-		name match {
-		  case "Revenir au menu" => Ksparov.frame.contents = new DrawMenu.Menu
-		  case "Revenir à la partie" => Ksparov.frame.contents = new DrawBoard.Board
+	class ComeBack (name : String) extends Button {
+		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		action = Action (name) {
+      		if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){
+				name match {
+					case "Revenir au menu" => Ksparov.frame.contents = new DrawMenu.Menu
+					case "Revenir à la partie" => Ksparov.frame.contents = new DrawBoard.Board
+				}
+      		} else {
+		        TextFileName.text = "ALREADY USED NAME"
+        	}
 		}
-      }
-        else{
-          TextFileName.text = "ALREADY USED NAME"
-        }
-      
 	}
-  }
 
-  class CenterGrid (name : String) extends GridPanel (17,1) {
-	for (i <- 0 to 16) {
-	  if (i % 2 == 0) {
-		contents += new BackgroundCase (1, 3)
-	  } else {
-        i match {
-		  case 1 => contents += TextFileName
-          case 3 => contents += TextEvent
-          case 5 => contents += TextSite
-          case 7 => contents += TextDate
-          case 9 => contents += TextRound
-          case 11 => contents += TextWhite
-          case 13 => contents += TextBlack
-		  case 15 => contents += new ComeBack (name)
-	    }
-      }
+	class CenterGrid (name : String) extends GridPanel (17,1) {
+		for (i <- 0 to 16) {
+			if (i % 2 == 0) {
+				contents += new BackgroundCase (1, 3)
+			} else {
+        		i match {
+		  			case 1 => contents += TextFileName
+    			    case 3 => contents += TextEvent
+    			    case 5 => contents += TextSite
+    				case 7 => contents += TextDate
+    		    	case 9 => contents += TextRound
+    		    	case 11 => contents += TextWhite
+	    	 	   	case 13 => contents += TextBlack
+					case 15 => contents += new ComeBack (name)
+	    		}
+    		}
+		}
 	}
-  }
 
-  class Dsave (name: String) extends BorderPanel {
-    layout (new BackgroundCase (17,1)) = East
-    layout (new BackgroundCase (17,1)) = West
-    layout (new CenterGrid(name)) = Center
-  }
+	class Dsave (name: String) extends BorderPanel {
+    	layout (new BackgroundCase (17,1)) = East
+    	layout (new BackgroundCase (17,1)) = West
+    	layout (new CenterGrid(name)) = Center
+	}
 }
 
 /* The window to choose and modify the parameters of the application : type of texture and type of pieces.
@@ -295,33 +294,42 @@ object DrawGameSelection {
 		action = Action (name) {
 			Constants.game_type = num
 			/* Launched a game. */
-		    Ksparov.init_game(num)
+		    Ksparov.init_game (num)
     		Ksparov.frame.contents = new DrawBoard.Board
 		}
 	}
 
 	/* The menu with options and a come back button. */
-	class CenterGrid extends GridPanel (9, 1) {
-		for (i <- 0 to 8) {
+	class CenterGrid extends GridPanel (7, 3) {
+		for (i <- 0 to 6) {
 			if (i % 2 == 0) {
 				contents += new BackgroundCase (1, 3)
+				contents += new BackgroundCase (1, 3)
+				contents += new BackgroundCase (1, 3)
 			} else { i match {
-				case 1 => contents += new Option ("Humain vs Humain", 1)
-				case 3 => contents += new Option ("Humain vs IA", 2)
-				case 5 => contents += new Option ("IA vs IA", 3)
-				case 7 => contents += new Button {
-					font = Constants.text_font
-					border = new javax.swing.border.LineBorder (Color.black, 2)
-					action = Action ("Revenir au menu") {Ksparov.frame.contents = new DrawMenu.Menu}}
-			}}
+				case 1 => contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>couleur aléatoire</html>", 2)
+					contents += new BackgroundCase (1, 3)
+					contents += new Option ("Humain vs Humain", 1)
+				case 3 => contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les blancs</html>", 3)
+					contents += new BackgroundCase (1, 3)
+					contents += new Option ("IA vs IA", 5)
+				case 5 => contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4)
+					contents += new BackgroundCase (1, 3)
+					contents += new Button {
+						font = Constants.text_font
+						border = new javax.swing.border.LineBorder (Color.black, 2)
+						action = Action ("Revenir au menu") {Ksparov.frame.contents = new DrawMenu.Menu}
+					}
+				}
+			}
 		}
 	}
 
 	/* The final class with background. */
 	class Menu extends BorderPanel {
-		layout (new BackgroundCase (9, 1)) = East
+		layout (new BackgroundCase (7, 1)) = East
 		layout (new CenterGrid) = Center
-		layout (new BackgroundCase (9, 1)) = West
+		layout (new BackgroundCase (7, 1)) = West
 	}
 }
 
@@ -368,7 +376,7 @@ object DrawBoard {
 
 	/* The case of the board, definend by the coordinates. They are alternatively black and white
 	   depending on their position. They go from (0, 0) to (7, 7). */
-	class Case (x : Int, y : Int) extends Button {
+	class Case (x : Int, y : Int, grid_id : Int) extends Button {
 		preferredSize = Constants.dim_small
 		if ((x + y) % 2 == 0) {
 			background = Color.black
@@ -381,6 +389,7 @@ object DrawBoard {
 				/* When we click one a case, Constants.selected_case receive it in a one dimension way.
 				   Then we launched the movment method in game.scala. */
 				Constants.selected_case = x + y * 8
+				Constants.selected_grid = grid_id
                 Ksparov.play_move(x,y)
 			}
 		}
@@ -400,7 +409,7 @@ object DrawBoard {
 		for (k <- 0 to Constants.nb_grid - 1) {
 			for (i <- 0 to Constants.nb_case_board - 1) {
 				for (j <- 0 to Constants.nb_case_board - 1) {
-					Constants.grids (k) (i + j * 8) = new Case (i, j)
+					Constants.grids (k) (i + j * 8) = new Case (i, j, k)
 				}
 			}
 		}
@@ -619,24 +628,22 @@ object DrawActions {
 		Constants.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 		/* Initilizing the array of cases. */
 		DrawBoard.create_grid_cases
-		for (k <- 0 to Constants.nb_grid - 1) {
-			/* For each piece in the game board. */
-			for (i <- 0 to game_board.length - 1) {
-				/* Transcripting coordinates in one dimension. */
-				coord = game_board(i).pos_x + game_board(i).pos_y * 8
-				/* If the piece is alive, update the icon of the case of its position. */
-				if (coord >= 0) {
-					piece_path = game_board(i).piece_path
-					Constants.grids(k)(coord).action.icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
-				/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
-				} else {
-					game_board(i).name match {
-						case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
-						case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
-						case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
-						case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
-						case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1
-					}
+		/* For each piece in the game board. */
+		for (i <- 0 to game_board.length - 1) {
+			/* Transcripting coordinates in one dimension. */
+			coord = game_board(i).pos_x + game_board(i).pos_y * 8
+			/* If the piece is alive, update the icon of the case of its position. */
+			if (coord >= 0) {
+				piece_path = game_board(i).piece_path
+				Constants.grids(game_board(i).grid)(coord).action.icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
+			/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
+			} else {
+				game_board(i).name match {
+					case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
+					case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
+					case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
+					case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
+					case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1
 				}
 			}
 		}
@@ -673,17 +680,19 @@ object DrawActions {
 		/* For each reachable case, colors it into red. */
         for (i <- 0 to case_list.length - 1) {
             var (k, l) = case_list(i)
-            Constants.grids (grid_id) (k + 8 * l).background = Color.red
+            Constants.grids (0) (k + 8 * l).background = Color.red
         }
 	}
 
 	/* Recolor as "normal" cases : white and black. */
-	def clear_possible_moves (grid_id : Int) {
-		for (i <- 0 to 63) {
-			if ((i % 8 + i / 8) % 2 == 0) {
-				Constants.grids (grid_id) (i).background = Color.black
-			} else {
-				Constants.grids (grid_id) (i).background = Color.white
+	def clear_possible_moves {
+		for (k <- 0 to Constants.nb_grid - 1) {
+			for (i <- 0 to 63) {
+				if ((i % 8 + i / 8) % 2 == 0) {
+					Constants.grids (k) (i).background = Color.black
+				} else {
+					Constants.grids (k) (i).background = Color.white
+				}
 			}
 		}
 	}

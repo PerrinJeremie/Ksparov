@@ -54,13 +54,14 @@ object Aux {
 
 /*The general class from which all pieces inherit*/
 
-abstract class Piece (play : Int, x : Int, y : Int) {
+abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   var pos_x = x
   var pos_y = y
   def coords = (pos_x, pos_y)
   var name : String
   var piece_path : String
   var player = play
+  var grid = grid_id
   def pattern(x_a : Int, y_a : Int) : Boolean
 
   /*Returns the directions of a movement (-1, 0 or 1) */
@@ -85,95 +86,96 @@ abstract class Piece (play : Int, x : Int, y : Int) {
       case None => (true,None) //arrival is free
       case _ if (p.get).player == player => (false,Some(p.get)) //Friendly piece on arrival
       case _ if (p.get).player != player => (true, Some(p.get)) //Ennemy piece on arrival
+    }}
+    //Recursive case
+    else {p match {
+      case None => clear_path(next_x, next_y, x_a, y_a,g ,dir_x ,dir_y) //recursive call
+      case _ => (false,Some(p.get)) //There is an obstacle on the path
+    }}
+  }
+
+
+  /*Auxiliary function for move : checks if a move is possible but doesn't modify the board*/
+  /*Returns the validity of the move, the piece taken, and a list of the pieces attacking the opponent's king*/
+  def pre_move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
+
+    //Checking if the arrival or the piece is on board and if the pattern is respected
+    if (!(checks_pre_move(x_a, y_a))) {
+      (false, Some(this), Nil)
     }
-  }
-  //Recursive case
-  else {p match {
-    case None => clear_path(next_x, next_y, x_a, y_a,g ,dir_x ,dir_y) //recursive call
-    case _ => (false,Some(p.get)) //There is an obstacle on the path
-  }
- }
-}
-
-
-/*Auxiliary function for move : checks if a move is possible but doesn't modify the board*/
-/*Returns the validity of the move, the piece taken, and a list of the pieces attacking the opponent's king*/
-def pre_move(x_a : Int, y_a : Int, g :Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
-
-  //Checking if the arrival or the piece is on board and if the pattern is respected
-  if (!(checks_pre_move(x_a, y_a))) {
-    (false, Some(this), Nil)
-  }
-  //Checking the path and the destination
-  else {
-    var (dir_x, dir_y) = get_dirs(x_a, y_a)
-    var (clear, p_arrival) = clear_path(pos_x, pos_y, x_a, y_a, g, dir_x, dir_y)
-    if (!clear){
-      (false, p_arrival, Nil) //There is a friendly piece on the destination
-    }
+    //Checking the path and the destination
     else {
-      //We now have to simulate the movement to check if it is valid once applied. Since we do not want to modify the board, we save the current coordinates.
-      var (old_x, old_y) = coords
-      var (old_x2, old_y2)=(0, 0)
-      pos_x = x_a
-      pos_y = y_a
-      p_arrival match {
-        case None => ();
-        case _ => old_x2  =  p_arrival.get.pos_x ; old_y2 =  p_arrival.get.pos_y ;
-        p_arrival.get.pos_x = (-1) ; p_arrival.get.pos_y = (-1)
-      }
-      //Checking if the king is attacked
-      val checks = Aux.check_check(g)
-      //Restablishing previous position
-      pos_x = old_x
-      pos_y = old_y
-      if (p_arrival != None) {
-        p_arrival.get.pos_x = old_x2 ; p_arrival.get.pos_y = old_y2 ;
-      }
-      //Giving final answer based on attacks on king
-      if ( !(checks(player).isEmpty) ) {
-        (false, Some ( checks(player)(0) ), checks(player) ) //The king is attacked and this move doesn't protect the king
-      }
-      else {
-        (true, p_arrival, checks(1 - player))  //This move is valid
+      var (dir_x, dir_y) = get_dirs (x_a, y_a)
+      var (clear, p_arrival) = clear_path (pos_x, pos_y, x_a, y_a, g, dir_x, dir_y)
+      if (!clear){
+        (false, p_arrival, Nil) //There is a friendly piece on the destination
+      } else {
+        //We now have to simulate the movement to check if it is valid once applied. Since we do not want to modify the board, we save the current coordinates.
+        var (old_x, old_y) = coords
+        var (old_x2, old_y2)=(0, 0)
+        pos_x = x_a
+        pos_y = y_a
+        p_arrival match {
+          case None => ();
+          case _ => old_x2 = p_arrival.get.pos_x
+            old_y2 = p_arrival.get.pos_y
+            p_arrival.get.pos_x = (-1)
+            p_arrival.get.pos_y = (-1)
+        }
+        //Checking if the king is attacked
+        val checks = Aux.check_check(g)
+        //Restablishing previous position
+        pos_x = old_x
+        pos_y = old_y
+        if (p_arrival != None) {
+          p_arrival.get.pos_x = old_x2 ; p_arrival.get.pos_y = old_y2 ;
+        }
+        //Giving final answer based on attacks on king
+        if ( !(checks (player).isEmpty) ) {
+          (false, Some (checks (player) (0)), checks (player)) //The king is attacked and this move doesn't protect the king
+        } else {
+          (true, p_arrival, checks (1 - player))  //This move is valid
+        }
       }
     }
   }
-}
 
-/*Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.*/
-def move(x_a : Int, y_a : Int, g : Array[Piece]) : Boolean={
-  var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
-  if (move_ok){
-    pos_x = x_a ;
-    pos_y = y_a ;
-    if (p_arrival != None) {
-      p_arrival.get.pos_x = (-1) ; p_arrival.get.pos_y= (-1)
-    }
-    var king = Constants.kings(1-player)
-    king.attackers = attackers
-    name match { //this is needed for castling
-      case "rook" => this.asInstanceOf[Rook].has_moved = true
-      case "king" => this.asInstanceOf[King].has_moved = true
-      case _ => ()
-     }
+  /*Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.*/
+  def move(x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
+    var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
+    if (move_ok){
+      pos_x = x_a ;
+      pos_y = y_a ;
+      grid = (1 - grid) * (Constants.nb_grid - 1)
+      if (p_arrival != None) {
+        p_arrival.get.pos_x = (-1) 
+        p_arrival.get.pos_y= (-1)
+      }
+      var king = Constants.kings(1-player)
+      king.attackers = attackers
+      name match { //this is needed for castling
+        case "rook" => this.asInstanceOf[Rook].has_moved = true
+        case "king" => this.asInstanceOf[King].has_moved = true
+        case _ => ()
+      }
     }
     move_ok
   }
 
   /* Auxiliary function for possible_moves returning the possibility of a move */
-  def aux( x : (Int,Int), g : Array[Piece]) = {
-    var (i,j) : (Int,Int) = x
+  def aux (x : (Int, Int), g : Array[Piece]) = {
+    var (i, j) : (Int, Int) = x
     var (clear, a , b) = pre_move (i, j, g)
     clear
   }
+
   /*Returns an array of all the cases the piece can go to */
-  def possible_moves (g:Array[Piece])={
-    Aux.cases.filter(aux(_,g))
+  def possible_moves (g : Array[Piece]) = {
+    Aux.cases.filter (aux (_, g))
   }
 }
 
-class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
+class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "pawn"
   var piece_path = "Pawn.png"
   /*A pawn can go one (or two if it is on its starting case) case forward and eventually in diagonal to attack another piece*/
@@ -201,7 +203,7 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
     }
   }
   /*We override move to handle the case of promotion*/
-  override def move (x_a : Int, y_a : Int, g : Array[Piece])={
+  override def move (x_a : Int, y_a : Int, g : Array[Piece]) = {
     var move_ok = super.move( x_a, y_a, g)
     if (y_a ==  7 * player && move_ok ){
       Constants.promoted_piece = this
@@ -215,7 +217,7 @@ class Pawn (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   }
 }
 
-class Rook(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
+class Rook(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "rook"
   var piece_path = "Rook.png"
   var has_moved = false
@@ -224,7 +226,7 @@ class Rook(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   }
 }
 
-class Knight(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
+class Knight(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "knight" //I still argue black knights should be called Batmans
   var piece_path = "Knight.png"
   var has_moved = false;
@@ -243,7 +245,7 @@ class Knight(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   }
 }
 
-class Bishop(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0){
+class Bishop (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "bishop"
   var piece_path = "Bishop.png"
   def pattern(x_a : Int, y_a : Int) = {
@@ -251,7 +253,7 @@ class Bishop(b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0){
   }
 }
 
-class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
+class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "king"
   var piece_path = "King.png"
   var attackers : List[Piece] = Nil //A list of the pieces attacking the king. Updated during at each move.
@@ -315,7 +317,7 @@ class King (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
   }
 }
 
-class Queen (b : Int, x0 : Int, y0 : Int) extends Piece (b, x0, y0) {
+class Queen (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "queen"
   var piece_path = "Queen.png"
   def pattern(x_a:Int,y_a:Int)={

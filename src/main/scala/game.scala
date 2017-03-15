@@ -35,13 +35,14 @@ class Human(n : Int) extends Player(n : Int) {
     /* Converting the case selected into x and y. */
     var x = Constants.selected_case % 8
     var y = Constants.selected_case / 8
+    var grid = Constants.selected_grid
     /* First click, checking if the piece selected is own by the player. */
     if (isHis(x,y)) {
       /* If so validate the first clic and open the second click. */
       Constants.first_choice_done = true
       /* Then select the piece of position and draw possible moves. */
-      Ksparov.get_piece_of_pos(x,y)
-      DrawActions.clear_possible_moves (0)
+      Ksparov.get_piece_of_pos(x, y, grid)
+      DrawActions.clear_possible_moves
       DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y, 0)
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
@@ -50,7 +51,7 @@ class Human(n : Int) extends Player(n : Int) {
         /* loads part of the move to be added but has to wait for promotion information */
         Save.add_move1( Constants.selected_piece, (x,y))
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
-        var valid = Ksparov.board(Constants.selected_piece).move(x,y,Ksparov.board)
+        var valid = Ksparov.board(Constants.selected_piece).move(x, y, Ksparov.board)
         if (valid) {
           /* the move being valid addit to the list of moves */
           Save.add_move2
@@ -60,7 +61,7 @@ class Human(n : Int) extends Player(n : Int) {
         } else {
           /* If the move is invalid, research for a first click */
           Constants.first_choice_done = false
-          DrawActions.clear_possible_moves (0)
+          DrawActions.clear_possible_moves
         }
       }
     }
@@ -148,8 +149,9 @@ object Constants {
   }
 
   var selected_case = 0
+  var selected_grid = 0
   var selected_piece = -1
-  var promoted_piece = new Pawn (0, -1, -1)
+  var promoted_piece = new Pawn (0, -1, -1, 0)
   var selected_promotion = ""
 
   /* The type of game chosen : 0 for Human vs Human, 1 for Hhuman vs AI and 2 for AI vs AI. */
@@ -199,23 +201,23 @@ object Ksparov {
   def init_board {
     for (p <- 0 to 1) {
       for(i <- 0 to 7) {
-        board((1-p)*16 + i) = new Pawn(p,i,1+(1-p)*5)
+        board((1 - p) * 16 + i) = new Pawn(p, i, 1 + (1 - p) * 5, 0)
       }
-      board( 8 + (1-p)*16) = new Rook(p,0, (1-p)*7)
-      board( 9 + (1-p)*16) = new Rook(p,7,(1-p)*7)
-      board( 10 + (1-p)*16) = new Knight(p,1,(1-p)*7)
-      board( 11 + (1-p)*16) = new Knight(p,6,(1-p)*7)
-      board( 12 + (1-p)*16) = new Bishop(p,2,(1-p)*7)
-      board( 13 + (1-p)*16) = new Bishop(p,5,(1-p)*7)
-      board( 14 + (1-p)*16) = Constants.kings(p)
-      board( 15 + (1-p)*16) = new Queen(p,3,(1-p)*7)
+      board(8 + (1 - p) * 16) = new Rook(p, 0, (1 - p) * 7, 0)
+      board(9 + (1 - p) * 16) = new Rook(p, 7, (1 - p) * 7, 0)
+      board(10 + (1 - p) * 16) = new Knight(p, 1, (1 - p) * 7, 0)
+      board(11 + (1 - p) * 16) = new Knight(p, 6, (1 - p) * 7, 0)
+      board(12 + (1 - p) * 16) = new Bishop(p, 2, (1 - p) * 7, 0)
+      board(13 + (1 - p) * 16) = new Bishop(p, 5, (1 - p) * 7, 0)
+      board(14 + (1 - p) * 16) = Constants.kings(p)
+      board(15 + (1 - p) * 16) = new Queen(p, 3, (1 - p) * 7, 0)
     }
   }
 
   /* Return the index in the game_board of the piece of position (x, y) */
-  def get_piece_of_pos (x : Int, y : Int) {
+  def get_piece_of_pos (x : Int, y : Int, grid_id : Int) {
     for (i <- 0 to 31){
-      if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y){
+      if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y && Ksparov.board(i).grid == grid_id){
         Constants.selected_piece = i
       }
     }
@@ -224,10 +226,10 @@ object Ksparov {
   def promotion (p : Int) = {
     val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)  
     var new_piece = Constants.selected_promotion match {
-      case "Knight" => new Knight (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-      case "Bishop" => new Bishop (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-      case "Rook" => new Rook (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
-      case "Queen" => new Queen (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y)
+      case "Knight" => new Knight (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
+      case "Bishop" => new Bishop (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
+      case "Rook" => new Rook (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
+      case "Queen" => new Queen (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
     }
     board (pawn_index) = new_piece
     var king = Constants.kings(1-p)
@@ -287,7 +289,7 @@ object Ksparov {
   /* Define the variable for a new game, called after the game type selection. */
   def init_game (n : Int) {
     /* Instantiate the kings and then the new board. */
-    Constants.kings = Array(new King (0, 4, 7), new King (1, 4, 0))
+    Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     DrawBoard.init_grids
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
@@ -303,13 +305,23 @@ object Ksparov {
         if (scala.util.Random.nextInt(2) == 0) {
           Constants.players(0) = new Human(0)
           Constants.players(1) = new AI(1)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
+          Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
         } else {
           Constants.players(1) = new Human(1)
           Constants.players(0) = new AI(0)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("Bienvenu dans Ksparov, vous jouez les blancs !")
-         }
+          Constants.message_drawer = new DrawBoard.MessageDrawer ("Bienvenu dans Ksparov, vous jouez les blancs !")
+        }
       case 3 =>
+        Constants.game_type = 2
+        Constants.players(0) = new AI(0)
+        Constants.players(1) = new Human(1)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
+      case 4 => 
+        Constants.game_type = 2
+        Constants.players(0) = new Human(0)
+        Constants.players(1) = new AI(1)
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
+      case 5 =>
         Constants.players(1) = new AI(1)
         Constants.players(0) = new AI(0)
         Constants.message_drawer = new DrawBoard.MessageDrawer ("Mode IA vs IA : cliquez pour voir le prochain coup !")

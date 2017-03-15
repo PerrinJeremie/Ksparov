@@ -59,7 +59,6 @@ object AI_methods {
       case 2 => Constants.selected_promotion = "Knight"
       case 3 => Constants.selected_promotion = "Rook"
     }
-    println(rand.nextInt(3))
     Ksparov.promotion (Constants.curr_player)
   } 
 }
