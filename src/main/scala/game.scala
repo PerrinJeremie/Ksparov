@@ -74,7 +74,7 @@ class Human(n : Int) extends Player(n : Int) {
   override def check_pat : Boolean = {
     var sum = 0
     for (i <- 0 to Ksparov.board.length / 2 - 1) {
-      sum = sum + Ksparov.board(i + 16 * id).possible_moves(Ksparov.board).length
+      sum = sum + Ksparov.board(i + 16 * (1 - id)).possible_moves(Ksparov.board).length
     }
     if (sum == 0) {
       Constants.game_nulle = true
@@ -277,7 +277,7 @@ object Ksparov {
           DrawActions.draw_messages ("Mate")
           Constants.game_won = true
         } else {
-          /* Check if the AI still can move. */
+          /* Check if there is pat. */
           if (Constants.players(1 - Constants.curr_player).check_pat) {
             DrawActions.draw_messages ("Pat")
           } else {
@@ -326,7 +326,7 @@ object Ksparov {
         } else {
           Constants.players(1) = new Human(1)
           Constants.players(0) = new AI(0)
-          Constants.message_drawer = new DrawBoard.MessageDrawer ("Bienvenu dans Ksparov, vous jouez les blancs !")
+          Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenu dans Ksparov, <br> vous jouez les blancs !</html>")
         }
       case 3 =>
         Constants.game_type = 2

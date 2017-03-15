@@ -41,8 +41,10 @@ class AI (player : Int) extends Player (player) {
         /* If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle */
         if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
           notdone = false
-          pat = true
+          Constants.players(Constants.curr_player).asInstanceOf[AI].pat = true
           Constants.game_nulle = true
+          Constants.curr_player = 1 - Constants.curr_player
+          println("PAAAAT")
         }        
       }
     }
@@ -53,6 +55,7 @@ class AI (player : Int) extends Player (player) {
   }
 
   override def check_pat : Boolean = {
+    println("Je teste IA pat : " + pat)
     pat
   }
 }
