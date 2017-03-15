@@ -18,6 +18,7 @@ abstract class Player(n:Int) {
   /* ai is true if and only if the player is an artifical inteligence. */
   var ai = false
   def getmove : Unit
+  def check_pat : Boolean
 }
 
 /* The class for a human player, defines some method and mainly the getmove method. */
@@ -67,6 +68,18 @@ class Human(n : Int) extends Player(n : Int) {
           DrawActions.clear_possible_moves
         }
       }
+    }
+  }
+
+  override def check_pat : Boolean = {
+    var sum = 0
+    for (i <- 0 to Ksparov.board.length / 2 - 1) {
+      sum = sum + Ksparov.board(i + 16 * id).possible_moves(Ksparov.board).length
+    }
+    if (sum == 0) {
+      true
+    } else {
+      false
     }
   }
 }
@@ -264,7 +277,7 @@ object Ksparov {
           Constants.game_won = true
         } else {
           /* Check if the AI still can move. */
-          if (Constants.game_nulle) {
+          if (Constants.players(1 - Constants.curr_player).check_pat) {
             DrawActions.draw_messages ("Pat")
           } else {
             /* Else check if there is check. */

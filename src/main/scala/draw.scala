@@ -727,9 +727,9 @@ object DrawActions {
 
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
 			case "Pat" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>l'IA noire ne peut plus bouger !</html>"
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur noir ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>l'IA blanche ne peut plus bouger !</html>"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur blanc ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 

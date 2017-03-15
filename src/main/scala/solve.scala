@@ -1,5 +1,7 @@
 class AI (player : Int) extends Player (player) {
 
+  var pat = false
+
 	ai = true
   /* This array is used not to try several times the same piece. */
   var already_check = new Array[Boolean](16)
@@ -17,11 +19,11 @@ class AI (player : Int) extends Player (player) {
     }
 
     val r = scala.util.Random
-    var done = true
+    var notdone = true
 
     /* While no movement has been done and there are still pieces to try, 
        search for a piece with a possible movement. */
-    while (done) {
+    while (notdone) {
       var ind = r.nextInt (16)
       /* If the piece has not been tried, let's do it */
       if (!already_check (ind)) {
@@ -29,7 +31,7 @@ class AI (player : Int) extends Player (player) {
         var t = Ksparov.board ((1 - id) * 16 + ind).possible_moves (Ksparov.board)
         /* If there are possible moves, select one of them and apply it */
         if (t.nonEmpty) {
-          done = false
+          notdone = false
           var (i,j) = t(r.nextInt(t.size))
           /* Save move */
           Save.add_move1((1-id)*16 + ind, (i,j))
@@ -37,8 +39,9 @@ class AI (player : Int) extends Player (player) {
           Ksparov.board((1 - id) * 16 + ind).move(i,j,Ksparov.board)
         }
         /* If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle */
-        if (!((already_check.find (p => p == false)).nonEmpty) && done) {
-          done = false
+        if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
+          notdone = false
+          pat = true
           Constants.game_nulle = true
         }        
       }
@@ -47,6 +50,10 @@ class AI (player : Int) extends Player (player) {
     /* Draw the new board */
     DrawActions.draw_game_board(Ksparov.board)
     Constants.players(Constants.curr_player).moved = true
+  }
+
+  override def check_pat : Boolean = {
+    pat
   }
 }
 
