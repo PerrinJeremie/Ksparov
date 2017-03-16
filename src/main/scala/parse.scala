@@ -125,17 +125,15 @@ object Save{
         case -1 => writer.write( " O-O " )
         case 1 => writer.write( " O-O-O " )
         case 0 => 
-          if (move._2){
-            writer.write( " =" + move._3)
-          }
-          else{
-            writer.write(" ")
-          }
+          writer.write(" ")
           writer.write( move._4 + pos_to_PGN(move._7))
           if(move._5){
             writer.write("x")
           }
           writer.write(pos_to_PGN(move._8))
+          if (move._2){
+            writer.write ("=" + move._3)
+          }
           if(move._6){
             writer.write("+ ")
           }
@@ -185,28 +183,147 @@ object Load {
 
   val matchtag = """"(.*)"""".r
   val tourtag = """[0-9]+[.]""".r
-
+  val piecetag = """(K|Q|B|N|R)+""".r
+  val xaxistag = """[a-h]+""".r
+  val yaxistag = """[1-8]+""".r
 
   var list_of_moves : List[String] = List()
   
   var infos :  Array[String] = Array("","","","","","","","")
 
-  var event : String = "" 
-  var site : String = ""
-  var date : String = ""
-  var round : String = ""
-  var white : String = ""
-  var black : String = ""
-  var result : String = "" 
-
   var player : Int = 1
 
-  def parse_word (w : String) : Unit = {
-    w match {
-      case tourtag(_*) => ()
-      case _ => println(w)
-    }
+  var piece = ""
+  var piece_Ch : Piece = new Pawn(0,-1,-1,0)
+  var pos_init : (Int,Int) = (0,0)
+  var pos_fin : (Int,Int) = (0,0)
+
+  def reset_when_parsing : Unit ={
+    var piece = ""
+    var piece_Ch : Piece = new Pawn(0,-1,-1,0)
+    var pos_init : (Int,Int) = (0,0)
+    var pos_fin : (Int,Int) = (0,0)
   }
+
+  class Reproducer(n : Int) extends Player(n:Int){
+
+    def is_x_axis(c : Char) : Boolean = {
+      return xaxistag.findFirstIn(c.toString) match {
+        case Some(s) => true
+        case None => false
+      }
+    }
+
+    def is_y_axis(c : Char) : Boolean = {
+      yaxistag.findFirstIn(c.toString) match{
+        case Some(s) => true
+        case None => false
+      }
+    }
+
+    def pcolumn( P : Piece) : Boolean = {
+      return ((P.name == piece) && (P.player == id) && P.pos_x == pos_init._1)
+    }
+
+     def pline( P : Piece) : Boolean = {
+      return (P.name == piece && P.player == id && P.pos_y == pos_init._2)
+    }
+
+    def pexactpos( P : Piece) : Boolean = {
+      return (P.name == piece && P.player == id && P.coords == pos_init)
+    }
+
+    def pcangoto( P :Piece): Boolean = {
+      return (P.name == piece && P.player == id && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
+    }
+
+    def parse_word (s : String) : Unit = {
+      var w = s+ "$$$$$"
+
+      /* Recherche du type de piéce */
+
+      w(0) match{
+        case 'O' => 
+          if (w == "O-O"){
+            Ksparov.board((1-id)*16 +14).move(6,(1-id)*7, Ksparov.board)
+          }
+          else{
+            Ksparov.board((1-id)*16 + 14).move(2,(1-id)*7,Ksparov.board)
+          }
+          return ()
+        case 'K' => piece = "king"; w = w.substring(1, w.length)
+        case 'Q' => piece = "queen"; w = w.substring(1, w.length)
+        case 'B' => piece = "bishop"; w = w.substring(1, w.length)
+        case 'N' => piece = "knight"; w = w.substring(1, w.length)
+        case 'R' => piece = "rook"; w = w.substring(1, w.length)
+        case 'P' => piece = "pawn"; w = w.substring(1, w.length)
+        case _ => piece = "pawn"
+      }
+
+      /*Desambiguisont le mouvement */
+
+      if ( is_x_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
+        pos_init = (w(0).toInt - 97,0)
+        piece_Ch = Ksparov.board.filter(pcolumn)(0)
+        w = w.substring(1, w.length)
+      }
+      else{
+        if( is_y_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
+          pos_init = (0,w(0).toInt - 49)
+          piece_Ch = Ksparov.board.filter(pline)(0)
+          w = w.substring(1,w.length)
+        }
+        else{
+          if (is_x_axis(w(0)) && is_y_axis(w(1)) && (w(2) == 'x' || is_x_axis(w(2)))){
+            pos_init = ( w(0).toInt - 97, w(1).toInt - 49)
+            println( pos_init )
+            piece_Ch =  Ksparov.board.filter(pexactpos)(0)
+            w = w.substring(2,w.length)
+          }
+        }
+      }
+
+      /* Mange une piéce */
+      if (w(0) == 'x'){
+        w = w.substring(1,w.length)
+      }
+
+      /* Déplacement */
+
+      pos_fin = (w(0).toInt - 97, w(1).toInt - 49)
+
+      if(piece_Ch.coords == (-1,-1)){
+        piece_Ch = Ksparov.board.filter(pcangoto)(0)
+      }
+
+      piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
+
+    }
+
+    override def getmove : Unit = {
+      println(list_of_moves.head)
+      parse_word(list_of_moves.head)
+      list_of_moves = list_of_moves.tail
+      DrawActions.draw_game_board(Ksparov.board)
+      Constants.players(Constants.curr_player).moved = true
+    }
+
+    override def check_pat : Boolean = {
+      var sum = 0
+      for (i <- 0 to Ksparov.board.length / 2 - 1) {
+        sum = sum + Ksparov.board(i + 16 * (1 - id)).possible_moves(Ksparov.board).length
+      }
+      if (sum == 0) {
+        Constants.game_nulle = true
+        true
+      } else {
+        false
+      }
+    }
+
+  }
+
+
 
   def get_list_move_from_file (filename : String)  : Unit = {
 
@@ -231,12 +348,14 @@ object Load {
             for (i <- 0 to array_of_words.length -1) {
               array_of_words(i) match {
                 case tourtag(_*) => ()
+                case "" => ()
                 case _ => list_of_moves = array_of_words(i) :: list_of_moves
               }
             }
         }
       }
     }
+    list_of_moves = list_of_moves.reverse
   }
 
 

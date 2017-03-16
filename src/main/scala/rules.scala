@@ -94,7 +94,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     }}
   }
 
-
+xs
   /*Auxiliary function for move : checks if a move is possible but doesn't modify the board*/
   /*Returns the validity of the move, the piece taken, and a list of the pieces attacking the opponent's king*/
   def pre_move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
