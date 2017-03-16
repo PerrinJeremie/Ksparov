@@ -122,8 +122,8 @@ object Save{
         writer.write( ((i+1)/2).toString + ".")
       }
       move._1 match{
-        case -1 => writer.write( " O-O " )
-        case 1 => writer.write( " O-O-O " )
+        case -1 => writer.write( " 0-0 " )
+        case 1 => writer.write( " 0-0-0 " )
         case 0 =>
           writer.write(" ")
           writer.write( move._4 + pos_to_PGN(move._7))
@@ -182,7 +182,8 @@ object Load {
   /* regexs to parse words and lines */
 
   val matchtag = """"(.*)"""".r
-  val tourtag = """[0-9]+[.]""".r
+  val tourtag = """[0-9]+[.]+""".r
+  val resulttag = """[*]|1-0|1–0|0-1|0–1|1/2-1/2|1/2–1/2""".r
   val piecetag = """(K|Q|B|N|R)+""".r
   val xaxistag = """[a-h]+""".r
   val yaxistag = """[1-8]+""".r
@@ -245,12 +246,13 @@ object Load {
       /* Recherche du type de piéce */
 
       w(0) match{
-        case 'O' =>
-          if (w == "O-O"){
-            Ksparov.board((1-id)*16 +14).move(6,(1-id)*7, Ksparov.board)
+        case '0' =>
+          if (w.substring(0,3) == "0-0"){
+            Ksparov.board((1-Constants.curr_player)*16 +14).move(6,(1-Constants.curr_player)*7, Ksparov.board)
+            println("done")
           }
           else{
-            Ksparov.board((1-id)*16 + 14).move(2,(1-id)*7,Ksparov.board)
+            Ksparov.board((1-Constants.curr_player)*16 + 14).move(2,(1-Constants.curr_player)*7,Ksparov.board)
           }
           return ()
         case 'K' => piece = "king"; w = w.substring(1, w.length)
@@ -296,8 +298,6 @@ object Load {
         piece_Ch = Ksparov.board.filter(pcangoto)(0)
       }
 
-      println( piece_Ch.player)
-      println( Constants.curr_player)
       w = w.substring(2,w.length)
 
       /* Promotion */
@@ -318,6 +318,7 @@ object Load {
     override def getmove : Unit = {
       if (!list_of_moves.isEmpty){
         reset_when_parsing
+        println(list_of_moves.head)
         parse_word(list_of_moves.head)
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
@@ -368,7 +369,15 @@ object Load {
             for (i <- 0 to array_of_words.length -1) {
               array_of_words(i) match {
                 case tourtag(_*) => ()
+                case resulttag(s) => println(s)
                 case "" => ()
+                case "1-0" => ()
+                case "1–0" => ()
+                case "0-1" => ()
+                case "0–1" => ()
+                case "1/2-1/2" => ()
+                case "1/2–1/2" => ()
+                case "*" => ()
                 case _ => list_of_moves = array_of_words(i) :: list_of_moves
               }
             }
