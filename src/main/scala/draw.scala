@@ -49,6 +49,7 @@ object DrawMenu {
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 				case "Charger une partie" => Constants.nb_grid = 1
+                    DrawCharge.define_listgame
                     Ksparov.frame.contents = new DrawCharge.Dcharge
 				case "Voir les scores" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
 				case "Gérer les paramètres" => Ksparov.frame.contents = new DrawParameters.Parameters
@@ -134,13 +135,21 @@ object DrawCharge{
         return s.substring(0,s.length -4)
     }
 
-    var result = ("ls " + Constants.save_path) !!;
-    var listgame = result.split('\n').map(shorten).toList
+    var result: String = "";
+    var listgame : List[String] = List("")
     var scroll = new ComboBox(listgame)
+    var list_empty = false 
 
     def define_listgame {
-    	DrawCharge.listgame = result.split('\n').map(shorten).toList
-    	DrawCharge.scroll = new ComboBox(listgame)
+        result = ("ls " + Constants.save_path) !!;
+        if (result.length == 0){
+          list_empty = true
+        }
+        else{
+          list_empty = false
+    	  DrawCharge.listgame = result.split('\n').map(shorten).toList
+    	  DrawCharge.scroll = new ComboBox(listgame)
+        }
     }
 
   	class Option (text : String, return_type : String) extends Button {
@@ -166,9 +175,15 @@ object DrawCharge{
 				contents += new BackgroundCase (1, 3)
 			} else {
        	 		i match {
-		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle sauvegarde<br>voulez-vous charger ?</html>")
-		  			case 2 => contents += scroll
-		  			case 4 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")
+		  			case 1 =>
+                    if(!list_empty){
+                      contents += new Label ("<html><div style='text-align : center;'>Quelle sauvegarde<br>voulez-vous charger ?</html>")}
+                    else{
+                      contents += new Label  ("<html><div style='text-align : center;'>Pas de sauvegarde<br>à charger</html>")}
+		  			case 2 => if(!list_empty){contents += scroll}else{contents += new BackgroundCase (1,3)}
+		  			case 4 =>  
+                    if(!list_empty){contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")}
+                    else{ contents += new BackgroundCase (1,3)} 
 		  			case 6 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
 	    		}
     		}
