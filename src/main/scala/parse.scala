@@ -301,11 +301,12 @@ object Load {
     }
 
     override def getmove : Unit = {
-      println(list_of_moves.head)
+      if (!list_of_moves.isEmpty){
       parse_word(list_of_moves.head)
       list_of_moves = list_of_moves.tail
       DrawActions.draw_game_board(Ksparov.board)
       Constants.players(Constants.curr_player).moved = true
+      }
     }
 
     override def check_pat : Boolean = {

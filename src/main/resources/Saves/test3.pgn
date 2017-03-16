@@ -1,0 +1,20 @@
+[ Event "Ksparov Game"]
+[ Site "Ksparov Software"]
+[ Date "2017.3.16"]
+[ Round "1"]
+[ White "White_player"]
+[ Black "Black_player"]
+[ Result "*"]
+
+1. d2d4 b7b5
+2. Qd1d3 b5b4
+3. Qd3a6 Bc8b7
+4. Qa6xb7 f7f5
+5. Qb7xa8 Ke8f7
+6. d4d5 c7c6
+7. d5xc6 h7h6
+8. c6xd7 h6h5
+9. Qa8xb8 e7e5
+10. Qb8xd8 f5f4
+11. Qd8c8 g7g6
+12. d7d8=R e5e4
