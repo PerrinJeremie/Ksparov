@@ -147,6 +147,7 @@ object DrawCharge{
 				return_type match {
 					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 					case "Game" => 
+
                     Constants.game_type = 6
                     Ksparov.init_game(6)
                     Ksparov.frame.contents = new DrawBoard.Board
@@ -223,7 +224,7 @@ object DrawSave {
 				contents += new BackgroundCase (1, 3)
 			} else {
        	 		i match {
-		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle nom donner<br> à la sauvegarde ?</html>")
+		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>")
 		  			case 2 => contents += TextFileName
 		  			case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
 		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")

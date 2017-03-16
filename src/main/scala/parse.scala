@@ -201,10 +201,6 @@ object Load {
 
   var player : Int = 1
 
-  def main( argv : Array[String]) {
-    get_list_move_from_file("test")
-  }
-
   def parse_word (w : String) : Unit = {
     w match {
       case tourtag(_*) => ()
