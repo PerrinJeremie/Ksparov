@@ -135,8 +135,13 @@ object DrawCharge{
     }
 
     var result = ("ls " + Constants.save_path) !!;
-    val listgame = result.split('\n').map(shorten).toList
-    val scroll = new ComboBox(listgame)
+    var listgame = result.split('\n').map(shorten).toList
+    var scroll = new ComboBox(listgame)
+
+    def define_listgame {
+    	DrawCharge.listgame = result.split('\n').map(shorten).toList
+    	DrawCharge.scroll = new ComboBox(listgame)
+    }
 
   	class Option (text : String, return_type : String) extends Button {
 		preferredSize = Constants.dim_big
@@ -144,14 +149,14 @@ object DrawCharge{
 		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (text) {
-				return_type match {
-					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
-					case "Game" => 
-                    Load.get_list_move_from_file(scroll.item)
-                    Constants.game_type = 6
-                    Ksparov.init_game(6)
-                    Ksparov.frame.contents = new DrawBoard.Board
-				}
+			return_type match {
+				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+				case "Game" => 
+                Load.get_list_move_from_file(scroll.item)
+                Constants.game_type = 6
+                Ksparov.init_game(6)
+                Ksparov.frame.contents = new DrawBoard.Board
+			}
 		}
 	}
 
@@ -171,6 +176,7 @@ object DrawCharge{
 	}
 
 	class Dcharge extends BorderPanel {
+		define_listgame
     	layout (new BackgroundCase (8,1)) = East
     	layout (new BackgroundCase (8,1)) = West
     	layout (new CenterGrid) = Center
@@ -183,8 +189,8 @@ object DrawSave {
 		override def font = Constants.text_font 
   	}
 
-    def resultgame(p : Int, gw : Boolean, gn : Boolean) : String = {
-      (p,gw,gn) match{
+    def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
+      (p,gw,gn) match {
         case (_,_,true) => "1/2-1/2"
         case (1,true,_) => "1-0"
         case (0,true,_) => "0-1"
