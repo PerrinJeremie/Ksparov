@@ -207,6 +207,8 @@ object Load {
 
   class Reproducer(n : Int) extends Player(n:Int){
 
+    ai = true
+
     def is_x_axis(c : Char) : Boolean = {
       return xaxistag.findFirstIn(c.toString) match {
         case Some(s) => true

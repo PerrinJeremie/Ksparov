@@ -161,6 +161,7 @@ object DrawCharge{
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 				case "Game" => 
+                Load.list_of_moves = List()
                 Load.get_list_move_from_file(scroll.item)
                 Constants.game_type = 6
                 Ksparov.init_game(6)

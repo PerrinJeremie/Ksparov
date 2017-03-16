@@ -60,6 +60,7 @@ class AI (player : Int) extends Player (player) {
 
 object AI_methods {
   def ai_promotion {
+
     val rand = scala.util.Random
     rand.nextInt(4) match {
       case 0 => Constants.selected_promotion = "Queen"
