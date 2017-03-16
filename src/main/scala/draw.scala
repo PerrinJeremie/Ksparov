@@ -161,7 +161,7 @@ object DrawCharge{
 				contents += new BackgroundCase (1, 3)
 			} else {
        	 		i match {
-		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle nom donner<br> à la sauvegarde ?</html>")
+		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle sauvegarde<br>voulez-vous charger ?</html>")
 		  			case 2 => contents += scroll
 		  			case 4 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")
 		  			case 6 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
@@ -728,9 +728,7 @@ object DrawActions {
 		}
 		draw_game_board (Ksparov.board)
 		Ksparov.frame.contents = new DrawBoard.Board
-		Constants.curr_player = 1 - Constants.curr_player
-		draw_messages ("Current_turn")
-		Constants.curr_player = 1 - Constants.curr_player
+		draw_messages ("Current_turn", 1 - Constants.curr_player)
 	}
 
 	/* Color in red the reachables cases. */
@@ -758,38 +756,38 @@ object DrawActions {
 	}
 
 	/* Draw a given message on the board, the message depends on the argument passed */
-	def draw_messages (message_type : String) {
+	def draw_messages (message_type : String, player : Int) {
 		message_type match {
 
 			/* Draw who's player the turn is. */
-			case "Current_turn" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "La main est au joueur blanc !"
+			case "Current_turn" => player match {
+				case 0 => Constants.message_drawer.text = "La main est au joueur noir !"
 					Constants.message_drawer.foreground = Color.black
-				case 1 => Constants.message_drawer.text = "La main est au joueur noir !"
+				case 1 => Constants.message_drawer.text = "La main est au joueur blanc !"
 					Constants.message_drawer.foreground = Color.black
 			}
 
 			/* Draw if a player is in check. */
-			case "Check" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
+			case "Check" => player match {
+				case 0 => Constants.message_drawer.text = "Le joueur noir est en échec !"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "Le joueur noir est en échec !"
+				case 1 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
 					Constants.message_drawer.foreground = Color.red
 			}
 
 			/* Draw if a player is mate. */
-			case "Mate" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur noir gagne la partie !</html>"
+			case "Mate" => player match {
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur blanc gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur blanc gagne la partie !</html>"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur noir gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
-			case "Pat" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur blanc ne peut plus bouger !</html>"
+			case "Pat" => player match {
+				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur noir ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur noir ne peut plus bouger !</html>"
+				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur blanc ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 

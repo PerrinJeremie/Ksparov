@@ -249,15 +249,39 @@ object Ksparov {
       case "Queen" => new Queen (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
     }
     board (pawn_index) = new_piece
-    var king = Constants.kings(1-p)
+    var king = Constants.kings(1 - p)
     if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
       king.attackers = king.attackers :+ new_piece
     }
     Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
 
+    check_game_status (Constants.curr_player)
+
     if (Constants.players(Constants.curr_player).ai && Constants.game_type == 2) {
       play_move (0, 0)
+    }
+  }
+
+  def check_game_status (player : Int) {
+  /* Check if there is a mate after the move. */
+    if (Checkmate.check_mate (Ksparov.board, player)) {
+     /* If so, finish the game. */
+      DrawActions.draw_messages ("Mate", player)
+      Constants.game_won = true
+    } else {
+      /* Check if there is pat. */
+      if (Constants.players(player).check_pat) {
+        DrawActions.draw_messages ("Pat", player)
+      } else {
+        /* Else check if there is check. */
+        if (Constants.kings(player).attacked) {
+          DrawActions.draw_messages ("Check", player)
+        } else {
+          /* Else, else, else ... Continue and give the hand to the other player. */
+          DrawActions.draw_messages ("Current_turn", player)
+        }
+      }
     }
   }
 
@@ -271,32 +295,14 @@ object Ksparov {
       Constants.players(Constants.curr_player).getmove
       if (Constants.players(Constants.curr_player).moved) {
         Constants.players(Constants.curr_player).moved = false
-        /* Check if there is a mate after the move. */
-        if (Checkmate.check_mate (Ksparov.board, 1 - Constants.curr_player)) {
-          /* If so, finish the game. */
-          DrawActions.draw_messages ("Mate")
-          Constants.game_won = true
-        } else {
-          /* Check if there is pat. */
-          if (Constants.players(1 - Constants.curr_player).check_pat) {
-            DrawActions.draw_messages ("Pat")
-          } else {
-            /* Else check if there is check. */
-            if (Constants.kings(1 - Constants.curr_player).attacked) {
-              DrawActions.draw_messages ("Check")
-            } else {
-              /* Else, else, else ... Continue and give the hand to the other player. */
-              DrawActions.draw_messages ("Current_turn")
-            }
-            if (Constants.promotion) {
-              DrawActions.draw_messages ("Promotion")
-            }
-            Constants.curr_player = 1 - Constants.curr_player
-            Constants.first_choice_done = false
-          }
+        check_game_status (1 - Constants.curr_player)
+        if (Constants.promotion) {
+          DrawActions.draw_messages ("Promotion", Constants.curr_player)
         }
+        Constants.curr_player = 1 - Constants.curr_player
+        Constants.first_choice_done = false
       }
-      /* If the next playe is an IA and we are in Human vs AI, play the AI move in a row. */
+      /* If the next player is an IA and we are in Human vs AI, play the AI move in a row. */
       if (Constants.players(Constants.curr_player).ai && Constants.game_type == 2) {
         play_move (0, 0)
       }
@@ -341,11 +347,11 @@ object Ksparov {
       case 5 =>
         Constants.players(1) = new AI(1)
         Constants.players(0) = new AI(0)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("Mode IA vs IA : cliquez pour voir le prochain coup !")
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
         Constants.players(1) = new AI(1)
         Constants.players(0) = new AI(0)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("Mode Spectateur : cliquez pour voir le prochain coup !")
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le prochain coup !</html>")
     }
     /* Defines the game as not yet won, and the white player as the first player. */
     Constants.game_won = false

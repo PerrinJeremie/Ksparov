@@ -44,7 +44,6 @@ class AI (player : Int) extends Player (player) {
           Constants.players(Constants.curr_player).asInstanceOf[AI].pat = true
           Constants.game_nulle = true
           Constants.curr_player = 1 - Constants.curr_player
-          println("PAAAAT")
         }        
       }
     }
@@ -55,7 +54,6 @@ class AI (player : Int) extends Player (player) {
   }
 
   override def check_pat : Boolean = {
-    println("Je teste IA pat : " + pat)
     pat
   }
 }
