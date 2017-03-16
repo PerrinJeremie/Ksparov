@@ -199,10 +199,10 @@ object Load {
   var pos_fin : (Int,Int) = (0,0)
 
   def reset_when_parsing : Unit ={
-    var piece = ""
-    var piece_Ch : Piece = new Pawn(0,-1,-1,0)
-    var pos_init : (Int,Int) = (0,0)
-    var pos_fin : (Int,Int) = (0,0)
+    piece = ""
+    piece_Ch  = new Pawn(0,-1,-1,0)
+    pos_init = (0,0)
+    pos_fin  = (0,0)
   }
 
   class Reproducer(n : Int) extends Player(n:Int){
@@ -224,19 +224,19 @@ object Load {
     }
 
     def pcolumn( P : Piece) : Boolean = {
-      return ((P.name == piece) && (P.player == id) && P.pos_x == pos_init._1)
+      return ((P.name == piece) && (P.player == Constants.curr_player) && P.pos_x == pos_init._1)
     }
 
     def pline( P : Piece) : Boolean = {
-      return (P.name == piece && P.player == id && P.pos_y == pos_init._2)
+      return (P.name == piece && P.player == Constants.curr_player && P.pos_y == pos_init._2)
     }
 
     def pexactpos( P : Piece) : Boolean = {
-      return (P.name == piece && P.player == id && P.coords == pos_init)
+      return (P.name == piece && P.player == Constants.curr_player && P.coords == pos_init)
     }
 
     def pcangoto( P :Piece): Boolean = {
-      return (P.name == piece && P.player == id && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
+      return (P.name == piece && (P.player == Constants.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
     }
 
     def parse_word (s : String) : Unit = {
@@ -278,13 +278,11 @@ object Load {
         else{
           if (is_x_axis(w(0)) && is_y_axis(w(1)) && (w(2) == 'x' || is_x_axis(w(2)))){
             pos_init = ( w(0).toInt - 97, w(1).toInt - 49)
-            println( pos_init )
             piece_Ch =  Ksparov.board.filter(pexactpos)(0)
             w = w.substring(2,w.length)
           }
         }
       }
-
       /* Mange une piéce */
       if (w(0) == 'x'){
         w = w.substring(1,w.length)
@@ -298,6 +296,8 @@ object Load {
         piece_Ch = Ksparov.board.filter(pcangoto)(0)
       }
 
+      println( piece_Ch.player)
+      println( Constants.curr_player)
       w = w.substring(2,w.length)
 
       /* Promotion */
@@ -314,8 +314,10 @@ object Load {
 
     }
 
+
     override def getmove : Unit = {
       if (!list_of_moves.isEmpty){
+        reset_when_parsing
         parse_word(list_of_moves.head)
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
