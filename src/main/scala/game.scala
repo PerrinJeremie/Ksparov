@@ -19,6 +19,7 @@ abstract class Player(n:Int) {
   var ai = false
   def getmove : Unit
   def check_pat : Boolean
+  def ai_promotion : Unit
 }
 
 /* The class for a human player, defines some method and mainly the getmove method. */
@@ -82,6 +83,10 @@ class Human(n : Int) extends Player(n : Int) {
     } else {
       false
     }
+  }
+
+  override def ai_promotion : Unit = {
+    ()
   }
 }
 

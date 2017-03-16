@@ -56,9 +56,7 @@ class AI (player : Int) extends Player (player) {
   override def check_pat : Boolean = {
     pat
   }
-}
 
-object AI_methods {
   def ai_promotion {
 
     val rand = scala.util.Random
@@ -69,5 +67,6 @@ object AI_methods {
       case 3 => Constants.selected_promotion = "Rook"
     }
     Ksparov.promotion (Constants.curr_player)
-  } 
+  }
 }
+

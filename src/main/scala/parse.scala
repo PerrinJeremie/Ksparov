@@ -2,14 +2,14 @@ import java.io._
 import scala.io.Source
 import sys.process._
 
-/* On se base sur une version de PGN non ambigue donc chaque mouvement est de la forme (hormis les mouvements spéciaux tels que le roque et la promotion) : 
+/* On se base sur une version de PGN non ambigue donc chaque mouvement est de la forme (hormis les mouvements spéciaux tels que le roque et la promotion) :
  Na1(x)a2
  */
 
 
 object Save{
 
-  /* Liste de triplets (irock,prom,piece_prom,piece,p1,p2) avec 
+  /* Liste de triplets (irock,prom,piece_prom,piece,p1,p2) avec
    - irock=0 si pas de roque, = 1 si grand, = -1 si petit. 
    - prom = true si il y a promotion, alors piece_prom indique la piece.
    - piece la piece qui bouge (K king ,Q queen ,B bishop ,N knight ,R rook).
@@ -76,30 +76,30 @@ object Save{
   }
 
   def add_prom_to_move( s: String, b:Boolean) : Unit ={
-   val piece_prom : String =  
-     s match {
-       case "Knight" => "N"
-       case "Bishop" => "B"
-       case "Rook" => "R"
-       case "Queen" => "Q"
-     }
+    val piece_prom : String =
+      s match {
+        case "Knight" => "N"
+        case "Bishop" => "B"
+        case "Rook" => "R"
+        case "Queen" => "Q"
+      }
     curr_move = (curr_move._1,true,piece_prom,curr_move._4,curr_move._5,curr_move._6 || b,curr_move._7,curr_move._8)
     if ( add2_happened) {
       list_of_moves = curr_move :: list_of_moves.tail
     }
   }
- 
-/*  def init : String = {
-    val r = scala.util.Random
-    var name  = "0000000000000000"
-    while ! (is_valid(name + ".pgn")) {
-      name = ""
-      for( i <- 0 to 15){
-        name = name + (r.nextInt(10)).toString
-      }
-    }
-    return name + ".pgn"
-  }*/
+  
+  /*  def init : String = {
+   val r = scala.util.Random
+   var name  = "0000000000000000"
+   while ! (is_valid(name + ".pgn")) {
+   name = ""
+   for( i <- 0 to 15){
+   name = name + (r.nextInt(10)).toString
+   }
+   }
+   return name + ".pgn"
+   }*/
 
   def write_tags(writer : PrintWriter, event : String, site : String, date : String, round : String, white : String, black : String, result : String): Unit ={
     writer.write( "[ Event \"" + event + "\"]\n")
@@ -118,13 +118,13 @@ object Save{
   def write_moves(writer : PrintWriter, result : String) : Unit = {
 
     def write_move(i : Int, move: Moves) : Unit = {
-      if (i % 2 == 1){ 
+      if (i % 2 == 1){
         writer.write( ((i+1)/2).toString + ".")
       }
       move._1 match{
         case -1 => writer.write( " O-O " )
         case 1 => writer.write( " O-O-O " )
-        case 0 => 
+        case 0 =>
           writer.write(" ")
           writer.write( move._4 + pos_to_PGN(move._7))
           if(move._5){
@@ -156,7 +156,7 @@ object Save{
     val _ = rec_writing(list_of_moves)
   }
 
-  /* returns 0 if all went well, -1 if it's not the case. 
+  /* returns 0 if all went well, -1 if it's not the case.
    Informations have to be filled by players except for result which is the result of the game : 
    with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
 
@@ -227,7 +227,7 @@ object Load {
       return ((P.name == piece) && (P.player == id) && P.pos_x == pos_init._1)
     }
 
-     def pline( P : Piece) : Boolean = {
+    def pline( P : Piece) : Boolean = {
       return (P.name == piece && P.player == id && P.pos_y == pos_init._2)
     }
 
@@ -245,7 +245,7 @@ object Load {
       /* Recherche du type de piéce */
 
       w(0) match{
-        case 'O' => 
+        case 'O' =>
           if (w == "O-O"){
             Ksparov.board((1-id)*16 +14).move(6,(1-id)*7, Ksparov.board)
           }
@@ -298,16 +298,28 @@ object Load {
         piece_Ch = Ksparov.board.filter(pcangoto)(0)
       }
 
+      w = w.substring(2,w.length)
+
+      /* Promotion */
+      if (w(0) == '='){
+        w(1) match{
+          case 'Q' => Constants.selected_promotion = "Queen"
+          case 'N' => Constants.selected_promotion = "Knight"
+          case 'B' => Constants.selected_promotion = "Bishop"
+          case 'R' => Constants.selected_promotion = "Rook"
+        }
+      }
+
       piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
 
     }
 
     override def getmove : Unit = {
       if (!list_of_moves.isEmpty){
-      parse_word(list_of_moves.head)
-      list_of_moves = list_of_moves.tail
-      DrawActions.draw_game_board(Ksparov.board)
-      Constants.players(Constants.curr_player).moved = true
+        parse_word(list_of_moves.head)
+        list_of_moves = list_of_moves.tail
+        DrawActions.draw_game_board(Ksparov.board)
+        Constants.players(Constants.curr_player).moved = true
       }
     }
 
@@ -324,6 +336,9 @@ object Load {
       }
     }
 
+    override def ai_promotion : Unit = {
+      Ksparov.promotion(Constants.curr_player)
+    }
   }
 
 
@@ -337,7 +352,7 @@ object Load {
     for (lines <- Source.fromFile(Constants.save_path + filename + ".pgn").getLines()){
       if (i<= 7){
         matchtag.findFirstIn(lines) match {
-          case Some(s) => 
+          case Some(s) =>
             infos(i) = s
             i = i + 1
           case None => ()

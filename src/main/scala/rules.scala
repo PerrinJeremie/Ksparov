@@ -207,7 +207,7 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
     if (y_a ==  7 * player && move_ok ){
       Constants.promoted_piece = this
       if (Constants.players(Constants.curr_player).ai) {
-        AI_methods.ai_promotion
+        Constants.players(Constants.curr_player).ai_promotion
       } else {
         DrawActions.enable_promotion (Constants.curr_player)
       }
