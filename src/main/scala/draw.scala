@@ -903,7 +903,10 @@ object DrawActions {
 			}
 		}
 		/* Draw the new board. */
+		var dimension = Ksparov.frame.bounds.getSize()
 		Ksparov.frame.contents = new DrawBoard.Board
+		Ksparov.frame.preferredSize = dimension
+		Ksparov.frame.size = dimension
 	}
 
 	def enable_promotion (p : Int) {

@@ -102,10 +102,12 @@ object Constants {
   var text_font = new Font ("Gill Sans Cyr MT", 1, 16)
   var num_dead_font = new Font("Arial", 0, 25)
 
+  var resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
   def apply_resolution {
 
     /* Defining the dimension and numbers of the cases */
-    val resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+    resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
     if (resolution.getHeight < 1000.0) {
       dim_path = "Min/"
@@ -215,6 +217,7 @@ object Ksparov {
   var frame = new MainFrame {
     title = "Ksparov"
     contents = new DrawMenu.Menu
+    peer.setLocationRelativeTo(null)
   }
 
   /* The 2 * 16 pieces bord is created. */
