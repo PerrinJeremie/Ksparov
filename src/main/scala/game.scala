@@ -129,6 +129,7 @@ object Constants {
       }
     }
   resources_path = "src/main/resources/" + dim_path
+  }
   
   val nb_case_board = 8
   var nb_grid = 2
