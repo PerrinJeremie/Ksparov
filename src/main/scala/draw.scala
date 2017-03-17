@@ -212,7 +212,7 @@ object DrawCharge{
 		  			case 2 => if(!list_empty){contents += scroll}else{contents += new BackgroundCase (1,3)}
 		  			case 4 =>  
                     if(!list_empty){contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")}
-                    else{ contents += new BackgroundCase (1,3)} 
+                    else{ contents += new Label ("<html><div style='text-align : center;'>Allez sur chessgames.com<br>pour télécharger des parties</html>") } 
 		  			case 6 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
 	    		}
     		}
