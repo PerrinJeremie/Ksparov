@@ -26,7 +26,7 @@ object Aux {
     var white_king = Constants.kings(1)
     var black_king = Constants.kings(0)
     var (x_wk, y_wk) = white_king.coords
-    var (x_bk ,y_bk) = black_king.coords
+    var (x_bk, y_bk) = black_king.coords
     var kings = Array(x_wk, y_wk, x_bk, y_bk)
 
     //Now to check if any piece is attacking a king
@@ -38,7 +38,7 @@ object Aux {
         var x_king = kings(2 * color)
         var y_king = kings(2 * color + 1)
         //Checking the validity of the move :
-        if (p.checks_pre_move(x_king, y_king)){
+        if (p.checks_pre_move(x_king, y_king)) {
           var (dir_x, dir_y) = p.get_dirs(x_king, y_king)
           //Checking if the piece can actually attack the king :
           var (clear, piece_on_arrival) = p.clear_path(x, y, x_king, y_king, g, dir_x, dir_y)

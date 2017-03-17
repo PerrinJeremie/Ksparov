@@ -117,11 +117,19 @@ object Constants {
       text_font = new Font ("Gill Sans Cyr MT", 1, 11)
       num_dead_font = new Font("Arial", 0, 20)
     } else {
-      dim_path = "Max/"
+      if (resolution.getHeight > 1100.0) {
+        dim_path = "Jeroboam/"
+        dim_small = new Dimension (90, 90)
+        dim_big = new Dimension (270, 90)
+        dim_message_drawer = new Dimension (450, 90)
+        text_font = new Font ("Gill Sans Cyr MT", 1, 20)
+        num_dead_font = new Font("Arial", 0, 30)
+      } else {
+        dim_path = "Max/"
+      }
     }
   resources_path = "src/main/resources/" + dim_path
-  }
-
+  
   val nb_case_board = 8
   var nb_grid = 2
 
