@@ -181,39 +181,45 @@ object DrawCharge{
 		}
 	}
 
-	class CenterGrid extends GridPanel (8,1) {
-		for (i <- 0 to 7) {
+  class PrettyLabel (text : String) extends Label(text){
+    border = new javax.swing.border.LineBorder (Color.black, 2)
+	preferredSize = Constants.dim_message_drawer
+	minimumSize = Constants.dim_message_drawer
+	maximumSize = Constants.dim_message_drawer
+	font = Constants.text_font
+	background = new Color (200, 200, 200)
+	opaque = true
+   }
+
+	class CenterGrid extends GridPanel (10,1) {
+		for (i <- 0 to 9) {
 			if (i == 0 || i % 2 == 1 && i != 1) {
-				contents += new BackgroundCase (1, 3)
+				contents += new BackgroundCase (1, 5)
 			} else {
        	 		i match {
 		  			case 1 =>
                     if (!list_empty) {
-                    	contents += new Label ("<html><div style='text-align : center;'>Quelle sauvegarde<br>voulez-vous charger ?</html>") {
-                    	  	border = new javax.swing.border.LineBorder (Color.black, 2)
-							preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-							background = new Color (200, 200, 200)
-							opaque = true
+                    	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>") {
+                    	  	
                       	}
                     } else {
-                      	contents += new Label ("<html><div style='text-align : center;'>Aucune sauvegarde<br>n'est disponible !</html>") {
-                    	  	border = new javax.swing.border.LineBorder (Color.black, 2)
-							preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-							background = new Color (200, 200, 200)
-							opaque = true
+                      	contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>") {
                       	}
                     }
-		  			case 2 => if(!list_empty){contents += scroll}else{contents += new BackgroundCase (1,3)}
-		  			case 4 =>  
-                    if(!list_empty){contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")}
-                    else{ contents += new Label ("<html><div style='text-align : center;'>Allez sur chessgames.com<br>pour télécharger des parties</html>") } 
-		  			case 6 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
+		  		  case 2 => 
+                    if(!list_empty){
+                    contents += scroll}
+                  else{
+                    contents += new BackgroundCase (1,5)}
+		  		  case 4 => 
+                    if (!list_empty) {contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete")}
+                    else{ contents += new BackgroundCase (1,5)}
+                  case 6 =>
+                    if(!list_empty){
+                      contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")}
+                    else{ 
+                      contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>") }
+		  			case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
 	    		}
     		}
 		}
@@ -221,8 +227,8 @@ object DrawCharge{
 
 	class Dcharge extends BorderPanel {
 		define_listgame
-    	layout (new BackgroundCase (8,1)) = East
-    	layout (new BackgroundCase (8,1)) = West
+    	layout (new BackgroundCase (10,1)) = East
+    	layout (new BackgroundCase (10,1)) = West
     	layout (new CenterGrid) = Center
 	}
 }
