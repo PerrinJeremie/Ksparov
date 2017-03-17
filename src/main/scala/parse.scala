@@ -184,6 +184,8 @@ object Load {
   val matchtag = """"(.*)"""".r
   val tourtag = """[0-9]+[.]+""".r
   val resulttag = """[*]|1-0|1–0|0-1|0–1|1/2-1/2|1/2–1/2""".r
+  val droquereg = """0|O|O""".r
+  val roquereg = """0–0|O–O|0-0|O-O|O-O""".r
   val piecetag = """(K|Q|B|N|R)+""".r
   val xaxistag = """[a-h]+""".r
   val yaxistag = """[1-8]+""".r
@@ -244,23 +246,22 @@ object Load {
       var w = s+ "$$$$$"
 
       /* Recherche du type de piéce */
-
-      w(0) match{
-        case '0' =>
-          if (w.substring(0,3) == "0-0"){
-            Ksparov.board((1-Constants.curr_player)*16 +14).move(6,(1-Constants.curr_player)*7, Ksparov.board)
-            println("done")
-          }
-          else{
-            Ksparov.board((1-Constants.curr_player)*16 + 14).move(2,(1-Constants.curr_player)*7,Ksparov.board)
+      println(w(0))
+      w(0).toString match{
+        case droquereg(_*) =>
+          w.substring(0,3) match{
+            case roquereg(_*) =>
+              Ksparov.board((1-Constants.curr_player)*16 +14).move(6,(1-Constants.curr_player)*7, Ksparov.board)
+            case _ =>
+              Ksparov.board((1-Constants.curr_player)*16 + 14).move(2,(1-Constants.curr_player)*7,Ksparov.board)
           }
           return ()
-        case 'K' => piece = "king"; w = w.substring(1, w.length)
-        case 'Q' => piece = "queen"; w = w.substring(1, w.length)
-        case 'B' => piece = "bishop"; w = w.substring(1, w.length)
-        case 'N' => piece = "knight"; w = w.substring(1, w.length)
-        case 'R' => piece = "rook"; w = w.substring(1, w.length)
-        case 'P' => piece = "pawn"; w = w.substring(1, w.length)
+        case "K" => piece = "king"; w = w.substring(1, w.length)
+        case "Q" => piece = "queen"; w = w.substring(1, w.length)
+        case "B" => piece = "bishop"; w = w.substring(1, w.length)
+        case "N" => piece = "knight"; w = w.substring(1, w.length)
+        case "R" => piece = "rook"; w = w.substring(1, w.length)
+        case "P" => piece = "pawn"; w = w.substring(1, w.length)
         case _ => piece = "pawn"
       }
 
@@ -363,7 +364,7 @@ object Load {
       }
       else{
         matchtag.findFirstIn(lines) match {
-          case Some(s) => println("pb")
+          case Some(s) => println(s)
           case None =>
             val array_of_words = lines.split(' ')
             for (i <- 0 to array_of_words.length -1) {
@@ -378,7 +379,8 @@ object Load {
                 case "1/2-1/2" => ()
                 case "1/2–1/2" => ()
                 case "*" => ()
-                case _ => list_of_moves = array_of_words(i) :: list_of_moves
+                case _ => val arr = array_of_words(i).split('.') 
+                          list_of_moves = arr(arr.length -1) :: list_of_moves
               }
             }
         }
