@@ -231,18 +231,18 @@ object DrawSave {
 
 	class SaveArgument (default : String, col : Int) extends TextField (default, col) {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
-        preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
+        preferredSize = Constants.dim_message_drawer
+		minimumSize = Constants.dim_message_drawer
+		maximumSize = Constants.dim_message_drawer
 		font = Constants.text_font
   	}
 
   	class SaveLabel (str : String) extends Label {
   		text = str
   		border = new javax.swing.border.LineBorder (Color.black, 2)
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
+		preferredSize = Constants.dim_message_drawer
+		minimumSize = Constants.dim_message_drawer
+		maximumSize = Constants.dim_message_drawer
 		font = Constants.text_font
 		background = new Color (200, 200, 200)
 		opaque = true
@@ -266,9 +266,9 @@ object DrawSave {
 	val TextBlack = new SaveArgument ("Joueur noir", 0)
 
 	class ComeBack (text : String, return_type : String) extends Button {
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
+		preferredSize = Constants.dim_message_drawer
+		minimumSize = Constants.dim_message_drawer
+		maximumSize = Constants.dim_message_drawer
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		font = Constants.text_font
 		action = Action (text) {
@@ -282,15 +282,15 @@ object DrawSave {
 					case "Quit" => Ksparov.frame.dispose()
 				}
       		} else {
-		        TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
+				TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
         	}
 		}
 	}
 
 	class CancelButton extends Button {
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
+		preferredSize = Constants.dim_message_drawer
+		minimumSize = Constants.dim_message_drawer
+		maximumSize = Constants.dim_message_drawer
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		font = Constants.text_font
 		action = Action ("Annuler") {
@@ -300,9 +300,9 @@ object DrawSave {
 	}
 
 	class SwitchButton (switch_type : String) extends Button {
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
+		preferredSize = Constants.dim_message_drawer
+		minimumSize = Constants.dim_message_drawer
+		maximumSize = Constants.dim_message_drawer
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		font = Constants.text_font
 		if (switch_type == "AdvancedSave") {
@@ -321,10 +321,10 @@ object DrawSave {
 	class LeftSimpleGrid extends GridPanel (8, 1) {
 		for (i <- 0 to 7) {
 			if (i == 0 || i % 2 == 1 && i != 1) {
-				contents += new BackgroundCase (1, 3)
+				contents += new BackgroundCase (1, 5)
 			} else {
        	 		i match {
-		  			case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>")
+		  			case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
 		  			case 2 => contents += TextFileName
 		  			case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
 		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
@@ -339,7 +339,7 @@ object DrawSave {
 				case 1 => contents += new SwitchButton ("AdvancedSave")
 				case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu") 
 				case 6 => contents += new CancelButton
-				case _ => contents += new BackgroundCase (1, 3)
+				case _ => contents += new BackgroundCase (1, 5)
 			}
 		}
 	}
@@ -347,10 +347,10 @@ object DrawSave {
 	class LeftAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 8) {
 			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 3)
+				contents += new BackgroundCase (1, 5)
 			} else {
 				i match {
-					case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>")
+					case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
 						contents += TextFileName
 					case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>")
 						contents += TextEvent
@@ -366,11 +366,11 @@ object DrawSave {
 	class CenterAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 8) {
 			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 3)
+				contents += new BackgroundCase (1, 5)
 			} else {
 				i match {
-					case 1 => contents += new BackgroundCase (1, 3)
-						contents += new BackgroundCase (1, 3)
+					case 1 => contents += new BackgroundCase (1, 5)
+						contents += new BackgroundCase (1, 5)
 					case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>")
 						contents += TextDate
 					case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>")
@@ -384,17 +384,13 @@ object DrawSave {
 
 	class RightAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 12){
-			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 3)
-			} else {
-				i match {
-					case 1 => contents += new SwitchButton ("SimpleSave")
-					case 5 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
-					case 7 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
-					case 9 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
-					case 11 => contents += new CancelButton
-					case _ => contents += new BackgroundCase (1, 3)
-				}
+			i match {
+				case 1 => contents += new SwitchButton ("SimpleSave")
+				case 5 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
+				case 7 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+				case 9 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
+				case 11 => contents += new CancelButton
+				case _ => contents += new BackgroundCase (1, 5)
 			}
 		}
 	}

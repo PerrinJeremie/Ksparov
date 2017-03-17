@@ -140,7 +140,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   }
 
   /*Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.*/
-  def move(x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
+  def move (x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
     var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
     if (move_ok){
       pos_x = x_a ;
@@ -150,7 +150,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
         p_arrival.get.pos_x = (-1) 
         p_arrival.get.pos_y= (-1)
       }
-      var king = Constants.kings(1-player)
+      var king = Constants.kings (1 - player)
       king.attackers = attackers
       name match { //this is needed for castling
         case "rook" => this.asInstanceOf[Rook].has_moved = true
