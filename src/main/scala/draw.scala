@@ -201,12 +201,23 @@ object DrawCharge{
 
 object DrawSave {
 
-	class TextField2 (default : String, col : Int) extends TextField (default, col) {
+	class SaveArgument (default : String, col : Int) extends TextField (default, col) {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
         preferredSize = Constants.dim_big
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		font = Constants.text_font
+  	}
+
+  	class SaveLabel (str : String) extends Label {
+  		text = str
+  		border = new javax.swing.border.LineBorder (Color.black, 2)
+		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		font = Constants.text_font
+		background = new Color (200, 200, 200)
+		opaque = true
   	}
 
     def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
@@ -218,25 +229,27 @@ object DrawSave {
       }
     }
 
-	val TextFileName = new TextField2 ("", 0)
-	val TextEvent = new TextField2 ("Ksparov Tournament", 0)
-	val TextSite = new TextField2 ("Ksparov Software", 0)
-	val TextDate = new TextField2 (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
-	val TextRound = new TextField2 ("Ronde numéro ", 0)
-	val TextWhite = new TextField2 ("Joueur blanc", 0)
-	val TextBlack = new TextField2 ("Joueur noir", 0)
+	val TextFileName = new SaveArgument ("", 0)
+	val TextEvent = new SaveArgument ("Ksparov Tournament", 0)
+	val TextSite = new SaveArgument ("Ksparov Software", 0)
+	val TextDate = new SaveArgument (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
+	val TextRound = new SaveArgument ("Ronde numéro ", 0)
+	val TextWhite = new SaveArgument ("Joueur blanc", 0)
+	val TextBlack = new SaveArgument ("Joueur noir", 0)
 
 	class ComeBack (text : String, return_type : String) extends Button {
 		preferredSize = Constants.dim_big
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
+		font = Constants.text_font
 		action = Action (text) {
-      		if (Save.write_to_file(TextFileName.text, "Ksparov Game", "Ksparov Software", new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), "1", "White_player", "Black_player", resultgame(Constants.curr_player, Constants.game_won,Constants.game_nulle) ) == 0) {
-      		/*if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0){*/
+			if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0) {
+				TextFileName.text = ""
 				return_type match {
 					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 					case "Game" => Ksparov.frame.contents = new DrawBoard.Board
+					case "Quit" => Ksparov.frame.dispose()
 				}
       		} else {
 		        TextFileName.text = "ALREADY USED NAME"
@@ -244,143 +257,137 @@ object DrawSave {
 		}
 	}
 
-	class SimpleGrid extends GridPanel (8,1) {
+	class CancelButton extends Button {
+		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		font = Constants.text_font
+		action = Action ("Annuler") {Ksparov.frame.contents = new DrawBoard.Board}
+	}
+
+	class SwitchButton (switch_type : String) extends Button {
+		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		font = Constants.text_font
+		if (switch_type == "AdvancedSave") {
+			action = Action ("<html><div style='text-align : center;'>Passer en mode<br>sauvegarde avancée</html>") {
+				Ksparov.frame.contents = new DrawSave.AdvancedSave
+			}
+		} else {
+			action = Action ("<html><div style='text-align : center;'>Revenir à la<br>sauvegarde simple</html>") {
+				Ksparov.frame.contents = new DrawSave.SimpleSave
+			}
+		}
+	}
+
+	class LeftSimpleGrid extends GridPanel (8, 1) {
 		for (i <- 0 to 7) {
 			if (i == 0 || i % 2 == 1 && i != 1) {
 				contents += new BackgroundCase (1, 3)
 			} else {
        	 		i match {
-		  			case 1 => contents += new Label ("<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>")
+		  			case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>")
 		  			case 2 => contents += TextFileName
 		  			case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
-		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
+		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
 	    		}
     		}
 		}
 	}
 
-	class LeftAdvancedGrid extends GridPanel (10, 1) {
-		for (i <- 0 to 6){
+	class RightSimpleGrid extends GridPanel (8, 1) {
+		for(i <- 0 to 7) {
+			i match {
+				case 1 => contents += new SwitchButton ("AdvancedSave")
+				case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu") 
+				case 6 => contents += new CancelButton
+				case _ => contents += new BackgroundCase (1, 3)
+			}
+		}
+	}
+
+	class LeftAdvancedGrid extends GridPanel (13, 1) {
+		for (i <- 0 to 8) {
 			if (i % 2 == 0) {
 				contents += new BackgroundCase (1, 3)
 			} else {
 				i match {
-					case 1 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
+					case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>")
 						contents += TextFileName
-					case 3 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
+					case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>")
 						contents += TextEvent
-					case 5 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
+					case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>")
 						contents += TextSite
-					
+					case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les blancs ?</html>")
+						contents += TextWhite
 				}
 			}
 		}		
 	}
 
-	class CenterAdvancedGrid extends GridPanel (10, 1) {
-		for (i <- 0 to 6){
+	class CenterAdvancedGrid extends GridPanel (13, 1) {
+		for (i <- 0 to 8) {
 			if (i % 2 == 0) {
 				contents += new BackgroundCase (1, 3)
 			} else {
 				i match {
 					case 1 => contents += new BackgroundCase (1, 3)
 						contents += new BackgroundCase (1, 3)
-					case 3 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
+					case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>")
 						contents += TextDate
-					case 5 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
+					case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>")
 						contents += TextRound
-					
+					case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les noirs ?</html>")
+						contents += TextBlack
 				}
 			}
 		}		
 	}
 
-	class RightAdvancedGrid extends GridPanel (10, 1) {
-		for (i <- 0 to 6){
+	class RightAdvancedGrid extends GridPanel (13, 1) {
+		for (i <- 0 to 12){
 			if (i % 2 == 0) {
 				contents += new BackgroundCase (1, 3)
 			} else {
 				i match {
-					case 1 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
-						contents += new BackgroundCase (1, 3)
-					case 3 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Qui joue les blancs ?</html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
-						contents += TextWhite
-					case 5 => contents += new Label {
-							text = "<html><div style='text-align : center;'>Qui joue les noirs ?</html>"
-							border = new javax.swing.border.LineBorder (Color.black, 2)
-                	    	preferredSize = Constants.dim_big
-							minimumSize = Constants.dim_big
-							maximumSize = Constants.dim_big
-							font = Constants.text_font
-						}
-						contents += TextBlack
-					
+					case 1 => contents += new SwitchButton ("SimpleSave")
+					case 7 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+					case 9 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
+					case 11 => contents += new CancelButton
+					case _ => contents += new BackgroundCase (1, 3)
 				}
 			}
-		}		
+		}
 	}
 
 	class SimpleSave extends BorderPanel {
-    	layout (new BackgroundCase (8,1)) = East
-    	layout (new BackgroundCase (8,1)) = West
-    	layout (new SimpleGrid) = Center
+    	layout (new BorderPanel {
+    		layout (new BackgroundCase (8,1)) = West
+    		layout (new LeftSimpleGrid) = East
+    		}) = West
+    	layout (new BackgroundCase (8,1)) = Center
+    	layout (new BorderPanel {
+    		layout (new RightSimpleGrid) = West
+    		layout (new BackgroundCase (8, 1)) = East
+    	}) = East
 	}
 
 	class AdvancedSave extends BorderPanel {
 		layout (new BorderPanel {
-			layout (new BackgroundCase (10, 1)) = West
+			layout (new BackgroundCase (13, 1)) = West
 			layout (new LeftAdvancedGrid) = East
 			}) = West
 		layout (new BorderPanel {
-			layout (new BackgroundCase (10, 1)) = West
+			layout (new BackgroundCase (13, 1)) = West
 			layout (new CenterAdvancedGrid) = East
 			}) = Center
 		layout (new BorderPanel {
-			layout (new BackgroundCase (10, 1)) = West
+			layout (new BackgroundCase (13, 1)) = West
 			layout (new RightAdvancedGrid) = Center
-			layout (new BackgroundCase (10, 1)) = East
+			layout (new BackgroundCase (13, 1)) = East
 			}) = East
 	}
 }
@@ -681,7 +688,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
-				Ksparov.frame.contents = new DrawSave.Dsave
+				Ksparov.frame.contents = new DrawSave.SimpleSave	
 			}
 		}
 		contents += new Button {
