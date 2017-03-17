@@ -178,6 +178,7 @@ object Constants {
 
   /* The type of game chosen : 0 for Human vs Human, 1 for Hhuman vs AI and 2 for AI vs AI. */
   var game_type = 0
+  var alice_chess = false
 
   /* Arrays for the game : one with the 63 cases, one which counts the dead pieces for each player. */
   var grids = new Array [Array[DrawBoard.Case]] (nb_grid)

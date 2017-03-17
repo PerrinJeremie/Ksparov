@@ -44,9 +44,11 @@ object DrawMenu {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action (name) {
 			name match {
-				case "<html><div style='text-align : center;'>Jouer une partie<br>classique</html>" => Constants.nb_grid = 1
+				case "<html><div style='text-align : center;'>Jouer une<br>partie classique</html>" => Constants.nb_grid = 1
+					Constants.alice_chess = false
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
+					Constants.alice_chess = true
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 				case "Charger une partie" => Constants.nb_grid = 1
                     DrawCharge.define_listgame
@@ -66,7 +68,7 @@ object DrawMenu {
         		contents += new BackgroundCase (1, 3)
         		contents += new BackgroundCase (1, 3)
     		} else { i match {
-	        case 1 => contents += new Option ("<html><div style='text-align : center;'>Jouer une partie<br>classique</html>")
+	        case 1 => contents += new Option ("<html><div style='text-align : center;'>Jouer une<br>partie classique</html>")
 			contents += new BackgroundCase (1, 3)
         	contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
         	case 3 => contents += new Option ("Charger une partie")
@@ -177,10 +179,27 @@ object DrawCharge{
 			} else {
        	 		i match {
 		  			case 1 =>
-                    if(!list_empty){
-                      contents += new Label ("<html><div style='text-align : center;'>Quelle sauvegarde<br>voulez-vous charger ?</html>")}
-                    else{
-                      contents += new Label  ("<html><div style='text-align : center;'>Pas de sauvegarde<br>à charger</html>")}
+                    if (!list_empty) {
+                    	contents += new Label ("<html><div style='text-align : center;'>Quelle sauvegarde<br>voulez-vous charger ?</html>") {
+                    	  	border = new javax.swing.border.LineBorder (Color.black, 2)
+							preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+							background = new Color (200, 200, 200)
+							opaque = true
+                      	}
+                    } else {
+                      	contents += new Label ("<html><div style='text-align : center;'>Aucune sauvegarde<br>n'est disponible !</html>") {
+                    	  	border = new javax.swing.border.LineBorder (Color.black, 2)
+							preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+							background = new Color (200, 200, 200)
+							opaque = true
+                      	}
+                    }
 		  			case 2 => if(!list_empty){contents += scroll}else{contents += new BackgroundCase (1,3)}
 		  			case 4 =>  
                     if(!list_empty){contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")}
@@ -252,7 +271,7 @@ object DrawSave {
 					case "Quit" => Ksparov.frame.dispose()
 				}
       		} else {
-		        TextFileName.text = "ALREADY USED NAME"
+		        TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
         	}
 		}
 	}
@@ -354,6 +373,7 @@ object DrawSave {
 			} else {
 				i match {
 					case 1 => contents += new SwitchButton ("SimpleSave")
+					case 5 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
 					case 7 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
 					case 9 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
 					case 11 => contents += new CancelButton
@@ -496,6 +516,18 @@ object DrawParameters {
 /* This object is for the game selection : Human vs Human, AI vs AI or AI vs Human. */
 object DrawGameSelection {
 
+	class MessageDrawer extends Label {
+		font = Constants.text_font
+		background = new Color (200, 200, 200)
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		opaque = true
+		if (Constants.alice_chess) {
+			text = "<html><div style='text-align : center;'>Vous avez choisi de jouer aux échecs d'Alice,<br>veuillez sélectionner le type de jeu !</html>"
+		} else {
+			text = "<html><div style='text-align : center;'>Vous avez choisi de jouer aux échecs classiques,<br>veuillez sélectionner le type de jeu !</html>"
+		}
+	}
+
 	/* The button for the choice selection : change the value of Constants.game_type when pressed. */
 	class Option (name : String, num : Int) extends Button {
 		preferredSize = Constants.dim_big
@@ -537,11 +569,22 @@ object DrawGameSelection {
 		}
 	}
 
+	class WelcomeMessage extends BorderPanel {
+		layout (new BackgroundCase (1, 11)) = North
+		layout (new BorderPanel {
+			layout (new BackgroundCase (1, 1)) = West
+			layout (new MessageDrawer) = Center
+			layout (new BackgroundCase (1, 1)) = East
+		}) = South
+		
+	}
+
 	/* The final class with background. */
 	class Menu extends BorderPanel {
 		layout (new BackgroundCase (7, 1)) = East
 		layout (new CenterGrid) = Center
 		layout (new BackgroundCase (7, 1)) = West
+		layout (new WelcomeMessage) = North
 	}
 }
 
