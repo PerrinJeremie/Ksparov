@@ -332,7 +332,11 @@ object Load {
       if (!list_of_moves.isEmpty){
         reset_when_parsing
         println(list_of_moves.head)
-        parse_word(list_of_moves.head)
+        try {
+          parse_word(list_of_moves.head)
+        }catch{
+          case _ : Throwable => println(".PGN corrompu") 
+        }
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
         Constants.players(Constants.curr_player).moved = true

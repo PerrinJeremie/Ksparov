@@ -141,7 +141,7 @@ object DrawNotYet {
 object DrawCharge {
 
     def shorten( s :String): String ={
-        return s.substring(0,s.length -4)
+        return s.substring(Constants.save_path.length,s.length -4)
     }
 
     var result: String = "";
@@ -150,7 +150,7 @@ object DrawCharge {
     var list_empty = false 
 
     def define_listgame {
-        result = ("ls " + Constants.save_path) !!;
+        result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
         if (result.length == 0){
           list_empty = true
         }
