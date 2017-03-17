@@ -47,14 +47,19 @@ object DrawMenu {
 				case "<html><div style='text-align : center;'>Jouer une<br>partie classique</html>" => Constants.nb_grid = 1
 					Constants.alice_chess = false
 					Ksparov.frame.contents = new DrawGameSelection.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
 					Constants.alice_chess = true
 					Ksparov.frame.contents = new DrawGameSelection.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Charger une partie" => Constants.nb_grid = 1
                     DrawCharge.define_listgame
                     Ksparov.frame.contents = new DrawCharge.Dcharge
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Voir les scores" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Gérer les paramètres" => Ksparov.frame.contents = new DrawParameters.Parameters
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Quitter Ksparov" => Ksparov.frame.dispose()
 			}
 		}
@@ -102,7 +107,9 @@ object DrawNotYet {
 		action = Action (name) {
 			name match {
 				case "Revenir au menu" => Ksparov.frame.contents = new DrawMenu.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Revenir à la partie" => Ksparov.frame.contents = new DrawBoard.Board
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 	}
@@ -162,12 +169,14 @@ object DrawCharge{
 		action = Action (text) {
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Game" => 
-                Load.list_of_moves = List()
-                Load.get_list_move_from_file(scroll.item)
-                Constants.game_type = 6
-                Ksparov.init_game(6)
-                Ksparov.frame.contents = new DrawBoard.Board
+        	        Load.list_of_moves = List()
+        	        Load.get_list_move_from_file(scroll.item)
+        	        Constants.game_type = 6
+        	        Ksparov.init_game(6)
+        	        Ksparov.frame.contents = new DrawBoard.Board
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 	}
@@ -267,7 +276,9 @@ object DrawSave {
 				TextFileName.text = ""
 				return_type match {
 					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+						Ksparov.frame.peer.setLocationRelativeTo(null)
 					case "Game" => Ksparov.frame.contents = new DrawBoard.Board
+						Ksparov.frame.peer.setLocationRelativeTo(null)
 					case "Quit" => Ksparov.frame.dispose()
 				}
       		} else {
@@ -282,7 +293,10 @@ object DrawSave {
 		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		font = Constants.text_font
-		action = Action ("Annuler") {Ksparov.frame.contents = new DrawBoard.Board}
+		action = Action ("Annuler") {
+			Ksparov.frame.contents = new DrawBoard.Board
+			Ksparov.frame.peer.setLocationRelativeTo(null)
+		}
 	}
 
 	class SwitchButton (switch_type : String) extends Button {
@@ -294,10 +308,12 @@ object DrawSave {
 		if (switch_type == "AdvancedSave") {
 			action = Action ("<html><div style='text-align : center;'>Passer en mode<br>sauvegarde avancée</html>") {
 				Ksparov.frame.contents = new DrawSave.AdvancedSave
+				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		} else {
 			action = Action ("<html><div style='text-align : center;'>Revenir à la<br>sauvegarde simple</html>") {
 				Ksparov.frame.contents = new DrawSave.SimpleSave
+				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 	}
@@ -500,7 +516,10 @@ object DrawParameters {
 		contents += new PiecesGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
-			action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {Ksparov.frame.contents = new DrawMenu.Menu}
+			action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
+				Ksparov.frame.contents = new DrawMenu.Menu
+				Ksparov.frame.peer.setLocationRelativeTo(null)
+			}
 			border = new javax.swing.border.LineBorder (Color.black, 2)}
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 	}
@@ -540,6 +559,7 @@ object DrawGameSelection {
 			/* Launched a game. */
 		    Ksparov.init_game (num)
     		Ksparov.frame.contents = new DrawBoard.Board
+			Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
 	}
 
@@ -562,7 +582,10 @@ object DrawGameSelection {
 					contents += new Button {
 						font = Constants.text_font
 						border = new javax.swing.border.LineBorder (Color.black, 2)
-						action = Action ("Revenir au menu") {Ksparov.frame.contents = new DrawMenu.Menu}
+						action = Action ("Revenir au menu") {
+							Ksparov.frame.contents = new DrawMenu.Menu
+							Ksparov.frame.peer.setLocationRelativeTo(null)
+						}
 					}
 				}
 			}
@@ -726,18 +749,21 @@ object DrawBoard {
 		font = Constants.text_font
 			action = Action ("Recommencer une partie") {
 	    		Ksparov.frame.contents = new DrawGameSelection.Menu
+				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
-				Ksparov.frame.contents = new DrawSave.SimpleSave	
+				Ksparov.frame.contents = new DrawSave.SimpleSave
+				Ksparov.frame.peer.setLocationRelativeTo(null)	
 			}
 		}
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Revenir au menu principal") {
 				Ksparov.frame.contents = new DrawMenu.Menu
+				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 		contents += new Button {
