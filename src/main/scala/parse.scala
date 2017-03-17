@@ -22,9 +22,19 @@ object Save{
 
   var add2_happened = false
 
-  def is_valid (s:String) : Boolean = {
+  def is_valid (s:String) : Int = {
     var res : String = ("ls " + Constants.save_path) !!;
-    return (res.indexOf(s) == -1 && s.length <= 24)
+    if(s.length > 34){
+      return -2
+    }
+    else{
+      if(res.indexOf(s) == -1){
+        return 0
+      }
+      else{
+        -1
+      }
+    }
   }
 
   def init : Unit = {
@@ -161,15 +171,17 @@ object Save{
    with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
 
   def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String,result:String) : Int = {
-    if (is_valid(s+".pgn")) {
-      val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
-      write_tags(writer,event,site,date,round,white,black,result)
-      write_moves(writer,result)
-      writer.close()
-      return 0
-    }
-    else {
-      return -1
+    is_valid(s+".pgn") match {
+      case 0 =>
+        val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
+        write_tags(writer,event,site,date,round,white,black,result)
+        write_moves(writer,result)
+        writer.close()
+        return 0
+      case -1 =>
+        return -1
+      case -2 =>
+        return -2
     }
   }
 
@@ -320,7 +332,11 @@ object Load {
       if (!list_of_moves.isEmpty){
         reset_when_parsing
         println(list_of_moves.head)
-        parse_word(list_of_moves.head)
+        try {
+          parse_word(list_of_moves.head)
+        }catch{
+          case _ : Throwable => println(".PGN corrompu") 
+        }
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
         Constants.players(Constants.curr_player).moved = true
