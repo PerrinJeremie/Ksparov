@@ -177,6 +177,10 @@ object DrawCharge{
         	        Ksparov.init_game(6)
         	        Ksparov.frame.contents = new DrawBoard.Board
 					Ksparov.frame.peer.setLocationRelativeTo(null)
+              case "Delete" =>
+                    val res_ = ("rm " + Constants.save_path + scroll.item + ".pgn") !!;
+                    define_listgame
+                    Ksparov.frame.contents = new DrawCharge.Dcharge
 			}
 		}
 	}
@@ -278,7 +282,8 @@ object DrawSave {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		font = Constants.text_font
 		action = Action (text) {
-			if (Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") == 0) {
+			Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") match {
+              case 0 =>
 				TextFileName.text = ""
 				return_type match {
 					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
@@ -287,8 +292,10 @@ object DrawSave {
 						Ksparov.frame.peer.setLocationRelativeTo(null)
 					case "Quit" => Ksparov.frame.dispose()
 				}
-      		} else {
+              case -1 =>
 				TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
+              case -2 =>
+                TextFileName.text = " 30 Caractères Max. "
         	}
 		}
 	}
@@ -330,7 +337,7 @@ object DrawSave {
 				contents += new BackgroundCase (1, 5)
 			} else {
        	 		i match {
-		  			case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
+		  			case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (30 caractères max) ?</html>")
 		  			case 2 => contents += TextFileName
 		  			case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
 		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
