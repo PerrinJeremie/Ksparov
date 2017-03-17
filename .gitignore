@@ -96,4 +96,8 @@ flycheck_*.el
 # test your code
 test.scala
 
+# sauvegardes
+
+.pgn
+
 # End of https://www.gitignore.io/api/emacs
