@@ -202,7 +202,11 @@ object DrawCharge{
 object DrawSave {
 
 	class TextField2 (default : String, col : Int) extends TextField (default, col) {
-		override def font = Constants.text_font 
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+        preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		font = Constants.text_font
   	}
 
     def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
@@ -215,12 +219,12 @@ object DrawSave {
     }
 
 	val TextFileName = new TextField2 ("", 0)
-	/*val TextEvent = new TextField2 ("Event", 0)
-	val TextSite = new TextField2 ("Site", 0)
-	val TextDate = new TextField2 ("Date", 0)
-	val TextRound = new TextField2 ("Round", 0)
-	val TextWhite = new TextField2 ("White", 0)
-	val TextBlack = new TextField2 ("Black", 0)*/
+	val TextEvent = new TextField2 ("Ksparov Tournament", 0)
+	val TextSite = new TextField2 ("Ksparov Software", 0)
+	val TextDate = new TextField2 (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
+	val TextRound = new TextField2 ("Ronde numéro ", 0)
+	val TextWhite = new TextField2 ("Joueur blanc", 0)
+	val TextBlack = new TextField2 ("Joueur noir", 0)
 
 	class ComeBack (text : String, return_type : String) extends Button {
 		preferredSize = Constants.dim_big
@@ -240,7 +244,7 @@ object DrawSave {
 		}
 	}
 
-	class CenterGrid extends GridPanel (8,1) {
+	class SimpleGrid extends GridPanel (8,1) {
 		for (i <- 0 to 7) {
 			if (i == 0 || i % 2 == 1 && i != 1) {
 				contents += new BackgroundCase (1, 3)
@@ -255,10 +259,129 @@ object DrawSave {
 		}
 	}
 
-	class Dsave extends BorderPanel {
+	class LeftAdvancedGrid extends GridPanel (10, 1) {
+		for (i <- 0 to 6){
+			if (i % 2 == 0) {
+				contents += new BackgroundCase (1, 3)
+			} else {
+				i match {
+					case 1 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Quelle nom donner à la <br> sauvegarde (20 car. max) ?</html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextFileName
+					case 3 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextEvent
+					case 5 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextSite
+					
+				}
+			}
+		}		
+	}
+
+	class CenterAdvancedGrid extends GridPanel (10, 1) {
+		for (i <- 0 to 6){
+			if (i % 2 == 0) {
+				contents += new BackgroundCase (1, 3)
+			} else {
+				i match {
+					case 1 => contents += new BackgroundCase (1, 3)
+						contents += new BackgroundCase (1, 3)
+					case 3 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextDate
+					case 5 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextRound
+					
+				}
+			}
+		}		
+	}
+
+	class RightAdvancedGrid extends GridPanel (10, 1) {
+		for (i <- 0 to 6){
+			if (i % 2 == 0) {
+				contents += new BackgroundCase (1, 3)
+			} else {
+				i match {
+					case 1 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+						contents += new BackgroundCase (1, 3)
+					case 3 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Qui joue les blancs ?</html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextWhite
+					case 5 => contents += new Label {
+							text = "<html><div style='text-align : center;'>Qui joue les noirs ?</html>"
+							border = new javax.swing.border.LineBorder (Color.black, 2)
+                	    	preferredSize = Constants.dim_big
+							minimumSize = Constants.dim_big
+							maximumSize = Constants.dim_big
+							font = Constants.text_font
+						}
+						contents += TextBlack
+					
+				}
+			}
+		}		
+	}
+
+	class SimpleSave extends BorderPanel {
     	layout (new BackgroundCase (8,1)) = East
     	layout (new BackgroundCase (8,1)) = West
-    	layout (new CenterGrid) = Center
+    	layout (new SimpleGrid) = Center
+	}
+
+	class AdvancedSave extends BorderPanel {
+		layout (new BorderPanel {
+			layout (new BackgroundCase (10, 1)) = West
+			layout (new LeftAdvancedGrid) = East
+			}) = West
+		layout (new BorderPanel {
+			layout (new BackgroundCase (10, 1)) = West
+			layout (new CenterAdvancedGrid) = East
+			}) = Center
+		layout (new BorderPanel {
+			layout (new BackgroundCase (10, 1)) = West
+			layout (new RightAdvancedGrid) = Center
+			layout (new BackgroundCase (10, 1)) = East
+			}) = East
 	}
 }
 
