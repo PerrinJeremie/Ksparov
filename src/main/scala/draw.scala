@@ -138,7 +138,7 @@ object DrawNotYet {
 	}
 }
 
-object DrawCharge{
+object DrawCharge {
 
     def shorten( s :String): String ={
         return s.substring(0,s.length -4)
@@ -157,7 +157,9 @@ object DrawCharge{
         else{
           list_empty = false
     	  DrawCharge.listgame = result.split('\n').map(shorten).toList
-    	  DrawCharge.scroll = new ComboBox(listgame)
+    	  DrawCharge.scroll = new ComboBox(listgame) {
+    	  	font = Constants.text_font
+    	  }
         }
     }
 
@@ -166,6 +168,7 @@ object DrawCharge{
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		border = new javax.swing.border.LineBorder (Color.black, 2)
+		font = Constants.text_font
 		action = Action (text) {
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
