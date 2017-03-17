@@ -13,40 +13,32 @@ object Aux {
 
 
   /*Returns the piece on coords(x,y) or None if there is none*/
-  def piece_of_coord (x : Int, y : Int, g : Array[Piece]) : Option[Piece] = {
-    g find (p => p.pos_x == x && p.pos_y == y)
+  def piece_of_coord (x : Int, y : Int, g : Array[Piece], grid_id : Int) : Option[Piece] = {
+    g find (p => p.pos_x == x && p.pos_y == y && p.grid == grid_id)
   }
 
   /*Checks for attacks on both kings and returns a list of attackers for each king.
     Used in the pre_move function*/
   def check_check (g : Array[Piece]) : Array[List[Piece]] = {
     var attacks = Array(Nil:List[Piece], Nil : List[Piece])
-
-    //Finding the kings
-    var white_king = Constants.kings(1)
-    var black_king = Constants.kings(0)
-    var (x_wk, y_wk) = white_king.coords
-    var (x_bk ,y_bk) = black_king.coords
-    var kings = Array(x_wk, y_wk, x_bk, y_bk)
-
-    //Now to check if any piece is attacking a king
-    for (i <- 0 to g.size - 1){
-      var p = g(i)
-      var (x, y, color) = (p.pos_x, p.pos_y, p.player)
-      //Checking if the piece isn't dead :
-      if (Aux.on_board(x, y)){
-        var x_king = kings(2 * color)
-        var y_king = kings(2 * color + 1)
-        //Checking the validity of the move :
-        if (p.checks_pre_move(x_king, y_king)){
-          var (dir_x, dir_y) = p.get_dirs(x_king, y_king)
-          //Checking if the piece can actually attack the king :
-          var (clear, piece_on_arrival) = p.clear_path(x, y, x_king, y_king, g, dir_x, dir_y)
-          if (clear) {
-            attacks(1 - color) = attacks(1 - color):+p
+      for (i <- 0 to g.size - 1){
+        var p = g(i)
+        var (x, y, color) = (p.pos_x, p.pos_y, p.player)
+        //Checking if the piece isn't dead :
+        if ( Aux.on_board(x, y) && p.grid == Constants.kings(1 - color).grid ){
+          var x_king = Constants.kings(1 - color).pos_x
+          var y_king = Constants.kings(1 - color).pos_y
+          //Checking the validity of the move :
+          if (p.checks_pre_move(x_king, y_king)){
+            var (dir_x, dir_y) = p.get_dirs(x_king, y_king)
+            //Checking if the piece can actually attack the king :
+            var (clear, piece_on_arrival) = p.clear_path(x, y, x_king, y_king, g, dir_x, dir_y)
+            if (clear) {
+              attacks(1 - color) = attacks(1 - color):+p
+            }
           }
         }
-      }
+
     }
     attacks
   }
@@ -58,10 +50,11 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   var pos_x = x
   var pos_y = y
   def coords = (pos_x, pos_y)
+  def nextgrid = ( grid = (grid + 1)%(Constants.nb_grid))
   var name : String
   var piece_path : String
   var player = play
-  var grid = grid_id
+  var grid : Int = grid_id
   def pattern(x_a : Int, y_a : Int) : Boolean
 
   /*Returns the directions of a movement (-1, 0 or 1) */
@@ -77,10 +70,17 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   /*Recursive function that explores the path of a movement.
   The boolean indicates if the path is clear, and the piece is either the ennemy piece on arrival, an obstacle on the path, or None.*/
   def clear_path (x_d : Int, y_d : Int, x_a : Int, y_a : Int, g : Array[Piece], dir_x : Int, dir_y : Int) : (Boolean, Option[Piece]) = {
+    //Handling Alice case
+    if (Constants.alice_chess){
+      var piece_arrival = Aux.piece_of_coord (x_a, y_a, g, (grid + 1) % (Constants.nb_grid))
+      if (piece_arrival != None) {
+        (false, piece_arrival)
+      }
+    }
     //Getting next case
     var next_x = dir_x + x_d
     var next_y = dir_y + y_d
-    var p = Aux.piece_of_coord (next_x, next_y, g)
+    var p = Aux.piece_of_coord (next_x, next_y, g, grid)
     //Base case
     if (x_a == next_x && y_a == next_y){p match {
       case None => (true,None) //arrival is free
@@ -114,6 +114,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
         var (old_x2, old_y2)=(0, 0)
         pos_x = x_a
         pos_y = y_a
+        nextgrid
         p_arrival match {
           case None => ();
           case _ => old_x2 = p_arrival.get.pos_x
@@ -126,6 +127,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
         //Restablishing previous position
         pos_x = old_x
         pos_y = old_y
+        nextgrid
         if (p_arrival != None) {
           p_arrival.get.pos_x = old_x2 ; p_arrival.get.pos_y = old_y2 ;
         }
@@ -145,9 +147,9 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     if (move_ok){
       pos_x = x_a ;
       pos_y = y_a ;
-      grid = (1 - grid) * (Constants.nb_grid - 1)
+      nextgrid
       if (p_arrival != None) {
-        p_arrival.get.pos_x = (-1) 
+        p_arrival.get.pos_x = (-1)
         p_arrival.get.pos_y= (-1)
       }
       var king = Constants.kings(1-player)
@@ -194,7 +196,7 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
       (clear && p_arrival == None, p_arrival)
     }
     else { //the pawn is attacking. But there is no need to call clear_path, as the destination is only one case away.
-      var p : Option[Piece] = Aux.piece_of_coord(x_a, y_a, g)
+      var p : Option[Piece] = Aux.piece_of_coord(x_a, y_a, g, grid)
       p match {
         case None => (false,None)
         case _ => (p.get.player != player, Some(p.get))
@@ -235,7 +237,14 @@ class Knight(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y
 
   /*Knighs can jump over all other pieces, so we are jumping over the recursive case too*/
   override def clear_path(x_d:Int, y_d:Int, x_a:Int, y_a:Int, g:Array[Piece], dir_x:Int, dir_y:Int) : (Boolean, Option[Piece]) = {
-    var p = Aux.piece_of_coord(x_a,y_a,g)
+
+    if (Constants.alice_chess){
+      var piece_arrival = Aux.piece_of_coord (x_a, y_a, g, (grid + 1) % (Constants.nb_grid))
+      if (piece_arrival != None) {
+        (false, piece_arrival)
+      }
+    }
+    var p = Aux.piece_of_coord(x_a,y_a,g, grid)
     p match {
       case None => (true,None)
       case _ if (p.get).player == player => (false,Some(p.get))
@@ -265,7 +274,7 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
   /*An override is neccesary to handle the case of castling*/
   override def pre_move (x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
     //Checking the basic conditions for castling
-    if (!has_moved && !attacked && math.abs(pos_x - x_a) == 2 && pos_y == y_a) {
+    if (!has_moved && !attacked && math.abs(pos_x - x_a) == 2 && pos_y == y_a && !Constants.alice_chess) {
       //Getting corresponding rook.
       var dir_x = math.signum (x_a - pos_x)
       var x_rook = dir_x match {
@@ -273,11 +282,11 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
         case (-1) => 0
         case _ => -1
       }
-      var rook = Aux.piece_of_coord(x_rook, pos_y, g)
+      var rook = Aux.piece_of_coord(x_rook, pos_y, g, grid)
       //In case this is a queenside castling, checking the emptiness of the case next to the rook. If it is kingside, the case will be off board anyway.
-      var right_neighbor = Aux.piece_of_coord(x_rook + 1, pos_y, g)
+      var right_neighbor = Aux.piece_of_coord(x_rook + 1, pos_y, g, grid)
       if ( (rook != None) && (rook.get.name == "rook") && !rook.get.asInstanceOf[Rook].has_moved && (right_neighbor == None)) { //Lazy evaluation FTW !
-                                                                                                                                //If the conditions are ok, we have to check if the king is not attacked during its movement. We use the super method for this.
+       //If the conditions are ok, we have to check if the king is not attacked during its movement. We use the super method for this.
         var (move_ok1, p_arrival1, l1) = super.pre_move(pos_x + dir_x, pos_y, g)
         pos_x += dir_x
         var (move_ok2, p_arrival2, l2) = super.pre_move(pos_x + dir_x, pos_y, g)
@@ -332,7 +341,6 @@ object Checkmate {
   /*Checks if player pl has lost the game. */
   def check_mate(g : Array[Piece], pl : Int) : Boolean = {
     var king = Constants.kings(pl)
-    //var king = (g find (p => (p.name == "king" && p.player==pl))).get
     var (x_king, y_king) = king.coords
     var checkmate = king.attacked
     //Checking if the king can escape the attack on its own.
