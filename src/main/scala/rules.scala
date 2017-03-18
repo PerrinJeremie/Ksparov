@@ -60,29 +60,35 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     (math.signum(x_a - pos_x), math.signum(y_a - pos_y))
   }
 
+  def mirror_free (x_a : Int, y_a : Int) = {
+    if (Constants.alice_chess) {
+      if (Aux.piece_of_coord(x_a, y_a, Ksparov.board, 1 - grid) == None) {
+        true
+      } else {
+        false
+      }
+    } else {
+      true
+    }
+  }
+
   /*Checks if basic conditions for a piece movement are satisfied */
   def checks_pre_move (x_a : Int, y_a : Int) = {
-    pattern(x_a, y_a) && Aux.on_board(pos_x, pos_y) && Aux.on_board(x_a, y_a) && !(x_a == pos_x && y_a == pos_y)
+    pattern(x_a, y_a) && Aux.on_board(pos_x, pos_y) && Aux.on_board(x_a, y_a) && !(x_a == pos_x && y_a == pos_y) && mirror_free(x_a, y_a)
   }
 
   /*Recursive function that explores the path of a movement.
   The boolean indicates if the path is clear, and the piece is either the ennemy piece on arrival, an obstacle on the path, or None.*/
   def clear_path (x_d : Int, y_d : Int, x_a : Int, y_a : Int, g : Array[Piece], dir_x : Int, dir_y : Int) : (Boolean, Option[Piece]) = {
-    //Handling Alice case
-    if (Constants.alice_chess){
-      var piece_arrival = Aux.piece_of_coord (x_a, y_a, g, (grid + 1) % (Constants.nb_grid))
-      if (piece_arrival != None) {
-        (false, piece_arrival)
-      }
-    }
     //Getting next case
     var next_x = dir_x + x_d
     var next_y = dir_y + y_d
+    println ("Next : " + next_x.toString + ", " + next_y.toString)
     var p = Aux.piece_of_coord (next_x, next_y, g, grid)
     //Base case
     if (x_a == next_x && y_a == next_y){p match {
       case None => (true,None) //arrival is free
-      case _ if (p.get).player == player => (false,Some(p.get)) //Friendly piece on arrival
+      case _ if (p.get).player == player => (false, Some(p.get)) //Friendly piece on arrival
       case _ if (p.get).player != player => (true, Some(p.get)) //Ennemy piece on arrival
     }}
     //Recursive case

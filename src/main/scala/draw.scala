@@ -963,7 +963,7 @@ object DrawActions {
 		}
 		draw_game_board (Ksparov.board)
 		Ksparov.frame.contents = new DrawBoard.Board
-		draw_messages ("Current_turn", 1 - Constants.curr_player)
+		draw_game_messages ("Current_turn", 1 - Constants.curr_player)
 	}
 
 	/* Color in red the reachables cases. */
@@ -991,7 +991,7 @@ object DrawActions {
 	}
 
 	/* Draw a given message on the board, the message depends on the argument passed */
-	def draw_messages (message_type : String, player : Int) {
+	def draw_game_messages (message_type : String, player : Int) {
 		message_type match {
 
 			/* Draw who's player the turn is. */

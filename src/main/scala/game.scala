@@ -285,19 +285,19 @@ object Ksparov {
   /* Check if there is a mate after the move. */
     if (Checkmate.check_mate (Ksparov.board, player)) {
      /* If so, finish the game. */
-      DrawActions.draw_messages ("Mate", player)
+      DrawActions.draw_game_messages ("Mate", player)
       Constants.game_won = true
     } else {
       /* Check if there is pat. */
       if (Constants.players(player).check_pat) {
-        DrawActions.draw_messages ("Pat", player)
+        DrawActions.draw_game_messages ("Pat", player)
       } else {
         /* Else check if there is check. */
         if (Constants.kings(player).attacked) {
-          DrawActions.draw_messages ("Check", player)
+          DrawActions.draw_game_messages ("Check", player)
         } else {
           /* Else, else, else ... Continue and give the hand to the other player. */
-          DrawActions.draw_messages ("Current_turn", player)
+          DrawActions.draw_game_messages ("Current_turn", player)
         }
       }
     }
@@ -315,7 +315,7 @@ object Ksparov {
         Constants.players(Constants.curr_player).moved = false
         check_game_status (1 - Constants.curr_player)
         if (Constants.promotion) {
-          DrawActions.draw_messages ("Promotion", Constants.curr_player)
+          DrawActions.draw_game_messages ("Promotion", Constants.curr_player)
         }
         Constants.curr_player = 1 - Constants.curr_player
         Constants.first_choice_done = false
