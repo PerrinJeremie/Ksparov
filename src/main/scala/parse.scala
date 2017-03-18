@@ -19,6 +19,7 @@ object Save{
   type Moves = (Int , Boolean , String , String , Boolean, Boolean, (Int,Int), (Int,Int))
   var list_of_moves : List[Moves] = List()
   var curr_move : Moves = (0,false,"","",false,false,(0,0),(0,0))
+  var whowins = 2
 
   var add2_happened = false
 
@@ -118,7 +119,9 @@ object Save{
     writer.write( "[ Round \"" + round + "\"]\n")
     writer.write( "[ White \"" + white + "\"]\n")
     writer.write( "[ Black \"" + black + "\"]\n")
-    writer.write( "[ Result \"" + result + "\"]\n\n")
+    writer.write( "[ Result \"" + result + "\"]\n")
+    if(Constants.nb_grid == 2){
+    writer.write( "[ Type \"Alice\" ]\n\n")}
   }
 
   def pos_to_PGN (p : (Int,Int)) : String = {
@@ -176,6 +179,7 @@ object Save{
         val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
         write_tags(writer,event,site,date,round,white,black,result)
         write_moves(writer,result)
+        writer.write( whowins match { case 2 => "*" case 1 => "1-0" case 0 => "0-1" case -1 => "1/2-1/2"}) 
         writer.close()
         return 0
       case -1 =>
@@ -259,14 +263,15 @@ object Load {
     def parse_word (s : String) : Unit = {
 
       s match {
-        case resulttag(_*) =>  return ()
+        case resulttag(_*) => 
+          Constants.game_won = true
+          return ()
         case _ => ()
       }
 
       var w = s+ "$$$$$"
 
       /* Recherche du type de piéce */
-      println(w(0))
       w(0).toString match{
         case droquereg(_*) =>
           w.substring(0,3) match{
@@ -346,7 +351,9 @@ object Load {
         case "?$" => ()
         case "!?" => ()
         case "?!" => ()
+        case _ => ()
       }
+
 
       piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
 
@@ -356,7 +363,6 @@ object Load {
     override def getmove : Unit = {
       if (!list_of_moves.isEmpty){
         reset_when_parsing
-        println(list_of_moves.head)
         try {
           parse_word(list_of_moves.head)
         }catch{
@@ -405,7 +411,7 @@ object Load {
       }
       else{
         matchtag.findFirstIn(lines) match {
-          case Some(s) => println(s)
+          case Some(s) => if(s == "\"Alice\""){ Constants.nb_grid = 2} 
           case None =>
             val array_of_words = lines.split(' ')
             for (i <- 0 to array_of_words.length -1) {

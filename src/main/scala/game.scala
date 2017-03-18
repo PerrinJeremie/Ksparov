@@ -286,10 +286,12 @@ object Ksparov {
     if (Checkmate.check_mate (Ksparov.board, player)) {
      /* If so, finish the game. */
       DrawActions.draw_game_messages ("Mate", player)
+      Save.whowins = player 
       Constants.game_won = true
     } else {
       /* Check if there is pat. */
       if (Constants.players(player).check_pat) {
+        Save.whowins = -1
         DrawActions.draw_game_messages ("Pat", player)
       } else {
         /* Else check if there is check. */
