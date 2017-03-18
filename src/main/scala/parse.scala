@@ -201,6 +201,8 @@ object Load {
   val piecetag = """(K|Q|B|N|R)+""".r
   val xaxistag = """[a-h]+""".r
   val yaxistag = """[1-8]+""".r
+  val mattag = """[+ #]+""".r
+
 
   var list_of_moves : List[String] = List()
   
@@ -255,6 +257,12 @@ object Load {
     }
 
     def parse_word (s : String) : Unit = {
+
+      s match {
+        case resulttag(_*) =>  return ()
+        case _ => ()
+      }
+
       var w = s+ "$$$$$"
 
       /* Recherche du type de piéce */
@@ -321,6 +329,23 @@ object Load {
           case 'B' => Constants.selected_promotion = "Bishop"
           case 'R' => Constants.selected_promotion = "Rook"
         }
+        w = w.substring(2,w.length)
+      }
+
+      /* Mat */
+      w(0).toString match{
+        case mattag(_*) => w = w.substring(1,w.length)
+        case _ => ()
+      }
+
+      /* Comments */
+      w.substring(0,2) match{
+        case "!$" => ()
+        case "!!" => ()
+        case "??" => ()
+        case "?$" => ()
+        case "!?" => ()
+        case "?!" => ()
       }
 
       piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
@@ -335,7 +360,7 @@ object Load {
         try {
           parse_word(list_of_moves.head)
         }catch{
-          case _ : Throwable => println(".PGN corrompu") 
+          case _ : Throwable => Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Fichier Corrompu</html>")
         }
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
@@ -386,15 +411,7 @@ object Load {
             for (i <- 0 to array_of_words.length -1) {
               array_of_words(i) match {
                 case tourtag(_*) => ()
-                case resulttag(s) => println(s)
                 case "" => ()
-                case "1-0" => ()
-                case "1–0" => ()
-                case "0-1" => ()
-                case "0–1" => ()
-                case "1/2-1/2" => ()
-                case "1/2–1/2" => ()
-                case "*" => ()
                 case _ => val arr = array_of_words(i).split('.') 
                           list_of_moves = arr(arr.length -1) :: list_of_moves
               }
