@@ -91,8 +91,8 @@ object DrawMenu {
 
 	/** The final appearance with the principal menu between two columns of background cases. */
 	class Menu extends BorderPanel {
-    	layout (new BackgroundCase (nb_menu_option + 1, 1)) = East
-    	layout (new BackgroundCase (nb_menu_option + 1, 1)) = West
+    	layout (new BackgroundCase (7, 1)) = East
+    	layout (new BackgroundCase (7, 1)) = West
     	layout (new MenuGrid) = Center
 	}
 }
