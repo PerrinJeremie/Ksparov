@@ -83,7 +83,6 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     //Getting next case
     var next_x = dir_x + x_d
     var next_y = dir_y + y_d
-    println ("Next : " + next_x.toString + ", " + next_y.toString)
     var p = Aux.piece_of_coord (next_x, next_y, g, grid)
     //Base case
     if (x_a == next_x && y_a == next_y){p match {
@@ -113,9 +112,10 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
       if (!clear){
         (false, p_arrival, Nil) //There is a friendly piece on the destination
       } else {
-        //We now have to simulate the movement to check if it is valid once applied. Since we do not want to modify the board, we save the current coordinates.
+        /* We now have to simulate the movement to check if it is valid once applied. 
+        Since we do not want to modify the board, we save the current coordinates. */
         var (old_x, old_y) = coords
-        var (old_x2, old_y2)=(0, 0)
+        var (old_x2, old_y2) = (0, 0)
         pos_x = x_a
         pos_y = y_a
         nextgrid
@@ -127,19 +127,23 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
             p_arrival.get.pos_y = (-1)
         }
         //Checking if the king is attacked
-        val checks = Aux.check_check(g)
+        val checks1 = Aux.check_check(g)
+        nextgrid
+        val checks2 = Aux.check_check(g)
+        nextgrid
         //Restablishing previous position
         pos_x = old_x
         pos_y = old_y
         nextgrid
         if (p_arrival != None) {
-          p_arrival.get.pos_x = old_x2 ; p_arrival.get.pos_y = old_y2 ;
+          p_arrival.get.pos_x = old_x2
+          p_arrival.get.pos_y = old_y2
         }
         //Giving final answer based on attacks on king
-        if ( !(checks (player).isEmpty) ) {
-          (false, Some (checks (player) (0)), checks (player)) //The king is attacked and this move doesn't protect the king
+        if (!(checks1 (player).isEmpty) || !(checks2 (player).isEmpty)) {
+          (false, None, checks1 (player)) //The king is attacked and this move doesn't protect the king
         } else {
-          (true, p_arrival, checks (1 - player))  //This move is valid
+          (true, p_arrival, checks1 (1 - player))  //This move is valid
         }
       }
     }

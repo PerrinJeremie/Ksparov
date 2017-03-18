@@ -26,11 +26,11 @@ abstract class Player(n:Int) {
 class Human(n : Int) extends Player(n : Int) {
 
   /* Take a couple of positions and return true if the piece is owned by the player. */
-  def isHis(x : Int, y : Int) : Boolean = {
+  def isHis(x : Int, y : Int, grid : Int) : Boolean = {
     var done = false
     /* We run from 0 to 15 for the player 1 (white) and from 16 to 31 for the player 0 (black) */
     for (i <- (1 - id) * 16 to (2 - id) * 16 - 1) {
-      done = done || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y))
+      done = done || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y) && Ksparov.board(i).grid == grid)
     }
     return done
   }
@@ -42,13 +42,13 @@ class Human(n : Int) extends Player(n : Int) {
     var y = Constants.selected_case / 8
     var grid = Constants.selected_grid
     /* First click, checking if the piece selected is own by the player. */
-    if (isHis(x,y)) {
+    if (isHis(x, y, grid)) {
       /* If so validate the first clic and open the second click. */
       Constants.first_choice_done = true
       /* Then select the piece of position and draw possible moves. */
       Ksparov.get_piece_of_pos(x, y, grid)
       DrawActions.clear_possible_moves
-      DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y, 0)
+      DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y, Ksparov.board(Constants.selected_piece).grid)
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
