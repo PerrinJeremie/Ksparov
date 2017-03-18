@@ -15,8 +15,11 @@ import sys.process._
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Kasparov.frame in game.scala. */
 
-/* The exception of the above rule : this class defines a grid of background cases,
+/* The exception of the above rule : */
+
+/**This class defines a grid of background cases,
    each background is juste a set of this grid. */
+
 class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	for(k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
@@ -32,12 +35,12 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	}
 }
 
-/* Draw the main menu of the application. A menu is an instance of DrawMenu.Menu. */
+/** Draw the main menu of the application. 
+	A menu is an instance of DrawMenu.Menu. */
 object DrawMenu {
-	val nb_menu_option = 6
 
-	/* The generic class for the buttons, the role of a particular is defined
-	   depending on the parameter passed to the class. */
+	/** This is the generic class for each option botton in the main menu, 
+	the role of a particular is defined depending on the parameter passed to the class. */
 	class Option (name : String) extends Button {
 		font = Constants.text_font
 		preferredSize = Constants.dim_big
@@ -65,9 +68,9 @@ object DrawMenu {
 		}
 	}
 
-	/* The principal menu : for each line there are two buttons and a background between them. */
-	class MenuGrid extends GridPanel (nb_menu_option + 1, 3) {
-    	for( i <- 0 to nb_menu_option) {
+	/** The principal menu : for each line there are two buttons and a background between them. */
+	class MenuGrid extends GridPanel (7, 3) {
+    	for( i <- 0 to 6) {
     		if (i % 2 == 0) {
         		contents += new BackgroundCase (1, 3)
         		contents += new BackgroundCase (1, 3)
@@ -86,7 +89,7 @@ object DrawMenu {
     	}
 	}
 
-	/* The final appearance with the principal menu between two columns of background cases. */
+	/** The final appearance with the principal menu between two columns of background cases. */
 	class Menu extends BorderPanel {
     	layout (new BackgroundCase (nb_menu_option + 1, 1)) = East
     	layout (new BackgroundCase (nb_menu_option + 1, 1)) = West
@@ -138,17 +141,21 @@ object DrawNotYet {
 	}
 }
 
+/** This object is used to draw the menu for loading games. */
 object DrawCharge {
 
-    def shorten( s :String): String ={
-        return s.substring(Constants.save_path.length,s.length -4)
+	/** Returns the string passed in argument without the 4 last characters. */
+    def shorten(s : String) : String = {
+        return s.substring(Constants.save_path.length, s.length - 4)
     }
 
-    var result: String = "";
+    var result : String = "";
     var listgame : List[String] = List("")
     var scroll = new ComboBox(listgame)
     var list_empty = false 
 
+    /** Defines the value of result with the list of pgn files found in src/main/resources/Saves, 
+    and actualize other value depending on the fact that there is files or not. */
     def define_listgame {
         result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
         if (result.length == 0){
@@ -163,6 +170,7 @@ object DrawCharge {
         }
     }
 
+    /** Defines the button for the loading menu. */
   	class Option (text : String, return_type : String) extends Button {
 		preferredSize = Constants.dim_big
 		minimumSize = Constants.dim_big
@@ -188,16 +196,18 @@ object DrawCharge {
 		}
 	}
 
-  class PrettyLabel (text : String) extends Label(text){
-    border = new javax.swing.border.LineBorder (Color.black, 2)
-	preferredSize = Constants.dim_message_drawer
-	minimumSize = Constants.dim_message_drawer
-	maximumSize = Constants.dim_message_drawer
-	font = Constants.text_font
-	background = new Color (200, 200, 200)
-	opaque = true
-   }
+	/** Defines the labels used in the loading menu, with the characteristics defined in Constants. */
+	class PrettyLabel (text : String) extends Label(text){
+    	border = new javax.swing.border.LineBorder (Color.black, 2)
+		preferredSize = Constants.dim_message_drawer
+		minimumSize = Constants.dim_message_drawer
+		maximumSize = Constants.dim_message_drawer
+		font = Constants.text_font
+		background = new Color (200, 200, 200)
+		opaque = true
+	}
 
+	/** The main grid of the loading menu with everything. */
 	class CenterGrid extends GridPanel (10,1) {
 		for (i <- 0 to 9) {
 			if (i == 0 || i % 2 == 1 && i != 1) {
@@ -232,6 +242,7 @@ object DrawCharge {
 		}
 	}
 
+	/** The final menu with the central grid and background columns on each sides of it. */
 	class Dcharge extends BorderPanel {
 		define_listgame
     	layout (new BackgroundCase (10,1)) = East
