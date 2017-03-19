@@ -286,8 +286,8 @@ object DrawSave {
 	val TextSite = new SaveArgument ("Ksparov Software", 0)
 	val TextDate = new SaveArgument (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
 	val TextRound = new SaveArgument ("Ronde numéro ", 0)
-	val TextWhite = new SaveArgument ("Joueur blanc", 0)
-	val TextBlack = new SaveArgument ("Joueur noir", 0)
+	val TextWhite = new SaveArgument ("Garry Kasparov", 0)
+	val TextBlack = new SaveArgument ("Bobby Fischer", 0)
 
 	class ComeBack (text : String, return_type : String) extends Button {
 		preferredSize = Constants.dim_message_drawer
@@ -1006,37 +1006,51 @@ object DrawActions {
 
 	/* Draw a given message on the board, the message depends on the argument passed */
 	def draw_game_messages (message_type : String, player : Int) {
+          
+      var joueur_string = Constants.game_type match{
+          case 6 =>
+              player match {
+                case 1 => Load.infos("White")
+                case 0 => Load.infos("Black")
+              }
+            case _ => 
+              player match {
+                case 1 => "joueur blanc"
+                case 0 => "joueur noir"
+              }
+          }
+
 		message_type match {
 
 			/* Draw who's player the turn is. */
-			case "Current_turn" => player match {
-				case 0 => Constants.message_drawer.text = "La main est au joueur noir !"
+			case "Current_turn" => Constants.game_type match {
+				case 6 => Constants.message_drawer.text = "La main est à " + joueur_string +" !"
 					Constants.message_drawer.foreground = Color.black
-				case 1 => Constants.message_drawer.text = "La main est au joueur blanc !"
+				case _ => Constants.message_drawer.text = "La main est au " + joueur_string +" !"
 					Constants.message_drawer.foreground = Color.black
 			}
 
 			/* Draw if a player is in check. */
-			case "Check" => player match {
-				case 0 => Constants.message_drawer.text = "Le joueur noir est en échec !"
+			case "Check" => Constants.game_type match {
+				case 6 => Constants.message_drawer.text = joueur_string + " est en échec !"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "Le joueur blanc est en échec !"
+				case _ => Constants.message_drawer.text = "Le " + joueur_string + " est en échec !"
 					Constants.message_drawer.foreground = Color.red
 			}
 
 			/* Draw if a player is mate. */
-			case "Mate" => player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur blanc gagne la partie !</html>"
+			case "Mate" => Constants.game_type match {
+				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>" + (if(player == 0){Load.infos("White")}else{Load.infos("Black")}) + " gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le joueur noir gagne la partie !</html>"
+				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le "+ (if(player == 0){"joueur blanc"}else{"joueur noir"}) + " gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
-			case "Pat" => player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur noir ne peut plus bouger !</html>"
+			case "Pat" => Constants.game_type match {
+				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>"+ joueur_string +" ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le joueur blanc ne peut plus bouger !</html>"
+				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le "+ joueur_string +" ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
 
@@ -1044,6 +1058,32 @@ object DrawActions {
 				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
 				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
 			} 
+
+          case "1-0" => Constants.message_drawer.text = "<html><div style='text-align : center;'>" + Load.infos("White") +" gagne la partie !</html>"
+					Constants.message_drawer.foreground = Color.red
+
+          case "0-1" => Constants.message_drawer.text = "<html><div style='text-align : center;'>"+ Load.infos("Black") +" gagne la partie !</html>"
+					Constants.message_drawer.foreground = Color.red
+
+          case "1/2-1/2" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle !</html>"
+					Constants.message_drawer.foreground = Color.red
+
+          case "*" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie non finie !</html>"
+					Constants.message_drawer.foreground = Color.red
+
+          case "!$" => Constants.message_drawer.text = "Bon coup de " + joueur_string +" !"
+					Constants.message_drawer.foreground = Color.black
+          case "!!" => Constants.message_drawer.text = "Trés bon coup de " + joueur_string +" !"
+					Constants.message_drawer.foreground = Color.black
+          case "?$" =>Constants.message_drawer.text = "Que fait " + joueur_string +" ?"
+					Constants.message_drawer.foreground = Color.black
+          case "??" => Constants.message_drawer.text = "Coup trés surprenant de la part de " + joueur_string +" !"
+					Constants.message_drawer.foreground = Color.black
+          case "!?" => Constants.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
+					Constants.message_drawer.foreground = Color.black
+          case "?!" => Constants.message_drawer.text = "Qu'espère  " + joueur_string +" en jouant ce coup ?"
+					Constants.message_drawer.foreground = Color.black
+
 		}
 	}
 }

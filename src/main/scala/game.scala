@@ -298,8 +298,19 @@ object Ksparov {
         if (Constants.kings(player).attacked) {
           DrawActions.draw_game_messages ("Check", player)
         } else {
-          /* Else, else, else ... Continue and give the hand to the other player. */
-          DrawActions.draw_game_messages ("Current_turn", player)
+          if (Load.specialmessage != ""){
+            DrawActions.draw_game_messages (Load.specialmessage,player)
+            Load.specialmessage = ""
+          } else {
+            if (Load.finalresult != ""){
+              DrawActions.draw_game_messages (Load.finalresult,player)
+              Load.specialmessage = ""
+            }
+            else{
+              /* Else, else, else ... Continue and give the hand to the other player. */
+              DrawActions.draw_game_messages ("Current_turn", player)
+            }
+          }
         }
       }
     }

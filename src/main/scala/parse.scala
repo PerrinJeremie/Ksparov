@@ -197,7 +197,10 @@ object Load {
 
   /* regexs to parse words and lines */
 
-  val matchtag = """"(.*)"""".r
+  val matchtag = """\[(.*)\"(.*)\"(.*)\]""".r
+  val emptyline = """(' '|'\n'|'\t')*""".r
+  val matchtag1 = """\[[^"_]*\"""".r
+  val matchtag2 = """\"(.*)\"""".r
   val tourtag = """[0-9]+[.]+""".r
   val resulttag = """[*]|1-0|1–0|0-1|0–1|1/2-1/2|1/2–1/2""".r
   val droquereg = """0|O|O""".r
@@ -206,18 +209,25 @@ object Load {
   val xaxistag = """[a-h]+""".r
   val yaxistag = """[1-8]+""".r
   val mattag = """[+ #]+""".r
+  val spmessage = """(!!|["!?"]|["??"]|["?!"]|!$|["?$"])""".r
 
 
   var list_of_moves : List[String] = List()
   
-  var infos :  Array[String] = Array("","","","","","","","")
+  var infos :  Map[String,String] = Map()
 
   var player : Int = 1
+
+  var finalresult : String = ""
+
+  var specialmessage : String = ""
 
   var piece = ""
   var piece_Ch : Piece = new Pawn(0,-1,-1,0)
   var pos_init : (Int,Int) = (0,0)
   var pos_fin : (Int,Int) = (0,0)
+
+  case class Exn_parsing_tags(message:String) extends Exception (message)
 
   def reset_when_parsing : Unit ={
     piece = ""
@@ -225,6 +235,16 @@ object Load {
     pos_init = (0,0)
     pos_fin  = (0,0)
   }
+
+
+  def pnotspace( c : Char) : Boolean = {
+    return ( c != ' ' && c != '\t' && c != '\n')
+  }
+
+  def pnotspec( c : Char) : Boolean = {
+    return ( c != '\"' && c != '[' )
+  }
+
 
   class Reproducer(n : Int) extends Player(n:Int){
 
@@ -264,6 +284,7 @@ object Load {
 
       s match {
         case resulttag(_*) => 
+          finalresult = s
           Constants.game_won = true
           return ()
         case _ => ()
@@ -345,12 +366,7 @@ object Load {
 
       /* Comments */
       w.substring(0,2) match{
-        case "!$" => ()
-        case "!!" => ()
-        case "??" => ()
-        case "?$" => ()
-        case "!?" => ()
-        case "?!" => ()
+        case spmessage(s) => specialmessage = s 
         case _ => ()
       }
 
@@ -396,33 +412,41 @@ object Load {
 
   def get_list_move_from_file (filename : String)  : Unit = {
 
-    infos(0) = filename
+    infos += ("filename" -> filename)
 
     var i = 1
 
     for (lines <- Source.fromFile(Constants.save_path + filename + ".pgn").getLines()){
-      if (i<= 7){
-        matchtag.findFirstIn(lines) match {
-          case Some(s) =>
-            infos(i) = s
-            i = i + 1
-          case None => ()
-        }
-      }
-      else{
-        matchtag.findFirstIn(lines) match {
-          case Some(s) => if(s == "\"Alice\""){ Constants.nb_grid = 2} 
-          case None =>
+      lines match {
+        case matchtag(_*) =>
+          matchtag1.findFirstIn(lines) match{
+            case Some(s1) => 
+              matchtag2.findFirstIn(lines) match{
+                case Some(s2) => 
+                  var s11 = s1.filter(pnotspace).filter(pnotspec)
+                  var s21 = s2.filter(pnotspec)
+                  infos += ( s11 -> s21)
+                  if (s11 == "Type" && s21 == "Alice"){
+                    Constants.nb_grid = 2}
+                case None => throw Exn_parsing_tags("tag1")
+              }
+            case None => throw Exn_parsing_tags("tag2")
+          }
+        case emptyline(_*) => ()
+        case _ =>
+          if ( infos.contains("White") && infos.contains("Black") ){
             val array_of_words = lines.split(' ')
             for (i <- 0 to array_of_words.length -1) {
               array_of_words(i) match {
                 case tourtag(_*) => ()
                 case "" => ()
-                case _ => val arr = array_of_words(i).split('.') 
-                          list_of_moves = arr(arr.length -1) :: list_of_moves
+                case _ => val arr = array_of_words(i).split('.')
+                  list_of_moves = arr(arr.length -1) :: list_of_moves
               }
             }
-        }
+          } else {
+            throw Exn_parsing_tags("no_player_info")
+          }
       }
     }
     list_of_moves = list_of_moves.reverse
