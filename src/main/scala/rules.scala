@@ -48,7 +48,12 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   var pos_x = x
   var pos_y = y
   def coords = (pos_x, pos_y)
-  def nextgrid = ( grid = (grid + 1)%(Constants.nb_grid))
+  def next_grid = {
+    grid = (grid + 1) % (Constants.nb_grid)
+  }
+  def previous_grid = {
+    grid = (grid + Constants.nb_grid - 1) % (Constants.nb_grid)
+  }
   var name : String
   var piece_path : String
   var player = play
@@ -104,12 +109,12 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     //Checking if the arrival or the piece is on board and if the pattern is respected
     if (!(checks_pre_move(x_a, y_a))) {
       (false, Some(this), Nil)
-    }
-    //Checking the path and the destination
-    else {
+    } else {
+      //Checking the path and the destination
       var (dir_x, dir_y) = get_dirs (x_a, y_a)
       var (clear, p_arrival) = clear_path (pos_x, pos_y, x_a, y_a, g, dir_x, dir_y)
-      if (!clear){
+
+      if (!clear) {
         (false, p_arrival, Nil) //There is a friendly piece on the destination
       } else {
         /* We now have to simulate the movement to check if it is valid once applied. 
@@ -118,7 +123,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
         var (old_x2, old_y2) = (0, 0)
         pos_x = x_a
         pos_y = y_a
-        nextgrid
+        next_grid
         p_arrival match {
           case None => ();
           case _ => old_x2 = p_arrival.get.pos_x
@@ -126,19 +131,21 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
             p_arrival.get.pos_x = (-1)
             p_arrival.get.pos_y = (-1)
         }
+
         //Checking if the king is attacked
         val checks1 = Aux.check_check(g)
-        nextgrid
+        previous_grid
         val checks2 = Aux.check_check(g)
-        nextgrid
+
         //Restablishing previous position
         pos_x = old_x
         pos_y = old_y
-        nextgrid
+
         if (p_arrival != None) {
           p_arrival.get.pos_x = old_x2
           p_arrival.get.pos_y = old_y2
         }
+
         //Giving final answer based on attacks on king
         if (!(checks1 (player).isEmpty) || !(checks2 (player).isEmpty)) {
           (false, None, checks1 (player)) //The king is attacked and this move doesn't protect the king
@@ -151,11 +158,11 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
 
   /*Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.*/
   def move (x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
-    var (move_ok, p_arrival, attackers) = pre_move(x_a, y_a, g)
-    if (move_ok){
+    var (move_ok, p_arrival, attackers) = pre_move (x_a, y_a, g)
+    if (move_ok) {
       pos_x = x_a ;
       pos_y = y_a ;
-      nextgrid
+      next_grid
       if (p_arrival != None) {
         p_arrival.get.pos_x = (-1)
         p_arrival.get.pos_y= (-1)

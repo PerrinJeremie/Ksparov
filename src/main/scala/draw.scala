@@ -51,7 +51,7 @@ object DrawMenu {
 					Constants.alice_chess = false
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
+				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 3
 					Constants.alice_chess = true
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -1003,7 +1003,7 @@ object DrawActions {
 	/* Draw a given message on the board, the message depends on the argument passed */
 	def draw_game_messages (message_type : String, player : Int) {
           
-      var joueur_string = Constants.game_type match{
+      var joueur_string = Constants.game_type match {
           case 6 =>
               player match {
                 case 1 => Load.infos("White")
@@ -1077,7 +1077,7 @@ object DrawActions {
 					Constants.message_drawer.foreground = Color.black
           case "!?" => Constants.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
 					Constants.message_drawer.foreground = Color.black
-          case "?!" => Constants.message_drawer.text = "Qu'espère  " + joueur_string +" en jouant ce coup ?"
+          case "?!" => Constants.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
 					Constants.message_drawer.foreground = Color.black
 
 		}
