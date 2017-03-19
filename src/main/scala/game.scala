@@ -304,7 +304,7 @@ object Ksparov {
           } else {
             if (Load.finalresult != ""){
               DrawActions.draw_game_messages (Load.finalresult,player)
-              Load.specialmessage = ""
+              Load.finalresult = ""
             }
             else{
               /* Else, else, else ... Continue and give the hand to the other player. */
