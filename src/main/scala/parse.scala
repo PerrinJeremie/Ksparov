@@ -128,7 +128,7 @@ object Save{
     (97 + p._1).toChar + (p._2 + 1).toString
   }
 
-  def write_moves(writer : PrintWriter, result : String) : Unit = {
+  def write_moves(writer : PrintWriter) : Unit = {
 
     def write_move(i : Int, move: Moves) : Unit = {
       if (i % 2 == 1){
@@ -173,13 +173,14 @@ object Save{
    Informations have to be filled by players except for result which is the result of the game : 
    with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
 
-  def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String,result:String) : Int = {
+  def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String) : Int = {
+    var result = whowins match { case 2 => "*" case 1 => "1-0" case 0 => "0-1" case -1 => "1/2-1/2"}
     is_valid(s+".pgn") match {
       case 0 =>
         val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
         write_tags(writer,event,site,date,round,white,black,result)
-        write_moves(writer,result)
-        writer.write( whowins match { case 2 => "*" case 1 => "1-0" case 0 => "0-1" case -1 => "1/2-1/2"}) 
+        write_moves(writer)
+        writer.write(result) 
         writer.close()
         return 0
       case -1 =>
@@ -428,25 +429,26 @@ object Load {
                   infos += ( s11 -> s21)
                   if (s11 == "Type" && s21 == "Alice"){
                     Constants.nb_grid = 2}
-                case None => throw Exn_parsing_tags("tag1")
+                case None => () /* Not possible */
               }
-            case None => throw Exn_parsing_tags("tag2")
+            case None => () /* Not possible */
           }
         case emptyline(_*) => ()
         case _ =>
-          if ( infos.contains("White") && infos.contains("Black") ){
+          if (!infos.contains("White")) {
+            infos += ("White" -> "Garry Kasparov") }
+          if (!infos.contains("Black")) {
+            infos += ("Black" -> "Bobby Fischer") }
             val array_of_words = lines.split(' ')
-            for (i <- 0 to array_of_words.length -1) {
-              array_of_words(i) match {
-                case tourtag(_*) => ()
-                case "" => ()
-                case _ => val arr = array_of_words(i).split('.')
-                  list_of_moves = arr(arr.length -1) :: list_of_moves
-              }
+          for (i <- 0 to array_of_words.length -1) {
+            array_of_words(i) match {
+              case tourtag(_*) => ()
+              case "" => ()
+              case _ => val arr = array_of_words(i).split('.')
+                list_of_moves = arr(arr.length -1) :: list_of_moves
             }
-          } else {
-            throw Exn_parsing_tags("no_player_info")
           }
+
       }
     }
     list_of_moves = list_of_moves.reverse

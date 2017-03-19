@@ -149,10 +149,15 @@ object DrawCharge {
         return s.substring(Constants.save_path.length, s.length - 4)
     }
 
+    def pred_nospace(s:String) : Boolean = {
+      return !s.contains(' ')
+    }
+
     var result : String = "";
     var listgame : List[String] = List("")
     var scroll = new ComboBox(listgame)
     var list_empty = false 
+    var text_label = ""
 
     /** Defines the value of result with the list of pgn files found in src/main/resources/Saves, 
     and actualize other value depending on the fact that there is files or not. */
@@ -160,10 +165,11 @@ object DrawCharge {
         result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
         if (result.length == 0){
           list_empty = true
+          text_label = "nosaves"
         }
         else{
           list_empty = false
-    	  DrawCharge.listgame = result.split('\n').map(shorten).toList
+    	  DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList
     	  DrawCharge.scroll = new ComboBox(listgame) {
     	  	font = Constants.text_font
     	  }
@@ -214,14 +220,12 @@ object DrawCharge {
 				contents += new BackgroundCase (1, 5)
 			} else {
        	 		i match {
-		  			case 1 =>
-                    if (!list_empty) {
-                    	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>") {
-                    	  	
-                      	}
-                    } else {
-                      	contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>") {
-                      	}
+		  		  case 1 =>
+                    list_empty match {
+                      case true => 
+                        contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>") 
+                      case _ =>
+                    	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>") 
                     }
 		  		  case 2 => 
                     if(!list_empty){
@@ -296,7 +300,7 @@ object DrawSave {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		font = Constants.text_font
 		action = Action (text) {
-			Save.write_to_file(TextFileName.text, TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text,"*") match {
+			Save.write_to_file(TextFileName.text.replaceAllLiterally(" ","_"), TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text) match {
               case 0 =>
 				TextFileName.text = ""
 				return_type match {
@@ -1006,8 +1010,8 @@ object DrawActions {
       var joueur_string = Constants.game_type match {
           case 6 =>
               player match {
-                case 1 => Load.infos("White")
-                case 0 => Load.infos("Black")
+                case 1 => Load.infos("White") + " (BLANC) "
+                case 0 => Load.infos("Black") + " (NOIR) "
               }
             case _ => 
               player match {
