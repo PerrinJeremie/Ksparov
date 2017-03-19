@@ -981,7 +981,9 @@ object DrawActions {
 	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, piece_grid : Int) {
 		/* Coloring the selected case in red. */
 		Constants.grids(piece_grid)(pice_position_x + piece_position_y * 8).background = Color.red
-		Constants.grids(1 - piece_grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
+		if (Constants.alice_chess) {
+			Constants.grids(1 - piece_grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
+		}
 		for (k <- 0 to Constants.nb_grid - 1) {
 			/* For each reachable case, colors it into red. */
    		    for (i <- 0 to case_list.length - 1) {
