@@ -701,6 +701,7 @@ object DrawBoard {
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 
 	def init_grids {
+		Constants.grids = new Array [Array[DrawBoard.Case]] (Constants.nb_grid)
 		for(i <- 0 to Constants.nb_grid - 1) {
 			Constants.grids (i) = new Array [Case] (Constants.nb_case_board * Constants.nb_case_board)
 		} 
@@ -726,9 +727,10 @@ object DrawBoard {
 	}
 
 	/* The center grid with the board and background with label around. */
-	class Simple_Grid (grid_id : Int) extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board) {
+	class Simple_Grid (grid_id : Int) extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 1) {
 		for (i <- -1 to Constants.nb_case_board) {
 			if (i == - 1 || i == Constants.nb_case_board) {
+				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCaseWithLabel ("A")
 				contents += new BackgroundCaseWithLabel ("B")
 				contents += new BackgroundCaseWithLabel ("C")
@@ -738,9 +740,13 @@ object DrawBoard {
 				contents += new BackgroundCaseWithLabel ("G")
 				contents += new BackgroundCaseWithLabel ("H")
 			} else {
-				for (j <- 0 to Constants.nb_case_board- 1) {
-					/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top. */
-					contents += Constants.grids (grid_id) (j + (7 - i) * 8)
+				for (j <- -1 to Constants.nb_case_board - 1) {
+					if (j == -1) {
+						contents += new BackgroundCaseWithLabel ((8 - i).toString)
+					} else {
+						/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top. */
+						contents += Constants.grids (grid_id) (j + (7 - i) * 8)
+					}
 				}
 			}
 		}
@@ -756,13 +762,9 @@ object DrawBoard {
 		} 
 	}
 
-	class Grid extends BorderPanel {
-		Constants.nb_grid match {
-			case 1 => layout (new Simple_Grid (0)) = Center
-			case 2 => 
-				layout (new Simple_Grid (0)) = West
-				layout (new Number_column) = Center 
-				layout (new Simple_Grid (1)) = East 
+	class Grid extends GridPanel (1, Constants.nb_grid) {
+		for (k <- 0 to Constants.nb_grid - 1) {
+			contents += new Simple_Grid (k)
 		}
 	}
 
@@ -819,10 +821,9 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the white player. */
-	class Border1 extends GridPanel (Constants.nb_case_board + 2, 4) {
+	class Border1 extends GridPanel (Constants.nb_case_board + 2, 3) {
 		for(i <- 0 to Constants.nb_case_board + 1) {
 			if (i < 1 || i > 8) {
-				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
@@ -831,33 +832,27 @@ object DrawBoard {
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
-					contents += new BackgroundCaseWithLabel ((9 - i).toString)
 				} else { i match {
 					case 4 =>
 						contents += Constants.promotion_buttons(1)(0)
 						contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
 						contents += new BackgroundCase (1, 1)
-						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						case 5 =>
 						contents += Constants.promotion_buttons(1)(1)
 						contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
 						contents += new BackgroundCase (1, 1)
-						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					case 6 =>
 						contents += Constants.promotion_buttons(1)(2)
 						contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
 						contents += new BackgroundCase (1, 1)
-						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					case 7 =>
 						contents += Constants.promotion_buttons(1)(3)
 						contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
 						contents += new BackgroundCase (1, 1)
-						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					case 8 =>
 						contents += new DeadCase (1, "Pawn")
 						contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
 						contents += new BackgroundCase (1, 1)
-						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					}
 				}
 			}
@@ -980,9 +975,8 @@ object DrawActions {
 	/* Color in red the reachables cases. */
 	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, piece_grid : Int) {
 		/* Coloring the selected case in red. */
-		Constants.grids(piece_grid)(pice_position_x + piece_position_y * 8).background = Color.red
-		if (Constants.alice_chess) {
-			Constants.grids(1 - piece_grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
+		for (k <- 0 to Constants.nb_grid - 1) {
+			Constants.grids(k)(pice_position_x + piece_position_y * 8).background = Color.yellow
 		}
 		for (k <- 0 to Constants.nb_grid - 1) {
 			/* For each reachable case, colors it into red. */
