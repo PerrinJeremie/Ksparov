@@ -51,7 +51,7 @@ object DrawMenu {
 					Constants.alice_chess = false
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 3
+				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
 					Constants.alice_chess = true
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -977,17 +977,16 @@ object DrawActions {
 	}
 
 	/* Color in red the reachables cases. */
-	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, piece_grid : Int) {
+	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, grid : Int) {
 		/* Coloring the selected case in red. */
-		for (k <- 0 to Constants.nb_grid - 1) {
-			Constants.grids(k)(pice_position_x + piece_position_y * 8).background = Color.yellow
-		}
-		for (k <- 0 to Constants.nb_grid - 1) {
-			/* For each reachable case, colors it into red. */
-   		    for (i <- 0 to case_list.length - 1) {
-        	    var (j, l) = case_list(i)
-        	    Constants.grids (k) (j + 8 * l).background = Color.red
-        	}
+		Constants.grids(grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
+		Constants.grids((grid + 1) % (Constants.nb_grid))(pice_position_x + piece_position_y * 8).background = Color.yellow
+		
+		/* For each reachable case, colors it into red. */
+   		for (i <- 0 to case_list.length - 1) {
+            var (j, l) = case_list(i)
+            Constants.grids (grid) (j + 8 * l).background = Color.red
+            Constants.grids ((grid + 1) % (Constants.nb_grid)) (j + 8 * l).background = Color.red
         }
 	}
 

@@ -67,7 +67,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
 
   def mirror_free (x_a : Int, y_a : Int) = {
     if (Constants.alice_chess) {
-      if (Aux.piece_of_coord(x_a, y_a, Ksparov.board, 1 - grid) == None) {
+      if (Aux.piece_of_coord(x_a, y_a, Ksparov.board, (grid + 1) % (Constants.nb_grid)) == None) {
         true
       } else {
         false
