@@ -824,41 +824,59 @@ object DrawBoard {
 		layout(Constants.message_drawer) = Center
 	}
 
+	class Play_button (player : Int) extends Button {
+		preferredSize = Constants.dim_small
+		action = new Action ("") {
+			enabled = false
+			borderPainted = false
+			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+			disabledIcon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+			if (Constants.game_type == 6) {
+				enabled = true
+				background = Color.red
+				borderPainted = true
+				border = new javax.swing.border.LineBorder (Color.black, 1)
+				icon = new javax.swing.ImageIcon(Constants.resources_path + "Play_button.png")	
+			}
+			def apply {
+				Constants.players (player) = new Human (player)
+				Constants.players (1 - player) = new AI (player)
+			}
+		}	
+	}
+
 	/* Border grid with dead pieces for the white player. */
 	class Border1 extends GridPanel (Constants.nb_case_board + 2, 3) {
 		for(i <- 0 to Constants.nb_case_board + 1) {
-			if (i < 1 || i > 8) {
-				contents += new BackgroundCase (1, 1)
-				contents += new BackgroundCase (1, 1)
-				contents += new BackgroundCase (1, 1)
-			} else { 
-				if (i < 4) {
+			i match {
+				case 3 =>
+					contents += new Play_button	(1)
+					contents += new BackgroundCase (1, 1)
+					contents += new BackgroundCase (1, 1)
+				case 4 =>
+					contents += Constants.promotion_buttons(1)(0)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
+					contents += new BackgroundCase (1, 1)
+				case 5 =>
+					contents += Constants.promotion_buttons(1)(1)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
+					contents += new BackgroundCase (1, 1)
+				case 6 =>
+					contents += Constants.promotion_buttons(1)(2)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
+					contents += new BackgroundCase (1, 1)
+				case 7 =>
+					contents += Constants.promotion_buttons(1)(3)
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
+					contents += new BackgroundCase (1, 1)
+				case 8 =>
+					contents += new DeadCase (1, "Pawn")
+					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
+					contents += new BackgroundCase (1, 1)
+				case _ => 
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
-				} else { i match {
-					case 4 =>
-						contents += Constants.promotion_buttons(1)(0)
-						contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
-						contents += new BackgroundCase (1, 1)
-						case 5 =>
-						contents += Constants.promotion_buttons(1)(1)
-						contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
-						contents += new BackgroundCase (1, 1)
-					case 6 =>
-						contents += Constants.promotion_buttons(1)(2)
-						contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
-						contents += new BackgroundCase (1, 1)
-					case 7 =>
-						contents += Constants.promotion_buttons(1)(3)
-						contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
-						contents += new BackgroundCase (1, 1)
-					case 8 =>
-						contents += new DeadCase (1, "Pawn")
-						contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
-						contents += new BackgroundCase (1, 1)
-					}
-				}
 			}
 		}
 	}
@@ -872,7 +890,7 @@ object DrawBoard {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else {
-				if (i > 5) {
+				if (i > 6) {
 					contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
@@ -903,6 +921,11 @@ object DrawBoard {
 						contents += new BackgroundCase (1, 1)
 						contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
 						contents += new DeadCase (0, "Pawn")
+					case 6 => 
+						contents += new BackgroundCaseWithLabel ((9 - i).toString)
+						contents += new BackgroundCase (1, 1)
+						contents += new BackgroundCase (1, 1)
+						contents += new Play_button (0)
 					}
 				}
 			}
