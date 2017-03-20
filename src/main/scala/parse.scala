@@ -427,8 +427,11 @@ object Load {
                   var s11 = s1.filter(pnotspace).filter(pnotspec)
                   var s21 = s2.filter(pnotspec)
                   infos += ( s11 -> s21)
-                  if (s11 == "Type" && s21 == "Alice"){
-                    Constants.nb_grid = 2}
+                  if (s11 == "Type" && s21 == "Alice") {
+                    Constants.alice_chess = true
+                  } else {
+                    Constants.alice_chess = false
+                  }
                 case None => () /* Not possible */
               }
             case None => () /* Not possible */

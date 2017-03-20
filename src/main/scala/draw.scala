@@ -35,33 +35,47 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	}
 }
 
+class PrettyBigLabel (text : String) extends Label (text) {
+    border = new javax.swing.border.LineBorder (Color.black, 2)
+	preferredSize = Constants.dim_message_drawer
+	minimumSize = Constants.dim_message_drawer
+	maximumSize = Constants.dim_message_drawer
+	font = Constants.text_font
+}
+
+class PrettyBigButton extends Button {
+	font = Constants.text_font
+	preferredSize = Constants.dim_big
+	minimumSize = Constants.dim_big
+	maximumSize = Constants.dim_big
+	border = new javax.swing.border.LineBorder (Color.black, 2)	
+}
+
 /** Draw the main menu of the application. 
 	A menu is an instance of DrawMenu.Menu. */
 object DrawMenu {
 
 	/** This is the generic class for each option botton in the main menu, 
 	the role of a particular is defined depending on the parameter passed to the class. */
-	class Option (name : String) extends Button {
-		font = Constants.text_font
-		preferredSize = Constants.dim_big
-		border = new javax.swing.border.LineBorder (Color.black, 2)
+	class Option (name : String) extends PrettyBigButton {
 		action = Action (name) {
 			name match {
-				case "<html><div style='text-align : center;'>Jouer une<br>partie classique</html>" => Constants.nb_grid = 1
+				case "<html><div style='text-align : center;'>Jouer une<br>partie classique</html>" =>
 					Constants.alice_chess = false
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" => Constants.nb_grid = 2
+				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" =>
 					Constants.alice_chess = true
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Charger une partie" => Constants.nb_grid = 1
+				case "Charger une partie" =>
                     DrawCharge.define_listgame
                     Ksparov.frame.contents = new DrawCharge.Dcharge
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Voir les scores" => Ksparov.frame.contents = new DrawNotYet.NotYet ("Revenir au menu")
+				case "Voir les scores" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Gérer les paramètres" => Ksparov.frame.contents = new DrawParameters.Parameters
+				case "Gérer les paramètres" => 
+					Ksparov.frame.contents = new DrawParameters.Parameters
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Quitter Ksparov" => Ksparov.frame.dispose()
 			}
@@ -71,21 +85,24 @@ object DrawMenu {
 	/** The principal menu : for each line there are two buttons and a background between them. */
 	class MenuGrid extends GridPanel (7, 3) {
     	for( i <- 0 to 6) {
-    		if (i % 2 == 0) {
-        		contents += new BackgroundCase (1, 3)
-        		contents += new BackgroundCase (1, 3)
-        		contents += new BackgroundCase (1, 3)
-    		} else { i match {
-	        case 1 => contents += new Option ("<html><div style='text-align : center;'>Jouer une<br>partie classique</html>")
-			contents += new BackgroundCase (1, 3)
-        	contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
-        	case 3 => contents += new Option ("Charger une partie")
-        	contents += new BackgroundCase (1, 3)
-        	contents += new Option ("Voir les scores")
-        	case 5 => contents += new Option ("Gérer les paramètres")
-        	contents += new BackgroundCase (1, 3)
-        	contents += new Option ("Quitter Ksparov")
-    		}}
+    		i match {
+	        	case 1 => 
+	        		contents += new Option ("<html><div style='text-align : center;'>Jouer une<br>partie classique</html>")
+					contents += new BackgroundCase (1, 3)
+        			contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
+        		case 3 => 
+        			contents += new Option ("Charger une partie")
+        			contents += new BackgroundCase (1, 3)
+        			contents += new Option ("Voir les scores")
+        		case 5 => 
+        			contents += new Option ("Gérer les paramètres")
+        			contents += new BackgroundCase (1, 3)
+        			contents += new Option ("Quitter Ksparov")
+        		case _ =>
+        			contents += new BackgroundCase (1, 3)
+        			contents += new BackgroundCase (1, 3)
+        			contents += new BackgroundCase (1, 3)
+    		}
     	}
 	}
 
@@ -97,50 +114,6 @@ object DrawMenu {
 	}
 }
 
-/* An object no so useful, it draws a message telling the users that functionnality has not been programmed.
-   We use it for keeping place to the future upgrades of the game. */
-object DrawNotYet {
-
-	/* The button to come back where you were in the application menu or in a game. */
-	class ComeBack (name : String) extends Button {
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
-		border = new javax.swing.border.LineBorder (Color.black, 2)
-		action = Action (name) {
-			name match {
-				case "Revenir au menu" => Ksparov.frame.contents = new DrawMenu.Menu
-					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Revenir à la partie" => Ksparov.frame.contents = new DrawBoard.Board
-					Ksparov.frame.peer.setLocationRelativeTo(null)
-			}
-		}
-	}
-
-	/* The window is basic a message and the come back button. */
-	class CenterGrid (name : String) extends GridPanel (5,1) {
-		for (i <- 0 to 4) {
-			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 3)
-			} else { i match {
-				case 1 => contents += new Label {
-					font = Constants.text_font
-					/* The beauty of scala : using HTML langage to format text and to have a carriage return (\n does not work...) */
-					text = "<html><div style='text-align : center;'>Cette fonctionnalité n'est pas<br>encore développée, veuillez<br>patienter quelque peu !</div></html>"
-				}
-				case 3 => contents += new ComeBack (name)
-			}}
-		}
-	}
-
-	/* A simple layout : the center grid between two columns of background cases. */
-	class NotYet (name : String) extends BorderPanel {
-		layout (new BackgroundCase (5, 1)) = East
-		layout (new BackgroundCase (5, 1)) = West
-		layout (new CenterGrid (name)) = Center
-	}
-}
-
 /** This object is used to draw the menu for loading games. */
 object DrawCharge {
 
@@ -149,8 +122,8 @@ object DrawCharge {
         return s.substring(Constants.save_path.length, s.length - 4)
     }
 
-    def pred_nospace(s:String) : Boolean = {
-      return !s.contains(' ')
+    def pred_nospace(s : String) : Boolean = {
+      return !s.contains (' ')
     }
 
     var result : String = "";
@@ -163,26 +136,20 @@ object DrawCharge {
     and actualize other value depending on the fact that there is files or not. */
     def define_listgame {
         result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
-        if (result.length == 0){
-          list_empty = true
-          text_label = "nosaves"
-        }
-        else{
-          list_empty = false
-    	  DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList
-    	  DrawCharge.scroll = new ComboBox(listgame) {
+        if (result.length == 0) {
+        	list_empty = true
+        	text_label = "nosaves"
+        } else {
+        	list_empty = false
+    		DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList
+    		DrawCharge.scroll = new ComboBox(listgame) {
     	  	font = Constants.text_font
     	  }
         }
     }
 
     /** Defines the button for the loading menu. */
-  	class Option (text : String, return_type : String) extends Button {
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
-		border = new javax.swing.border.LineBorder (Color.black, 2)
-		font = Constants.text_font
+  	class Option (text : String, return_type : String) extends PrettyBigButton {
 		action = Action (text) {
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
@@ -203,12 +170,7 @@ object DrawCharge {
 	}
 
 	/** Defines the labels used in the loading menu, with the characteristics defined in Constants. */
-	class PrettyLabel (text : String) extends Label(text){
-    	border = new javax.swing.border.LineBorder (Color.black, 2)
-		preferredSize = Constants.dim_message_drawer
-		minimumSize = Constants.dim_message_drawer
-		maximumSize = Constants.dim_message_drawer
-		font = Constants.text_font
+	class PrettyLabel (text : String) extends PrettyBigLabel (text) {
 		background = new Color (200, 200, 200)
 		opaque = true
 	}
@@ -216,32 +178,33 @@ object DrawCharge {
 	/** The main grid of the loading menu with everything. */
 	class CenterGrid extends GridPanel (10,1) {
 		for (i <- 0 to 9) {
-			if (i == 0 || i % 2 == 1 && i != 1) {
-				contents += new BackgroundCase (1, 5)
-			} else {
-       	 		i match {
-		  		  case 1 =>
-                    list_empty match {
-                      case true => 
+   	 		i match {
+				case 1 =>
+                    if (list_empty) {
                         contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>") 
-                      case _ =>
+                    } else {
                     	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>") 
                     }
-		  		  case 2 => 
-                    if(!list_empty){
-                    contents += scroll}
-                  else{
-                    contents += new BackgroundCase (1,5)}
-		  		  case 4 => 
-                    if (!list_empty) {contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete")}
-                    else{ contents += new BackgroundCase (1,5)}
-                  case 6 =>
-                    if(!list_empty){
-                      contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")}
-                    else{ 
-                      contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>") }
-		  			case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
-	    		}
+		  		case 2 => 
+                    if (!list_empty) {
+                    	contents += scroll}
+                	else {
+                    	contents += new BackgroundCase (1,5)
+                    }
+		  		case 4 => 
+                    if (!list_empty) {
+                    	contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete")
+                    } else {
+                    	contents += new BackgroundCase (1,5)
+                    }
+                case 6 =>
+                    if (!list_empty) {
+                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")
+                    } else { 
+                    	contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>")
+                    }
+		  		case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
+		  		case _ => contents += new BackgroundCase (1, 5)
     		}
 		}
 	}
@@ -265,22 +228,19 @@ object DrawSave {
 		font = Constants.text_font
   	}
 
-  	class SaveLabel (str : String) extends Label {
-  		text = str
-  		border = new javax.swing.border.LineBorder (Color.black, 2)
+  	class SaveLabel (str : String) extends PrettyBigLabel (str) {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
 		maximumSize = Constants.dim_message_drawer
-		font = Constants.text_font
 		background = new Color (200, 200, 200)
 		opaque = true
   	}
 
     def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
-      (p,gw,gn) match {
-        case (_,_,true) => "1/2-1/2"
-        case (1,true,_) => "1-0"
-        case (0,true,_) => "0-1"
+      (p, gw, gn) match {
+        case (_, _, true) => "1/2-1/2"
+        case (1, true, _) => "1-0"
+        case (0, true, _) => "0-1"
         case _ => "*"
       }
     }
@@ -293,49 +253,43 @@ object DrawSave {
 	val TextWhite = new SaveArgument ("Garry Kasparov", 0)
 	val TextBlack = new SaveArgument ("Bobby Fischer", 0)
 
-	class ComeBack (text : String, return_type : String) extends Button {
+	class ComeBack (text : String, return_type : String) extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
 		maximumSize = Constants.dim_message_drawer
-		border = new javax.swing.border.LineBorder (Color.black, 2)
-		font = Constants.text_font
 		action = Action (text) {
 			Save.write_to_file(TextFileName.text.replaceAllLiterally(" ","_"), TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text) match {
-              case 0 =>
-				TextFileName.text = ""
-				return_type match {
-					case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
-						Ksparov.frame.peer.setLocationRelativeTo(null)
-					case "Game" => Ksparov.frame.contents = new DrawBoard.Board
-						Ksparov.frame.peer.setLocationRelativeTo(null)
-					case "Quit" => Ksparov.frame.dispose()
+            	case 0 =>
+					TextFileName.text = ""
+					return_type match {
+						case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+							Ksparov.frame.peer.setLocationRelativeTo(null)
+						case "Game" => Ksparov.frame.contents = new DrawBoard.Board
+							Ksparov.frame.peer.setLocationRelativeTo(null)
+						case "Quit" => Ksparov.frame.dispose()
 				}
-              case -1 =>
-				TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
-              case -2 =>
-                TextFileName.text = " 30 Caractères Max. "
+            	case -1 =>
+					TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
+              	case -2 =>
+                	TextFileName.text = " 30 Caractères Max. "
         	}
 		}
 	}
 
-	class CancelButton extends Button {
+	class CancelButton extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
 		maximumSize = Constants.dim_message_drawer
-		border = new javax.swing.border.LineBorder (Color.black, 2)
-		font = Constants.text_font
 		action = Action ("Annuler") {
 			Ksparov.frame.contents = new DrawBoard.Board
 			Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
 	}
 
-	class SwitchButton (switch_type : String) extends Button {
+	class SwitchButton (switch_type : String) extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
 		maximumSize = Constants.dim_message_drawer
-		border = new javax.swing.border.LineBorder (Color.black, 2)
-		font = Constants.text_font
 		if (switch_type == "AdvancedSave") {
 			action = Action ("<html><div style='text-align : center;'>Passer en mode<br>sauvegarde avancée</html>") {
 				Ksparov.frame.contents = new DrawSave.AdvancedSave
@@ -351,16 +305,13 @@ object DrawSave {
 
 	class LeftSimpleGrid extends GridPanel (8, 1) {
 		for (i <- 0 to 7) {
-			if (i == 0 || i % 2 == 1 && i != 1) {
-				contents += new BackgroundCase (1, 5)
-			} else {
-       	 		i match {
-		  			case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (30 caractères max) ?</html>")
-		  			case 2 => contents += TextFileName
-		  			case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
-		  			case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
-	    		}
-    		}
+			i match {
+		  		case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (30 caractères max) ?</html>")
+		  		case 2 => contents += TextFileName
+		  		case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+		  		case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
+		  		case _ => contents += new BackgroundCase (1, 5)
+	    	}
 		}
 	}
 
@@ -377,38 +328,32 @@ object DrawSave {
 
 	class LeftAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 8) {
-			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 5)
-			} else {
-				i match {
-					case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
-						contents += TextFileName
-					case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>")
-						contents += TextEvent
-					case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>")
-						contents += TextSite
-					case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les blancs ?</html>")
-						contents += TextWhite
-				}
+			i match {
+				case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
+					contents += TextFileName
+				case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>")
+					contents += TextEvent
+				case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>")
+					contents += TextSite
+				case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les blancs ?</html>")
+					contents += TextWhite
+				case _ => contents += new BackgroundCase (1, 5)
 			}
 		}		
 	}
 
 	class CenterAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 8) {
-			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 5)
-			} else {
-				i match {
-					case 1 => contents += new BackgroundCase (1, 5)
-						contents += new BackgroundCase (1, 5)
-					case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>")
-						contents += TextDate
-					case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>")
-						contents += TextRound
-					case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les noirs ?</html>")
-						contents += TextBlack
-				}
+			i match {
+				case 1 => contents += new BackgroundCase (1, 5)
+					contents += new BackgroundCase (1, 5)
+				case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>")
+					contents += TextDate
+				case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>")
+					contents += TextRound
+				case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les noirs ?</html>")
+					contents += TextBlack
+				case _ => contents += new BackgroundCase (1, 5)
 			}
 		}		
 	}
@@ -525,21 +470,20 @@ object DrawParameters {
 		}
 	}
 
+	class ChoiceMessage (text : String) extends Label (text) {
+		font = Constants.text_font
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		background = new Color (200, 200, 200)
+		opaque = true
+	}
+
 	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
 	class CenterGrid extends GridPanel (9, 1) {
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Label ("Choissisez le fond") {
-			font = Constants.text_font
-			border = new javax.swing.border.LineBorder (Color.black, 2)
-			background = new Color (200, 200, 200)
-			opaque = true}
+		contents += new Label ("Choissisez le fond")
 		contents += new TextureGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Label ("Choissisez le type de pièces") {
-			font = Constants.text_font
-			border = new javax.swing.border.LineBorder (Color.black, 2)
-			background = new Color (200, 200, 200)
-			opaque = true}
+		contents += new Label ("Choissisez le type de pièces")
 		contents += new PiecesGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
@@ -575,12 +519,7 @@ object DrawGameSelection {
 	}
 
 	/* The button for the choice selection : change the value of Constants.game_type when pressed. */
-	class Option (name : String, num : Int) extends Button {
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
-		font = Constants.text_font
-		border = new javax.swing.border.LineBorder (Color.black, 2)
+	class Option (name : String, num : Int) extends PrettyBigButton {
 		action = Action (name) {
 			Constants.game_type = num
 			/* Launched a game. */
@@ -593,18 +532,17 @@ object DrawGameSelection {
 	/* The menu with options and a come back button. */
 	class CenterGrid extends GridPanel (7, 3) {
 		for (i <- 0 to 6) {
-			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 3)
-				contents += new BackgroundCase (1, 3)
-				contents += new BackgroundCase (1, 3)
-			} else { i match {
-				case 1 => contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>couleur aléatoire</html>", 2)
+			i match {
+				case 1 => 
+					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>couleur aléatoire</html>", 2)
 					contents += new BackgroundCase (1, 3)
 					contents += new Option ("Humain vs Humain", 1)
-				case 3 => contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les blancs</html>", 3)
+				case 3 => 
+					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les blancs</html>", 3)
 					contents += new BackgroundCase (1, 3)
 					contents += new Option ("IA vs IA", 5)
-				case 5 => contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4)
+				case 5 => 
+					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4)
 					contents += new BackgroundCase (1, 3)
 					contents += new Button {
 						font = Constants.text_font
@@ -614,7 +552,10 @@ object DrawGameSelection {
 							Ksparov.frame.peer.setLocationRelativeTo(null)
 						}
 					}
-				}
+				case _ => 
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
 			}
 		}
 	}
@@ -642,10 +583,9 @@ object DrawGameSelection {
 object DrawBoard {
 
 	/* We need here background cases with label in order to have letters and numbers around the board. */
-	class BackgroundCaseWithLabel (label : String) extends Label {
+	class BackgroundCaseWithLabel (label : String) extends Label (label) {
 		preferredSize = Constants.dim_small
 		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-		text = label
 		/* This option make the superposition of text and icon possible. */
 		horizontalTextPosition = Alignment.Center
 		foreground = Constants.text_color
@@ -705,6 +645,11 @@ object DrawBoard {
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 
 	def init_grids {
+		if (Constants.alice_chess) {
+			Constants.nb_grid = 2
+		} else {
+			Constants.nb_grid = 1
+		}
 		Constants.grids = new Array [Array[DrawBoard.Case]] (Constants.nb_grid)
 		for(i <- 0 to Constants.nb_grid - 1) {
 			Constants.grids (i) = new Array [Case] (Constants.nb_case_board * Constants.nb_case_board)
@@ -804,14 +749,12 @@ object DrawBoard {
 	}
 
 	/* Behind the board, there is the message drawer, which is a label where messages like "check", "mat"... are displayed. */
-	class MessageDrawer (message : String) extends Label {
+	class MessageDrawer (message : String) extends Label (message) {
 		font = Constants.text_font
 		preferredSize = Constants.dim_message_drawer
 		background = new Color (220, 220, 220)
 		opaque = true
 		foreground = Color.black
-		/* The text is defined by its parameter, which is contained in Constants.message_drawer. */
-		text = message
 		horizontalTextPosition = Alignment.Center
 		verticalTextPosition = Alignment.Center
 		border = new javax.swing.border.LineBorder (Color.black, 1)
@@ -951,10 +894,7 @@ object DrawBoard {
 object DrawActions {
 
 	/* Draw a game board (an array of pieces) on the chessboard. */
-	def draw_game_board (game_board : Array[Piece]) {	
-		var coord = 0
-		var player_path = ""
-		var piece_path = ""
+	def draw_game_board (game_board : Array[Piece]) {
 		/* Reinitializing the dead piece array to avoid mutli-counting. */
 		Constants.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 		/* Initilizing the array of cases. */
@@ -962,10 +902,10 @@ object DrawActions {
 		/* For each piece in the game board. */
 		for (i <- 0 to game_board.length - 1) {
 			/* Transcripting coordinates in one dimension. */
-			coord = game_board(i).pos_x + game_board(i).pos_y * 8
+			var coord = game_board(i).pos_x + game_board(i).pos_y * 8
 			/* If the piece is alive, update the icon of the case of its position. */
 			if (coord >= 0) {
-				piece_path = game_board(i).piece_path
+				var piece_path = game_board(i).piece_path
 				Constants.grids(game_board(i).grid)(coord).action.icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
 			/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
 			} else {
@@ -1023,9 +963,9 @@ object DrawActions {
 		for (k <- 0 to Constants.nb_grid - 1) {
 			for (i <- 0 to 63) {
 				if ((i % 8 + i / 8) % 2 == 0) {
-					Constants.grids (k) (i).background = Color.black
+					Constants.grids(k)(i).background = Color.black
 				} else {
-					Constants.grids (k) (i).background = Color.white
+					Constants.grids(k)(i).background = Color.white
 				}
 			}
 		}
@@ -1033,18 +973,17 @@ object DrawActions {
 
 	/* Draw a given message on the board, the message depends on the argument passed */
 	def draw_game_messages (message_type : String, player : Int) {
-          
-      var joueur_string = Constants.game_type match {
-          case 6 =>
-              player match {
-                case 1 => Load.infos("White") + " (BLANC) "
-                case 0 => Load.infos("Black") + " (NOIR) "
-              }
+        var joueur_string = Constants.game_type match {
+        	case 6 =>
+            	player match {
+                	case 1 => Load.infos("White") + " (BLANC) "
+                	case 0 => Load.infos("Black") + " (NOIR) "
+            	}
             case _ => 
-              player match {
-                case 1 => "joueur blanc"
-                case 0 => "joueur noir"
-              }
+            	player match {
+               		case 1 => "joueur blanc"
+                	case 0 => "joueur noir"
+            	}
           }
 
 		message_type match {
@@ -1086,31 +1025,30 @@ object DrawActions {
 				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
 			} 
 
-          case "1-0" => Constants.message_drawer.text = "<html><div style='text-align : center;'>" + Load.infos("White") +" gagne la partie !</html>"
-					Constants.message_drawer.foreground = Color.red
+        	case "1-0" => Constants.message_drawer.text = "<html><div style='text-align : center;'>" + Load.infos("White") +" gagne la partie !</html>"
+				Constants.message_drawer.foreground = Color.red
 
-          case "0-1" => Constants.message_drawer.text = "<html><div style='text-align : center;'>"+ Load.infos("Black") +" gagne la partie !</html>"
-					Constants.message_drawer.foreground = Color.red
+        	case "0-1" => Constants.message_drawer.text = "<html><div style='text-align : center;'>"+ Load.infos("Black") +" gagne la partie !</html>"
+				Constants.message_drawer.foreground = Color.red
 
-          case "1/2-1/2" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle !</html>"
-					Constants.message_drawer.foreground = Color.red
+        	case "1/2-1/2" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle !</html>"
+				Constants.message_drawer.foreground = Color.red
 
-          case "*" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie non finie !</html>"
-					Constants.message_drawer.foreground = Color.red
+        	case "*" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie non finie !</html>"
+				Constants.message_drawer.foreground = Color.red
 
-          case "!$" => Constants.message_drawer.text = "Bon coup de " + joueur_string +" !"
-					Constants.message_drawer.foreground = Color.black
-          case "!!" => Constants.message_drawer.text = "Trés bon coup de " + joueur_string +" !"
-					Constants.message_drawer.foreground = Color.black
-          case "?$" =>Constants.message_drawer.text = "Que fait " + joueur_string +" ?"
-					Constants.message_drawer.foreground = Color.black
-          case "??" => Constants.message_drawer.text = "Coup trés surprenant de la part de " + joueur_string +" !"
-					Constants.message_drawer.foreground = Color.black
-          case "!?" => Constants.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
-					Constants.message_drawer.foreground = Color.black
-          case "?!" => Constants.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
-					Constants.message_drawer.foreground = Color.black
-
+        	case "!$" => Constants.message_drawer.text = "Bon coup de " + joueur_string +" !"
+				Constants.message_drawer.foreground = Color.black
+        	case "!!" => Constants.message_drawer.text = "Trés bon coup de " + joueur_string +" !"
+				Constants.message_drawer.foreground = Color.black
+        	case "?$" =>Constants.message_drawer.text = "Que fait " + joueur_string +" ?"
+				Constants.message_drawer.foreground = Color.black
+        	case "??" => Constants.message_drawer.text = "Coup trés surprenant de la part de " + joueur_string +" !"
+				Constants.message_drawer.foreground = Color.black
+        	case "!?" => Constants.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
+				Constants.message_drawer.foreground = Color.black
+        	case "?!" => Constants.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
+				Constants.message_drawer.foreground = Color.black
 		}
 	}
 }
