@@ -836,7 +836,7 @@ object DrawBoard {
 				background = Color.red
 				borderPainted = true
 				border = new javax.swing.border.LineBorder (Color.black, 1)
-				icon = new javax.swing.ImageIcon(Constants.resources_path + "Play_button.png")	
+				icon = new javax.swing.ImageIcon(Constants.resources_path + "Play_button" + player.toString + ".png")	
 			}
 			def apply {
 				Constants.players (player) = new Human (player)
