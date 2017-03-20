@@ -840,7 +840,7 @@ object DrawBoard {
 			}
 			def apply {
 				Constants.players (player) = new Human (player)
-				Constants.players (1 - player) = new AI (player)
+				Constants.players (1 - player) = new AI (1 - player)
 				for (k <- 0 to 1) {
 					Constants.play_buttons(k).enabled = false
 					Constants.play_buttons(k).borderPainted = false

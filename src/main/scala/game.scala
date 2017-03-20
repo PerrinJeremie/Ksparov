@@ -318,7 +318,7 @@ object Ksparov {
   }
 
   /* Called when click on a case of the board, defines the movment action. */
-  def play_move(x : Int, y : Int) {
+  def play_move (x : Int, y : Int) {
     /* Checking if the game has been won. */
     if (Constants.game_won || Constants.game_nulle || Constants.promotion) {
       /* If so, don't do anything, just wait for other button to be pressed. */
@@ -384,7 +384,7 @@ object Ksparov {
       case 6 =>
         Constants.players(1) = new Load.Reproducer(1)
         Constants.players(0) = new Load.Reproducer(0)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le prochain coup !</html>")
+        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
     }
     /* Defines the game as not yet won, and the white player as the first player. */
     Constants.game_won = false
