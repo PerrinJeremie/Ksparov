@@ -824,7 +824,7 @@ object DrawBoard {
 		layout(Constants.message_drawer) = Center
 	}
 
-	class Play_button (player : Int) extends Button {
+	class PlayButton (player : Int) extends Button {
 		preferredSize = Constants.dim_small
 		action = new Action ("") {
 			enabled = false
@@ -841,6 +841,11 @@ object DrawBoard {
 			def apply {
 				Constants.players (player) = new Human (player)
 				Constants.players (1 - player) = new AI (player)
+				for (k <- 0 to 1) {
+					Constants.play_buttons(k).enabled = false
+					Constants.play_buttons(k).borderPainted = false
+					Constants.play_buttons(k).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+				}
 			}
 		}	
 	}
@@ -850,7 +855,7 @@ object DrawBoard {
 		for(i <- 0 to Constants.nb_case_board + 1) {
 			i match {
 				case 3 =>
-					contents += new Play_button	(1)
+					contents += Constants.play_buttons (1)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 				case 4 =>
@@ -925,7 +930,7 @@ object DrawBoard {
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
-						contents += new Play_button (0)
+						contents += Constants.play_buttons (0)
 					}
 				}
 			}

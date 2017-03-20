@@ -195,6 +195,7 @@ object Constants {
   var grids = new Array [Array[DrawBoard.Case]] (nb_grid)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
   var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
+  var play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
 
   /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
   var kings = new Array[King](2)
@@ -344,6 +345,7 @@ object Ksparov {
   def init_game (n : Int) {
     /* Instantiate the kings and then the new board. */
     Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
+    Constants.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
     DrawBoard.init_grids
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
