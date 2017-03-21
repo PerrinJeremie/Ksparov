@@ -733,6 +733,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Recommencer une partie") {
+//				Ksparov.timer.interrupt()
 	    		Ksparov.frame.contents = new DrawGameSelection.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -740,13 +741,15 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
+//				Ksparov.timer.stop()
 				Ksparov.frame.contents = new DrawSave.SimpleSave
-				Ksparov.frame.peer.setLocationRelativeTo(null)	
+				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Revenir au menu principal") {
+//				Ksparov.timer.stop()
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -754,6 +757,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Quitter Ksparov") {
+//				Ksparov.timer.interrupt()
 	    		Ksparov.frame.dispose()
 			}
 		}

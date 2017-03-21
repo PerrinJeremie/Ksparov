@@ -419,7 +419,7 @@ object Ksparov {
     Constants.game_nulle = false
     Constants.curr_player = 1
 
-    timer.start
+//    Ksparov.timer.start
   }
 
   /* The Swing application with frame in it. */
