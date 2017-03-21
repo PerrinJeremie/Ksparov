@@ -29,7 +29,7 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 				preferredSize = Constants.dim_small
 				minimumSize = Constants.dim_small
 				maximumSize = Constants.dim_small
-				icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+				icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
 			}
 		}
 	}
@@ -412,7 +412,7 @@ object DrawParameters {
 		preferredSize = Constants.dim_small
 		/* The border is red for the actual parameter and black for other. The regural expression
 		   get the number in the texture path. */
-		if ((Constants.pattern findAllIn Constants.small_texture_path).mkString.toInt == number) {
+		if ((Constants.pattern findAllIn Constants.texture_path).mkString.toInt == number) {
 			border = new javax.swing.border.LineBorder (Color.red, 3)
 		} else {
 			border = new javax.swing.border.LineBorder (Color.black, 3)
@@ -441,7 +441,7 @@ object DrawParameters {
 		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
 			def apply {
-				Constants.write_parameters (number.toString, (Constants.pattern findAllIn Constants.small_texture_path).mkString (","))
+				Constants.write_parameters (number.toString, (Constants.pattern findAllIn Constants.texture_path).mkString (","))
 				Constants.apply_parameters
 				Ksparov.frame.contents = new DrawParameters.Parameters
 			}
@@ -582,10 +582,22 @@ object DrawGameSelection {
 /* The most important class : draw the board itself ! */
 object DrawBoard {
 
+	class Clock (txt : String, player : Int) extends Label (txt) {
+		foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)
+		background = new Color (player * 255, player * 255, player * 255)
+		opaque = true
+	    border = new javax.swing.border.LineBorder (Color.black, 2)
+		preferredSize = Constants.dim_big
+		minimumSize = Constants.dim_big
+		maximumSize = Constants.dim_big
+		font = Constants.text_font
+		text = new java.text.SimpleDateFormat("mm:ss").format(java.util.Calendar.getInstance().getTime)
+	}
+
 	/* We need here background cases with label in order to have letters and numbers around the board. */
 	class BackgroundCaseWithLabel (label : String) extends Label (label) {
 		preferredSize = Constants.dim_small
-		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
 		/* This option make the superposition of text and icon possible. */
 		horizontalTextPosition = Alignment.Center
 		foreground = Constants.text_color
@@ -612,7 +624,7 @@ object DrawBoard {
 	/* These cases are the just next to the previous one, they are numbers of dead pieces. */
 	class NumDeadCase (player : Int, number : Int) extends Label {
 		preferredSize = Constants.dim_small
-		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
 		horizontalTextPosition = Alignment.Center
 		foreground = Constants.text_color
 		font = Constants.num_dead_font
@@ -643,7 +655,6 @@ object DrawBoard {
 	/* The board with its 63 cases, it is represented as an Array in Constants.grid_cases,
 	   we need it in an array to change the icon variable depending on board.
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
-
 	def init_grids {
 		if (Constants.alice_chess) {
 			Constants.nb_grid = 2
@@ -762,9 +773,13 @@ object DrawBoard {
 
 	/* The footer of the window with the message drawer. */
 	class Footer extends BorderPanel {
-		layout(new BackgroundCase (1, 5)) = East
-		layout(new BackgroundCase (1, 5)) = West
-		layout(Constants.message_drawer) = Center
+		layout(new BackgroundCase (1, 2)) = East
+		layout(new BackgroundCase (1, 2)) = West
+		layout(new BorderPanel {
+			layout (new Clock ("Coucou", 1)) = West
+			layout (Constants.message_drawer) = Center
+			layout (new Clock ("Bou !", 0)) = East
+			}) = Center
 	}
 
 	class PlayButton (player : Int) extends Button {
@@ -772,8 +787,8 @@ object DrawBoard {
 		action = new Action ("") {
 			enabled = false
 			borderPainted = false
-			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
-			disabledIcon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
+			disabledIcon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
 			if (Constants.game_type == 6) {
 				enabled = true
 				background = Color.red
@@ -787,7 +802,7 @@ object DrawBoard {
 				for (k <- 0 to 1) {
 					Constants.play_buttons(k).enabled = false
 					Constants.play_buttons(k).borderPainted = false
-					Constants.play_buttons(k).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.small_texture_path)
+					Constants.play_buttons(k).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
 				}
 			}
 		}	

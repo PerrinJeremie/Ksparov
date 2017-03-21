@@ -137,7 +137,7 @@ object Constants {
   /* Defining the path to find every resource used in the programm */
   var pieces_path = ""
   var save_path = "src/main/resources/Saves/"
-  var small_texture_path = ""
+  var texture_path = ""
 
   /* Defining the color of the text on the board. */
   var text_color = Color.black
@@ -160,7 +160,7 @@ object Constants {
 
     /* Updating variables. */
     pieces_path = "Pieces/" + lines(1) + "/"
-    small_texture_path = "Texture_small_" + lines(2) + ".png"
+    texture_path = "Texture_small_" + lines(2) + ".png"
 
     /* Defining the text color depending on the texture selected. */
     lines(2).toInt match {
@@ -210,12 +210,40 @@ object Constants {
   var game_won = false
   var promotion = false
 
+  var time = 0
+
   /* The message drawer is instantiated here so we can change its text in DrawActions.draw_messages. */
   var message_drawer = new DrawBoard.MessageDrawer ("")
 }
 
+object Time {
+  val form = new java.text.SimpleDateFormat("mm:ss")
+  def current = form.format(java.util.Calendar.getInstance().getTime)
+}
+
+object Timer {
+  def apply (interval : Int, repeats : Boolean = true)(op : => Unit) {
+    val timeOut = new javax.swing.AbstractAction() {
+      def actionPerformed (e : java.awt.event.ActionEvent) = op
+    }
+    val t = new javax.swing.Timer(interval, timeOut)
+    t.setRepeats(repeats)
+    t.start()
+  }
+}
+
+class TimeThread extends Thread {
+  override def run {
+    Timer(100) {
+      Ksparov.frame.contents = new DrawBoard.Board
+    }
+  }  
+}
+
 /* The main object of the application. */
 object Ksparov {
+
+  val timer = new TimeThread
 
   Constants.apply_resolution
   /* Reading the parameters from the file. */
@@ -390,6 +418,8 @@ object Ksparov {
     Constants.game_won = false
     Constants.game_nulle = false
     Constants.curr_player = 1
+
+    timer.start
   }
 
   /* The Swing application with frame in it. */
