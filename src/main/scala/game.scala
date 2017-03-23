@@ -22,6 +22,7 @@ abstract class Player (n : Int) {
   def ai_promotion : Unit
   var actual_time = 0
   var nb_move = 0
+  var actual_period = 0
 }
 
 /* The class for a human player, defines some method and mainly the getmove method. */
@@ -95,8 +96,10 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
+  var periods = Array (new Time.Period (10, 2), new Time.Period (5, 5))
+
   var period_time = 10
-  var period_move = 40
+  var period_move = 1
   var new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
 
@@ -230,19 +233,30 @@ object Constants {
 }
 
 object Time {
+  class Period (period_time : Int, period_move : Int) {
+    var time = period_time
+    var nb_move = period_move
+  }
+
   def convert_in_two_digit (num : Int) = {
-    if (num < 10) {
-      "0" + num.toString
+    if (num < 0) {
+        "00"
     } else {
-      num.toString
+      if (num < 10) {
+        "0" + num.toString
+      } else {
+        num.toString
+      }
     }
   }
+
   def hhmmss_to_int (time : String) = {
     var hour = time.substring(0, 2) 
     var min = time.substring(3, 5)
     var sec = time.substring(6, 8)
     sec.toInt + 60 * min.toInt + 3600 * hour.toInt
   }
+
   def int_to_hhmmss (time : Int) = {
     var hour = time / 3600
     var min = time / 60 - hour * 60
@@ -254,20 +268,31 @@ object Time {
 class TimeThread extends Thread {
   override def run {
     while (Constants.thread_in_life && !Constants.game_nulle && !Constants.game_won) {
-      Thread.sleep (300)
+      Thread.sleep (200)
       if (Constants.thread_in_life) {
         Constants.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
         if (Constants.new_time != Constants.last_time) {
-          Constants.players(Constants.curr_player).actual_time -= 1
+          var player = Constants.players(Constants.curr_player)
+          player.actual_time -= 1
+          var dimension = Ksparov.frame.bounds.getSize()
+          Ksparov.frame.contents = new DrawBoard.Board
+          Ksparov.frame.size = dimension
           Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-          if (Constants.players(Constants.curr_player).actual_time <= 0) {
-            Constants.game_won = true
-            DrawActions.draw_game_messages ("Time", 1 - Constants.curr_player)
+          if (player.actual_time <= 0) {
+            if (player.nb_move < Constants.periods(player.actual_period).nb_move || player.actual_period - 1 == Constants.periods.length) {
+              Constants.game_won = true
+              DrawActions.draw_game_messages ("Time", 1 - Constants.curr_player)
+            } else {
+              player.actual_period += 1
+              player.actual_time = Constants.periods(player.actual_period).time
+              player.nb_move = 0
+            }
           }
+        } else {
+          var dimension = Ksparov.frame.bounds.getSize()
+          Ksparov.frame.contents = new DrawBoard.Board
+          Ksparov.frame.size = dimension
         }
-        var dimension = Ksparov.frame.bounds.getSize()
-        Ksparov.frame.contents = new DrawBoard.Board
-        Ksparov.frame.size = dimension
       }
     }
   }
@@ -463,8 +488,8 @@ object Ksparov {
     Constants.game_nulle = false
     Constants.curr_player = 1
 
-    Constants.players(0).actual_time = Constants.period_time
-    Constants.players(1).actual_time = Constants.period_time
+    Constants.players(0).actual_time = Constants.periods(0).time
+    Constants.players(1).actual_time = Constants.periods(0).time
 
     Constants.timer = new TimeThread
     Constants.ai_move = new AIMoveThread

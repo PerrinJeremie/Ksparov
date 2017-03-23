@@ -594,7 +594,7 @@ object DrawBoard {
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		font = Constants.text_font
-		text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Encore " + (Constants.period_move - Constants.players(player).nb_move) + " coups </html>"
+		text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Encore " + (math.max(Constants.periods(Constants.players(player).actual_period).nb_move - Constants.players(player).nb_move, 0)) + " coups </html>"
 		action = Action (text) {
 			Constants.timer.interrupt
 		}
