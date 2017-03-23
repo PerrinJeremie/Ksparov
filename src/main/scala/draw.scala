@@ -594,7 +594,7 @@ object DrawBoard {
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		font = Constants.text_font
-		text = new java.text.SimpleDateFormat("mm:ss").format(java.util.Calendar.getInstance().getTime)
+		text = Time.int_to_hhmmss(Constants.players(player).actual_time)
 		action = Action (text) {
 			Constants.timer.interrupt
 		}

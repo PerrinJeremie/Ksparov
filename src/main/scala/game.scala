@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 /* The class that defines a player, it will be extended in Human just below and in AI in rules.scala. */
-abstract class Player(n:Int) {
+abstract class Player (n : Int) {
   val id : Int = n
   var moved = false
   /* ai is true if and only if the player is an artifical inteligence. */
@@ -20,6 +20,7 @@ abstract class Player(n:Int) {
   def getmove : Unit
   def check_pat : Boolean
   def ai_promotion : Unit
+  var actual_time = 0
 }
 
 /* The class for a human player, defines some method and mainly the getmove method. */
@@ -92,6 +93,11 @@ class Human(n : Int) extends Player(n : Int) {
 
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
+
+  var period_time = 5400
+  var period_move = 40
+  var new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+  var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
 
   var ai_turn = false
   var thread_in_life = true
@@ -222,11 +228,38 @@ object Constants {
   var message_drawer = new DrawBoard.MessageDrawer ("")
 }
 
+object Time {
+  def convert_in_two_digit (num : Int) = {
+    if (num < 10) {
+      "0" + num.toString
+    } else {
+      num.toString
+    }
+  }
+  def hhmmss_to_int (time : String) = {
+    var hour = time.substring(0, 2) 
+    var min = time.substring(3, 5)
+    var sec = time.substring(6, 8)
+    sec.toInt + 60 * min.toInt + 3600 * hour.toInt
+  }
+  def int_to_hhmmss (time : Int) = {
+    var hour = time / 3600
+    var min = time / 60 - hour * 60
+    var sec = time % 60
+    convert_in_two_digit (hour) + " : " + convert_in_two_digit (min) + " : " + convert_in_two_digit (sec)
+  }
+}
+
 class TimeThread extends Thread {
   override def run {
     while (Constants.thread_in_life) {
       Thread.sleep (300)
       if (Constants.thread_in_life) {
+        Constants.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+        if (Constants.new_time != Constants.last_time) {
+          Constants.players(Constants.curr_player).actual_time -= 1
+          Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+        }
         var dimension = Ksparov.frame.bounds.getSize()
         Ksparov.frame.contents = new DrawBoard.Board
         Ksparov.frame.size = dimension
@@ -238,7 +271,7 @@ class TimeThread extends Thread {
 class AIMoveThread extends Thread {
   override def run {
     while (Constants.thread_in_life) {
-      Thread.sleep (1000)
+      Thread.sleep (800)
       if (Constants.ai_turn) {
         Ksparov.play_move
         Constants.ai_turn = false
@@ -424,11 +457,15 @@ object Ksparov {
     Constants.game_nulle = false
     Constants.curr_player = 1
 
+    Constants.players(0).actual_time = Constants.period_time
+    Constants.players(1).actual_time = Constants.period_time
+
     Constants.timer = new TimeThread
     Constants.ai_move = new AIMoveThread
     Constants.thread_in_life = true
     Constants.timer.start
     Constants.ai_move.start
+    Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
 
   /* The Swing application with frame in it. */
