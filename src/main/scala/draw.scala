@@ -594,7 +594,7 @@ object DrawBoard {
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		font = Constants.text_font
-		text = Time.int_to_hhmmss(Constants.players(player).actual_time)
+		text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Encore " + (Constants.period_move - Constants.players(player).nb_move) + " coups </html>"
 		action = Action (text) {
 			Constants.timer.interrupt
 		}
@@ -1026,9 +1026,12 @@ object DrawActions {
 					Constants.message_drawer.foreground = Color.red
 			}
 
+			case "Time" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Perte au temps,<br> le " + joueur_string + " gagne la partie !</html>"
+				Constants.message_drawer.foreground = Color.red
+
 			/* Draw if a player is mate. */
 			case "Mate" => Constants.game_type match {
-				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>" + (if(player == 0){Load.infos("White")}else{Load.infos("Black")}) + " gagne la partie !</html>"
+				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>" + (if (player == 0) {Load.infos("White")} else {Load.infos("Black")}) + " gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red
 				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le "+ (if(player == 0){"joueur blanc"}else{"joueur noir"}) + " gagne la partie !</html>"
 					Constants.message_drawer.foreground = Color.red

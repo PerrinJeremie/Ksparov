@@ -21,6 +21,7 @@ abstract class Player (n : Int) {
   def check_pat : Boolean
   def ai_promotion : Unit
   var actual_time = 0
+  var nb_move = 0
 }
 
 /* The class for a human player, defines some method and mainly the getmove method. */
@@ -94,7 +95,7 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var period_time = 5400
+  var period_time = 10
   var period_move = 40
   var new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
@@ -252,13 +253,17 @@ object Time {
 
 class TimeThread extends Thread {
   override def run {
-    while (Constants.thread_in_life) {
+    while (Constants.thread_in_life && !Constants.game_nulle && !Constants.game_won) {
       Thread.sleep (300)
       if (Constants.thread_in_life) {
         Constants.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
         if (Constants.new_time != Constants.last_time) {
           Constants.players(Constants.curr_player).actual_time -= 1
           Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+          if (Constants.players(Constants.curr_player).actual_time <= 0) {
+            Constants.game_won = true
+            DrawActions.draw_game_messages ("Time", 1 - Constants.curr_player)
+          }
         }
         var dimension = Ksparov.frame.bounds.getSize()
         Ksparov.frame.contents = new DrawBoard.Board
@@ -270,7 +275,7 @@ class TimeThread extends Thread {
 
 class AIMoveThread extends Thread {
   override def run {
-    while (Constants.thread_in_life) {
+    while (Constants.thread_in_life && !Constants.game_nulle && !Constants.game_won) {
       Thread.sleep (800)
       if (Constants.ai_turn) {
         Ksparov.play_move
@@ -391,6 +396,7 @@ object Ksparov {
       /* Else get the move, and if the player has moved, go on. */
       Constants.players(Constants.curr_player).getmove
       if (Constants.players(Constants.curr_player).moved) {
+        Constants.players(Constants.curr_player).nb_move += 1
         Constants.players(Constants.curr_player).moved = false
         check_game_status (1 - Constants.curr_player)
         if (Constants.promotion) {
