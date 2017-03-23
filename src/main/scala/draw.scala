@@ -264,8 +264,11 @@ object DrawSave {
 					return_type match {
 						case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 							Ksparov.frame.peer.setLocationRelativeTo(null)
-						case "Game" => Ksparov.frame.contents = new DrawBoard.Board
-							Ksparov.frame.peer.setLocationRelativeTo(null)
+						case "Game" => Constants.timer = new TimeThread
+    						Constants.ai_move = new AIMoveThread
+    						Constants.thread_in_life = true
+	    					Constants.timer.start
+    						Constants.ai_move.start 
 						case "Quit" => Ksparov.frame.dispose()
 				}
             	case -1 =>
@@ -582,7 +585,7 @@ object DrawGameSelection {
 /* The most important class : draw the board itself ! */
 object DrawBoard {
 
-	class Clock (txt : String, player : Int) extends Label (txt) {
+	class Clock (player : Int) extends Button {
 		foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)
 		background = new Color (player * 255, player * 255, player * 255)
 		opaque = true
@@ -592,6 +595,9 @@ object DrawBoard {
 		maximumSize = Constants.dim_big
 		font = Constants.text_font
 		text = new java.text.SimpleDateFormat("mm:ss").format(java.util.Calendar.getInstance().getTime)
+		action = Action (text) {
+			Constants.timer.interrupt
+		}
 	}
 
 	/* We need here background cases with label in order to have letters and numbers around the board. */
@@ -647,7 +653,7 @@ object DrawBoard {
 				   Then we launched the movment method in game.scala. */
 				Constants.selected_case = x + y * 8
 				Constants.selected_grid = grid_id
-                Ksparov.play_move(x,y)
+                Ksparov.play_move
 			}
 		}
 	}
@@ -733,7 +739,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Recommencer une partie") {
-//				Ksparov.timer.interrupt()
+				Constants.thread_in_life = false
 	    		Ksparov.frame.contents = new DrawGameSelection.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -741,7 +747,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Sauvegarder la partie") {
-//				Ksparov.timer.stop()
+				Constants.thread_in_life = false
 				Ksparov.frame.contents = new DrawSave.SimpleSave
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -749,7 +755,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Revenir au menu principal") {
-//				Ksparov.timer.stop()
+				Constants.thread_in_life = false
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -757,7 +763,7 @@ object DrawBoard {
 		contents += new Button {
 		font = Constants.text_font
 			action = Action ("Quitter Ksparov") {
-//				Ksparov.timer.interrupt()
+				Constants.thread_in_life = false
 	    		Ksparov.frame.dispose()
 			}
 		}
@@ -780,9 +786,9 @@ object DrawBoard {
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
-			layout (new Clock ("Coucou", 1)) = West
+			layout (new Clock (1)) = West
 			layout (Constants.message_drawer) = Center
-			layout (new Clock ("Bou !", 0)) = East
+			layout (new Clock (0)) = East
 			}) = Center
 	}
 
@@ -938,9 +944,6 @@ object DrawActions {
 			}
 		}
 		/* Draw the new board. */
-		var dimension = Ksparov.frame.bounds.getSize()
-		Ksparov.frame.contents = new DrawBoard.Board
-		Ksparov.frame.size = dimension
 	}
 
 	def enable_promotion (p : Int) {

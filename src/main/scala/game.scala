@@ -93,6 +93,12 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
+  var ai_turn = false
+  var thread_in_life = true
+
+  var timer = new TimeThread
+  var ai_move = new AIMoveThread
+
   var dim_small = new Dimension (70, 70)
   var dim_big = new Dimension (210, 70)
   var dim_message_drawer = new Dimension (350, 70)
@@ -216,40 +222,38 @@ object Constants {
   var message_drawer = new DrawBoard.MessageDrawer ("")
 }
 
-object Time {
-  val form = new java.text.SimpleDateFormat("mm:ss")
-  def current = form.format(java.util.Calendar.getInstance().getTime)
-}
-
-object Timer {
-  def apply (interval : Int, repeats : Boolean = true)(op : => Unit) {
-    val timeOut = new javax.swing.AbstractAction() {
-      def actionPerformed (e : java.awt.event.ActionEvent) = op
+class TimeThread extends Thread {
+  override def run {
+    while (Constants.thread_in_life) {
+      Thread.sleep (300)
+      if (Constants.thread_in_life) {
+        var dimension = Ksparov.frame.bounds.getSize()
+        Ksparov.frame.contents = new DrawBoard.Board
+        Ksparov.frame.size = dimension
+      }
     }
-    val t = new javax.swing.Timer(interval, timeOut)
-    t.setRepeats(repeats)
-    t.start()
   }
 }
 
-class TimeThread extends Thread {
+class AIMoveThread extends Thread {
   override def run {
-    Timer(100) {
-      Ksparov.frame.contents = new DrawBoard.Board
+    while (Constants.thread_in_life) {
+      Thread.sleep (1000)
+      if (Constants.ai_turn) {
+        Ksparov.play_move
+        Constants.ai_turn = false
+      }
     }
-  }  
+  }
 }
 
 /* The main object of the application. */
 object Ksparov {
 
-  val timer = new TimeThread
-
   Constants.apply_resolution
   /* Reading the parameters from the file. */
   Constants.apply_parameters
 
-  DrawBoard.create_grid_dead
 
   /* Define the first frame, later the contents variables will be change to display other frame. */
   var frame = new MainFrame {
@@ -306,7 +310,7 @@ object Ksparov {
     check_game_status (Constants.curr_player)
 
     if ((Constants.players(Constants.curr_player).ai && Constants.game_type == 2) || (Constants.game_type == 6 && !Constants.players(1 - Constants.curr_player).ai)) {
-      play_move (0, 0)
+      play_move
     }
   }
 
@@ -346,7 +350,7 @@ object Ksparov {
   }
 
   /* Called when click on a case of the board, defines the movment action. */
-  def play_move (x : Int, y : Int) {
+  def play_move {
     /* Checking if the game has been won. */
     if (Constants.game_won || Constants.game_nulle || Constants.promotion) {
       /* If so, don't do anything, just wait for other button to be pressed. */
@@ -364,7 +368,7 @@ object Ksparov {
       }
       /* If the next player is an IA and we are in Human vs AI, play the AI move in a row. */
       if ((Constants.players(Constants.curr_player).ai && Constants.game_type == 2) || (Constants.game_type == 6 && !Constants.players(1 - Constants.curr_player).ai)) {
-        play_move (0, 0)
+        Constants.ai_turn = true
       }
     }
   }
@@ -375,6 +379,7 @@ object Ksparov {
     Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     Constants.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
     DrawBoard.init_grids
+    DrawBoard.create_grid_dead
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
     Save.init 
@@ -419,7 +424,11 @@ object Ksparov {
     Constants.game_nulle = false
     Constants.curr_player = 1
 
-//    Ksparov.timer.start
+    Constants.timer = new TimeThread
+    Constants.ai_move = new AIMoveThread
+    Constants.thread_in_life = true
+    Constants.timer.start
+    Constants.ai_move.start
   }
 
   /* The Swing application with frame in it. */
