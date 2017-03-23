@@ -585,7 +585,7 @@ object DrawGameSelection {
 /* The most important class : draw the board itself ! */
 object DrawBoard {
 
-	class Clock (player : Int) extends Button {
+	class Clock (player : Int) extends Label {
 		foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)
 		background = new Color (player * 255, player * 255, player * 255)
 		opaque = true
@@ -594,9 +594,10 @@ object DrawBoard {
 		minimumSize = Constants.dim_big
 		maximumSize = Constants.dim_big
 		font = Constants.text_font
-		text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Encore " + (math.max(Constants.periods(Constants.players(player).actual_period).nb_move - Constants.players(player).nb_move, 0)) + " coups </html>"
-		action = Action (text) {
-			Constants.timer.interrupt
+		if (Constants.players(player).actual_period + 1 == Constants.periods.length) {
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Dernière période</html>"
+		} else {
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Encore " + (math.max(Constants.periods(Constants.players(player).actual_period).nb_move - Constants.players(player).nb_move, 0)) + " coups </html>"
 		}
 	}
 
@@ -786,10 +787,18 @@ object DrawBoard {
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
-			layout (new Clock (1)) = West
+			layout (if (Constants.game_type == 6) {
+					new BackgroundCase (1, 3)
+				} else {
+					new Clock (1)
+				}) = West
 			layout (Constants.message_drawer) = Center
-			layout (new Clock (0)) = East
-			}) = Center
+			layout (if (Constants.game_type == 6) {
+					new BackgroundCase (1, 3)
+				} else {
+					new Clock (0)
+				}) = East
+		}) = Center
 	}
 
 	class PlayButton (player : Int) extends Button {
@@ -1026,7 +1035,7 @@ object DrawActions {
 					Constants.message_drawer.foreground = Color.red
 			}
 
-			case "Time" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Perte au temps,<br> le " + joueur_string + " gagne la partie !</html>"
+			case "Time" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Perte au temps,<br>" + joueur_string + " gagne la partie !</html>"
 				Constants.message_drawer.foreground = Color.red
 
 			/* Draw if a player is mate. */

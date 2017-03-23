@@ -96,7 +96,7 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var periods = Array (new Time.Period (10, 2, 0), new Time.Period (5, 5, 10))
+  var periods = Array (new Time.Period (10, 2, 0), new Time.Period (5, 5, 2))
 
   var period_time = 10
   var period_move = 1
@@ -279,8 +279,8 @@ class TimeThread extends Thread {
           Ksparov.frame.contents = new DrawBoard.Board
           Ksparov.frame.size = dimension
           Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-          if (player.actual_time <= 0) {
-            if (player.nb_move < Constants.periods(player.actual_period).nb_move || player.actual_period - 1 == Constants.periods.length) {
+          if (player.actual_time <= 0 && Constants.game_type != 6) {
+            if (player.nb_move < Constants.periods(player.actual_period).nb_move || player.actual_period + 1 == Constants.periods.length) {
               Constants.game_won = true
               DrawActions.draw_game_messages ("Time", 1 - Constants.curr_player)
             } else {
@@ -493,11 +493,11 @@ object Ksparov {
     Constants.players(0).actual_time = Constants.periods(0).time
     Constants.players(1).actual_time = Constants.periods(0).time
 
-    Constants.timer = new TimeThread
-    Constants.ai_move = new AIMoveThread
     Constants.thread_in_life = true
     Constants.timer.start
+    Constants.timer = new TimeThread
     Constants.ai_move.start
+    Constants.ai_move = new AIMoveThread
     Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
 
