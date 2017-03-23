@@ -96,7 +96,7 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var periods = Array (new Time.Period (10, 2), new Time.Period (5, 5))
+  var periods = Array (new Time.Period (10, 2, 0), new Time.Period (5, 5, 10))
 
   var period_time = 10
   var period_move = 1
@@ -233,9 +233,10 @@ object Constants {
 }
 
 object Time {
-  class Period (period_time : Int, period_move : Int) {
+  class Period (period_time : Int, period_move : Int, increment : Int) {
     var time = period_time
     var nb_move = period_move
+    var inc = increment
   }
 
   def convert_in_two_digit (num : Int) = {
@@ -422,6 +423,7 @@ object Ksparov {
       Constants.players(Constants.curr_player).getmove
       if (Constants.players(Constants.curr_player).moved) {
         Constants.players(Constants.curr_player).nb_move += 1
+        Constants.players(Constants.curr_player).actual_time += Constants.periods(Constants.players(Constants.curr_player).actual_period).inc
         Constants.players(Constants.curr_player).moved = false
         check_game_status (1 - Constants.curr_player)
         if (Constants.promotion) {
