@@ -413,6 +413,7 @@ object Load {
 
   def get_list_move_from_file (filename : String)  : Unit = {
 
+    infos = Map()
     infos += ("filename" -> filename)
 
     var i = 1
