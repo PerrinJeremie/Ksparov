@@ -274,6 +274,7 @@ object DrawSave {
 						case "Game" => Constants.timer = new TimeThread
     						Constants.ai_move = new AIMoveThread
     						Constants.thread_in_life = true
+    						Ksparov.frame.contents = new DrawBoard.Board
 	    					Constants.timer.start
     						Constants.ai_move.start 
 						case "Quit" => Ksparov.frame.dispose()
@@ -421,13 +422,13 @@ object DrawParameters {
 	class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
 		preferredSize = Constants.dim_small
 		border = new javax.swing.border.LineBorder (Color.black, 2)
-		action = new Action (txt) {
+		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "parameter_sub_menu" + id + ".png")
 			if (current_menu) {
 				border = new javax.swing.border.LineBorder (Color.red, 2)
 			}
 			def apply = {
-				Ksparov.frame.contents = new DrawParameters.DrawSubMenu(id)
+				//Ksparov.frame.contents = new DrawParameters.DrawSubMenu(id)
 			}
 		}
 	}
@@ -513,12 +514,12 @@ object DrawParameters {
 	}
 
 	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
-	class DisplaySubMenu extends GridPanel (9, 1) {
+	class CenterGrid extends GridPanel (9, 1) {
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new ChoiceMessage ("Choissisez le fond")
+		contents += new Label ("Choissisez le fond")
 		contents += new TextureGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new ChoiceMessage ("Choissisez le type de pièces")
+		contents += new Label ("Choissisez le type de pièces")
 		contents += new PiecesGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
@@ -526,7 +527,6 @@ object DrawParameters {
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
-            font = Constants.text_font
 			border = new javax.swing.border.LineBorder (Color.black, 2)}
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 	}
