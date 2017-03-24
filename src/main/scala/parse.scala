@@ -218,6 +218,8 @@ object Load {
   val mattag = """[+ #]+""".r
   val spmessage = """(!!|["!?"]|["??"]|["?!"]|!$|["?$"])""".r
   val datereg = """\d\d\d\d[.](0[1-9]|1[0 1 2])[.]([0 1 2]\d|3[0 1])""".r
+  val comments = "(.*);(.*)".r 
+  val extension = "%(.*)".r
 
 
   var list_of_moves : List[String] = List()
@@ -417,7 +419,47 @@ object Load {
     }
   }
 
+  def read_moves (lines : String) : Unit = {
+    if (!infos.contains("White")) {
+          infos += ("White" -> "Garry Kasparov") }
+        if (!infos.contains("Black")) {
+          infos += ("Black" -> "Bobby Fischer") }
+        val array_of_words = lines.split(' ')
+        for (i <- 0 to array_of_words.length -1) {
+          array_of_words(i) match {
+            case tourtag(_*) => ()
+            case "" => ()
+            case _ => val arr = array_of_words(i).split('.')
+              list_of_moves = arr(arr.length -1) :: list_of_moves
+          }
+        }
+  }
 
+  def read_line (lines : String) : Unit = {
+    lines match {
+      case matchtag(_*) =>
+        matchtag1.findFirstIn(lines) match{
+          case Some(s1) =>
+            matchtag2.findFirstIn(lines) match{
+              case Some(s2) =>
+                var s11 = s1.filter(pnotspace).filter(pnotspec)
+                var s21 = s2.filter(pnotspec)
+                infos += ( s11 -> s21)
+                if (s11 == "Type" && s21 == "Alice") {
+                  Constants.alice_chess = true
+                } else {
+                  Constants.alice_chess = false
+                }
+              case None => () /* Not possible */
+            }
+          case None => () /* Not possible */
+        }
+      case emptyline(_*) => ()
+      case extension(_*) => ()
+      case comments(s1,s2) => read_moves(s1)
+      case _ => read_moves(lines)
+    }
+  }
 
   def get_list_move_from_file (filename : String)  : Unit = {
 
@@ -425,44 +467,15 @@ object Load {
     infos += ("filename" -> filename)
 
     var i = 1
+    var texte_entier = ""
 
     for (lines <- Source.fromFile(Constants.save_path + filename + ".pgn").getLines()){
-      lines match {
-        case matchtag(_*) =>
-          matchtag1.findFirstIn(lines) match{
-            case Some(s1) =>
-              matchtag2.findFirstIn(lines) match{
-                case Some(s2) =>
-                  var s11 = s1.filter(pnotspace).filter(pnotspec)
-                  var s21 = s2.filter(pnotspec)
-                  infos += ( s11 -> s21)
-                  if (s11 == "Type" && s21 == "Alice") {
-                    Constants.alice_chess = true
-                  } else {
-                    Constants.alice_chess = false
-                  }
-                case None => () /* Not possible */
-              }
-            case None => () /* Not possible */
-          }
-        case emptyline(_*) => ()
-        case _ =>
-          if (!infos.contains("White")) {
-            infos += ("White" -> "Garry Kasparov") }
-          if (!infos.contains("Black")) {
-            infos += ("Black" -> "Bobby Fischer") }
-            val array_of_words = lines.split(' ')
-          for (i <- 0 to array_of_words.length -1) {
-            array_of_words(i) match {
-              case tourtag(_*) => ()
-              case "" => ()
-              case _ => val arr = array_of_words(i).split('.')
-                list_of_moves = arr(arr.length -1) :: list_of_moves
-            }
-          }
-
-      }
+      texte_entier += lines + "\n"
     }
+
+    var tableau = texte_entier.split("\\(|\\)").zipWithIndex.filter(x => x._2 % 2 == 0).map(_._1)
+    texte_entier = tableau.mkString.split("\\{|\\}").zipWithIndex.filter(_._2 % 2 == 0).map(_._1).mkString
+    texte_entier.split('\n').iterator.foreach(read_line)
     list_of_moves = list_of_moves.reverse
   }
 
