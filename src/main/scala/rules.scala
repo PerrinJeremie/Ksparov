@@ -174,6 +174,10 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
       if (p_arrival != None) {
         p_arrival.get.pos_x = (-1)
         p_arrival.get.pos_y= (-1)
+        Constants.nb_boring_moves = 0
+      }
+      else {
+        Constants.nb_boring_moves+=1
       }
       var king = Constants.kings (1 - player)
       king.attackers = attackers
@@ -225,7 +229,7 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
       if (Save.list_of_moves.nonEmpty){
       var (irock,prom,piece_prom,piece, attack, check, p1,p2) = Save.list_of_moves.head
       val deplacement = math.abs(p2._2-p1._2) // Has it moved two cases ?
-      en_passant_ok = (piece == "" && deplacement == 2 && p1._1 == x_a) // Is it now adjacent to the arrival ?
+      en_passant_ok = (piece == "" && deplacement == 2 && p1._1 == x_a && p2._2 == pos_y) // Is it now adjacent to the arrival ?
       }
        p match {
         case None if en_passant_ok => (true, Aux.piece_of_coord(x_a, y_a + player_to_direction , g, grid))
@@ -244,6 +248,9 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
       } else {
         DrawActions.enable_promotion (Constants.curr_player)
       }
+    }
+    if (move_ok){
+      Constants.nb_boring_moves = 0
     }
     move_ok
   }
@@ -348,6 +355,9 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
       has_moved = true
       var king = Constants.kings(1 - player)
       king.attackers = attackers
+      if (move_ok) {
+        Constants.nb_boring_moves+=1
+      }
       move_ok
     }
     else {

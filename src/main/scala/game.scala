@@ -23,6 +23,7 @@ abstract class Player (n : Int) {
     Constants.game_nulle = Nulle.trivial_nulle( Ksparov.board)
     Constants.game_nulle
   }
+  def check_boring_game : Boolean = Constants.nb_boring_moves >= 50
   def ai_promotion : Unit
   var actual_time = 0
   var nb_move = 0
@@ -123,6 +124,7 @@ object Constants {
 
   var resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
+  var nb_boring_moves = 0
   def apply_resolution {
 
     /* Defining the dimension and numbers of the cases */
@@ -404,6 +406,12 @@ object Ksparov {
           DrawActions.draw_game_messages ("Nulle", player)
         }
         else {
+      /*Check if players are not asleep because nothing has been happening for 50 moves */
+          if (Constants.players(player).check_boring_game) {
+            Save.whowins = -1
+            DrawActions.draw_game_messages ("50coups", player)
+          }
+          else {
         /* Else check if there is check. */
         if (Constants.kings(player).attacked) {
           DrawActions.draw_game_messages ("Check", player)
@@ -425,6 +433,7 @@ object Ksparov {
       }
     }
   }
+}
 }
   /* Called when click on a case of the board, defines the movment action. */
   def play_move {

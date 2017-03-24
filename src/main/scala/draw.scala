@@ -1095,6 +1095,8 @@ object DrawActions {
 				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : le "+ joueur_string +" ne peut plus mater !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
+			case "50coups" => Constants.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 50 coups sans prise ni mouvement de pion ! </html>"
+				Constants.message_drawer.foreground = Color.red
 
 			case "Promotion" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
