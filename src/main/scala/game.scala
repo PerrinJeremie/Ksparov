@@ -96,7 +96,7 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var periods = Array (new Time.Period (10, 2, 0), new Time.Period (5, 5, 2))
+  var periods = Array (new Time.Period (100000, 2, 0), new Time.Period (5, 5, 2))
 
   var period_time = 10
   var period_move = 1
@@ -302,7 +302,7 @@ class TimeThread extends Thread {
 class AIMoveThread extends Thread {
   override def run {
     while (Constants.thread_in_life && !Constants.game_nulle && !Constants.game_won) {
-      Thread.sleep (800)
+      Thread.sleep (0)
       if (Constants.ai_turn) {
         Ksparov.play_move
         Constants.ai_turn = false
