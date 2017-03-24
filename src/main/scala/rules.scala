@@ -364,7 +364,30 @@ class Queen (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y
   }
 }
 
+object Nulle {
+  /*Auxiliary function */
+  def is_living (p : Piece) : Boolean = {
+    Aux.on_board(p.pos_x, p.pos_y) && p.name != "king"
+  }
+  /*Returns the pieces that are still on board, and not kings*/
+  def living_pieces (g : Array[Piece]) ={
+    g.filter(is_living)
+  }
+  /*Checks for various nulle finals */
+  def trivial_nulle (g : Array[Piece]) : Boolean = {
+    var reduced_g = living_pieces (g)
+    reduced_g.size match {
+      case 0  => true
+      case 1  => var remaining_piece = reduced_g(0).name ; (remaining_piece == "knight" || remaining_piece == "bishop")
+      case 2 =>  var p1 = reduced_g(0) ; var p2 = reduced_g(1) ;
+                (p1.name =="bishop" && p2.name == "bishop" && p2.player != p1.player && p1.pos_x+8*p1.pos_y == p2.pos_x +8*p2.pos_y)
+     case _ => false
+    }
+  }
+}
+
 object Checkmate {
+
   def move_is_possible(p : Piece, x_a : Int, y_a : Int, g :Array[Piece] ) : Boolean = {
     var (possible, a, b) = p.pre_move(x_a, y_a, g)
     possible

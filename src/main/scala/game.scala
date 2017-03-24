@@ -19,6 +19,10 @@ abstract class Player (n : Int) {
   var ai = false
   def getmove : Unit
   def check_pat : Boolean
+  def check_nulle : Boolean = {
+    Constants.game_nulle = Nulle.trivial_nulle( Ksparov.board)
+    Constants.game_nulle
+  }
   def ai_promotion : Unit
   var actual_time = 0
   var nb_move = 0
@@ -87,7 +91,6 @@ class Human(n : Int) extends Player(n : Int) {
       false
     }
   }
-
   override def ai_promotion : Unit = {
     ()
   }
@@ -393,6 +396,12 @@ object Ksparov {
         Save.whowins = -1
         DrawActions.draw_game_messages ("Pat", player)
       } else {
+      /*Check if the game is nulle */
+        if (Constants.players(player).check_nulle) {
+          Save.whowins = -1
+          DrawActions.draw_game_messages ("Nulle", player)
+        }
+        else {
         /* Else check if there is check. */
         if (Constants.kings(player).attacked) {
           DrawActions.draw_game_messages ("Check", player)
@@ -414,7 +423,7 @@ object Ksparov {
       }
     }
   }
-
+}
   /* Called when click on a case of the board, defines the movment action. */
   def play_move {
     /* Checking if the game has been won. */

@@ -48,14 +48,14 @@ class PrettyBigButton extends Button {
 	preferredSize = Constants.dim_big
 	minimumSize = Constants.dim_big
 	maximumSize = Constants.dim_big
-	border = new javax.swing.border.LineBorder (Color.black, 2)	
+	border = new javax.swing.border.LineBorder (Color.black, 2)
 }
 
-/** Draw the main menu of the application. 
+/** Draw the main menu of the application.
 	A menu is an instance of DrawMenu.Menu. */
 object DrawMenu {
 
-	/** This is the generic class for each option botton in the main menu, 
+	/** This is the generic class for each option botton in the main menu,
 	the role of a particular is defined depending on the parameter passed to the class. */
 	class Option (name : String) extends PrettyBigButton {
 		action = Action (name) {
@@ -74,7 +74,7 @@ object DrawMenu {
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Voir les scores" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Gérer les paramètres" => 
+				case "Gérer les paramètres" =>
 					Ksparov.frame.contents = new DrawParameters.Parameters
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Quitter Ksparov" => Ksparov.frame.dispose()
@@ -86,15 +86,15 @@ object DrawMenu {
 	class MenuGrid extends GridPanel (7, 3) {
     	for( i <- 0 to 6) {
     		i match {
-	        	case 1 => 
+	        	case 1 =>
 	        		contents += new Option ("<html><div style='text-align : center;'>Jouer une<br>partie classique</html>")
 					contents += new BackgroundCase (1, 3)
         			contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
-        		case 3 => 
+        		case 3 =>
         			contents += new Option ("Charger une partie")
         			contents += new BackgroundCase (1, 3)
         			contents += new Option ("Voir les scores")
-        		case 5 => 
+        		case 5 =>
         			contents += new Option ("Gérer les paramètres")
         			contents += new BackgroundCase (1, 3)
         			contents += new Option ("Quitter Ksparov")
@@ -129,10 +129,10 @@ object DrawCharge {
     var result : String = "";
     var listgame : List[String] = List("")
     var scroll = new ComboBox(listgame)
-    var list_empty = false 
+    var list_empty = false
     var text_label = ""
 
-    /** Defines the value of result with the list of pgn files found in src/main/resources/Saves, 
+    /** Defines the value of result with the list of pgn files found in src/main/resources/Saves,
     and actualize other value depending on the fact that there is files or not. */
     def define_listgame {
         result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
@@ -154,7 +154,7 @@ object DrawCharge {
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Game" => 
+				case "Game" =>
         	        Load.list_of_moves = List()
         	        Load.get_list_move_from_file(scroll.item)
         	        Constants.game_type = 6
@@ -181,17 +181,17 @@ object DrawCharge {
    	 		i match {
 				case 1 =>
                     if (list_empty) {
-                        contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>") 
+                        contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>")
                     } else {
-                    	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>") 
+                    	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>")
                     }
-		  		case 2 => 
+		  		case 2 =>
                     if (!list_empty) {
                     	contents += scroll}
                 	else {
                     	contents += new BackgroundCase (1,5)
                     }
-		  		case 4 => 
+		  		case 4 =>
                     if (!list_empty) {
                     	contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete")
                     } else {
@@ -200,7 +200,7 @@ object DrawCharge {
                 case 6 =>
                     if (!list_empty) {
                     	contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")
-                    } else { 
+                    } else {
                     	contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>")
                     }
 		  		case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
@@ -229,7 +229,7 @@ object DrawSave {
 		foreground = Color.black
 		listenTo(mouse.clicks)
     	reactions += {
-      		case _: event.MouseClicked => 
+      		case _: event.MouseClicked =>
       			foreground = Color.black
       			text = ""
     	}
@@ -276,7 +276,7 @@ object DrawSave {
     						Constants.thread_in_life = true
     						Ksparov.frame.contents = new DrawBoard.Board
 	    					Constants.timer.start
-    						Constants.ai_move.start 
+    						Constants.ai_move.start
 						case "Quit" => Ksparov.frame.dispose()
 				}
             	case -1 =>
@@ -331,7 +331,7 @@ object DrawSave {
 		for(i <- 0 to 7) {
 			i match {
 				case 1 => contents += new SwitchButton ("AdvancedSave")
-				case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu") 
+				case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
 				case 6 => contents += new CancelButton
 				case _ => contents += new BackgroundCase (1, 5)
 			}
@@ -351,7 +351,7 @@ object DrawSave {
 					contents += textWhite
 				case _ => contents += new BackgroundCase (1, 5)
 			}
-		}		
+		}
 	}
 
 	class CenterAdvancedGrid extends GridPanel (13, 1) {
@@ -367,7 +367,7 @@ object DrawSave {
 					contents += textBlack
 				case _ => contents += new BackgroundCase (1, 5)
 			}
-		}		
+		}
 	}
 
 	class RightAdvancedGrid extends GridPanel (13, 1) {
@@ -437,7 +437,7 @@ object DrawParameters {
 		for (i <- 0 to height - 1) {
 			i match {
 				case 1 => contents += new SubMenuChoice (i, i == current_menu)
-				case 3 => contents += new SubMenuChoice (i, i == current_menu) 
+				case 3 => contents += new SubMenuChoice (i, i == current_menu)
 				case _ => contents += new BackgroundCase (1, 1)
 			}
 		}
@@ -569,15 +569,15 @@ object DrawGameSelection {
 	class CenterGrid extends GridPanel (7, 3) {
 		for (i <- 0 to 6) {
 			i match {
-				case 1 => 
+				case 1 =>
 					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>couleur aléatoire</html>", 2)
 					contents += new BackgroundCase (1, 3)
 					contents += new Option ("Humain vs Humain", 1)
-				case 3 => 
+				case 3 =>
 					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les blancs</html>", 3)
 					contents += new BackgroundCase (1, 3)
 					contents += new Option ("IA vs IA", 5)
-				case 5 => 
+				case 5 =>
 					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4)
 					contents += new BackgroundCase (1, 3)
 					contents += new Button {
@@ -588,7 +588,7 @@ object DrawGameSelection {
 							Ksparov.frame.peer.setLocationRelativeTo(null)
 						}
 					}
-				case _ => 
+				case _ =>
 					contents += new BackgroundCase (1, 3)
 					contents += new BackgroundCase (1, 3)
 					contents += new BackgroundCase (1, 3)
@@ -603,7 +603,7 @@ object DrawGameSelection {
 			layout (new MessageDrawer) = Center
 			layout (new BackgroundCase (1, 1)) = East
 		}) = South
-		
+
 	}
 
 	/* The final class with background. */
@@ -704,7 +704,7 @@ object DrawBoard {
 		Constants.grids = new Array [Array[DrawBoard.Case]] (Constants.nb_grid)
 		for(i <- 0 to Constants.nb_grid - 1) {
 			Constants.grids (i) = new Array [Case] (Constants.nb_case_board * Constants.nb_case_board)
-		} 
+		}
 	}
 
 	def create_grid_cases {
@@ -759,7 +759,7 @@ object DrawBoard {
 			} else {
 				contents += new BackgroundCaseWithLabel ((9 - i).toString)
 			}
-		} 
+		}
 	}
 
 	class Grid extends GridPanel (1, Constants.nb_grid) {
@@ -846,7 +846,7 @@ object DrawBoard {
 				background = Color.red
 				borderPainted = true
 				border = new javax.swing.border.LineBorder (Color.black, 1)
-				icon = new javax.swing.ImageIcon(Constants.resources_path + "Play_button" + player.toString + ".png")	
+				icon = new javax.swing.ImageIcon(Constants.resources_path + "Play_button" + player.toString + ".png")
 			}
 			def apply {
 				Constants.players (player) = new Human (player)
@@ -857,7 +857,7 @@ object DrawBoard {
 					Constants.play_buttons(k).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
 				}
 			}
-		}	
+		}
 	}
 
 	/* Border grid with dead pieces for the white player. */
@@ -888,7 +888,7 @@ object DrawBoard {
 					contents += new DeadCase (1, "Pawn")
 					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
 					contents += new BackgroundCase (1, 1)
-				case _ => 
+				case _ =>
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
@@ -936,7 +936,7 @@ object DrawBoard {
 						contents += new BackgroundCase (1, 1)
 						contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
 						contents += new DeadCase (0, "Pawn")
-					case 6 => 
+					case 6 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
@@ -1013,7 +1013,7 @@ object DrawActions {
 		/* Coloring the selected case in red. */
 		Constants.grids(grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
 		Constants.grids((grid + 1) % (Constants.nb_grid))(pice_position_x + piece_position_y * 8).background = Color.yellow
-		
+
 		/* For each reachable case, colors it into red. */
    		for (i <- 0 to case_list.length - 1) {
             var (j, l) = case_list(i)
@@ -1043,7 +1043,7 @@ object DrawActions {
                 	case 1 => Load.infos("White") + " (BLANC) "
                 	case 0 => Load.infos("Black") + " (NOIR) "
             	}
-            case _ => 
+            case _ =>
             	player match {
                		case 1 => "joueur blanc"
                 	case 0 => "joueur noir"
@@ -1086,11 +1086,17 @@ object DrawActions {
 				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le "+ joueur_string +" ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
+			case "Nulle" => Constants.game_type match {
+				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : "+ joueur_string +" ne peut plus mater !</html>"
+					Constants.message_drawer.foreground = Color.red
+				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : le "+ joueur_string +" ne peut plus mater !</html>"
+					Constants.message_drawer.foreground = Color.red
+			}
 
 			case "Promotion" => Constants.curr_player match {
 				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
 				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
-			} 
+			}
 
         	case "1-0" => Constants.message_drawer.text = "<html><div style='text-align : center;'>" + Load.infos("White") +" gagne la partie !</html>"
 				Constants.message_drawer.foreground = Color.red
