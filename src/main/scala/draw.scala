@@ -483,10 +483,10 @@ object DrawParameters {
 	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
 	class CenterGrid extends GridPanel (9, 1) {
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Label ("Choissisez le fond")
+		contents += new ChoiceMessage ("Choissisez le fond")
 		contents += new TextureGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Label ("Choissisez le type de pièces")
+		contents += new ChoiceMessage ("Choissisez le type de pièces")
 		contents += new PiecesGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
@@ -494,6 +494,7 @@ object DrawParameters {
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
+            font = Constants.text_font
 			border = new javax.swing.border.LineBorder (Color.black, 2)}
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 	}
