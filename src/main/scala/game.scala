@@ -376,7 +376,7 @@ object Ksparov {
     check_game_status (Constants.curr_player)
 
     if ((Constants.players(Constants.curr_player).ai && Constants.game_type == 2) || (Constants.game_type == 6 && !Constants.players(1 - Constants.curr_player).ai)) {
-      play_move
+      Constants.ai_turn = true
     }
   }
 
