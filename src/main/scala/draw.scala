@@ -141,7 +141,7 @@ object DrawCharge {
         	text_label = "nosaves"
         } else {
         	list_empty = false
-    		DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList
+    		DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList.sortBy(_.toLowerCase)
     		DrawCharge.scroll = new ComboBox(listgame) {
     	  	font = Constants.text_font
     	  }
