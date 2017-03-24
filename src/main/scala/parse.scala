@@ -282,13 +282,13 @@ object Load {
       return (P.name == piece && (P.player == Constants.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
     }
 
-    def parse_word (s : String) : Unit = {
+    def parse_word (s : String) : Boolean = {
 
       s match {
         case resulttag(_*) =>
           finalresult = s
-          Constants.game_won = true
-          return ()
+          Ksparov.check_game_status(Constants.curr_player)
+          if (! (s == "*") ) {Constants.game_won = true; return true} else { return false }
         case _ => ()
       }
 
@@ -303,7 +303,7 @@ object Load {
             case _ =>
               Ksparov.board((1-Constants.curr_player)*16 + 14).move(2,(1-Constants.curr_player)*7,Ksparov.board)
           }
-          return ()
+          return true
         case "K" => piece = "king"; w = w.substring(1, w.length)
         case "Q" => piece = "queen"; w = w.substring(1, w.length)
         case "B" => piece = "bishop"; w = w.substring(1, w.length)
@@ -375,6 +375,7 @@ object Load {
       Save.add_move1(Ksparov.board.indexOf(piece_Ch),pos_fin)
       piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
       Save.add_move2
+      return true
 
     }
 
@@ -383,13 +384,12 @@ object Load {
       if (!list_of_moves.isEmpty){
         reset_when_parsing
         try {
-          parse_word(list_of_moves.head)
+          Constants.players(Constants.curr_player).moved = parse_word(list_of_moves.head)
         }catch{
           case _ : Throwable => Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Fichier Corrompu</html>")
         }
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
-        Constants.players(Constants.curr_player).moved = true
       }
     }
 
