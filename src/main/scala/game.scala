@@ -371,6 +371,8 @@ object Ksparov {
     Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
 
+    Constants.curr_player = 1 - Constants.curr_player
+
     check_game_status (Constants.curr_player)
 
     if ((Constants.players(Constants.curr_player).ai && Constants.game_type == 2) || (Constants.game_type == 6 && !Constants.players(1 - Constants.curr_player).ai)) {
@@ -428,8 +430,9 @@ object Ksparov {
         check_game_status (1 - Constants.curr_player)
         if (Constants.promotion) {
           DrawActions.draw_game_messages ("Promotion", Constants.curr_player)
+        } else {
+          Constants.curr_player = 1 - Constants.curr_player
         }
-        Constants.curr_player = 1 - Constants.curr_player
         Constants.first_choice_done = false
       }
       /* If the next player is an IA and we are in Human vs AI, play the AI move in a row. */
