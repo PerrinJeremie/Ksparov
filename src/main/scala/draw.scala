@@ -255,7 +255,7 @@ object DrawSave {
 	val textFileName = new SaveArgument ("", 0)
 	val textEvent = new SaveArgument ("Ksparov Tournament", 0)
 	val textSite = new SaveArgument ("Ksparov Software", 0)
-	val textDate = new SaveArgument (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
+	val textDate = new SaveArgument (new SimpleDateFormat("yyyy.MM.dd").format(Calendar.getInstance().getTime()), 0)
 	val textRound = new SaveArgument ("Ronde numéro ", 0)
 	val textWhite = new SaveArgument ("Garry Kasparov", 0)
 	val textBlack = new SaveArgument ("Bobby Fischer", 0)
