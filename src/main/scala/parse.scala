@@ -9,8 +9,9 @@ import sys.process._
 
 object Save{
 
-  /* Liste de triplets (irock,prom,piece_prom,piece, attack, check, p1,p2) avec
-   - irock=0 si pas de roque, = 1 si grand, = -1 si petit.
+
+  /* Liste de octuplet (irock,prom,piece_prom,piece,attack,check,p1,p2) avec
+   - irock=0 si pas de roque, = 1 si grand, = -1 si petit. 
    - prom = true si il y a promotion, alors piece_prom indique la piece.
    - piece la piece qui bouge (K king ,Q queen ,B bishop ,N knight ,R rook).
    - attack = vrai si une piece est mangée
@@ -180,7 +181,7 @@ object Save{
         val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
         write_tags(writer,event,site,date,round,white,black,result)
         write_moves(writer)
-        writer.write(result)
+        writer.write(" "+result) 
         writer.close()
         return 0
       case -1 =>
@@ -371,8 +372,9 @@ object Load {
         case _ => ()
       }
 
-
+      Save.add_move1(Ksparov.board.indexOf(piece_Ch),pos_fin)
       piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
+      Save.add_move2
 
     }
 
