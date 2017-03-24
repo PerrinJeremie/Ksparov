@@ -279,7 +279,7 @@ class TimeThread extends Thread {
           var player = Constants.players(Constants.curr_player)
           player.actual_time -= 1
           var dimension = Ksparov.frame.bounds.getSize()
-          Ksparov.frame.contents = new DrawBoard.Board
+          Ksparov.frame.contents = new DrawBoard.Board 
           Ksparov.frame.size = dimension
           Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
           if (player.actual_time <= 0 && Constants.game_type != 6) {

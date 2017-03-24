@@ -284,6 +284,9 @@ object DrawSave {
 					textFileName.text = "SAUVEGARDE DEJA EXISTANTE"
               	case -2 =>
                 	textFileName.text = " 30 Caractères Max. "
+                case -3 =>
+                    textDate.foreground = Color.red
+                    textDate.text = "FORMAT AAAA.MM.JJ A RESPECTER"
         	}
 		}
 	}

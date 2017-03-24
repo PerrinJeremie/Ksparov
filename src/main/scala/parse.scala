@@ -178,12 +178,17 @@ object Save{
     var result = whowins match { case 2 => "*" case 1 => "1-0" case 0 => "0-1" case -1 => "1/2-1/2"}
     is_valid(s+".pgn") match {
       case 0 =>
-        val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
-        write_tags(writer,event,site,date,round,white,black,result)
-        write_moves(writer)
-        writer.write(" "+result) 
-        writer.close()
-        return 0
+        date match{
+          case Load.datereg(_*) =>
+            val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
+            write_tags(writer,event,site,date,round,white,black,result)
+            write_moves(writer)
+            writer.write(" "+result)
+            writer.close()
+            return 0
+          case _ =>
+            return -3
+        }
       case -1 =>
         return -1
       case -2 =>
@@ -212,6 +217,7 @@ object Load {
   val yaxistag = """[1-8]+""".r
   val mattag = """[+ #]+""".r
   val spmessage = """(!!|["!?"]|["??"]|["?!"]|!$|["?$"])""".r
+  val datereg = """\d\d\d\d[.](0[1-9]|1[0 1 2])[.]([0 1 2]\d|3[0 1])""".r
 
 
   var list_of_moves : List[String] = List()
