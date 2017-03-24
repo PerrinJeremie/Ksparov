@@ -226,6 +226,13 @@ object DrawSave {
 		minimumSize = Constants.dim_message_drawer
 		maximumSize = Constants.dim_message_drawer
 		font = Constants.text_font
+		foreground = Color.black
+		listenTo(mouse.clicks)
+    	reactions += {
+      		case _: event.MouseClicked => 
+      			foreground = Color.black
+      			text = ""
+    	}
   	}
 
   	class SaveLabel (str : String) extends PrettyBigLabel (str) {
@@ -245,36 +252,38 @@ object DrawSave {
       }
     }
 
-	val TextFileName = new SaveArgument ("", 0)
-	val TextEvent = new SaveArgument ("Ksparov Tournament", 0)
-	val TextSite = new SaveArgument ("Ksparov Software", 0)
-	val TextDate = new SaveArgument (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
-	val TextRound = new SaveArgument ("Ronde numéro ", 0)
-	val TextWhite = new SaveArgument ("Garry Kasparov", 0)
-	val TextBlack = new SaveArgument ("Bobby Fischer", 0)
+	val textFileName = new SaveArgument ("", 0)
+	val textEvent = new SaveArgument ("Ksparov Tournament", 0)
+	val textSite = new SaveArgument ("Ksparov Software", 0)
+	val textDate = new SaveArgument (new SimpleDateFormat("y.M.d").format(Calendar.getInstance().getTime()), 0)
+	val textRound = new SaveArgument ("Ronde numéro ", 0)
+	val textWhite = new SaveArgument ("Garry Kasparov", 0)
+	val textBlack = new SaveArgument ("Bobby Fischer", 0)
 
 	class ComeBack (text : String, return_type : String) extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
 		maximumSize = Constants.dim_message_drawer
 		action = Action (text) {
-			Save.write_to_file(TextFileName.text.replaceAllLiterally(" ","_"), TextEvent.text, TextSite.text,TextDate.text, TextRound.text,TextWhite.text,TextBlack.text) match {
+			Save.write_to_file(textFileName.text.replaceAllLiterally(" ","_"), textEvent.text, textSite.text, textDate.text, textRound.text, textWhite.text, textBlack.text) match {
             	case 0 =>
-					TextFileName.text = ""
+					textFileName.text = ""
 					return_type match {
 						case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 							Ksparov.frame.peer.setLocationRelativeTo(null)
 						case "Game" => Constants.timer = new TimeThread
     						Constants.ai_move = new AIMoveThread
     						Constants.thread_in_life = true
+    						Ksparov.frame.contents = new DrawBoard.Board
 	    					Constants.timer.start
     						Constants.ai_move.start 
 						case "Quit" => Ksparov.frame.dispose()
 				}
             	case -1 =>
-					TextFileName.text = "SAUVEGARDE DEJA EXISTANTE"
+            		textFileName.foreground = Color.red
+					textFileName.text = "SAUVEGARDE DEJA EXISTANTE"
               	case -2 =>
-                	TextFileName.text = " 30 Caractères Max. "
+                	textFileName.text = " 30 Caractères Max. "
         	}
 		}
 	}
@@ -310,7 +319,7 @@ object DrawSave {
 		for (i <- 0 to 7) {
 			i match {
 		  		case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (30 caractères max) ?</html>")
-		  		case 2 => contents += TextFileName
+		  		case 2 => contents += textFileName
 		  		case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
 		  		case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
 		  		case _ => contents += new BackgroundCase (1, 5)
@@ -333,13 +342,13 @@ object DrawSave {
 		for (i <- 0 to 8) {
 			i match {
 				case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
-					contents += TextFileName
+					contents += textFileName
 				case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>")
-					contents += TextEvent
+					contents += textEvent
 				case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>")
-					contents += TextSite
+					contents += textSite
 				case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les blancs ?</html>")
-					contents += TextWhite
+					contents += textWhite
 				case _ => contents += new BackgroundCase (1, 5)
 			}
 		}		
@@ -351,11 +360,11 @@ object DrawSave {
 				case 1 => contents += new BackgroundCase (1, 5)
 					contents += new BackgroundCase (1, 5)
 				case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>")
-					contents += TextDate
+					contents += textDate
 				case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>")
-					contents += TextRound
+					contents += textRound
 				case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les noirs ?</html>")
-					contents += TextBlack
+					contents += textBlack
 				case _ => contents += new BackgroundCase (1, 5)
 			}
 		}		
@@ -410,15 +419,39 @@ object DrawParameters {
 
 	val nb_option_max = 5
 
+	class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
+		preferredSize = Constants.dim_small
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		action = new Action ("") {
+			icon = new javax.swing.ImageIcon(Constants.resources_path + "parameter_sub_menu" + id + ".png")
+			if (current_menu) {
+				border = new javax.swing.border.LineBorder (Color.red, 2)
+			}
+			def apply = {
+				//Ksparov.frame.contents = new DrawParameters.DrawSubMenu(id)
+			}
+		}
+	}
+
+	class ChoiceColumn (height : Int, current_menu : Int) extends GridPanel (height, 1) {
+		for (i <- 0 to height - 1) {
+			i match {
+				case 1 => contents += new SubMenuChoice (i, i == current_menu)
+				case 3 => contents += new SubMenuChoice (i, i == current_menu) 
+				case _ => contents += new BackgroundCase (1, 1)
+			}
+		}
+	}
+
 	/* Buttons for the texture choice, the parameter defines which texture the button stands for. */
 	class TextureOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
 		/* The border is red for the actual parameter and black for other. The regural expression
 		   get the number in the texture path. */
 		if ((Constants.pattern findAllIn Constants.texture_path).mkString.toInt == number) {
-			border = new javax.swing.border.LineBorder (Color.red, 3)
+			border = new javax.swing.border.LineBorder (Color.red, 2)
 		} else {
-			border = new javax.swing.border.LineBorder (Color.black, 3)
+			border = new javax.swing.border.LineBorder (Color.black, 2)
 		}
 		action = new Action("") {
 			/* The action is different for other button because to have an icon on a button, you have to put in the action. */
@@ -437,9 +470,9 @@ object DrawParameters {
 	class PieceOption (number : Int) extends Button {
 		preferredSize = Constants.dim_small
 		if ((Constants.pattern findAllIn Constants.pieces_path).mkString.toInt == number) {
-			border = new javax.swing.border.LineBorder (Color.red, 3)
+			border = new javax.swing.border.LineBorder (Color.red, 2)
 		} else {
-			border = new javax.swing.border.LineBorder (Color.black, 3)
+			border = new javax.swing.border.LineBorder (Color.black, 2)
 		}
 		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
@@ -483,10 +516,10 @@ object DrawParameters {
 	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
 	class CenterGrid extends GridPanel (9, 1) {
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new ChoiceMessage ("Choissisez le fond")
+		contents += new Label ("Choissisez le fond")
 		contents += new TextureGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new ChoiceMessage ("Choissisez le type de pièces")
+		contents += new Label ("Choissisez le type de pièces")
 		contents += new PiecesGrid
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 		contents += new Button {
@@ -494,7 +527,6 @@ object DrawParameters {
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
-            font = Constants.text_font
 			border = new javax.swing.border.LineBorder (Color.black, 2)}
 		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 	}
