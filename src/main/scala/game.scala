@@ -374,7 +374,9 @@ object Ksparov {
     Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
 
-    Constants.curr_player = 1 - Constants.curr_player
+    if ( !Constants.players(Constants.curr_player).ai){
+      Constants.curr_player = 1 - Constants.curr_player
+    }
 
     check_game_status (Constants.curr_player)
 
