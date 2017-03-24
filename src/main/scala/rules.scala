@@ -57,6 +57,14 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   var name : String
   var piece_path : String
   var player = play
+  def player_to_direction = {
+    if (play == 0){
+      1
+    }
+    else {
+      -1
+    }
+  }
   var grid : Int = grid_id
   def pattern(x_a : Int, y_a : Int) : Boolean
 
@@ -117,7 +125,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
       if (!clear) {
         (false, p_arrival, Nil) //There is a friendly piece on the destination
       } else {
-        /* We now have to simulate the movement to check if it is valid once applied. 
+        /* We now have to simulate the movement to check if it is valid once applied.
         Since we do not want to modify the board, we save the current coordinates. */
         var (old_x, old_y) = coords
         var (old_x2, old_y2) = (0, 0)
@@ -212,8 +220,16 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
     }
     else { //the pawn is attacking. But there is no need to call clear_path, as the destination is only one case away.
       var p : Option[Piece] = Aux.piece_of_coord(x_a, y_a, g, grid)
-      p match {
-        case None => (false,None)
+      //Getting last played move to check if en passant occurs
+      var en_passant_ok = false
+      if (Save.list_of_moves.nonEmpty){
+      var (irock,prom,piece_prom,piece, attack, check, p1,p2) = Save.list_of_moves.head
+      val deplacement = math.abs(p2._2-p1._2) // Has it moved two cases ?
+      en_passant_ok = (piece == "" && deplacement == 2 && p1._1 == x_a) // Is it now adjacent to the arrival ?
+      }
+       p match {
+        case None if en_passant_ok => (true, Aux.piece_of_coord(x_a, y_a + player_to_direction , g, grid))
+        case None => (false, None)
         case _ => (p.get.player != player, Some(p.get))
       }
     }

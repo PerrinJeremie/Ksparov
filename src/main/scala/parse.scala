@@ -9,8 +9,8 @@ import sys.process._
 
 object Save{
 
-  /* Liste de triplets (irock,prom,piece_prom,piece,p1,p2) avec
-   - irock=0 si pas de roque, = 1 si grand, = -1 si petit. 
+  /* Liste de triplets (irock,prom,piece_prom,piece, attack, check, p1,p2) avec
+   - irock=0 si pas de roque, = 1 si grand, = -1 si petit.
    - prom = true si il y a promotion, alors piece_prom indique la piece.
    - piece la piece qui bouge (K king ,Q queen ,B bishop ,N knight ,R rook).
    - attack = vrai si une piece est mangée
@@ -99,7 +99,7 @@ object Save{
       list_of_moves = curr_move :: list_of_moves.tail
     }
   }
-  
+
   /*  def init : String = {
    val r = scala.util.Random
    var name  = "0000000000000000"
@@ -170,7 +170,7 @@ object Save{
   }
 
   /* returns 0 if all went well, -1 if it's not the case.
-   Informations have to be filled by players except for result which is the result of the game : 
+   Informations have to be filled by players except for result which is the result of the game :
    with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
 
   def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String) : Int = {
@@ -180,7 +180,7 @@ object Save{
         val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
         write_tags(writer,event,site,date,round,white,black,result)
         write_moves(writer)
-        writer.write(result) 
+        writer.write(result)
         writer.close()
         return 0
       case -1 =>
@@ -214,7 +214,7 @@ object Load {
 
 
   var list_of_moves : List[String] = List()
-  
+
   var infos :  Map[String,String] = Map()
 
   var player : Int = 1
@@ -284,7 +284,7 @@ object Load {
     def parse_word (s : String) : Unit = {
 
       s match {
-        case resulttag(_*) => 
+        case resulttag(_*) =>
           finalresult = s
           Constants.game_won = true
           return ()
@@ -367,7 +367,7 @@ object Load {
 
       /* Comments */
       w.substring(0,2) match{
-        case spmessage(s) => specialmessage = s 
+        case spmessage(s) => specialmessage = s
         case _ => ()
       }
 
@@ -422,9 +422,9 @@ object Load {
       lines match {
         case matchtag(_*) =>
           matchtag1.findFirstIn(lines) match{
-            case Some(s1) => 
+            case Some(s1) =>
               matchtag2.findFirstIn(lines) match{
-                case Some(s2) => 
+                case Some(s2) =>
                   var s11 = s1.filter(pnotspace).filter(pnotspec)
                   var s21 = s2.filter(pnotspec)
                   infos += ( s11 -> s21)

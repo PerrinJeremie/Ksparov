@@ -96,7 +96,7 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
-  var periods = Array (new Time.Period (10, 2, 0), new Time.Period (5, 5, 2))
+  var periods = Array (new Time.Period (10000, 2, 0), new Time.Period (5, 5, 2))
 
   var period_time = 10
   var period_move = 1
@@ -146,7 +146,7 @@ object Constants {
     }
   resources_path = "src/main/resources/" + dim_path
   }
-  
+
   val nb_case_board = 8
   var nb_grid = 2
 
@@ -252,7 +252,7 @@ object Time {
   }
 
   def hhmmss_to_int (time : String) = {
-    var hour = time.substring(0, 2) 
+    var hour = time.substring(0, 2)
     var min = time.substring(3, 5)
     var sec = time.substring(6, 8)
     sec.toInt + 60 * min.toInt + 3600 * hour.toInt
@@ -356,7 +356,7 @@ object Ksparov {
   }
 
   def promotion (p : Int) = {
-    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)  
+    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)
     var new_piece = Constants.selected_promotion match {
       case "Knight" => new Knight (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
       case "Bishop" => new Bishop (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
@@ -385,7 +385,7 @@ object Ksparov {
     if (Checkmate.check_mate (Ksparov.board, player)) {
      /* If so, finish the game. */
       DrawActions.draw_game_messages ("Mate", player)
-      Save.whowins = player 
+      Save.whowins = player
       Constants.game_won = true
     } else {
       /* Check if there is pat. */
@@ -451,7 +451,7 @@ object Ksparov {
     DrawBoard.create_grid_dead
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
-    Save.init 
+    Save.init
     /* Defines the welcome message and types of players depending on the game type chosen. */
     n match {
       case 1 =>
@@ -474,7 +474,7 @@ object Ksparov {
         Constants.players(0) = new AI(0)
         Constants.players(1) = new Human(1)
         Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
-      case 4 => 
+      case 4 =>
         Constants.game_type = 2
         Constants.players(0) = new Human(0)
         Constants.players(1) = new AI(1)
