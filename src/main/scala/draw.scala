@@ -454,11 +454,19 @@ object DrawParameters {
 		}
 	}
 
-	class ComeBack extends Button {
+	class ComeBack (sub_menu_id : Int) extends Button {
 		font = Constants.text_font
 		preferredSize = new Dimension (630, 70)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
+			sub_menu_id match {
+				case 3 => for (i <- 0 to Constants.nb_period - 1) {
+					Constants.periods (i) = new Time.Period (time_textfields(i).text.toInt, move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
+				}
+				case 2 => ()
+				case 1 => () 
+				case _ => () 
+			}
 			Ksparov.frame.contents = new DrawMenu.Menu
 			Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
@@ -548,7 +556,7 @@ object DrawParameters {
 			contents += new ChoiceMessage ("Choissisez le type de pièces")
 			contents += new PiecesGrid
 			contents += new BackgroundCase (1, 9)
-			contents += new ComeBack
+			contents += new ComeBack (1)
 			contents += new BackgroundCase (1, 9)
 		}) = Center
 
@@ -567,6 +575,11 @@ object DrawParameters {
 						case "ai_speed" => Constants.ai_speed = math.max (0, Constants.ai_speed - 100)
 						case "nb_alice_board" => Constants.nb_alice_board = math.max (2, Constants.nb_alice_board - 1)
 						case "nb_period" => Constants.nb_period = math.max (0, Constants.nb_period - 1)
+							if (Constants.nb_period == 0) {
+								Constants.clock_available = false
+							} else {
+								Constants.clock_available = true
+							}
 					}
 				} else {
 					variable match {
@@ -633,12 +646,16 @@ object DrawParameters {
 			contents += new BackgroundCase (1, 9)
 			contents += new NbAliceBoard
 			contents += new BackgroundCase (1, 9)
-			contents += new ComeBack
+			contents += new ComeBack (2)
 			contents += new BackgroundCase (1, 9)
 		}) = Center
 
 		layout (new BackgroundCase (7, 1)) = East	
 	}
+
+	var time_textfields = new Array [TextField] (Constants.nb_period)
+	var move_textfields = new Array [TextField] (Constants.nb_period)
+	var inc_textfields = new Array [TextField] (Constants.nb_period)
 
 	class NbPeriodChoice extends BorderPanel {
 		layout (new BackgroundCase (1, 2)) = West
@@ -655,20 +672,20 @@ object DrawParameters {
 		layout (new BackgroundCase (1, 1)) = East
 	}
 
-	class PeriodOptions extends BorderPanel {
+	class PeriodOptions (id : Int) extends BorderPanel {
 		layout (new BorderPanel {
 			layout (new Label ("Temps") {preferredSize = new Dimension (140, 70)}) = West
-			layout (new TextField () {preferredSize = new Dimension (70, 70)}) = East
+			layout (time_textfields (id)) = East
 		}) = West
 
 		layout (new BorderPanel {
 			layout (new Label ("Nombre de coup") {preferredSize = new Dimension (140, 70)}) = West
-			layout (new TextField () {preferredSize = new Dimension (70, 70)}) = East
+			layout (move_textfields (id)) = East
 		}) = Center
 
 		layout (new BorderPanel {
 			layout (new Label ("Incrément") {preferredSize = new Dimension (140, 70)}) = West
-			layout (new TextField () {preferredSize = new Dimension (70, 70)}) = East
+			layout (inc_textfields (id)) = East
 		}) = East
 	}
 
@@ -677,12 +694,32 @@ object DrawParameters {
 			if (i % 2 == 0) {
 				contents += new BackgroundCase (1, 9)
 			} else {
-				contents += new PeriodOptions
+				contents += new PeriodOptions (i / 2)
 			}
 		}
 	}
 
 	class ClockSubMenu (nb_period : Int) extends BorderPanel {
+		Constants.periods = new Array [Time.Period] (nb_period)
+		time_textfields = new Array [TextField] (nb_period)
+		move_textfields = new Array [TextField] (nb_period)
+		inc_textfields = new Array [TextField] (nb_period)
+
+		for (i <- 0 to nb_period - 1) {
+			time_textfields (i) = new TextField {
+				font = Constants.text_font
+				preferredSize = Constants.dim_small
+			}
+			move_textfields (i) = new TextField {
+				font = Constants.text_font
+				preferredSize = Constants.dim_small
+			}
+			inc_textfields (i) = new TextField {
+				font = Constants.text_font
+				preferredSize = Constants.dim_small
+			}
+		}
+
 		layout (new BorderPanel {
 			layout (new BackgroundCase (math.max (2 * nb_period + 5, 7), 1)) = West
 			layout (new ChoiceColumn (math.max (2 * nb_period + 5, 7), 3)) = East
@@ -699,7 +736,7 @@ object DrawParameters {
 				layout (new Periods (nb_period)) = Center
 			}
 			layout (new BorderPanel {
-				layout (new ComeBack) = North
+				layout (new ComeBack (3)) = North
 				layout (new BackgroundCase (1, 9)) = South
 			}) = South
 		}) = Center
@@ -876,7 +913,7 @@ object DrawBoard {
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 	def init_grids {
 		if (Constants.alice_chess) {
-			Constants.nb_grid = 2
+			Constants.nb_grid = Constants.nb_alice_board
 		} else {
 			Constants.nb_grid = 1
 		}
@@ -999,16 +1036,16 @@ object DrawBoard {
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
-			layout (if (Constants.game_type == 6) {
-					new BackgroundCase (1, 3)
-				} else {
+			layout (if (Constants.clock_available) {
 					new Clock (1)
+				} else {
+					new BackgroundCase (1, 3)
 				}) = West
 			layout (Constants.message_drawer) = Center
-			layout (if (Constants.game_type == 6) {
-					new BackgroundCase (1, 3)
-				} else {
+			layout (if (Constants.clock_available) {
 					new Clock (0)
+				} else {
+					new BackgroundCase (1, 3)
 				}) = East
 		}) = Center
 	}

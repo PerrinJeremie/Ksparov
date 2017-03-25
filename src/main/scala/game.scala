@@ -106,13 +106,15 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
+  var clock_available = true
+
   var nb_alice_board = 2
 
   var ai_speed = 200
 
   var nb_period = 1
 
-  var periods = Array (new Time.Period (100000, 2, 0), new Time.Period (5, 5, 2))
+  var periods = Array (new Time.Period (4, 2, 0), new Time.Period (5, 5, 2))
 
   var period_time = 10
   var period_move = 1
@@ -297,8 +299,9 @@ class TimeThread extends Thread {
           Ksparov.frame.contents = new DrawBoard.Board
           Ksparov.frame.size = dimension
           Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-          if (player.actual_time <= 0 && Constants.game_type != 6) {
+          if (player.actual_time <= 0 && Constants.clock_available) {
             if (player.nb_move < Constants.periods(player.actual_period).nb_move || player.actual_period + 1 == Constants.periods.length) {
+              DrawActions.clear_possible_moves
               Constants.game_won = true
               DrawActions.draw_game_messages ("Time", 1 - Constants.curr_player)
             } else {
