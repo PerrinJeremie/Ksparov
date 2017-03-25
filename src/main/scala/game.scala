@@ -106,6 +106,8 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
+  var base_size = 70
+
   var clock_available = true
 
   var nb_alice_board = 2
@@ -146,6 +148,7 @@ object Constants {
 
     if (resolution.getHeight < 1000.0) {
       dim_path = "Min/"
+      base_size = 50
       dim_small = new Dimension (50, 50)
       dim_big = new Dimension (150, 50)
       dim_message_drawer = new Dimension (250, 50)
@@ -154,6 +157,7 @@ object Constants {
     } else {
       if (resolution.getHeight > 1100.0) {
         dim_path = "Jeroboam/"
+        base_size = 90
         dim_small = new Dimension (90, 90)
         dim_big = new Dimension (270, 90)
         dim_message_drawer = new Dimension (450, 90)

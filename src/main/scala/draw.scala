@@ -421,9 +421,9 @@ object DrawSave {
 object DrawParameters {
 
 	class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
-		preferredSize = new Dimension (70, 70)
-		maximumSize = new Dimension (70, 70)
-		minimumSize = new Dimension (70, 70)
+		preferredSize = new Dimension (Constants.base_size, Constants.base_size)
+		maximumSize = new Dimension (Constants.base_size, Constants.base_size)
+		minimumSize = new Dimension (Constants.base_size, Constants.base_size)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "parameter_sub_menu" + id + ".png")
@@ -456,7 +456,7 @@ object DrawParameters {
 
 	class ComeBack (sub_menu_id : Int) extends Button {
 		font = Constants.text_font
-		preferredSize = new Dimension (630, 70)
+		preferredSize = new Dimension (Constants.base_size * 9, Constants.base_size)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
 			sub_menu_id match {
@@ -674,17 +674,17 @@ object DrawParameters {
 
 	class PeriodOptions (id : Int) extends BorderPanel {
 		layout (new BorderPanel {
-			layout (new Label ("Temps") {preferredSize = new Dimension (140, 70)}) = West
+			layout (new Label ("<html><div style='text-align : center;'>Durée de la<br>période<br>en seconde</html>") {preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)}) = West
 			layout (time_textfields (id)) = East
 		}) = West
 
 		layout (new BorderPanel {
-			layout (new Label ("Nombre de coup") {preferredSize = new Dimension (140, 70)}) = West
+			layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)}) = West
 			layout (move_textfields (id)) = East
 		}) = Center
 
 		layout (new BorderPanel {
-			layout (new Label ("Incrément") {preferredSize = new Dimension (140, 70)}) = West
+			layout (new Label ("<html><div style='text-align : center;'>Incrément après<br>un coup<br>en seconde</html>") {preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)}) = West
 			layout (inc_textfields (id)) = East
 		}) = East
 	}
@@ -709,14 +709,26 @@ object DrawParameters {
 			time_textfields (i) = new TextField {
 				font = Constants.text_font
 				preferredSize = Constants.dim_small
+				listenTo(keys)
+				reactions += {
+				    case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
+				}
 			}
 			move_textfields (i) = new TextField {
 				font = Constants.text_font
 				preferredSize = Constants.dim_small
+				listenTo(keys)
+				reactions += {
+				    case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
+				}
 			}
 			inc_textfields (i) = new TextField {
 				font = Constants.text_font
 				preferredSize = Constants.dim_small
+				listenTo(keys)
+				reactions += {
+				    case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
+				}
 			}
 		}
 
