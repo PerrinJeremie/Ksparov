@@ -96,6 +96,8 @@ class Human(n : Int) extends Player(n : Int) {
 /* This object defines constans and not so constants variable that are used during the process. */
 object Constants {
 
+  var nb_period = 1
+
   var periods = Array (new Time.Period (100000, 2, 0), new Time.Period (5, 5, 2))
 
   var period_time = 10

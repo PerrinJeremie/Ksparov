@@ -75,7 +75,7 @@ object DrawMenu {
 				case "Voir les scores" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Gérer les paramètres" => 
-					Ksparov.frame.contents = new DrawParameters.Parameters
+					Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Quitter Ksparov" => Ksparov.frame.dispose()
 			}
@@ -420,25 +420,34 @@ object DrawParameters {
 	val nb_option_max = 5
 
 	class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
-		preferredSize = Constants.dim_small
+		preferredSize = new Dimension (70, 70)
+		maximumSize = new Dimension (70, 70)
+		minimumSize = new Dimension (70, 70)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "parameter_sub_menu" + id + ".png")
+			background = new Color (0, 0, 0)
 			if (current_menu) {
 				border = new javax.swing.border.LineBorder (Color.red, 2)
 			}
 			def apply = {
-				//Ksparov.frame.contents = new DrawParameters.DrawSubMenu(id)
+				Ksparov.frame.contents = new DrawParameters.SubMenus(id)
 			}
 		}
 	}
 
-	class ChoiceColumn (height : Int, current_menu : Int) extends GridPanel (height, 1) {
+	class ChoiceColumn (height : Int, current_menu : Int) extends GridPanel (height, 2) {
 		for (i <- 0 to height - 1) {
-			i match {
-				case 1 => contents += new SubMenuChoice (i, i == current_menu)
-				case 3 => contents += new SubMenuChoice (i, i == current_menu) 
-				case _ => contents += new BackgroundCase (1, 1)
+			for (j <- 0 to 1) {
+				if (j == 0) {
+					i match {
+						case 1 => contents += new SubMenuChoice (1, 1 == current_menu)
+						case 3 => contents += new SubMenuChoice (2, 2 == current_menu) 
+						case _ => contents += new BackgroundCase (1, 1)
+					}
+				} else {
+					contents += new BackgroundCase (1, 1)
+				}
 			}
 		}
 	}
@@ -461,7 +470,7 @@ object DrawParameters {
 				   After doing this, we apply the new parameters to that choice is dynamic. */
 				Constants.write_parameters ((Constants.pattern findAllIn Constants.pieces_path).mkString, number.toString)
 				Constants.apply_parameters
-				Ksparov.frame.contents = new DrawParameters.Parameters
+				Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 			}
 		}
 	}
@@ -479,7 +488,7 @@ object DrawParameters {
 			def apply {
 				Constants.write_parameters (number.toString, (Constants.pattern findAllIn Constants.texture_path).mkString (","))
 				Constants.apply_parameters
-				Ksparov.frame.contents = new DrawParameters.Parameters
+				Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 			}
 		}
 	}
@@ -513,30 +522,132 @@ object DrawParameters {
 		opaque = true
 	}
 
-	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
-	class CenterGrid extends GridPanel (9, 1) {
-		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Label ("Choissisez le fond")
-		contents += new TextureGrid
-		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Label ("Choissisez le type de pièces")
-		contents += new PiecesGrid
-		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-		contents += new Button {
-			action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
-				Ksparov.frame.contents = new DrawMenu.Menu
-				Ksparov.frame.peer.setLocationRelativeTo(null)
+	class DisplaySubMenu extends BorderPanel {
+		layout (new BorderPanel {
+			layout (new BackgroundCase (9, 1)) = West
+			layout (new ChoiceColumn (9, 1)) = East
+		}) = West
+
+		layout (new GridPanel (1, 1) {
+			contents += new GridPanel (9, 1) {
+				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
+				contents += new ChoiceMessage ("Choissisez le fond")
+				contents += new TextureGrid
+				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
+				contents += new ChoiceMessage ("Choissisez le type de pièces")
+				contents += new PiecesGrid
+				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
+				contents += new Button {
+					font = Constants.text_font
+					border = new javax.swing.border.LineBorder (Color.black, 2)
+					action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
+						Ksparov.frame.contents = new DrawMenu.Menu
+						Ksparov.frame.peer.setLocationRelativeTo(null)
+					}
+				}
+				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
 			}
-			border = new javax.swing.border.LineBorder (Color.black, 2)}
-		contents += new BackgroundCase (1, 2 * nb_option_max - 1)
+		}) = Center
+
+		layout (new BackgroundCase (9, 1)) = East
 	}
 
-	/* The final window with borders on each side. */
-	class Parameters extends BorderPanel {
-		layout (new BackgroundCase (9, 1)) = East
-		layout (new CenterGrid) = Center
-		layout (new BackgroundCase (9, 1)) = West
+	class IncrementNbPeriod (sign : String) extends Button {
+		preferredSize = Constants.dim_small
+		maximumSize = Constants.dim_small
+		minimumSize = Constants.dim_small
+		font = Constants.text_font
+		action = Action (sign) {
+			if (sign == "-") {
+				Constants.nb_period -= 1
+			} else {
+				Constants.nb_period += 1
+			}
+			Ksparov.frame.contents = new DrawParameters.SubMenus (2)
+		}
 	}
+
+	class NbPeriodChoice extends GridPanel (2, 9) {
+		for (j <- 0 to 1) {
+			for (i <- 0 to 8) {
+				if (j == 0) {
+					contents += new BackgroundCase (1, 1)
+				} else {
+					i match {
+						case 2 => contents += new Label ("Nombre") {
+							preferredSize = new Dimension (70, 70)
+						}
+						case 3 => contents += new Label ("période") {
+							preferredSize = new Dimension (70, 70)
+						}
+						case 4 => contents += new IncrementNbPeriod ("-")
+						case 5 => contents += new Label (Constants.nb_period.toString)
+						case 6 => contents += new IncrementNbPeriod ("+")
+						case _ => contents += new BackgroundCase (1, 1)
+					}
+				}
+			}
+		}
+	}
+
+	class PeriodOptions extends BorderPanel {
+		layout (new BorderPanel {
+			layout (new Label ("Temps") {preferredSize = new Dimension (140, 70)}) = West
+			layout (new TextField () {preferredSize = new Dimension (70, 70)}) = East
+		}) = West
+
+		layout (new BorderPanel {
+			layout (new Label ("Nombre de coup") {preferredSize = new Dimension (140, 70)}) = West
+			layout (new TextField () {preferredSize = new Dimension (70, 70)}) = East
+		}) = Center
+
+		layout (new BorderPanel {
+			layout (new Label ("Incrément") {preferredSize = new Dimension (140, 70)}) = West
+			layout (new TextField () {preferredSize = new Dimension (70, 70)}) = East
+		}) = East
+	}
+
+	class Periods (nb_period : Int) extends GridPanel (2 * nb_period + 1, 1) {
+		for (i <- 0 to 2 * nb_period) {
+			if (i % 2 == 0) {
+				contents += new BackgroundCase (1, 9)
+			} else {
+				contents += new PeriodOptions
+			}
+		}
+	}
+
+	class ClockSubMenu (nb_period : Int) extends BorderPanel {
+		layout (new BorderPanel {
+			layout (new BackgroundCase (2 * nb_period + 4, 1)) = West
+			layout (new ChoiceColumn (2 * nb_period + 4, 2)) = East
+		}) = West
+
+		layout (new BorderPanel {
+			layout (new NbPeriodChoice) = North
+			layout (new Periods (nb_period)) = Center
+			layout (new Button {
+					font = Constants.text_font
+					preferredSize = new Dimension (630, 70)
+					border = new javax.swing.border.LineBorder (Color.black, 2)
+					action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
+						Ksparov.frame.contents = new DrawMenu.Menu
+						Ksparov.frame.peer.setLocationRelativeTo(null)
+					}
+			}) = South
+		}) = Center
+
+		layout (new BackgroundCase (2 * nb_period + 4, 1)) = East
+	}
+
+	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
+	class SubMenus (id : Int) extends GridPanel (1, 1) {
+		id match {
+			case 1 => contents += new DisplaySubMenu
+			case 2 => contents += new ClockSubMenu (Constants.nb_period)
+		}
+	}
+
 }
 
 /* This object is for the game selection : Human vs Human, AI vs AI or AI vs Human. */
