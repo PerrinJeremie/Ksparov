@@ -420,8 +420,6 @@ object DrawSave {
    Other options will be added soon. */
 object DrawParameters {
 
-	val nb_option_max = 5
-
 	class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
 		preferredSize = new Dimension (70, 70)
 		maximumSize = new Dimension (70, 70)
@@ -445,13 +443,24 @@ object DrawParameters {
 				if (j == 0) {
 					i match {
 						case 1 => contents += new SubMenuChoice (1, 1 == current_menu)
-						case 3 => contents += new SubMenuChoice (2, 2 == current_menu) 
+						case 3 => contents += new SubMenuChoice (2, 2 == current_menu)
+						case 5 => contents += new SubMenuChoice (3, 3 == current_menu) 
 						case _ => contents += new BackgroundCase (1, 1)
 					}
 				} else {
 					contents += new BackgroundCase (1, 1)
 				}
 			}
+		}
+	}
+
+	class ComeBack extends Button {
+		font = Constants.text_font
+		preferredSize = new Dimension (630, 70)
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
+			Ksparov.frame.contents = new DrawMenu.Menu
+			Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
 	}
 
@@ -497,8 +506,8 @@ object DrawParameters {
 	}
 
 	/* The menu for texture : an alternance of background cases and texture option. */
-	class TextureGrid extends GridPanel (1, 2 * nb_option_max - 1) {
-		for( i <- 1 to 2 * nb_option_max - 1) {
+	class TextureGrid extends GridPanel (1, 9) {
+		for( i <- 1 to 9) {
 			if (i % 2 == 0) {
 				contents += new BackgroundCase (1, 1)
 			} else {
@@ -508,8 +517,8 @@ object DrawParameters {
 	}
 
 	/* The menu for pieces : an alternance of background cases and pieces option. */
-	class PiecesGrid extends GridPanel (1, 2 * nb_option_max - 1) {
-		for( i <- 1 to 2 * nb_option_max - 1) {
+	class PiecesGrid extends GridPanel (1, 9) {
+		for( i <- 1 to 9) {
 			if (i % 2 == 0 || i > 4) {
 				contents += new BackgroundCase (1, 1)
 			} else {
@@ -531,66 +540,119 @@ object DrawParameters {
 			layout (new ChoiceColumn (9, 1)) = East
 		}) = West
 
-		layout (new GridPanel (1, 1) {
-			contents += new GridPanel (9, 1) {
-				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-				contents += new ChoiceMessage ("Choissisez le fond")
-				contents += new TextureGrid
-				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-				contents += new ChoiceMessage ("Choissisez le type de pièces")
-				contents += new PiecesGrid
-				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-				contents += new Button {
-					font = Constants.text_font
-					border = new javax.swing.border.LineBorder (Color.black, 2)
-					action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
-						Ksparov.frame.contents = new DrawMenu.Menu
-						Ksparov.frame.peer.setLocationRelativeTo(null)
-					}
-				}
-				contents += new BackgroundCase (1, 2 * nb_option_max - 1)
-			}
+		layout (new GridPanel (9, 1) {
+			contents += new BackgroundCase (1, 9)
+			contents += new ChoiceMessage ("Choissisez le fond")
+			contents += new TextureGrid
+			contents += new BackgroundCase (1, 9)
+			contents += new ChoiceMessage ("Choissisez le type de pièces")
+			contents += new PiecesGrid
+			contents += new BackgroundCase (1, 9)
+			contents += new ComeBack
+			contents += new BackgroundCase (1, 9)
 		}) = Center
 
 		layout (new BackgroundCase (9, 1)) = East
 	}
 
-	class IncrementNbPeriod (sign : String) extends Button {
-		preferredSize = Constants.dim_small
-		maximumSize = Constants.dim_small
-		minimumSize = Constants.dim_small
-		font = Constants.text_font
-		action = Action (sign) {
-			if (sign == "-") {
-				Constants.nb_period -= 1
-			} else {
-				Constants.nb_period += 1
-			}
-			Ksparov.frame.contents = new DrawParameters.SubMenus (2)
-		}
-	}
-
-	class NbPeriodChoice extends GridPanel (2, 9) {
-		for (j <- 0 to 1) {
-			for (i <- 0 to 8) {
-				if (j == 0) {
-					contents += new BackgroundCase (1, 1)
+	class Increment (variable : String, sub_menu_id : Int) extends GridPanel (1, 3) {
+		class IncButton (sign : String) extends Button {
+			preferredSize = Constants.dim_small
+			maximumSize = Constants.dim_small
+			minimumSize = Constants.dim_small
+			font = Constants.text_font
+			action = Action (sign) {
+				if (sign == "-") {
+					variable match {
+						case "ai_speed" => Constants.ai_speed = math.max (0, Constants.ai_speed - 100)
+						case "nb_alice_board" => Constants.nb_alice_board = math.max (2, Constants.nb_alice_board - 1)
+						case "nb_period" => Constants.nb_period = math.max (0, Constants.nb_period - 1)
+					}
 				} else {
-					i match {
-						case 2 => contents += new Label ("Nombre") {
-							preferredSize = new Dimension (70, 70)
-						}
-						case 3 => contents += new Label ("période") {
-							preferredSize = new Dimension (70, 70)
-						}
-						case 4 => contents += new IncrementNbPeriod ("-")
-						case 5 => contents += new Label (Constants.nb_period.toString)
-						case 6 => contents += new IncrementNbPeriod ("+")
-						case _ => contents += new BackgroundCase (1, 1)
+					variable match {
+						case "ai_speed" => Constants.ai_speed += 100
+						case "nb_alice_board" => Constants.nb_alice_board += 1
+						case "nb_period" => Constants.nb_period += 1
 					}
 				}
+				Ksparov.frame.contents = new DrawParameters.SubMenus (sub_menu_id)
 			}
 		}
+
+		contents += new IncButton ("-")
+		contents += new Label {
+			preferredSize = Constants.dim_small
+			variable match {
+				case "ai_speed" => text = Constants.ai_speed.toString
+				case "nb_alice_board" => text = Constants.nb_alice_board.toString
+				case "nb_period" => text = Constants.nb_period.toString
+			}
+		}
+		contents += new IncButton ("+")
+	}
+
+	class SpeedAI extends BorderPanel {
+		layout (new BackgroundCase (1, 2)) = West
+
+		layout (new GridPanel (1, 2) {
+			contents += new Label {
+				preferredSize = Constants.dim_big
+				font = Constants.text_font
+				text = "<html><div style='text-align : center;'>Vitesse de jeu de l'IA<br>en milliseconde</html>"
+			}
+			contents += new Increment ("ai_speed", 2)
+		}) = Center
+
+		layout (new BackgroundCase (1, 1)) = East
+	}
+
+	class NbAliceBoard extends BorderPanel {
+		layout (new BackgroundCase (1, 2)) = West
+
+		layout (new GridPanel (1, 2) {
+			contents += new Label {
+				preferredSize = Constants.dim_big
+				font = Constants.text_font
+				text = "<html><div style='text-align : center;'>Nombre de plateau<br>de jeu d'Alice</html>"
+			}
+			contents += new Increment ("nb_alice_board", 2)
+		}) = Center
+
+		layout (new BackgroundCase (1, 1)) = East
+	}
+
+	class PlayabilitySubMenu extends BorderPanel {
+		layout (new BorderPanel {
+			layout (new BackgroundCase (7, 1)) = West
+			layout (new ChoiceColumn (7, 2)) = East
+		}) = West
+	
+		layout (new GridPanel (7, 1) {
+			contents += new BackgroundCase (1, 9)
+			contents += new SpeedAI
+			contents += new BackgroundCase (1, 9)
+			contents += new NbAliceBoard
+			contents += new BackgroundCase (1, 9)
+			contents += new ComeBack
+			contents += new BackgroundCase (1, 9)
+		}) = Center
+
+		layout (new BackgroundCase (7, 1)) = East	
+	}
+
+	class NbPeriodChoice extends BorderPanel {
+		layout (new BackgroundCase (1, 2)) = West
+
+		layout (new GridPanel (1, 2) {
+			contents += new Label {
+				preferredSize = Constants.dim_big
+				font = Constants.text_font
+				text = "Nombre de période"
+			}
+			contents += new Increment ("nb_period", 3)
+		}) = Center
+
+		layout (new BackgroundCase (1, 1)) = East
 	}
 
 	class PeriodOptions extends BorderPanel {
@@ -622,32 +684,35 @@ object DrawParameters {
 
 	class ClockSubMenu (nb_period : Int) extends BorderPanel {
 		layout (new BorderPanel {
-			layout (new BackgroundCase (2 * nb_period + 4, 1)) = West
-			layout (new ChoiceColumn (2 * nb_period + 4, 2)) = East
+			layout (new BackgroundCase (math.max (2 * nb_period + 5, 7), 1)) = West
+			layout (new ChoiceColumn (math.max (2 * nb_period + 5, 7), 3)) = East
 		}) = West
 
 		layout (new BorderPanel {
-			layout (new NbPeriodChoice) = North
-			layout (new Periods (nb_period)) = Center
-			layout (new Button {
-					font = Constants.text_font
-					preferredSize = new Dimension (630, 70)
-					border = new javax.swing.border.LineBorder (Color.black, 2)
-					action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
-						Ksparov.frame.contents = new DrawMenu.Menu
-						Ksparov.frame.peer.setLocationRelativeTo(null)
-					}
+			layout (new BorderPanel {
+				layout (new BackgroundCase (1, 9)) = North
+				layout (new NbPeriodChoice) = South
+			}) = North
+			if (Constants.nb_period == 0) {
+				layout (new BackgroundCase (3, 9)) = Center
+			} else {
+				layout (new Periods (nb_period)) = Center
+			}
+			layout (new BorderPanel {
+				layout (new ComeBack) = North
+				layout (new BackgroundCase (1, 9)) = South
 			}) = South
 		}) = Center
 
-		layout (new BackgroundCase (2 * nb_period + 4, 1)) = East
+		layout (new BackgroundCase (math.max (2 * nb_period + 5, 7), 1)) = East
 	}
 
 	/* The final menu with the texture choice first then the piece choice and finally a come back button. */
 	class SubMenus (id : Int) extends GridPanel (1, 1) {
 		id match {
 			case 1 => contents += new DisplaySubMenu
-			case 2 => contents += new ClockSubMenu (Constants.nb_period)
+			case 2 => contents += new PlayabilitySubMenu
+			case 3 => contents += new ClockSubMenu (Constants.nb_period)
 		}
 	}
 
