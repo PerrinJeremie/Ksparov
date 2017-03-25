@@ -114,7 +114,7 @@ object Constants {
 
   var ai_speed = 200
 
-  var nb_period = 1
+  var nb_period = 2
 
   var periods = Array (new Time.Period (4, 2, 0), new Time.Period (5, 5, 2))
 

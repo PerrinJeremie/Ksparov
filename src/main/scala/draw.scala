@@ -461,6 +461,7 @@ object DrawParameters {
 		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
 			sub_menu_id match {
 				case 3 => for (i <- 0 to Constants.nb_period - 1) {
+					Constants.periods = new Array [Time.Period] (Constants.nb_period)
 					Constants.periods (i) = new Time.Period (time_textfields(i).text.toInt, move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
 				}
 				case 2 => ()
@@ -700,7 +701,6 @@ object DrawParameters {
 	}
 
 	class ClockSubMenu (nb_period : Int) extends BorderPanel {
-		Constants.periods = new Array [Time.Period] (nb_period)
 		time_textfields = new Array [TextField] (nb_period)
 		move_textfields = new Array [TextField] (nb_period)
 		inc_textfields = new Array [TextField] (nb_period)
@@ -708,6 +708,11 @@ object DrawParameters {
 		for (i <- 0 to nb_period - 1) {
 			time_textfields (i) = new TextField {
 				font = Constants.text_font
+				try {
+					text = Constants.periods(i).time.toString
+				} catch {
+					case _ : Throwable => text = "0"
+				}
 				preferredSize = Constants.dim_small
 				listenTo(keys)
 				reactions += {
@@ -716,6 +721,11 @@ object DrawParameters {
 			}
 			move_textfields (i) = new TextField {
 				font = Constants.text_font
+				try {
+					text = Constants.periods(i).nb_move.toString
+				} catch {
+					case _ : Throwable => text = "0"
+				}
 				preferredSize = Constants.dim_small
 				listenTo(keys)
 				reactions += {
@@ -724,6 +734,11 @@ object DrawParameters {
 			}
 			inc_textfields (i) = new TextField {
 				font = Constants.text_font
+				try {
+					text = Constants.periods(i).inc.toString
+				} catch {
+					case _ : Throwable => text = "0"
+				}
 				preferredSize = Constants.dim_small
 				listenTo(keys)
 				reactions += {
