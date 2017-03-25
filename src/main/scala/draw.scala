@@ -122,18 +122,24 @@ object DrawCharge {
         return s.substring(Constants.save_path.length, s.length - 4)
     }
 
+    /** Predicates if a string contains at least one space character. */
     def pred_nospace(s : String) : Boolean = {
       return !s.contains (' ')
     }
 
+    /** Stores the result of the loaded game. */
     var result : String = "";
+    /** Stores the list of games found in src/main/resources/Saves folder. */
     var listgame : List[String] = List("")
+    /** The component used to display the listgame value. */
     var scroll = new ComboBox(listgame)
+    /** True if and only if listgame is empty after trying to load saved games. i.e no game in src/main/resources/Saves folder.*/
     var list_empty = false
+    /** A switch to know what to print depending on the emptiness of listgame. */
     var text_label = ""
 
     /** Defines the value of result with the list of pgn files found in src/main/resources/Saves,
-    and actualize other value depending on the fact that there is files or not. */
+    and actualizes other value depending on the fact that there is files or not. */
     def define_listgame {
         result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
         if (result.length == 0) {
@@ -218,8 +224,10 @@ object DrawCharge {
 	}
 }
 
+/** Draws the menus used to save games.*/
 object DrawSave {
 
+    /** A text field that stores a certain information conserning the save, to be filled by the user. */
 	class SaveArgument (default : String, col : Int) extends TextField (default, col) {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
         preferredSize = Constants.dim_message_drawer
@@ -235,6 +243,7 @@ object DrawSave {
     	}
   	}
 
+    /** A label. */
   	class SaveLabel (str : String) extends PrettyBigLabel (str) {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
@@ -243,6 +252,7 @@ object DrawSave {
 		opaque = true
   	}
 
+    /** Returns the result tag associated with (player, game_won, game_null). */
     def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
       (p, gw, gn) match {
         case (_, _, true) => "1/2-1/2"
@@ -252,14 +262,22 @@ object DrawSave {
       }
     }
 
+    /** A text field, it's name explains it all. */
 	val textFileName = new SaveArgument ("", 0)
+    /** A text field, it's name explains it all. */
 	val textEvent = new SaveArgument ("Ksparov Tournament", 0)
+    /** A text field, it's name explains it all. */
 	val textSite = new SaveArgument ("Ksparov Software", 0)
+    /** A text field, it's name explains it all. */
 	val textDate = new SaveArgument (new SimpleDateFormat("yyyy.MM.dd").format(Calendar.getInstance().getTime()), 0)
+    /** A text field, it's name explains it all. */
 	val textRound = new SaveArgument ("Ronde numéro ", 0)
+    /** A text field, it's name explains it all. */
 	val textWhite = new SaveArgument ("Garry Kasparov", 0)
+    /** A text field, it's name explains it all. */
 	val textBlack = new SaveArgument ("Bobby Fischer", 0)
 
+    /** Button component which saves game and brings you back : to the menu with "Menu" as argument, to the game with "Game" as argument, to quit Ksparov with "Quit" as argument.*/
 	class ComeBack (text : String, return_type : String) extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
@@ -291,6 +309,7 @@ object DrawSave {
 		}
 	}
 
+    /** Button component brings you back to the game without saving. */
 	class CancelButton extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
@@ -301,6 +320,7 @@ object DrawSave {
 		}
 	}
 
+    /** Button switches between simple-save (only choice is filename), and advanced-save (all choices). */
 	class SwitchButton (switch_type : String) extends PrettyBigButton {
 		preferredSize = Constants.dim_message_drawer
 		minimumSize = Constants.dim_message_drawer
@@ -318,6 +338,7 @@ object DrawSave {
 		}
 	}
 
+    /** Left component part of the simple-save menu.*/
 	class LeftSimpleGrid extends GridPanel (8, 1) {
 		for (i <- 0 to 7) {
 			i match {
@@ -330,6 +351,7 @@ object DrawSave {
 		}
 	}
 
+    /** Right component part of the simple-save menu. */
 	class RightSimpleGrid extends GridPanel (8, 1) {
 		for(i <- 0 to 7) {
 			i match {
@@ -341,6 +363,7 @@ object DrawSave {
 		}
 	}
 
+    /** Left component part of the advanced-save menu.*/
 	class LeftAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 8) {
 			i match {
@@ -357,6 +380,7 @@ object DrawSave {
 		}
 	}
 
+    /** Center component part of the advanced-save menu.*/
 	class CenterAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 8) {
 			i match {
@@ -373,6 +397,7 @@ object DrawSave {
 		}
 	}
 
+    /** Right component part of the advanced-save menu.*/
 	class RightAdvancedGrid extends GridPanel (13, 1) {
 		for (i <- 0 to 12){
 			i match {
@@ -386,6 +411,7 @@ object DrawSave {
 		}
 	}
 
+    /** A panel that regroups all components of the simple-menu */
 	class SimpleSave extends BorderPanel {
     	layout (new BorderPanel {
     		layout (new BackgroundCase (8,1)) = West
@@ -398,6 +424,7 @@ object DrawSave {
     	}) = East
 	}
 
+    /** A panel which regroups all components of the advanced-menu */
 	class AdvancedSave extends BorderPanel {
 		layout (new BorderPanel {
 			layout (new BackgroundCase (13, 1)) = West
