@@ -6,12 +6,34 @@ object Aux {
       cases(8 * i + j) = (i, j)
     }
   }
-
+  /**Checks if case (x,y) is on the board. Useful to determine if a piece is dead, since those are in (-1,-1) **/
   def on_board (x : Int, y : Int) = {
     (0 <= x) && (x <= 7) && (0 <= y) && (y <= 7);
   }
-
-
+/**Converts an array to a string and hadh it. Used to store board **/
+ def array_to_hashed_string (g : Array[Piece]) :Int = {
+   var st = ""
+   for (i <- 0 to g.size - 1){
+     st += g(i).name + g(i).player.toString + g(i).pos_x.toString + g(i).pos_y.toString
+   }
+   st.hashCode()
+ }
+ /**Checks if a list contains three identic elements**/
+ def contains_triplicates ( positions : List[Int] ) : Boolean = {
+   var l = positions.sorted
+   var cmpt = 0
+   var old_x = -1
+   for ( x <- l if cmpt < 2){
+     if (old_x ==x){
+       cmpt+=1
+     }
+     else {
+       cmpt = 0
+     }
+     old_x =x
+   }
+   cmpt == 2
+  }
   /*Returns the piece on coords(x,y) or None if there is none*/
   def piece_of_coord (x : Int, y : Int, g : Array[Piece], grid_id : Int) : Option[Piece] = {
     g find (p => p.pos_x == x && p.pos_y == y && p.grid == grid_id)
@@ -164,14 +186,14 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     }
   }
 
-  /*Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.*/
+  /**Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.**/
   def move (x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
     var (move_ok, p_arrival, attackers) = pre_move (x_a, y_a, g)
-    if (move_ok) {
+    if (move_ok) { //If the move is valid, we apply the changes
       pos_x = x_a ;
       pos_y = y_a ;
       next_grid
-      if (p_arrival != None) {
+      if (p_arrival != None) { //Killing the piece taken
         p_arrival.get.pos_x = (-1)
         p_arrival.get.pos_y= (-1)
         Constants.nb_boring_moves = 0
@@ -179,7 +201,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
       else {
         Constants.nb_boring_moves+=1
       }
-      var king = Constants.kings (1 - player)
+      var king = Constants.kings (1 - player) //Updating list of king's attackers
       king.attackers = attackers
       name match { //this is needed for castling
         case "rook" => this.asInstanceOf[Rook].has_moved = true

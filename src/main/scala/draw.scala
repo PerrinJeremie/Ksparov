@@ -1089,13 +1089,18 @@ object DrawActions {
 				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le "+ joueur_string +" ne peut plus bouger !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
+			/* Draw if there is no more checkmate possible */
 			case "Nulle" => Constants.game_type match {
 				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : "+ joueur_string +" ne peut plus mater !</html>"
 					Constants.message_drawer.foreground = Color.red
 				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : le "+ joueur_string +" ne peut plus mater !</html>"
 					Constants.message_drawer.foreground = Color.red
 			}
+			/* Draw if 50 moves has been made without a pawn move or a piece taken */
 			case "50coups" => Constants.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 50 coups sans prise ni mouvement de pion ! </html>"
+				Constants.message_drawer.foreground = Color.red
+			/*Draw if a single position occured 3 times in the same game */
+			case "TripleRepetition" => 	Constants.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 3 répétitions de la même position ! </html>"
 				Constants.message_drawer.foreground = Color.red
 
 			case "Promotion" => Constants.curr_player match {

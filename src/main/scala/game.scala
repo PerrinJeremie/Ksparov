@@ -23,7 +23,13 @@ abstract class Player (n : Int) {
     Constants.game_nulle = Nulle.trivial_nulle( Ksparov.board)
     Constants.game_nulle
   }
-  def check_boring_game : Boolean = Constants.nb_boring_moves >= 50
+  def check_boring_game : Boolean = {
+    Constants.game_nulle = (Constants.nb_boring_moves >= 50)
+    Constants.game_nulle
+    }
+  def check_triple_repetition : Boolean = {
+    Constants.game_nulle = Aux.contains_triplicates(Constants.hashed_positions)
+    Constants.game_nulle }
   def ai_promotion : Unit
   var actual_time = 0
   var nb_move = 0
@@ -208,7 +214,7 @@ object Constants {
   var promoted_piece = new Pawn (0, -1, -1, 0)
   var selected_promotion = ""
 
-  /* The type of game chosen : 0 for Human vs Human, 1 for Hhuman vs AI and 2 for AI vs AI. */
+  /* The type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI. */
   var game_type = 0
   var alice_chess = false
 
@@ -230,6 +236,7 @@ object Constants {
   var game_nulle = false
   var game_won = false
   var promotion = false
+  var hashed_positions : List[Int] = List()
 
   var time = 0
 
@@ -281,7 +288,7 @@ class TimeThread extends Thread {
           var player = Constants.players(Constants.curr_player)
           player.actual_time -= 1
           var dimension = Ksparov.frame.bounds.getSize()
-          Ksparov.frame.contents = new DrawBoard.Board 
+          Ksparov.frame.contents = new DrawBoard.Board
           Ksparov.frame.size = dimension
           Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
           if (player.actual_time <= 0 && Constants.game_type != 6) {
@@ -412,6 +419,11 @@ object Ksparov {
             DrawActions.draw_game_messages ("50coups", player)
           }
           else {
+            if (Constants.players(player).check_triple_repetition) {
+              Save.whowins = -1
+              DrawActions.draw_game_messages ("TripleRepetition", player)
+            }
+            else {
         /* Else check if there is check. */
         if (Constants.kings(player).attacked) {
           DrawActions.draw_game_messages ("Check", player)
@@ -435,6 +447,7 @@ object Ksparov {
   }
 }
 }
+}
   /* Called when click on a case of the board, defines the movment action. */
   def play_move {
     /* Checking if the game has been won. */
@@ -447,6 +460,7 @@ object Ksparov {
         Constants.players(Constants.curr_player).nb_move += 1
         Constants.players(Constants.curr_player).actual_time += Constants.periods(Constants.players(Constants.curr_player).actual_period).inc
         Constants.players(Constants.curr_player).moved = false
+        Constants.hashed_positions = (Aux.array_to_hashed_string(Ksparov.board)) :: Constants.hashed_positions
         check_game_status (1 - Constants.curr_player)
         if (Constants.promotion) {
           DrawActions.draw_game_messages ("Promotion", Constants.curr_player)
@@ -467,6 +481,7 @@ object Ksparov {
     /* Instantiate the kings and then the new board. */
     Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     Constants.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
+    Constants.hashed_positions = List()
     DrawBoard.init_grids
     DrawBoard.create_grid_dead
     Ksparov.init_board
