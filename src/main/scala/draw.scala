@@ -763,9 +763,13 @@ object DrawParameters {
 				try {
 					text = Time.int_to_hhmmss(Constants.periods(i).time)
 				} catch {
-					case _ : Throwable => text = "0"
+					case _ : Throwable => text = "00:00:00"
 				}
 				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+				listenTo(keys)
+				reactions += {
+				    case e : KeyTyped => if (!e.char.isDigit && e.char != ':') {e.consume}     
+				}
 			}
 			move_textfields (i) = new TextField {
 				font = Constants.text_font
