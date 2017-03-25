@@ -8,7 +8,7 @@ import sys.process._
 object Save{
 
 
-  /** List of tuple (irock,prom,piece_prom,piece,attack,check,p1,p2) with
+  /** tuple (irock,prom,piece_prom,piece,attack,check,p1,p2) with
    - irock=0 if no roque, = 1 queen-side, = -1 if king-side. 
    - prom = true if promotion occurs, then piece_prom indicates chosen piece.
    - piece : the piece qui which moves (K king ,Q queen ,B bishop ,N knight ,R rook).
@@ -509,7 +509,7 @@ object Load {
     }
   }
 
-  /** reads from file, escaping variations and comments and linefeed.*/
+  /** Reads from file. filename is the name of the file without the .pgn extension. It escapes variations and comments and linefeed character.*/
   def get_list_move_from_file (filename : String)  : Unit = {
 
     infos = Map()
