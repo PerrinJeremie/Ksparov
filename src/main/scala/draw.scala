@@ -21,33 +21,35 @@ import sys.process._
    each background is juste a set of this grid. */
 
 class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
-	for(k <- 0 to i - 1) {
+	for (k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
 			contents += new Label {
-				/* The size of a grid (the same for the entire application) is difined in the object Constants
+				/* The size of a grid (the same for the entire application) is difined in the object Display
 				   in game.scala, idem for paths to resources. */
-				preferredSize = Constants.dim_small
-				minimumSize = Constants.dim_small
-				maximumSize = Constants.dim_small
-				icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
+				preferredSize = Display.dim_small
+				minimumSize = Display.dim_small
+				maximumSize = Display.dim_small
+				icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
 			}
 		}
 	}
 }
 
+/** The label we will use with preferences already set */
 class PrettyBigLabel (text : String) extends Label (text) {
     border = new javax.swing.border.LineBorder (Color.black, 2)
-	preferredSize = Constants.dim_message_drawer
-	minimumSize = Constants.dim_message_drawer
-	maximumSize = Constants.dim_message_drawer
-	font = Constants.text_font
+	preferredSize = Display.dim_message_drawer
+	minimumSize = Display.dim_message_drawer
+	maximumSize = Display.dim_message_drawer
+	font = Display.text_font
 }
 
+/** The button we will use with preferences already set */
 class PrettyBigButton extends Button {
-	font = Constants.text_font
-	preferredSize = Constants.dim_big
-	minimumSize = Constants.dim_big
-	maximumSize = Constants.dim_big
+	font = Display.text_font
+	preferredSize = Display.dim_big
+	minimumSize = Display.dim_big
+	maximumSize = Display.dim_big
 	border = new javax.swing.border.LineBorder (Color.black, 2)
 }
 
@@ -61,11 +63,11 @@ object DrawMenu {
 		action = Action (name) {
 			name match {
 				case "<html><div style='text-align : center;'>Jouer une<br>partie classique</html>" =>
-					Constants.alice_chess = false
+					Ksparov.curr_game.alice_chess = false
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" =>
-					Constants.alice_chess = true
+					Ksparov.curr_game.alice_chess = true
 					Ksparov.frame.contents = new DrawGameSelection.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Charger une partie" =>
@@ -119,7 +121,7 @@ object DrawCharge {
 
 	/** Returns the string passed in argument without the 4 last characters. */
     def shorten(s : String) : String = {
-        return s.substring(Constants.save_path.length, s.length - 4)
+        return s.substring(Display.save_path.length, s.length - 4)
     }
 
     /** Predicates if a string contains at least one space character. */
@@ -149,7 +151,7 @@ object DrawCharge {
         	list_empty = false
     		DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList.sortBy(_.toLowerCase)
     		DrawCharge.scroll = new ComboBox(listgame) {
-    	  	font = Constants.text_font
+    	  	font = Display.text_font
     	  }
         }
     }
@@ -163,19 +165,19 @@ object DrawCharge {
 				case "Game" =>
         	        Load.list_of_moves = List()
         	        Load.get_list_move_from_file(scroll.item)
-        	        Constants.game_type = 6
+        	        Ksparov.curr_game.game_type = 6
         	        Ksparov.init_game(6)
         	        Ksparov.frame.contents = new DrawBoard.Board
 					Ksparov.frame.peer.setLocationRelativeTo(null)
               case "Delete" =>
-                    val res_ = ("rm " + Constants.save_path + scroll.item + ".pgn") !!;
+                    val res_ = ("rm " + Display.save_path + scroll.item + ".pgn") !!;
                     define_listgame
                     Ksparov.frame.contents = new DrawCharge.Dcharge
 			}
 		}
 	}
 
-	/** Defines the labels used in the loading menu, with the characteristics defined in Constants. */
+	/** Defines the labels used in the loading menu, with the characteristics defined in Display. */
 	class PrettyLabel (text : String) extends PrettyBigLabel (text) {
 		background = new Color (200, 200, 200)
 		opaque = true
@@ -230,14 +232,14 @@ object DrawSave {
     /** A text field that stores a certain information conserning the save, to be filled by the user. */
 	class SaveArgument (default : String, col : Int) extends TextField (default, col) {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
-        preferredSize = Constants.dim_message_drawer
-		minimumSize = Constants.dim_message_drawer
-		maximumSize = Constants.dim_message_drawer
-		font = Constants.text_font
+        preferredSize = Display.dim_message_drawer
+		minimumSize = Display.dim_message_drawer
+		maximumSize = Display.dim_message_drawer
+		font = Display.text_font
 		foreground = Color.black
 		listenTo(mouse.clicks)
     	reactions += {
-      		case _: event.MouseClicked =>
+      		case _ : event.MouseClicked =>
       			foreground = Color.black
       			text = ""
     	}
@@ -245,9 +247,9 @@ object DrawSave {
 
     /** A label. */
   	class SaveLabel (str : String) extends PrettyBigLabel (str) {
-		preferredSize = Constants.dim_message_drawer
-		minimumSize = Constants.dim_message_drawer
-		maximumSize = Constants.dim_message_drawer
+		preferredSize = Display.dim_message_drawer
+		minimumSize = Display.dim_message_drawer
+		maximumSize = Display.dim_message_drawer
 		background = new Color (200, 200, 200)
 		opaque = true
   	}
@@ -279,9 +281,9 @@ object DrawSave {
 
     /** Button component which saves game and brings you back : to the menu with "Menu" as argument, to the game with "Game" as argument, to quit Ksparov with "Quit" as argument.*/
 	class ComeBack (text : String, return_type : String) extends PrettyBigButton {
-		preferredSize = Constants.dim_message_drawer
-		minimumSize = Constants.dim_message_drawer
-		maximumSize = Constants.dim_message_drawer
+		preferredSize = Display.dim_message_drawer
+		minimumSize = Display.dim_message_drawer
+		maximumSize = Display.dim_message_drawer
 		action = Action (text) {
 			Save.write_to_file(textFileName.text.replaceAllLiterally(" ","_"), textEvent.text, textSite.text, textDate.text, textRound.text, textWhite.text, textBlack.text) match {
             	case 0 =>
@@ -289,12 +291,12 @@ object DrawSave {
 					return_type match {
 						case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 							Ksparov.frame.peer.setLocationRelativeTo(null)
-						case "Game" => Constants.timer = new TimeThread
-    						Constants.ai_move = new AIMoveThread
-    						Constants.thread_in_life = true
+						case "Game" => Ksparov.timer = new Time.TimeThread
+    						Ksparov.ai_move = new AIMoveThread
+    						Ksparov.curr_game.thread_in_life = true
     						Ksparov.frame.contents = new DrawBoard.Board
-	    					Constants.timer.start
-    						Constants.ai_move.start
+	    					Ksparov.timer.start
+    						Ksparov.ai_move.start
 						case "Quit" => Ksparov.frame.dispose()
 				}
             	case -1 =>
@@ -311,9 +313,9 @@ object DrawSave {
 
     /** Button component brings you back to the game without saving. */
 	class CancelButton extends PrettyBigButton {
-		preferredSize = Constants.dim_message_drawer
-		minimumSize = Constants.dim_message_drawer
-		maximumSize = Constants.dim_message_drawer
+		preferredSize = Display.dim_message_drawer
+		minimumSize = Display.dim_message_drawer
+		maximumSize = Display.dim_message_drawer
 		action = Action ("Annuler") {
 			Ksparov.frame.contents = new DrawBoard.Board
 			Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -322,9 +324,9 @@ object DrawSave {
 
     /** Button switches between simple-save (only choice is filename), and advanced-save (all choices). */
 	class SwitchButton (switch_type : String) extends PrettyBigButton {
-		preferredSize = Constants.dim_message_drawer
-		minimumSize = Constants.dim_message_drawer
-		maximumSize = Constants.dim_message_drawer
+		preferredSize = Display.dim_message_drawer
+		minimumSize = Display.dim_message_drawer
+		maximumSize = Display.dim_message_drawer
 		if (switch_type == "AdvancedSave") {
 			action = Action ("<html><div style='text-align : center;'>Passer en mode<br>sauvegarde avancée</html>") {
 				Ksparov.frame.contents = new DrawSave.AdvancedSave
@@ -429,32 +431,33 @@ object DrawSave {
 		layout (new BorderPanel {
 			layout (new BackgroundCase (13, 1)) = West
 			layout (new LeftAdvancedGrid) = East
-			}) = West
+		}) = West
 		layout (new BorderPanel {
 			layout (new BackgroundCase (13, 1)) = West
 			layout (new CenterAdvancedGrid) = East
-			}) = Center
+		}) = Center
 		layout (new BorderPanel {
 			layout (new BackgroundCase (13, 1)) = West
 			layout (new RightAdvancedGrid) = Center
 			layout (new BackgroundCase (13, 1)) = East
-			}) = East
+		}) = East
 	}
 }
 
-/* The window to choose and modify the parameters of the application : type of texture and type of pieces.
-   Every parameter is recorded in the src/main/resources/Parameters file so they are kept from one gmae to the other.
-   Other options will be added soon. */
+/** Contains all classes to draw parameters selections.
+   Parameters are saved in src/main/resources/Parameters */
 object DrawParameters {
 
+	/** Defines button for the selection of the sub menu. */
 	class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
-		preferredSize = new Dimension (Constants.base_size, Constants.base_size)
-		maximumSize = new Dimension (Constants.base_size, Constants.base_size)
-		minimumSize = new Dimension (Constants.base_size, Constants.base_size)
+		preferredSize = new Dimension (Display.base_size, Display.base_size)
+		maximumSize = new Dimension (Display.base_size, Display.base_size)
+		minimumSize = new Dimension (Display.base_size, Display.base_size)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = new Action ("") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + "parameter_sub_menu" + id + ".png")
+			icon = new javax.swing.ImageIcon(Display.resources_path + "parameter_sub_menu" + id + ".png")
 			background = new Color (0, 0, 0)
+			/* The border is red for the selected sub-menu. */
 			if (current_menu) {
 				border = new javax.swing.border.LineBorder (Color.red, 2)
 			}
@@ -464,6 +467,7 @@ object DrawParameters {
 		}
 	}
 
+	/** Defines the column with all buttons for sub-menu and background cases elsewhere. */
 	class ChoiceColumn (height : Int, current_menu : Int) extends GridPanel (height, 2) {
 		for (i <- 0 to height - 1) {
 			for (j <- 0 to 1) {
@@ -481,33 +485,35 @@ object DrawParameters {
 		}
 	}
 
+	/** Defines the button to apply parameters and come back to the main menu. */
 	class ComeBack (sub_menu_id : Int) extends Button {
-		font = Constants.text_font
-		preferredSize = new Dimension (Constants.base_size * 9, Constants.base_size)
+		font = Display.text_font
+		preferredSize = new Dimension (Display.base_size * 9, Display.base_size)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
-		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
+		action = Action("Appliquer les changements et revenir au menu principal") {
 			sub_menu_id match {
 				case 3 => 
-					val correct_time = """([\d][\d]):([0-5][0-9]):([0-5][0-9])""".r
-					var continue = true
-					for (i <- 0 to Constants.nb_period - 1) {
+					/** The regex used to check if time for every period is well formated. */
+					val time_regex = """([\d][\d]):([0-5][0-9]):([0-5][0-9])""".r
+					var correct_time = true
+					for (i <- 0 to Ksparov.curr_game.nb_period - 1) {
 						time_textfields(i).text match {
-							case correct_time (_*) => ()
+							case time_regex (_*) => ()
 							case _ => time_textfields(i).text = "hh:mm:ss" 
-								continue = false
+								correct_time = false
 						}
 					}
-					if (continue) {
-						Constants.periods = new Array [Time.Period] (Constants.nb_period)
-						for (i <- 0 to Constants.nb_period - 1) {
-							Constants.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
+					if (correct_time) {
+						Ksparov.curr_game.periods = new Array [Time.Period] (Ksparov.curr_game.nb_period)
+						for (i <- 0 to Ksparov.curr_game.nb_period - 1) {
+							Ksparov.curr_game.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
 						}
-						Constants.write_parameters
+						Parameters.write
 						Ksparov.frame.contents = new DrawMenu.Menu
 						Ksparov.frame.peer.setLocationRelativeTo(null)
 					}
 				case 2 =>
-					Constants.write_parameters
+					Parameters.write
 					Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case 1 => 
@@ -519,23 +525,24 @@ object DrawParameters {
 
 	/* Buttons for the texture choice, the parameter defines which texture the button stands for. */
 	class TextureOption (number : Int) extends Button {
-		preferredSize = Constants.dim_small
+		val pattern = new Regex("\\d")
+		preferredSize = Display.dim_small
 		/* The border is red for the actual parameter and black for other. The regural expression
 		   get the number in the texture path. */
-		if ((Constants.pattern findAllIn Constants.texture_path).mkString.toInt == number) {
+		if ((pattern findAllIn Display.texture_path).mkString.toInt == number) {
 			border = new javax.swing.border.LineBorder (Color.red, 2)
 		} else {
 			border = new javax.swing.border.LineBorder (Color.black, 2)
 		}
 		action = new Action("") {
 			/* The action is different for other button because to have an icon on a button, you have to put in the action. */
-			icon = new javax.swing.ImageIcon(Constants.resources_path + "Texture_small_" + number.toString + ".png")
+			icon = new javax.swing.ImageIcon(Display.resources_path + "Texture_small_" + number.toString + ".png")
 			def apply = {
 				/* When the button is pushed, we write the new parameters in the src/main/resources/Parameters file.
 				   After doing this, we apply the new parameters to that choice is dynamic. */
-				Constants.texture_path = "Texture_small_" + number.toString + ".png"
-				Constants.write_parameters
-				Constants.apply_parameters
+				Display.texture_path = "Texture_small_" + number.toString + ".png"
+				Parameters.write
+				Parameters.apply
 				Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 			}
 		}
@@ -543,18 +550,19 @@ object DrawParameters {
 
 	/* Button fot the piece type choice, excatly the same as before. */
 	class PieceOption (number : Int) extends Button {
-		preferredSize = Constants.dim_small
-		if ((Constants.pattern findAllIn Constants.pieces_path).mkString.toInt == number) {
+		val pattern = new Regex("\\d")
+		preferredSize = Display.dim_small
+		if ((pattern findAllIn Display.pieces_path).mkString.toInt == number) {
 			border = new javax.swing.border.LineBorder (Color.red, 2)
 		} else {
 			border = new javax.swing.border.LineBorder (Color.black, 2)
 		}
 		action = new Action ("") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
+			icon = new javax.swing.ImageIcon(Display.resources_path + "Pieces/" + number.toString + "/1/King.png")
 			def apply {
-				Constants.pieces_path = "Pieces/" + number.toString + "/"
-				Constants.write_parameters
-				Constants.apply_parameters
+				Display.pieces_path = "Pieces/" + number.toString + "/"
+				Parameters.write
+				Parameters.apply
 				Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 			}
 		}
@@ -583,7 +591,7 @@ object DrawParameters {
 	}
 
 	class ChoiceMessage (text : String) extends Label (text) {
-		font = Constants.text_font
+		font = Display.text_font
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		background = new Color (200, 200, 200)
 		opaque = true
@@ -612,27 +620,27 @@ object DrawParameters {
 
 	class Increment (variable : String, sub_menu_id : Int) extends GridPanel (1, 3) {
 		class IncButton (sign : String) extends Button {
-			preferredSize = Constants.dim_small
-			maximumSize = Constants.dim_small
-			minimumSize = Constants.dim_small
-			font = Constants.text_font
+			preferredSize = Display.dim_small
+			maximumSize = Display.dim_small
+			minimumSize = Display.dim_small
+			font = Display.text_font
 			action = Action (sign) {
 				if (sign == "-") {
 					variable match {
-						case "ai_speed" => Constants.ai_speed = math.max (0, Constants.ai_speed - 100)
-						case "nb_alice_board" => Constants.nb_alice_board = math.max (2, Constants.nb_alice_board - 1)
-						case "nb_period" => Constants.nb_period = math.max (0, Constants.nb_period - 1)
-							if (Constants.nb_period == 0) {
-								Constants.clock_available = false
+						case "ai_speed" => Ksparov.curr_game.ai_speed = math.max (0, Ksparov.curr_game.ai_speed - 100)
+						case "nb_alice_board" => Ksparov.curr_game.nb_alice_board = math.max (2, Ksparov.curr_game.nb_alice_board - 1)
+						case "nb_period" => Ksparov.curr_game.nb_period = math.max (0, Ksparov.curr_game.nb_period - 1)
+							if (Ksparov.curr_game.nb_period == 0) {
+								Ksparov.curr_game.clock_available = false
 							} else {
-								Constants.clock_available = true
+								Ksparov.curr_game.clock_available = true
 							}
 					}
 				} else {
 					variable match {
-						case "ai_speed" => Constants.ai_speed += 100
-						case "nb_alice_board" => Constants.nb_alice_board += 1
-						case "nb_period" => Constants.nb_period += 1
+						case "ai_speed" => Ksparov.curr_game.ai_speed += 100
+						case "nb_alice_board" => Ksparov.curr_game.nb_alice_board += 1
+						case "nb_period" => Ksparov.curr_game.nb_period += 1
 					}
 				}
 				Ksparov.frame.contents = new DrawParameters.SubMenus (sub_menu_id)
@@ -641,44 +649,44 @@ object DrawParameters {
 
 		contents += new IncButton ("-")
 		contents += new Label {
-			preferredSize = Constants.dim_small
+			preferredSize = Display.dim_small
 			variable match {
-				case "ai_speed" => text = Constants.ai_speed.toString
-				case "nb_alice_board" => text = Constants.nb_alice_board.toString
-				case "nb_period" => text = Constants.nb_period.toString
+				case "ai_speed" => text = Ksparov.curr_game.ai_speed.toString
+				case "nb_alice_board" => text = Ksparov.curr_game.nb_alice_board.toString
+				case "nb_period" => text = Ksparov.curr_game.nb_period.toString
 			}
 		}
 		contents += new IncButton ("+")
 	}
 
 	class SpeedAI extends BorderPanel {
-		layout (new BackgroundCase (1, 2)) = West
+		layout (new BackgroundCase (1, 1)) = West
 
 		layout (new GridPanel (1, 2) {
 			contents += new Label {
-				preferredSize = Constants.dim_big
-				font = Constants.text_font
+				preferredSize = Display.dim_big
+				font = Display.text_font
 				text = "<html><div style='text-align : center;'>Vitesse de jeu de l'IA<br>en milliseconde</html>"
 			}
 			contents += new Increment ("ai_speed", 2)
 		}) = Center
 
-		layout (new BackgroundCase (1, 1)) = East
+		layout (new BackgroundCase (1, 2)) = East
 	}
 
 	class NbAliceBoard extends BorderPanel {
-		layout (new BackgroundCase (1, 2)) = West
+		layout (new BackgroundCase (1, 1)) = West
 
 		layout (new GridPanel (1, 2) {
 			contents += new Label {
-				preferredSize = Constants.dim_big
-				font = Constants.text_font
+				preferredSize = Display.dim_big
+				font = Display.text_font
 				text = "<html><div style='text-align : center;'>Nombre de plateau<br>de jeu d'Alice</html>"
 			}
 			contents += new Increment ("nb_alice_board", 2)
 		}) = Center
 
-		layout (new BackgroundCase (1, 1)) = East
+		layout (new BackgroundCase (1, 2)) = East
 	}
 
 	class PlayabilitySubMenu extends BorderPanel {
@@ -700,17 +708,17 @@ object DrawParameters {
 		layout (new BackgroundCase (7, 1)) = East	
 	}
 
-	var time_textfields = new Array [TextField] (Constants.nb_period)
-	var move_textfields = new Array [TextField] (Constants.nb_period)
-	var inc_textfields = new Array [TextField] (Constants.nb_period)
+	var time_textfields = new Array [TextField] (Ksparov.curr_game.nb_period)
+	var move_textfields = new Array [TextField] (Ksparov.curr_game.nb_period)
+	var inc_textfields = new Array [TextField] (Ksparov.curr_game.nb_period)
 
 	class NbPeriodChoice extends BorderPanel {
 		layout (new BackgroundCase (1, 2)) = West
 
 		layout (new GridPanel (1, 2) {
 			contents += new Label {
-				preferredSize = Constants.dim_big
-				font = Constants.text_font
+				preferredSize = Display.dim_big
+				font = Display.text_font
 				text = "Nombre de période"
 			}
 			contents += new Increment ("nb_period", 3)
@@ -722,21 +730,21 @@ object DrawParameters {
 	class PeriodOptions (id : Int) extends BorderPanel {
 		layout (new BorderPanel {
 			layout (new Label ("<html><div style='text-align : center;'>Durée de la<br>période au<br>format hh:mm:ss</html>") {
-				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+				preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
 			}) = West
 			layout (time_textfields (id)) = East
 		}) = West
 
 		layout (new BorderPanel {
 			layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {
-				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+				preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
 			}) = West
 			layout (move_textfields (id)) = East
 		}) = Center
 
 		layout (new BorderPanel {
 			layout (new Label ("<html><div style='text-align : center;'>Incrément après<br>un coup<br>en seconde</html>") {
-				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+				preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
 			}) = West
 			layout (inc_textfields (id)) = Center
 		}) = East
@@ -759,39 +767,39 @@ object DrawParameters {
 
 		for (i <- 0 to nb_period - 1) {
 			time_textfields (i) = new TextField {
-				font = Constants.text_font
+				font = Display.text_font
 				try {
-					text = Time.int_to_hhmmss(Constants.periods(i).time)
+					text = Time.int_to_hhmmss(Ksparov.curr_game.periods(i).time)
 				} catch {
 					case _ : Throwable => text = "00:00:00"
 				}
-				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+				preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
 				listenTo(keys)
 				reactions += {
 				    case e : KeyTyped => if (!e.char.isDigit && e.char != ':') {e.consume}     
 				}
 			}
 			move_textfields (i) = new TextField {
-				font = Constants.text_font
+				font = Display.text_font
 				try {
-					text = Constants.periods(i).nb_move.toString
+					text = Ksparov.curr_game.periods(i).nb_move.toString
 				} catch {
 					case _ : Throwable => text = "0"
 				}
-				preferredSize = Constants.dim_small
+				preferredSize = Display.dim_small
 				listenTo(keys)
 				reactions += {
 				    case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
 				}
 			}
 			inc_textfields (i) = new TextField {
-				font = Constants.text_font
+				font = Display.text_font
 				try {
-					text = Constants.periods(i).inc.toString
+					text = Ksparov.curr_game.periods(i).inc.toString
 				} catch {
 					case _ : Throwable => text = "0"
 				}
-				preferredSize = Constants.dim_small
+				preferredSize = Display.dim_small
 				listenTo(keys)
 				reactions += {
 				    case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
@@ -809,7 +817,7 @@ object DrawParameters {
 				layout (new BackgroundCase (1, 10)) = North
 				layout (new NbPeriodChoice) = South
 			}) = North
-			if (Constants.nb_period == 0) {
+			if (Ksparov.curr_game.nb_period == 0) {
 				layout (new BackgroundCase (3, 10)) = Center
 			} else {
 				layout (new Periods (nb_period)) = Center
@@ -828,7 +836,7 @@ object DrawParameters {
 		id match {
 			case 1 => contents += new DisplaySubMenu
 			case 2 => contents += new PlayabilitySubMenu
-			case 3 => contents += new ClockSubMenu (Constants.nb_period)
+			case 3 => contents += new ClockSubMenu (Ksparov.curr_game.nb_period)
 		}
 	}
 
@@ -838,21 +846,21 @@ object DrawParameters {
 object DrawGameSelection {
 
 	class MessageDrawer extends Label {
-		font = Constants.text_font
+		font = Display.text_font
 		background = new Color (200, 200, 200)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		opaque = true
-		if (Constants.alice_chess) {
+		if (Ksparov.curr_game.alice_chess) {
 			text = "<html><div style='text-align : center;'>Vous avez choisi de jouer aux échecs d'Alice,<br>veuillez sélectionner le type de jeu !</html>"
 		} else {
 			text = "<html><div style='text-align : center;'>Vous avez choisi de jouer aux échecs classiques,<br>veuillez sélectionner le type de jeu !</html>"
 		}
 	}
 
-	/* The button for the choice selection : change the value of Constants.game_type when pressed. */
+	/* The button for the choice selection : change the value of Ksparov.curr_game.game_type when pressed. */
 	class Option (name : String, num : Int) extends PrettyBigButton {
 		action = Action (name) {
-			Constants.game_type = num
+			Ksparov.curr_game.game_type = num
 			/* Launched a game. */
 		    Ksparov.init_game (num)
     		Ksparov.frame.contents = new DrawBoard.Board
@@ -876,7 +884,7 @@ object DrawGameSelection {
 					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4)
 					contents += new BackgroundCase (1, 3)
 					contents += new Button {
-						font = Constants.text_font
+						font = Display.text_font
 						border = new javax.swing.border.LineBorder (Color.black, 2)
 						action = Action ("Revenir au menu") {
 							Ksparov.frame.contents = new DrawMenu.Menu
@@ -918,95 +926,94 @@ object DrawBoard {
 		background = new Color (player * 255, player * 255, player * 255)
 		opaque = true
 	    border = new javax.swing.border.LineBorder (Color.black, 2)
-		preferredSize = Constants.dim_big
-		minimumSize = Constants.dim_big
-		maximumSize = Constants.dim_big
-		font = Constants.text_font
-		if (Constants.players(player).actual_period + 1 == Constants.periods.length) {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Dernière période</html>"
+		preferredSize = Display.dim_big
+		minimumSize = Display.dim_big
+		maximumSize = Display.dim_big
+		font = Display.text_font
+		if (Ksparov.curr_game.players(player).actual_period + 1 == Ksparov.curr_game.periods.length) {
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
 		} else {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Constants.players(player).actual_time) + "<br>" + "Encore " + (math.max(Constants.periods(Constants.players(player).actual_period).nb_move - Constants.players(player).nb_move, 0)) + " coups </html>"
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Ksparov.curr_game.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
 		}
 	}
 
 	/* We need here background cases with label in order to have letters and numbers around the board. */
 	class BackgroundCaseWithLabel (label : String) extends Label (label) {
-		preferredSize = Constants.dim_small
-		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
+		preferredSize = Display.dim_small
+		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
 		/* This option make the superposition of text and icon possible. */
 		horizontalTextPosition = Alignment.Center
-		foreground = Constants.text_color
+		foreground = Display.text_color
 	}
 
 	/* These cases just have an icon a piece (except king), they are on the left and right side of the bord
 	    and they are used to count the number of each dead piece for each player. */
 	class DeadCase (player : Int, piece : String) extends Button {
-		preferredSize = Constants.dim_small
+		preferredSize = Display.dim_small
 		/* They are colored in a grey close to the lead color. */
 		background = new Color (121, 128, 129)
 		action = new Action ("") {
-			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player.toString + "/" + piece + ".png")
-			disabledIcon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + player.toString + "/" + piece + ".png")
+			icon = new javax.swing.ImageIcon(Display.resources_path + Display.pieces_path + player.toString + "/" + piece + ".png")
+			disabledIcon = new javax.swing.ImageIcon(Display.resources_path + Display.pieces_path + player.toString + "/" + piece + ".png")
 			border = new javax.swing.border.LineBorder (Color.black, 1)
 			enabled = false
 			def apply = {
-				Constants.selected_promotion = piece
-				Ksparov.promotion (Constants.curr_player)
+				Ksparov.curr_game.selected_promotion = piece
+				Ksparov.promotion (Ksparov.curr_game.curr_player)
 			}
 		}
 	}
 
 	/* These cases are the just next to the previous one, they are numbers of dead pieces. */
 	class NumDeadCase (player : Int, number : Int) extends Label {
-		preferredSize = Constants.dim_small
-		icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
+		preferredSize = Display.dim_small
+		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
 		horizontalTextPosition = Alignment.Center
-		foreground = Constants.text_color
-		font = Constants.num_dead_font
+		foreground = Display.text_color
+		font = Display.num_dead_font
 		text = number.toString
 	}
 
 	/* The case of the board, definend by the coordinates. They are alternatively black and white
 	   depending on their position. They go from (0, 0) to (7, 7). */
 	class Case (x : Int, y : Int, grid_id : Int) extends Button {
-		preferredSize = Constants.dim_small
+		preferredSize = Display.dim_small
 		if ((x + y) % 2 == 0) {
 			background = Color.black
 		} else {
 			background = Color.white
   		}
 		action = new Action ("") {
-			/*icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + "1/Queen.png")*/
 			def apply = {
-				/* When we click one a case, Constants.selected_case receive it in a one dimension way.
+				/* When we click one a case, Ksparov.curr_game.selected_case receive it in a one dimension way.
 				   Then we launched the movment method in game.scala. */
-				Constants.selected_case = x + y * 8
-				Constants.selected_grid = grid_id
+				Ksparov.curr_game.selected_case = x + y * 8
+				Ksparov.curr_game.selected_grid = grid_id
                 Ksparov.play_move
 			}
 		}
 	}
 
-	/* The board with its 63 cases, it is represented as an Array in Constants.grid_cases,
+	/* The board with its 63 cases, it is represented as an Array in Ksparov.curr_game.grid_cases,
 	   we need it in an array to change the icon variable depending on board.
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 	def init_grids {
-		if (Constants.alice_chess) {
-			Constants.nb_grid = Constants.nb_alice_board
+		if (Ksparov.curr_game.alice_chess) {
+			Ksparov.curr_game.nb_grid = Ksparov.curr_game.nb_alice_board
 		} else {
-			Constants.nb_grid = 1
+			Ksparov.curr_game.nb_grid = 1
 		}
-		Constants.grids = new Array [Array[DrawBoard.Case]] (Constants.nb_grid)
-		for(i <- 0 to Constants.nb_grid - 1) {
-			Constants.grids (i) = new Array [Case] (Constants.nb_case_board * Constants.nb_case_board)
+		Ksparov.curr_game.grids = new Array [Array[DrawBoard.Case]] (Ksparov.curr_game.nb_grid)
+		for(i <- 0 to Ksparov.curr_game.nb_grid - 1) {
+			Ksparov.curr_game.grids (i) = new Array [Case] (Ksparov.curr_game.nb_case_board * Ksparov.curr_game.nb_case_board)
 		}
 	}
 
 	def create_grid_cases {
-		for (k <- 0 to Constants.nb_grid - 1) {
-			for (i <- 0 to Constants.nb_case_board - 1) {
-				for (j <- 0 to Constants.nb_case_board - 1) {
-					Constants.grids (k) (i + j * 8) = new Case (i, j, k)
+		for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
+			for (i <- 0 to Ksparov.curr_game.nb_case_board - 1) {
+				for (j <- 0 to Ksparov.curr_game.nb_case_board - 1) {
+					Ksparov.curr_game.grids (k) (i + j * 8) = new Case (i, j, k)
 				}
 			}
 		}
@@ -1014,17 +1021,17 @@ object DrawBoard {
 
 	def create_grid_dead {
 		for (j <- 0 to 1) {
-			Constants.promotion_buttons(j)(0) = new DeadCase (j, "Queen")
-			Constants.promotion_buttons(j)(1) = new DeadCase (j, "Bishop")
-			Constants.promotion_buttons(j)(2) = new DeadCase (j, "Knight")
-			Constants.promotion_buttons(j)(3) = new DeadCase (j, "Rook")
+			Ksparov.curr_game.promotion_buttons(j)(0) = new DeadCase (j, "Queen")
+			Ksparov.curr_game.promotion_buttons(j)(1) = new DeadCase (j, "Bishop")
+			Ksparov.curr_game.promotion_buttons(j)(2) = new DeadCase (j, "Knight")
+			Ksparov.curr_game.promotion_buttons(j)(3) = new DeadCase (j, "Rook")
 		}
 	}
 
 	/* The center grid with the board and background with label around. */
-	class Simple_Grid (grid_id : Int) extends GridPanel (Constants.nb_case_board + 2, Constants.nb_case_board + 1) {
-		for (i <- -1 to Constants.nb_case_board) {
-			if (i == - 1 || i == Constants.nb_case_board) {
+	class Simple_Grid (grid_id : Int) extends GridPanel (Ksparov.curr_game.nb_case_board + 2, Ksparov.curr_game.nb_case_board + 1) {
+		for (i <- -1 to Ksparov.curr_game.nb_case_board) {
+			if (i == - 1 || i == Ksparov.curr_game.nb_case_board) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCaseWithLabel ("A")
 				contents += new BackgroundCaseWithLabel ("B")
@@ -1035,20 +1042,20 @@ object DrawBoard {
 				contents += new BackgroundCaseWithLabel ("G")
 				contents += new BackgroundCaseWithLabel ("H")
 			} else {
-				for (j <- -1 to Constants.nb_case_board - 1) {
+				for (j <- -1 to Ksparov.curr_game.nb_case_board - 1) {
 					if (j == -1) {
 						contents += new BackgroundCaseWithLabel ((8 - i).toString)
 					} else {
 						/* Using 7 - i here because we want "classic" axis from left to right and from bottom to top. */
-						contents += Constants.grids (grid_id) (j + (7 - i) * 8)
+						contents += Ksparov.curr_game.grids (grid_id) (j + (7 - i) * 8)
 					}
 				}
 			}
 		}
 	}
 
-	class Number_column extends GridPanel (Constants.nb_case_board + 2, 1) {
-		for (i <- 0 to Constants.nb_case_board + 1) {
+	class Number_column extends GridPanel (Ksparov.curr_game.nb_case_board + 2, 1) {
+		for (i <- 0 to Ksparov.curr_game.nb_case_board + 1) {
 			if (i < 1 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 			} else {
@@ -1057,8 +1064,8 @@ object DrawBoard {
 		}
 	}
 
-	class Grid extends GridPanel (1, Constants.nb_grid) {
-		for (k <- 0 to Constants.nb_grid - 1) {
+	class Grid extends GridPanel (1, Ksparov.curr_game.nb_grid) {
+		for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 			contents += new Simple_Grid (k)
 		}
 	}
@@ -1066,33 +1073,33 @@ object DrawBoard {
 	/* The board has a menu on his top defined here. */
 	class Header extends GridPanel (2, 2) {
 		contents += new Button {
-		font = Constants.text_font
+		font = Display.text_font
 			action = Action ("Recommencer une partie") {
-				Constants.thread_in_life = false
+				Ksparov.curr_game.thread_in_life = false
 	    		Ksparov.frame.contents = new DrawGameSelection.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 		contents += new Button {
-		font = Constants.text_font
+		font = Display.text_font
 			action = Action ("Sauvegarder la partie") {
-				Constants.thread_in_life = false
+				Ksparov.curr_game.thread_in_life = false
 				Ksparov.frame.contents = new DrawSave.SimpleSave
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 		contents += new Button {
-		font = Constants.text_font
+		font = Display.text_font
 			action = Action ("Revenir au menu principal") {
-				Constants.thread_in_life = false
+				Ksparov.curr_game.thread_in_life = false
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
 		contents += new Button {
-		font = Constants.text_font
+		font = Display.text_font
 			action = Action ("Quitter Ksparov") {
-				Constants.thread_in_life = false
+				Ksparov.curr_game.thread_in_life = false
 	    		Ksparov.frame.dispose()
 			}
 		}
@@ -1100,8 +1107,8 @@ object DrawBoard {
 
 	/* Behind the board, there is the message drawer, which is a label where messages like "check", "mat"... are displayed. */
 	class MessageDrawer (message : String) extends Label (message) {
-		font = Constants.text_font
-		preferredSize = Constants.dim_message_drawer
+		font = Display.text_font
+		preferredSize = Display.dim_message_drawer
 		background = new Color (220, 220, 220)
 		opaque = true
 		foreground = Color.black
@@ -1115,13 +1122,13 @@ object DrawBoard {
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
-			layout (if (Constants.clock_available) {
+			layout (if (Ksparov.curr_game.clock_available) {
 					new Clock (1)
 				} else {
 					new BackgroundCase (1, 3)
 				}) = West
-			layout (Constants.message_drawer) = Center
-			layout (if (Constants.clock_available) {
+			layout (Ksparov.curr_game.message_drawer) = Center
+			layout (if (Ksparov.curr_game.clock_available) {
 					new Clock (0)
 				} else {
 					new BackgroundCase (1, 3)
@@ -1130,58 +1137,58 @@ object DrawBoard {
 	}
 
 	class PlayButton (player : Int) extends Button {
-		preferredSize = Constants.dim_small
+		preferredSize = Display.dim_small
 		action = new Action ("") {
 			enabled = false
 			borderPainted = false
-			icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
-			disabledIcon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
-			if (Constants.game_type == 6) {
+			icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
+			disabledIcon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
+			if (Ksparov.curr_game.game_type == 6) {
 				enabled = true
 				background = Color.red
 				borderPainted = true
 				border = new javax.swing.border.LineBorder (Color.black, 1)
-				icon = new javax.swing.ImageIcon(Constants.resources_path + "Play_button" + player.toString + ".png")
+				icon = new javax.swing.ImageIcon(Display.resources_path + "Play_button" + player.toString + ".png")
 			}
 			def apply {
-				Constants.players (player) = new Human (player)
-				Constants.players (1 - player) = new AI (1 - player)
+				Ksparov.curr_game.players (player) = new Human (player)
+				Ksparov.curr_game.players (1 - player) = new AI (1 - player)
 				for (k <- 0 to 1) {
-					Constants.play_buttons(k).enabled = false
-					Constants.play_buttons(k).borderPainted = false
-					Constants.play_buttons(k).icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.texture_path)
+					Ksparov.curr_game.play_buttons(k).enabled = false
+					Ksparov.curr_game.play_buttons(k).borderPainted = false
+					Ksparov.curr_game.play_buttons(k).icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
 				}
 			}
 		}
 	}
 
 	/* Border grid with dead pieces for the white player. */
-	class Border1 extends GridPanel (Constants.nb_case_board + 2, 3) {
-		for(i <- 0 to Constants.nb_case_board + 1) {
+	class Border1 extends GridPanel (Ksparov.curr_game.nb_case_board + 2, 3) {
+		for(i <- 0 to Ksparov.curr_game.nb_case_board + 1) {
 			i match {
 				case 3 =>
-					contents += Constants.play_buttons (1)
+					contents += Ksparov.curr_game.play_buttons (1)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 				case 4 =>
-					contents += Constants.promotion_buttons(1)(0)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(0))
+					contents += Ksparov.curr_game.promotion_buttons(1)(0)
+					contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(1)(0))
 					contents += new BackgroundCase (1, 1)
 				case 5 =>
-					contents += Constants.promotion_buttons(1)(1)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(1))
+					contents += Ksparov.curr_game.promotion_buttons(1)(1)
+					contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(1)(1))
 					contents += new BackgroundCase (1, 1)
 				case 6 =>
-					contents += Constants.promotion_buttons(1)(2)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(2))
+					contents += Ksparov.curr_game.promotion_buttons(1)(2)
+					contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(1)(2))
 					contents += new BackgroundCase (1, 1)
 				case 7 =>
-					contents += Constants.promotion_buttons(1)(3)
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(3))
+					contents += Ksparov.curr_game.promotion_buttons(1)(3)
+					contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(1)(3))
 					contents += new BackgroundCase (1, 1)
 				case 8 =>
 					contents += new DeadCase (1, "Pawn")
-					contents += new NumDeadCase (1, Constants.dead_pieces(1)(4))
+					contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(1)(4))
 					contents += new BackgroundCase (1, 1)
 				case _ =>
 					contents += new BackgroundCase (1, 1)
@@ -1192,8 +1199,8 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the black player. */
-	class Border0 extends GridPanel (Constants.nb_case_board + 2, 4) {
-		for(i <- 0 to Constants.nb_case_board + 1) {
+	class Border0 extends GridPanel (Ksparov.curr_game.nb_case_board + 2, 4) {
+		for(i <- 0 to Ksparov.curr_game.nb_case_board + 1) {
 			if (i < 1 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
@@ -1209,33 +1216,33 @@ object DrawBoard {
 					case 1 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
-						contents += new NumDeadCase (1, Constants.dead_pieces(0)(0))
-						contents += Constants.promotion_buttons(0)(0)
+						contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(0)(0))
+						contents += Ksparov.curr_game.promotion_buttons(0)(0)
 					case 2 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
-						contents += new NumDeadCase (1, Constants.dead_pieces(0)(1))
-						contents += Constants.promotion_buttons(0)(1)
+						contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(0)(1))
+						contents += Ksparov.curr_game.promotion_buttons(0)(1)
 					case 3 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
-						contents += new NumDeadCase (1, Constants.dead_pieces(0)(2))
-						contents += Constants.promotion_buttons(0)(2)
+						contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(0)(2))
+						contents += Ksparov.curr_game.promotion_buttons(0)(2)
 					case 4 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
-						contents += new NumDeadCase (1, Constants.dead_pieces(0)(3))
-						contents += Constants.promotion_buttons(0)(3)
+						contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(0)(3))
+						contents += Ksparov.curr_game.promotion_buttons(0)(3)
 					case 5 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
-						contents += new NumDeadCase (1, Constants.dead_pieces(0)(4))
+						contents += new NumDeadCase (1, Ksparov.curr_game.dead_pieces(0)(4))
 						contents += new DeadCase (0, "Pawn")
 					case 6 =>
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
-						contents += Constants.play_buttons (0)
+						contents += Ksparov.curr_game.play_buttons (0)
 					}
 				}
 			}
@@ -1258,7 +1265,7 @@ object DrawActions {
 	/* Draw a game board (an array of pieces) on the chessboard. */
 	def draw_game_board (game_board : Array[Piece]) {
 		/* Reinitializing the dead piece array to avoid mutli-counting. */
-		Constants.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+		Ksparov.curr_game.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 		/* Initilizing the array of cases. */
 		DrawBoard.create_grid_cases
 		/* For each piece in the game board. */
@@ -1268,63 +1275,62 @@ object DrawActions {
 			/* If the piece is alive, update the icon of the case of its position. */
 			if (coord >= 0) {
 				var piece_path = game_board(i).piece_path
-				Constants.grids(game_board(i).grid)(coord).action.icon = new javax.swing.ImageIcon(Constants.resources_path + Constants.pieces_path + game_board(i).player.toString + "/" + piece_path)
+				Ksparov.curr_game.grids(game_board(i).grid)(coord).action.icon = new javax.swing.ImageIcon(Display.resources_path + Display.pieces_path + game_board(i).player.toString + "/" + piece_path)
 			/* Else, if the piece is dead, update the array which counts the number of dead piece for each players. */
 			} else {
 				game_board(i).name match {
-					case "queen" => Constants.dead_pieces(game_board(i).player)(0) += 1
-					case "bishop" => Constants.dead_pieces(game_board(i).player)(1) += 1
-					case "knight" => Constants.dead_pieces(game_board(i).player)(2) += 1
-					case "rook" => Constants.dead_pieces(game_board(i).player)(3) += 1
-					case "pawn" => Constants.dead_pieces(game_board(i).player)(4) += 1
+					case "queen" => Ksparov.curr_game.dead_pieces(game_board(i).player)(0) += 1
+					case "bishop" => Ksparov.curr_game.dead_pieces(game_board(i).player)(1) += 1
+					case "knight" => Ksparov.curr_game.dead_pieces(game_board(i).player)(2) += 1
+					case "rook" => Ksparov.curr_game.dead_pieces(game_board(i).player)(3) += 1
+					case "pawn" => Ksparov.curr_game.dead_pieces(game_board(i).player)(4) += 1
 				}
 			}
 		}
-		/* Draw the new board. */
 	}
 
 	def enable_promotion (p : Int) {
-		Constants.promotion = true
+		Ksparov.curr_game.promotion = true
 		for (i <- 0 to 3) {
-			Constants.promotion_buttons(p)(i).enabled = true
-			Constants.promotion_buttons(p)(i).background = Color.red
+			Ksparov.curr_game.promotion_buttons(p)(i).enabled = true
+			Ksparov.curr_game.promotion_buttons(p)(i).background = Color.red
 		}
 		Ksparov.frame.contents = new DrawBoard.Board
 	}
 
 	def disable_promotion (p : Int) {
-		Constants.promotion = false
+		Ksparov.curr_game.promotion = false
 		for (i <- 0 to 3) {
-			Constants.promotion_buttons(p)(i).enabled = false
-			Constants.promotion_buttons(p)(i).background = new Color (121, 128, 129)
+			Ksparov.curr_game.promotion_buttons(p)(i).enabled = false
+			Ksparov.curr_game.promotion_buttons(p)(i).background = new Color (121, 128, 129)
 		}
 		draw_game_board (Ksparov.board)
 		Ksparov.frame.contents = new DrawBoard.Board
-		draw_game_messages ("Current_turn", 1 - Constants.curr_player)
+		draw_game_messages ("Current_turn", 1 - Ksparov.curr_game.curr_player)
 	}
 
 	/* Color in red the reachables cases. */
 	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, grid : Int) {
 		/* Coloring the selected case in red. */
-		Constants.grids(grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
-		Constants.grids((grid + 1) % (Constants.nb_grid))(pice_position_x + piece_position_y * 8).background = Color.yellow
+		Ksparov.curr_game.grids(grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
+		Ksparov.curr_game.grids((grid + 1) % (Ksparov.curr_game.nb_grid))(pice_position_x + piece_position_y * 8).background = Color.yellow
 
 		/* For each reachable case, colors it into red. */
    		for (i <- 0 to case_list.length - 1) {
             var (j, l) = case_list(i)
-            Constants.grids (grid) (j + 8 * l).background = Color.red
-            Constants.grids ((grid + 1) % (Constants.nb_grid)) (j + 8 * l).background = Color.red
+            Ksparov.curr_game.grids (grid) (j + 8 * l).background = Color.red
+            Ksparov.curr_game.grids ((grid + 1) % (Ksparov.curr_game.nb_grid)) (j + 8 * l).background = Color.red
         }
 	}
 
 	/* Recolor as "normal" cases : white and black. */
 	def clear_possible_moves {
-		for (k <- 0 to Constants.nb_grid - 1) {
+		for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 			for (i <- 0 to 63) {
 				if ((i % 8 + i / 8) % 2 == 0) {
-					Constants.grids(k)(i).background = Color.black
+					Ksparov.curr_game.grids(k)(i).background = Color.black
 				} else {
-					Constants.grids(k)(i).background = Color.white
+					Ksparov.curr_game.grids(k)(i).background = Color.white
 				}
 			}
 		}
@@ -1332,7 +1338,7 @@ object DrawActions {
 
 	/* Draw a given message on the board, the message depends on the argument passed */
 	def draw_game_messages (message_type : String, player : Int) {
-        var joueur_string = Constants.game_type match {
+        var joueur_string = Ksparov.curr_game.game_type match {
         	case 6 =>
             	player match {
                 	case 1 => Load.infos("White") + " (BLANC) "
@@ -1348,82 +1354,82 @@ object DrawActions {
 		message_type match {
 
 			/* Draw who's player the turn is. */
-			case "Current_turn" => Constants.game_type match {
-				case 6 => Constants.message_drawer.text = "La main est à " + joueur_string +" !"
-					Constants.message_drawer.foreground = Color.black
-				case _ => Constants.message_drawer.text = "La main est au " + joueur_string +" !"
-					Constants.message_drawer.foreground = Color.black
+			case "Current_turn" => Ksparov.curr_game.game_type match {
+				case 6 => Ksparov.curr_game.message_drawer.text = "La main est à " + joueur_string +" !"
+					Ksparov.curr_game.message_drawer.foreground = Color.black
+				case _ => Ksparov.curr_game.message_drawer.text = "La main est au " + joueur_string +" !"
+					Ksparov.curr_game.message_drawer.foreground = Color.black
 			}
 
 			/* Draw if a player is in check. */
-			case "Check" => Constants.game_type match {
-				case 6 => Constants.message_drawer.text = joueur_string + " est en échec !"
-					Constants.message_drawer.foreground = Color.red
-				case _ => Constants.message_drawer.text = "Le " + joueur_string + " est en échec !"
-					Constants.message_drawer.foreground = Color.red
+			case "Check" => Ksparov.curr_game.game_type match {
+				case 6 => Ksparov.curr_game.message_drawer.text = joueur_string + " est en échec !"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
+				case _ => Ksparov.curr_game.message_drawer.text = "Le " + joueur_string + " est en échec !"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
 			}
 
-			case "Time" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Perte au temps,<br>" + joueur_string + " gagne la partie !</html>"
-				Constants.message_drawer.foreground = Color.red
+			case "Time" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Perte au temps,<br>" + joueur_string + " gagne la partie !</html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 
 			/* Draw if a player is mate. */
-			case "Mate" => Constants.game_type match {
-				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>" + (if (player == 0) {Load.infos("White")} else {Load.infos("Black")}) + " gagne la partie !</html>"
-					Constants.message_drawer.foreground = Color.red
-				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le "+ (if(player == 0){"joueur blanc"}else{"joueur noir"}) + " gagne la partie !</html>"
-					Constants.message_drawer.foreground = Color.red
+			case "Mate" => Ksparov.curr_game.game_type match {
+				case 6 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>" + (if (player == 0) {Load.infos("White")} else {Load.infos("Black")}) + " gagne la partie !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
+				case _ => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Echec et mat,<br>le "+ (if(player == 0){"joueur blanc"}else{"joueur noir"}) + " gagne la partie !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
 			}
 
 			/* Draw if an AI cannot move (this option has only been implemented for IA). */
-			case "Pat" => Constants.game_type match {
-				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>"+ joueur_string +" ne peut plus bouger !</html>"
-					Constants.message_drawer.foreground = Color.red
-				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le "+ joueur_string +" ne peut plus bouger !</html>"
-					Constants.message_drawer.foreground = Color.red
+			case "Pat" => Ksparov.curr_game.game_type match {
+				case 6 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>"+ joueur_string +" ne peut plus bouger !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
+				case _ => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le "+ joueur_string +" ne peut plus bouger !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
 			}
 			/* Draw if there is no more checkmate possible */
-			case "Nulle" => Constants.game_type match {
-				case 6 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : "+ joueur_string +" ne peut plus mater !</html>"
-					Constants.message_drawer.foreground = Color.red
-				case _ => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : le "+ joueur_string +" ne peut plus mater !</html>"
-					Constants.message_drawer.foreground = Color.red
+			case "Nulle" => Ksparov.curr_game.game_type match {
+				case 6 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : "+ joueur_string +" ne peut plus mater !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
+				case _ => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : le "+ joueur_string +" ne peut plus mater !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
 			}
 			/* Draw if 50 moves has been made without a pawn move or a piece taken */
-			case "50coups" => Constants.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 50 coups sans prise ni mouvement de pion ! </html>"
-				Constants.message_drawer.foreground = Color.red
+			case "50coups" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 50 coups sans prise ni mouvement de pion ! </html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 			/*Draw if a single position occured 3 times in the same game */
-			case "TripleRepetition" => 	Constants.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 3 répétitions de la même position ! </html>"
-				Constants.message_drawer.foreground = Color.red
+			case "TripleRepetition" => 	Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 3 répétitions de la même position ! </html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 
-			case "Promotion" => Constants.curr_player match {
-				case 0 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
-				case 1 => Constants.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
+			case "Promotion" => Ksparov.curr_game.curr_player match {
+				case 0 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion noir !"
+				case 1 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Selectionnez la promotion <br> du pion blanc !"
 			}
 
-        	case "1-0" => Constants.message_drawer.text = "<html><div style='text-align : center;'>" + Load.infos("White") +" gagne la partie !</html>"
-				Constants.message_drawer.foreground = Color.red
+        	case "1-0" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>" + Load.infos("White") +" gagne la partie !</html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 
-        	case "0-1" => Constants.message_drawer.text = "<html><div style='text-align : center;'>"+ Load.infos("Black") +" gagne la partie !</html>"
-				Constants.message_drawer.foreground = Color.red
+        	case "0-1" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>"+ Load.infos("Black") +" gagne la partie !</html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 
-        	case "1/2-1/2" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle !</html>"
-				Constants.message_drawer.foreground = Color.red
+        	case "1/2-1/2" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle !</html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 
-        	case "*" => Constants.message_drawer.text = "<html><div style='text-align : center;'>Partie non finie !</html>"
-				Constants.message_drawer.foreground = Color.red
+        	case "*" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Partie non finie !</html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
 
-        	case "!$" => Constants.message_drawer.text = "Bon coup de " + joueur_string +" !"
-				Constants.message_drawer.foreground = Color.black
-        	case "!!" => Constants.message_drawer.text = "Trés bon coup de " + joueur_string +" !"
-				Constants.message_drawer.foreground = Color.black
-        	case "?$" =>Constants.message_drawer.text = "Que fait " + joueur_string +" ?"
-				Constants.message_drawer.foreground = Color.black
-        	case "??" => Constants.message_drawer.text = "Coup trés surprenant de la part de " + joueur_string +" !"
-				Constants.message_drawer.foreground = Color.black
-        	case "!?" => Constants.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
-				Constants.message_drawer.foreground = Color.black
-        	case "?!" => Constants.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
-				Constants.message_drawer.foreground = Color.black
+        	case "!$" => Ksparov.curr_game.message_drawer.text = "Bon coup de " + joueur_string +" !"
+				Ksparov.curr_game.message_drawer.foreground = Color.black
+        	case "!!" => Ksparov.curr_game.message_drawer.text = "Trés bon coup de " + joueur_string +" !"
+				Ksparov.curr_game.message_drawer.foreground = Color.black
+        	case "?$" =>Ksparov.curr_game.message_drawer.text = "Que fait " + joueur_string +" ?"
+				Ksparov.curr_game.message_drawer.foreground = Color.black
+        	case "??" => Ksparov.curr_game.message_drawer.text = "Coup trés surprenant de la part de " + joueur_string +" !"
+				Ksparov.curr_game.message_drawer.foreground = Color.black
+        	case "!?" => Ksparov.curr_game.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
+				Ksparov.curr_game.message_drawer.foreground = Color.black
+        	case "?!" => Ksparov.curr_game.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
+				Ksparov.curr_game.message_drawer.foreground = Color.black
 		}
 	}
 }

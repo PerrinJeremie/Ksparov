@@ -52,9 +52,9 @@ object Aux {
         var p = g(i)
         var (x, y, color) = (p.pos_x, p.pos_y, p.player)
         //Checking if the piece isn't dead :
-        if ( Aux.on_board(x, y) && p.grid == Constants.kings(1 - color).grid ){
-          var x_king = Constants.kings(1 - color).pos_x
-          var y_king = Constants.kings(1 - color).pos_y
+        if ( Aux.on_board(x, y) && p.grid == Ksparov.curr_game.kings(1 - color).grid ){
+          var x_king = Ksparov.curr_game.kings(1 - color).pos_x
+          var y_king = Ksparov.curr_game.kings(1 - color).pos_y
           //Checking the validity of the move :
           if (p.checks_pre_move(x_king, y_king)){
             var (dir_x, dir_y) = p.get_dirs(x_king, y_king)
@@ -80,11 +80,11 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   def coords = (pos_x, pos_y)
   /**[Alice Chess] Moves the piece to the next grid*/
   def next_grid = {
-    grid = (grid + 1) % (Constants.nb_grid)
+    grid = (grid + 1) % (Ksparov.curr_game.nb_grid)
   }
   /**[Alice Chess] Moves the piece to the previous_grid grid*/
   def previous_grid = {
-    grid = (grid + Constants.nb_grid - 1) % (Constants.nb_grid)
+    grid = (grid + Ksparov.curr_game.nb_grid - 1) % (Ksparov.curr_game.nb_grid)
   }
   /**A string describing the type of piece (pawn, rook...). Has no capital letter */
   var name : String
@@ -112,8 +112,8 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   }
   /**[Alice Chess] Checks if the corresponding case on the next grid is free */
   def mirror_free (x_a : Int, y_a : Int) = {
-    if (Constants.alice_chess) {
-      Aux.piece_of_coord(x_a, y_a, Ksparov.board, (grid + 1) % (Constants.nb_grid)) == None
+    if (Ksparov.curr_game.alice_chess) {
+      Aux.piece_of_coord(x_a, y_a, Ksparov.board, (grid + 1) % (Ksparov.curr_game.nb_grid)) == None
     } else {
       true
     }
@@ -208,12 +208,12 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
       if (p_arrival != None) { //Killing the piece taken
         p_arrival.get.pos_x = (-1)
         p_arrival.get.pos_y= (-1)
-        Constants.nb_boring_moves = 0
+        Ksparov.curr_game.nb_boring_moves = 0
       }
       else {
-        Constants.nb_boring_moves+=1
+        Ksparov.curr_game.nb_boring_moves+=1
       }
-      var king = Constants.kings (1 - player) //Updating list of king's attackers
+      var king = Ksparov.curr_game.kings (1 - player) //Updating list of king's attackers
       king.attackers = attackers
       name match { //this is needed for castling
         case "rook" => this.asInstanceOf[Rook].has_moved = true
@@ -277,15 +277,15 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
   override def move (x_a : Int, y_a : Int, g : Array[Piece]) = {
     var move_ok = super.move( x_a, y_a, g)
     if (y_a ==  7 * player && move_ok ){
-      Constants.promoted_piece = this
-      if (Constants.players(Constants.curr_player).ai) {
-        Constants.players(Constants.curr_player).ai_promotion
+      Ksparov.curr_game.promoted_piece = this
+      if (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai) {
+        Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai_promotion
       } else {
-        DrawActions.enable_promotion (Constants.curr_player)
+        DrawActions.enable_promotion (Ksparov.curr_game.curr_player)
       }
     }
     if (move_ok){
-      Constants.nb_boring_moves = 0
+      Ksparov.curr_game.nb_boring_moves = 0
     }
     move_ok
   }
@@ -312,8 +312,8 @@ class Knight(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y
   /**Knighs can jump over all other pieces, so we are jumping over the recursive case too*/
   override def clear_path(x_d:Int, y_d:Int, x_a:Int, y_a:Int, g:Array[Piece], dir_x:Int, dir_y:Int) : (Boolean, Option[Piece]) = {
 
-    if (Constants.alice_chess){
-      var piece_arrival = Aux.piece_of_coord (x_a, y_a, g, (grid + 1) % (Constants.nb_grid))
+    if (Ksparov.curr_game.alice_chess){
+      var piece_arrival = Aux.piece_of_coord (x_a, y_a, g, (grid + 1) % (Ksparov.curr_game.nb_grid))
       if (piece_arrival != None) {
         (false, piece_arrival)
       }
@@ -350,7 +350,7 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
   /**An override is neccesary to handle the case of castling*/
   override def pre_move (x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
     //Checking the basic conditions for castling
-    if (!has_moved && !attacked && math.abs(pos_x - x_a) == 2 && pos_y == y_a && !Constants.alice_chess) {
+    if (!has_moved && !attacked && math.abs(pos_x - x_a) == 2 && pos_y == y_a && !Ksparov.curr_game.alice_chess) {
       //Getting corresponding rook.
       var dir_x = math.signum (x_a - pos_x)
       var x_rook = dir_x match {
@@ -391,10 +391,10 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
       }
       p_arrival.get.asInstanceOf[Rook].has_moved = true
       has_moved = true
-      var king = Constants.kings(1 - player)
+      var king = Ksparov.curr_game.kings(1 - player)
       king.attackers = attackers
       if (move_ok) {
-        Constants.nb_boring_moves+=1
+        Ksparov.curr_game.nb_boring_moves+=1
       }
       move_ok
     }
@@ -445,7 +445,7 @@ object Checkmate {
   }
   /**Checks if player pl has lost the game. */
   def check_mate(g : Array[Piece], pl : Int) : Boolean = {
-    var king = Constants.kings(pl)
+    var king = Ksparov.curr_game.kings(pl)
     var (x_king, y_king) = king.coords
     var checkmate = king.attacked
     //Checking if the king can escape the attack on its own.

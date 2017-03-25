@@ -20,16 +20,16 @@ abstract class Player (n : Int) {
   def getmove : Unit
   def check_pat : Boolean
   def check_nulle : Boolean = {
-    Constants.game_nulle = Nulle.trivial_nulle( Ksparov.board)
-    Constants.game_nulle
+    Ksparov.curr_game.game_nulle = Nulle.trivial_nulle( Ksparov.board)
+    Ksparov.curr_game.game_nulle
   }
   def check_boring_game : Boolean = {
-    Constants.game_nulle = (Constants.nb_boring_moves >= 50)
-    Constants.game_nulle
+    Ksparov.curr_game.game_nulle = (Ksparov.curr_game.nb_boring_moves >= 50)
+    Ksparov.curr_game.game_nulle
     }
   def check_triple_repetition : Boolean = {
-    Constants.game_nulle = Aux.contains_triplicates(Constants.hashed_positions)
-    Constants.game_nulle }
+    Ksparov.curr_game.game_nulle = Aux.contains_triplicates(Ksparov.curr_game.hashed_positions)
+    Ksparov.curr_game.game_nulle }
   def ai_promotion : Unit
   var actual_time = 0
   var nb_move = 0
@@ -52,34 +52,34 @@ class Human(n : Int) extends Player(n : Int) {
   /* Select and apply a move. */
   override def getmove : Unit = {
     /* Converting the case selected into x and y. */
-    var x = Constants.selected_case % 8
-    var y = Constants.selected_case / 8
-    var grid = Constants.selected_grid
+    var x = Ksparov.curr_game.selected_case % 8
+    var y = Ksparov.curr_game.selected_case / 8
+    var grid = Ksparov.curr_game.selected_grid
     /* First click, checking if the piece selected is own by the player. */
     if (isHis(x, y, grid)) {
       /* If so validate the first clic and open the second click. */
-      Constants.first_choice_done = true
+      Ksparov.curr_game.first_choice_done = true
       /* Then select the piece of position and draw possible moves. */
       Ksparov.get_piece_of_pos(x, y, grid)
       DrawActions.clear_possible_moves
-      DrawActions.draw_possible_moves(Ksparov.board(Constants.selected_piece).possible_moves(Ksparov.board), x, y, Ksparov.board(Constants.selected_piece).grid)
+      DrawActions.draw_possible_moves(Ksparov.board(Ksparov.curr_game.selected_piece).possible_moves(Ksparov.board), x, y, Ksparov.board(Ksparov.curr_game.selected_piece).grid)
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
-      if (Constants.first_choice_done) {
+      if (Ksparov.curr_game.first_choice_done) {
         /* loads part of the move to be added but has to wait for promotion information */
-        Save.add_move1( Constants.selected_piece, (x,y))
+        Save.add_move1( Ksparov.curr_game.selected_piece, (x,y))
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
-        var valid = Ksparov.board(Constants.selected_piece).move(x, y, Ksparov.board)
+        var valid = Ksparov.board(Ksparov.curr_game.selected_piece).move(x, y, Ksparov.board)
         if (valid) {
           /* the move being valid addit to the list of moves */
           Save.add_move2
           /* If the move is valid, apply the new board */
           DrawActions.draw_game_board(Ksparov.board)
-          Constants.players(Constants.curr_player).moved = true
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
         } else {
           /* If the move is invalid, research for a first click */
-          Constants.first_choice_done = false
+          Ksparov.curr_game.first_choice_done = false
           DrawActions.clear_possible_moves
         }
       }
@@ -92,7 +92,7 @@ class Human(n : Int) extends Player(n : Int) {
       sum = sum + Ksparov.board(i + 16 * (1 - id)).possible_moves(Ksparov.board).length
     }
     if (sum == 0) {
-      Constants.game_nulle = true
+      Ksparov.curr_game.game_nulle = true
       true
     } else {
       false
@@ -103,148 +103,19 @@ class Human(n : Int) extends Player(n : Int) {
   }
 }
 
-/* This object defines constans and not so constants variable that are used during the process. */
-object Constants {
-
-  var base_size = 70
-
+class Game {
   var clock_available = true
-
-  var nb_alice_board = 2
-
   var ai_speed = 200
 
   var nb_period = 2
-
-  var periods = Array (new Time.Period (4, 2, 0), new Time.Period (5, 5, 2))
-
-  var period_time = 10
-  var period_move = 1
-  var new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-  var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-
+  var periods = new Array [Time.Period] (nb_period)
+  
+  var nb_alice_board = 2
+  var nb_grid = 1
+  var nb_case_board = 8
   var ai_turn = false
   var thread_in_life = true
-
-  var timer = new TimeThread
-  var ai_move = new AIMoveThread
-
-  var dim_small = new Dimension (70, 70)
-  var dim_big = new Dimension (210, 70)
-  var dim_message_drawer = new Dimension (350, 70)
-  var dim_path = ""
-  var resources_path = "src/main/resources/"
-
-  var text_font = new Font ("Gill Sans Cyr MT", 1, 16)
-  var num_dead_font = new Font("Arial", 0, 25)
-
-  var resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
   var nb_boring_moves = 0
-  def apply_resolution {
-
-    /* Defining the dimension and numbers of the cases */
-    resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
-    if (resolution.getHeight < 1000.0) {
-      dim_path = "Min/"
-      base_size = 50
-      dim_small = new Dimension (50, 50)
-      dim_big = new Dimension (150, 50)
-      dim_message_drawer = new Dimension (250, 50)
-      text_font = new Font ("Gill Sans Cyr MT", 1, 11)
-      num_dead_font = new Font("Arial", 0, 20)
-    } else {
-      if (resolution.getHeight > 1100.0) {
-        dim_path = "Jeroboam/"
-        base_size = 90
-        dim_small = new Dimension (90, 90)
-        dim_big = new Dimension (270, 90)
-        dim_message_drawer = new Dimension (450, 90)
-        text_font = new Font ("Gill Sans Cyr MT", 1, 20)
-        num_dead_font = new Font("Arial", 0, 30)
-      } else {
-        dim_path = "Max/"
-      }
-    }
-  resources_path = "src/main/resources/" + dim_path
-  }
-
-  val nb_case_board = 8
-  var nb_grid = 2
-
-  /* Defining the path to find every resource used in the programm */
-  var pieces_path = ""
-  var save_path = "src/main/resources/Saves/"
-  var texture_path = ""
-
-  /* Defining the color of the text on the board. */
-  var text_color = Color.black
-
-  /* This is a regexpr pattern to select the first digit of a string. */
-  val pattern = new Regex("\\d")
-
-  /* This method read the parameters in src/main/resources/Parameters and update constant varible according to it. */
-  var lines = new Array[String](3)
-  def apply_parameters = {
-    var i = 0
-    /* Initializing lines with empty strings. */
-    lines = new Array [String] (7)
-
-    /* Reading each lines of the file. */
-    for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
-      lines (i) = line.toString
-      i += 1
-    }
-
-    /* Updating variables. */
-    pieces_path = "Pieces/" + lines(1) + "/"
-    texture_path = "Texture_small_" + lines(2) + ".png"
-    Constants.ai_speed = lines(3).toInt
-    Constants.nb_alice_board = lines(4).toInt
-    Constants.nb_period = lines(5).toInt
-    parse_period_string(lines(6))
-
-    /* Defining the text color depending on the texture selected. */
-    lines(2).toInt match {
-      case 1 => text_color = Color.white
-      case 2 => text_color = Color.white
-      case 3 => text_color = Color.black
-      case 4 => text_color = Color.black
-      case 5 => text_color = Color.red
-    }
-  }
-
-  /* This method write the new parameters in the Parameters file. */
-  def write_parameters {
-    var writer = new PrintWriter(new File ("src/main/resources/Parameters"))
-    writer.write ("Lines of this file : 1 - Pieces, 2 - Texture, 3 - IA speed, 4 - Nb Alice board, 5 - Nb period, 6 - Each_period\n")
-    writer.write ((Constants.pattern findAllIn Constants.pieces_path).mkString + "\n")
-    writer.write ((Constants.pattern findAllIn Constants.texture_path).mkString (",") + "\n")
-    writer.write (Constants.ai_speed.toString + "\n")
-    writer.write (Constants.nb_alice_board.toString + "\n")
-    writer.write (Constants.nb_period.toString + "\n")
-    writer.write (Constants.periods_to_string(Constants.periods))
-    writer.close
-  }
-
-  def periods_to_string (periods_array : Array [Time.Period]) = {
-    var result = ""
-    for (i <- 0 to periods.length - 1) {
-      result += "(" + periods_array(i).time + "," + periods_array(i).nb_move + "," + periods_array(i).inc + ")"
-    }
-    result
-  }
-
-  def parse_period_string (periods_string : String) {
-    Constants.periods = new Array [Time.Period] (Constants.nb_period)
-    val pattern =  """([0-9]+),([0-9]+),([0-9]+)""".r
-    var i = 0
-    periods_string.split("\\(|\\)").filter(s => s != "").iterator.foreach(x => x match { 
-      case pattern(s1,s2,s3) => Constants.periods(i) = new Time.Period (s1.toInt, s2.toInt, s3.toInt)
-        i += 1
-    })
-  }
 
   var selected_case = 0
   var selected_grid = 0
@@ -260,7 +131,7 @@ object Constants {
   var grids = new Array [Array[DrawBoard.Case]] (nb_grid)
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
   var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
-  var play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
+  var play_buttons = new Array [DrawBoard.PlayButton] (2)
 
   /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
   var kings = new Array[King](2)
@@ -276,13 +147,14 @@ object Constants {
   var promotion = false
   var hashed_positions : List[Int] = List()
 
-  var time = 0
-
   /* The message drawer is instantiated here so we can change its text in DrawActions.draw_messages. */
   var message_drawer = new DrawBoard.MessageDrawer ("")
 }
 
 object Time {
+  var new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+  var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+
   class Period (period_time : Int, period_move : Int, increment : Int) {
     var time = period_time
     var nb_move = period_move
@@ -314,49 +186,37 @@ object Time {
     var sec = time % 60
     convert_in_two_digit (hour) + ":" + convert_in_two_digit (min) + ":" + convert_in_two_digit (sec)
   }
-}
 
-class TimeThread extends Thread {
-  override def run {
-    while (Constants.thread_in_life && !Constants.game_nulle && !Constants.game_won) {
-      Thread.sleep (200)
-      if (Constants.thread_in_life) {
-        Constants.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-        if (Constants.new_time != Constants.last_time) {
-          var player = Constants.players(Constants.curr_player)
-          player.actual_time -= 1
-          var dimension = Ksparov.frame.bounds.getSize()
-          Ksparov.frame.contents = new DrawBoard.Board
-          Ksparov.frame.size = dimension
-          Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-          if (player.actual_time <= 0 && Constants.clock_available) {
-            if (player.nb_move < Constants.periods(player.actual_period).nb_move || player.actual_period + 1 == Constants.periods.length) {
-              DrawActions.clear_possible_moves
-              Constants.game_won = true
-              DrawActions.draw_game_messages ("Time", 1 - Constants.curr_player)
-            } else {
-              player.actual_period += 1
-              player.actual_time = Constants.periods(player.actual_period).time
-              player.nb_move = 0
+  class TimeThread extends Thread {
+    override def run {
+      while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
+        Thread.sleep (200)
+        if (Ksparov.curr_game.thread_in_life) {
+          Time.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+          if (Time.new_time != Time.last_time) {
+            var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
+            player.actual_time -= 1
+            var dimension = Ksparov.frame.bounds.getSize()
+            Ksparov.frame.contents = new DrawBoard.Board
+            Ksparov.frame.size = dimension
+            Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+            if (player.actual_time <= 0 && Ksparov.curr_game.clock_available) {
+              if (player.nb_move < Ksparov.curr_game.periods(player.actual_period).nb_move || player.actual_period + 1 == Ksparov.curr_game.periods.length) {
+                DrawActions.clear_possible_moves
+                Ksparov.curr_game.game_won = true
+                DrawActions.draw_game_messages ("Time", 1 - Ksparov.curr_game.curr_player)
+              } else {
+               player.actual_period += 1
+                player.actual_time = Ksparov.curr_game.periods(player.actual_period).time
+                player.nb_move = 0
+              }
             }
+          } else {
+            var dimension = Ksparov.frame.bounds.getSize()
+            Ksparov.frame.contents = new DrawBoard.Board
+            Ksparov.frame.size = dimension
           }
-        } else {
-          var dimension = Ksparov.frame.bounds.getSize()
-          Ksparov.frame.contents = new DrawBoard.Board
-          Ksparov.frame.size = dimension
         }
-      }
-    }
-  }
-}
-
-class AIMoveThread extends Thread {
-  override def run {
-    while (Constants.thread_in_life && !Constants.game_nulle && !Constants.game_won) {
-      Thread.sleep (Constants.ai_speed)
-      if (Constants.ai_turn) {
-        Ksparov.play_move
-        Constants.ai_turn = false
       }
     }
   }
@@ -365,9 +225,14 @@ class AIMoveThread extends Thread {
 /* The main object of the application. */
 object Ksparov {
 
-  Constants.apply_resolution
+  var curr_game = new Game
+
+  var timer = new Time.TimeThread
+  var ai_move = new AIMoveThread
+
+  Display.apply_resolution
   /* Reading the parameters from the file. */
-  Constants.apply_parameters
+  Parameters.apply
 
 
   /* Define the first frame, later the contents variables will be change to display other frame. */
@@ -392,7 +257,7 @@ object Ksparov {
       board(11 + (1 - p) * 16) = new Knight(p, 6, (1 - p) * 7, 0)
       board(12 + (1 - p) * 16) = new Bishop(p, 2, (1 - p) * 7, 0)
       board(13 + (1 - p) * 16) = new Bishop(p, 5, (1 - p) * 7, 0)
-      board(14 + (1 - p) * 16) = Constants.kings(p)
+      board(14 + (1 - p) * 16) = Ksparov.curr_game.kings(p)
       board(15 + (1 - p) * 16) = new Queen(p, 3, (1 - p) * 7, 0)
     }
   }
@@ -401,35 +266,35 @@ object Ksparov {
   def get_piece_of_pos (x : Int, y : Int, grid_id : Int) {
     for (i <- 0 to 31){
       if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y && Ksparov.board(i).grid == grid_id){
-        Constants.selected_piece = i
+        Ksparov.curr_game.selected_piece = i
       }
     }
   }
 
   def promotion (p : Int) = {
-    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)
-    var new_piece = Constants.selected_promotion match {
-      case "Knight" => new Knight (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
-      case "Bishop" => new Bishop (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
-      case "Rook" => new Rook (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
-      case "Queen" => new Queen (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
+    val pawn_index = Ksparov.board.indexOf(Ksparov.curr_game.promoted_piece)
+    var new_piece = Ksparov.curr_game.selected_promotion match {
+      case "Knight" => new Knight (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
+      case "Bishop" => new Bishop (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
+      case "Rook" => new Rook (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
+      case "Queen" => new Queen (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
     }
     board (pawn_index) = new_piece
-    var king = Constants.kings(1 - p)
+    var king = Ksparov.curr_game.kings(1 - p)
     if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
       king.attackers = king.attackers :+ new_piece
     }
-    Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
+    Save.add_prom_to_move(Ksparov.curr_game.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
 
-    if ( !Constants.players(Constants.curr_player).ai){
-      Constants.curr_player = 1 - Constants.curr_player
+    if ( !Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai){
+      Ksparov.curr_game.curr_player = 1 - Ksparov.curr_game.curr_player
     }
 
-    check_game_status (Constants.curr_player)
+    check_game_status (Ksparov.curr_game.curr_player)
 
-    if ((Constants.players(Constants.curr_player).ai && Constants.game_type == 2) || (Constants.game_type == 6 && !Constants.players(1 - Constants.curr_player).ai)) {
-      Constants.ai_turn = true
+    if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) || (Ksparov.curr_game.game_type == 6 && !Ksparov.curr_game.players(1 - Ksparov.curr_game.curr_player).ai)) {
+      Ksparov.curr_game.ai_turn = true
     }
   }
 
@@ -439,32 +304,32 @@ object Ksparov {
      /* If so, finish the game. */
       DrawActions.draw_game_messages ("Mate", player)
       Save.whowins = player
-      Constants.game_won = true
+      Ksparov.curr_game.game_won = true
     } else {
       /* Check if there is pat. */
-      if (Constants.players(player).check_pat) {
+      if (Ksparov.curr_game.players(player).check_pat) {
         Save.whowins = -1
         DrawActions.draw_game_messages ("Pat", player)
       } else {
       /*Check if the game is nulle */
-        if (Constants.players(player).check_nulle) {
+        if (Ksparov.curr_game.players(player).check_nulle) {
           Save.whowins = -1
           DrawActions.draw_game_messages ("Nulle", player)
         }
         else {
       /*Check if players are not asleep because nothing has been happening for 50 moves */
-          if (Constants.players(player).check_boring_game) {
+          if (Ksparov.curr_game.players(player).check_boring_game) {
             Save.whowins = -1
             DrawActions.draw_game_messages ("50coups", player)
           }
           else {
-            if (Constants.players(player).check_triple_repetition) {
+            if (Ksparov.curr_game.players(player).check_triple_repetition) {
               Save.whowins = -1
               DrawActions.draw_game_messages ("TripleRepetition", player)
             }
             else {
         /* Else check if there is check. */
-        if (Constants.kings(player).attacked) {
+        if (Ksparov.curr_game.kings(player).attacked) {
           DrawActions.draw_game_messages ("Check", player)
         } else {
           if (Load.specialmessage != ""){
@@ -490,27 +355,27 @@ object Ksparov {
   /* Called when click on a case of the board, defines the movment action. */
   def play_move {
     /* Checking if the game has been won. */
-    if (Constants.game_won || Constants.game_nulle || Constants.promotion) {
+    if (Ksparov.curr_game.game_won || Ksparov.curr_game.game_nulle || Ksparov.curr_game.promotion) {
       /* If so, don't do anything, just wait for other button to be pressed. */
     } else {
       /* Else get the move, and if the player has moved, go on. */
-      Constants.players(Constants.curr_player).getmove
-      if (Constants.players(Constants.curr_player).moved) {
-        Constants.players(Constants.curr_player).nb_move += 1
-        Constants.players(Constants.curr_player).actual_time += Constants.periods(Constants.players(Constants.curr_player).actual_period).inc
-        Constants.players(Constants.curr_player).moved = false
-        Constants.hashed_positions = (Aux.array_to_hashed_string(Ksparov.board)) :: Constants.hashed_positions
-        check_game_status (1 - Constants.curr_player)
-        if (Constants.promotion) {
-          DrawActions.draw_game_messages ("Promotion", Constants.curr_player)
+      Ksparov.curr_game.players(Ksparov.curr_game.curr_player).getmove
+      if (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved) {
+        Ksparov.curr_game.players(Ksparov.curr_game.curr_player).nb_move += 1
+        Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_time += curr_game.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+        Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = false
+        Ksparov.curr_game.hashed_positions = (Aux.array_to_hashed_string(Ksparov.board)) :: Ksparov.curr_game.hashed_positions
+        check_game_status (1 - Ksparov.curr_game.curr_player)
+        if (Ksparov.curr_game.promotion) {
+          DrawActions.draw_game_messages ("Promotion", Ksparov.curr_game.curr_player)
         } else {
-          Constants.curr_player = 1 - Constants.curr_player
+          Ksparov.curr_game.curr_player = 1 - Ksparov.curr_game.curr_player
         }
-        Constants.first_choice_done = false
+        Ksparov.curr_game.first_choice_done = false
       }
       /* If the next player is an IA and we are in Human vs AI, play the AI move in a row. */
-      if ((Constants.players(Constants.curr_player).ai && Constants.game_type == 2) || (Constants.game_type == 6 && !Constants.players(1 - Constants.curr_player).ai)) {
-        Constants.ai_turn = true
+      if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) || (Ksparov.curr_game.game_type == 6 && !Ksparov.curr_game.players(1 - Ksparov.curr_game.curr_player).ai)) {
+        Ksparov.curr_game.ai_turn = true
       }
     }
   }
@@ -518,10 +383,10 @@ object Ksparov {
   /* Define the variable for a new game, called after the game type selection. */
   def init_game (n : Int) {
     /* Instantiate the kings and then the new board. */
-    Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
-    Constants.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
-    Constants.hashed_positions = List()
-    Constants.nb_boring_moves = 0
+    Ksparov.curr_game.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
+    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
+    Ksparov.curr_game.hashed_positions = List()
+    Ksparov.curr_game.nb_boring_moves = 0
     DrawBoard.init_grids
     DrawBoard.create_grid_dead
     Ksparov.init_board
@@ -530,56 +395,55 @@ object Ksparov {
     /* Defines the welcome message and types of players depending on the game type chosen. */
     n match {
       case 1 =>
-        Constants.players(0) = new Human(0)
-        Constants.players(1) = new Human(1)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
+        Ksparov.curr_game.players(0) = new Human(0)
+        Ksparov.curr_game.players(1) = new Human(1)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
       case 2 =>
         /* Draw a random number to know the color of each players. */
         if (scala.util.Random.nextInt(2) == 0) {
-          Constants.players(0) = new Human(0)
-          Constants.players(1) = new AI(1)
-          Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
+          Ksparov.curr_game.players(0) = new Human(0)
+          Ksparov.curr_game.players(1) = new AI(1)
+          Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
         } else {
-          Constants.players(1) = new Human(1)
-          Constants.players(0) = new AI(0)
-          Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenu dans Ksparov, <br> vous jouez les blancs !</html>")
+          Ksparov.curr_game.players(1) = new Human(1)
+          Ksparov.curr_game.players(0) = new AI(0)
+          Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenu dans Ksparov, <br> vous jouez les blancs !</html>")
         }
       case 3 =>
-        Constants.game_type = 2
-        Constants.players(0) = new AI(0)
-        Constants.players(1) = new Human(1)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
+        Ksparov.curr_game.game_type = 2
+        Ksparov.curr_game.players(0) = new AI(0)
+        Ksparov.curr_game.players(1) = new Human(1)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
       case 4 =>
-        Constants.game_type = 2
-        Constants.players(0) = new Human(0)
-        Constants.players(1) = new AI(1)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
+        Ksparov.curr_game.game_type = 2
+        Ksparov.curr_game.players(0) = new Human(0)
+        Ksparov.curr_game.players(1) = new AI(1)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
       case 5 =>
-        Constants.players(1) = new AI(1)
-        Constants.players(0) = new AI(0)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
+        Ksparov.curr_game.players(1) = new AI(1)
+        Ksparov.curr_game.players(0) = new AI(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
-        Constants.clock_available = false
-        Constants.players(1) = new Load.Reproducer(1)
-        Constants.players(0) = new Load.Reproducer(0)
-        Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
+        curr_game.clock_available = false
+        Ksparov.curr_game.players(1) = new Load.Reproducer(1)
+        Ksparov.curr_game.players(0) = new Load.Reproducer(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
     }
     /* Defines the game as not yet won, and the white player as the first player. */
-    Constants.game_won = false
-    Constants.game_nulle = false
-    Constants.curr_player = 1
+    Ksparov.curr_game.game_won = false
+    Ksparov.curr_game.game_nulle = false
+    Ksparov.curr_game.curr_player = 1
+    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
 
-    if (Constants.clock_available) {
-      Constants.players(0).actual_time = Constants.periods(0).time
-      Constants.players(1).actual_time = Constants.periods(0).time
+    if (curr_game.clock_available) {
+      Ksparov.curr_game.players(0).actual_time = curr_game.periods(0).time
+      Ksparov.curr_game.players(1).actual_time = curr_game.periods(0).time
     }
 
-    Constants.thread_in_life = true
-    Constants.timer.start
-    Constants.timer = new TimeThread
-    Constants.ai_move.start
-    Constants.ai_move = new AIMoveThread
-    Constants.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+    Ksparov.curr_game.thread_in_life = true
+    timer.start
+    ai_move.start
+    Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
 
   /* The Swing application with frame in it. */

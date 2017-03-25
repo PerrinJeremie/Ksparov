@@ -31,7 +31,7 @@ object Save{
 
   /** tests the validity of the string argument as a filename for the save : -2 if too long, -1 if already exists. */
   def is_valid (s:String) : Int = {
-    var res : String = ("ls " + Constants.save_path) !!;
+    var res : String = ("ls " + Display.save_path) !!;
     if(s.length > 34){
       return -2
     }
@@ -133,7 +133,7 @@ object Save{
     writer.write( "[ White \"" + white + "\"]\n")
     writer.write( "[ Black \"" + black + "\"]\n")
     writer.write( "[ Result \"" + result + "\"]\n")
-    if(Constants.nb_grid == 2){
+    if(Ksparov.curr_game.nb_grid == 2){
     writer.write( "[ Type \"Alice\" ]\n\n")}
   }
 
@@ -194,7 +194,7 @@ object Save{
       case 0 =>
         date match{
           case Load.datereg(_*) =>
-            val writer = new PrintWriter (new File (Constants.save_path + s + ".pgn" ))
+            val writer = new PrintWriter (new File (Display.save_path + s + ".pgn" ))
             write_tags(writer,event,site,date,round,white,black,result)
             write_moves(writer)
             writer.write(" "+result)
@@ -315,22 +315,22 @@ object Load {
 
     /** Predicates if piece is in column of pos_init */
     def pcolumn( P : Piece) : Boolean = {
-      return ((P.name == piece) && (P.player == Constants.curr_player) && P.pos_x == pos_init._1)
+      return ((P.name == piece) && (P.player == Ksparov.curr_game.curr_player) && P.pos_x == pos_init._1)
     }
 
     /** Predicates if piece is in pos_init's line*/
     def pline( P : Piece) : Boolean = {
-      return (P.name == piece && P.player == Constants.curr_player && P.pos_y == pos_init._2)
+      return (P.name == piece && P.player == Ksparov.curr_game.curr_player && P.pos_y == pos_init._2)
     }
 
     /** Predicates if piece is in pos_init position */ 
     def pexactpos( P : Piece) : Boolean = {
-      return (P.name == piece && P.player == Constants.curr_player && P.coords == pos_init)
+      return (P.name == piece && P.player == Ksparov.curr_game.curr_player && P.coords == pos_init)
     }
 
     /** Predicates if piece can go to pos_fin position */ 
     def pcangoto( P :Piece): Boolean = {
-      return (P.name == piece && (P.player == Constants.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
+      return (P.name == piece && (P.player == Ksparov.curr_game.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
     }
 
     /** Finds all information related to the move and plays the move once done */
@@ -339,8 +339,8 @@ object Load {
       s match {
         case resulttag(_*) =>
           finalresult = s
-          Ksparov.check_game_status(Constants.curr_player)
-          if (! (s == "*") ) {Constants.game_won = true; return true} else { return false }
+          Ksparov.check_game_status(Ksparov.curr_game.curr_player)
+          if (! (s == "*") ) {Ksparov.curr_game.game_won = true; return true} else { return false }
         case _ => ()
       }
 
@@ -351,9 +351,9 @@ object Load {
         case droquereg(_*) =>
           w.substring(0,3) match{
             case roquereg(_*) =>
-              Ksparov.board((1-Constants.curr_player)*16 +14).move(6,(1-Constants.curr_player)*7, Ksparov.board)
+              Ksparov.board((1-Ksparov.curr_game.curr_player)*16 +14).move(6,(1-Ksparov.curr_game.curr_player)*7, Ksparov.board)
             case _ =>
-              Ksparov.board((1-Constants.curr_player)*16 + 14).move(2,(1-Constants.curr_player)*7,Ksparov.board)
+              Ksparov.board((1-Ksparov.curr_game.curr_player)*16 + 14).move(2,(1-Ksparov.curr_game.curr_player)*7,Ksparov.board)
           }
           return true
         case "K" => piece = "king"; w = w.substring(1, w.length)
@@ -404,10 +404,10 @@ object Load {
       /* Promotion */
       if (w(0) == '='){
         w(1) match{
-          case 'Q' => Constants.selected_promotion = "Queen"
-          case 'N' => Constants.selected_promotion = "Knight"
-          case 'B' => Constants.selected_promotion = "Bishop"
-          case 'R' => Constants.selected_promotion = "Rook"
+          case 'Q' => Ksparov.curr_game.selected_promotion = "Queen"
+          case 'N' => Ksparov.curr_game.selected_promotion = "Knight"
+          case 'B' => Ksparov.curr_game.selected_promotion = "Bishop"
+          case 'R' => Ksparov.curr_game.selected_promotion = "Rook"
         }
         w = w.substring(2,w.length)
       }
@@ -436,9 +436,9 @@ object Load {
       if (!list_of_moves.isEmpty){
         reset_when_parsing
         try {
-          Constants.players(Constants.curr_player).moved = parse_word(list_of_moves.head)
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = parse_word(list_of_moves.head)
         }catch{
-          case _ : Throwable => Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Fichier Corrompu</html>")
+          case _ : Throwable => Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Fichier Corrompu</html>")
         }
         list_of_moves = list_of_moves.tail
         DrawActions.draw_game_board(Ksparov.board)
@@ -452,7 +452,7 @@ object Load {
         sum = sum + Ksparov.board(i + 16 * (1 - id)).possible_moves(Ksparov.board).length
       }
       if (sum == 0) {
-        Constants.game_nulle = true
+        Ksparov.curr_game.game_nulle = true
         true
       } else {
         false
@@ -461,7 +461,7 @@ object Load {
 
     /** Calls the promotion method of Ksparov object */ 
     override def ai_promotion : Unit = {
-      Ksparov.promotion(Constants.curr_player)
+      Ksparov.promotion(Ksparov.curr_game.curr_player)
     }
   }
 
@@ -494,9 +494,9 @@ object Load {
                 var s21 = s2.filter(pnotspec)
                 infos += ( s11 -> s21)
                 if (s11 == "Type" && s21 == "Alice") {
-                  Constants.alice_chess = true
+                  Ksparov.curr_game.alice_chess = true
                 } else {
-                  Constants.alice_chess = false
+                  Ksparov.curr_game.alice_chess = false
                 }
               case None => () /* Not possible */
             }
@@ -518,7 +518,7 @@ object Load {
     var i = 1
     var texte_entier = ""
 
-    for (lines <- Source.fromFile(Constants.save_path + filename + ".pgn").getLines()){
+    for (lines <- Source.fromFile(Display.save_path + filename + ".pgn").getLines()){
       texte_entier += lines + "\n"
     }
 

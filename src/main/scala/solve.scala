@@ -41,16 +41,16 @@ class AI (player : Int) extends Player (player) {
         /* If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle */
         if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
           notdone = false
-          Constants.players(Constants.curr_player).asInstanceOf[AI].pat = true
-          Constants.game_nulle = true
-          Constants.curr_player = 1 - Constants.curr_player
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).asInstanceOf[AI].pat = true
+          Ksparov.curr_game.game_nulle = true
+          Ksparov.curr_game.curr_player = 1 - Ksparov.curr_game.curr_player
         }        
       }
     }
     Save.add_move2
     /* Draw the new board */
     DrawActions.draw_game_board(Ksparov.board)
-    Constants.players(Constants.curr_player).moved = true
+    Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
   }
 
   override def check_pat : Boolean = {
@@ -61,12 +61,23 @@ class AI (player : Int) extends Player (player) {
 
     val rand = scala.util.Random
     rand.nextInt(4) match {
-      case 0 => Constants.selected_promotion = "Queen"
-      case 1 => Constants.selected_promotion = "Bishop"
-      case 2 => Constants.selected_promotion = "Knight"
-      case 3 => Constants.selected_promotion = "Rook"
+      case 0 => Ksparov.curr_game.selected_promotion = "Queen"
+      case 1 => Ksparov.curr_game.selected_promotion = "Bishop"
+      case 2 => Ksparov.curr_game.selected_promotion = "Knight"
+      case 3 => Ksparov.curr_game.selected_promotion = "Rook"
     }
-    Ksparov.promotion (Constants.curr_player)
+    Ksparov.promotion (Ksparov.curr_game.curr_player)
   }
 }
 
+class AIMoveThread extends Thread {
+  override def run {
+    while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
+      Thread.sleep (Ksparov.curr_game.ai_speed)
+      if (Ksparov.curr_game.ai_turn) {
+        Ksparov.play_move
+        Ksparov.curr_game.ai_turn = false
+      }
+    }
+  }
+}
