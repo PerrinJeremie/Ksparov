@@ -264,7 +264,7 @@ object Time {
   }
 
   def convert_in_two_digit (num : Int) = {
-    if (num < 0) {
+    if (num <= 0) {
         "00"
     } else {
       if (num < 10) {
@@ -286,7 +286,7 @@ object Time {
     var hour = time / 3600
     var min = time / 60 - hour * 60
     var sec = time % 60
-    convert_in_two_digit (hour) + " : " + convert_in_two_digit (min) + " : " + convert_in_two_digit (sec)
+    convert_in_two_digit (hour) + ":" + convert_in_two_digit (min) + ":" + convert_in_two_digit (sec)
   }
 }
 

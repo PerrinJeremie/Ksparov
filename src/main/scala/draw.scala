@@ -460,16 +460,31 @@ object DrawParameters {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
 			sub_menu_id match {
-				case 3 => for (i <- 0 to Constants.nb_period - 1) {
-					Constants.periods = new Array [Time.Period] (Constants.nb_period)
-					Constants.periods (i) = new Time.Period (time_textfields(i).text.toInt, move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
-				}
-				case 2 => ()
-				case 1 => () 
-				case _ => () 
+				case 3 => 
+					val correct_time = """([\d]+[\d]):([0-5][0-9]):([0-5][0-9])""".r
+					var continue = true
+					for (i <- 0 to Constants.nb_period - 1) {
+						time_textfields(i).text match {
+							case correct_time (_*) => ()
+							case _ => time_textfields(i).text = "hh:mm:ss" 
+								continue = false
+						}
+					}
+					if (continue) {
+						for (i <- 0 to Constants.nb_period - 1) {
+							Constants.periods = new Array [Time.Period] (Constants.nb_period)
+							Constants.periods (i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
+						}
+						Ksparov.frame.contents = new DrawMenu.Menu
+						Ksparov.frame.peer.setLocationRelativeTo(null)
+					}
+				case 2 =>
+					Ksparov.frame.contents = new DrawMenu.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
+				case 1 => 
+					Ksparov.frame.contents = new DrawMenu.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
-			Ksparov.frame.contents = new DrawMenu.Menu
-			Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
 	}
 
@@ -670,30 +685,36 @@ object DrawParameters {
 			contents += new Increment ("nb_period", 3)
 		}) = Center
 
-		layout (new BackgroundCase (1, 1)) = East
+		layout (new BackgroundCase (1, 2)) = East
 	}
 
 	class PeriodOptions (id : Int) extends BorderPanel {
 		layout (new BorderPanel {
-			layout (new Label ("<html><div style='text-align : center;'>Durée de la<br>période<br>en seconde</html>") {preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)}) = West
+			layout (new Label ("<html><div style='text-align : center;'>Durée de la<br>période au<br>format hh:mm:ss</html>") {
+				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+			}) = West
 			layout (time_textfields (id)) = East
 		}) = West
 
 		layout (new BorderPanel {
-			layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)}) = West
+			layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {
+				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+			}) = West
 			layout (move_textfields (id)) = East
 		}) = Center
 
 		layout (new BorderPanel {
-			layout (new Label ("<html><div style='text-align : center;'>Incrément après<br>un coup<br>en seconde</html>") {preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)}) = West
-			layout (inc_textfields (id)) = East
+			layout (new Label ("<html><div style='text-align : center;'>Incrément après<br>un coup<br>en seconde</html>") {
+				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
+			}) = West
+			layout (inc_textfields (id)) = Center
 		}) = East
 	}
 
 	class Periods (nb_period : Int) extends GridPanel (2 * nb_period + 1, 1) {
 		for (i <- 0 to 2 * nb_period) {
 			if (i % 2 == 0) {
-				contents += new BackgroundCase (1, 9)
+				contents += new BackgroundCase (1, 10)
 			} else {
 				contents += new PeriodOptions (i / 2)
 			}
@@ -709,15 +730,11 @@ object DrawParameters {
 			time_textfields (i) = new TextField {
 				font = Constants.text_font
 				try {
-					text = Constants.periods(i).time.toString
+					text = Time.int_to_hhmmss(Constants.periods(i).time)
 				} catch {
 					case _ : Throwable => text = "0"
 				}
-				preferredSize = Constants.dim_small
-				listenTo(keys)
-				reactions += {
-				    case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
-				}
+				preferredSize = new Dimension (Constants.base_size * 2, Constants.base_size)
 			}
 			move_textfields (i) = new TextField {
 				font = Constants.text_font
@@ -754,17 +771,17 @@ object DrawParameters {
 
 		layout (new BorderPanel {
 			layout (new BorderPanel {
-				layout (new BackgroundCase (1, 9)) = North
+				layout (new BackgroundCase (1, 10)) = North
 				layout (new NbPeriodChoice) = South
 			}) = North
 			if (Constants.nb_period == 0) {
-				layout (new BackgroundCase (3, 9)) = Center
+				layout (new BackgroundCase (3, 10)) = Center
 			} else {
 				layout (new Periods (nb_period)) = Center
 			}
 			layout (new BorderPanel {
 				layout (new ComeBack (3)) = North
-				layout (new BackgroundCase (1, 9)) = South
+				layout (new BackgroundCase (1, 10)) = South
 			}) = South
 		}) = Center
 
