@@ -461,7 +461,7 @@ object DrawParameters {
 		action = Action("<html><div style='text-align : center;'>Appliquer les changements<br>et revenir au menu</html>") {
 			sub_menu_id match {
 				case 3 => 
-					val correct_time = """([\d]+[\d]):([0-5][0-9]):([0-5][0-9])""".r
+					val correct_time = """([\d][\d]):([0-5][0-9]):([0-5][0-9])""".r
 					var continue = true
 					for (i <- 0 to Constants.nb_period - 1) {
 						time_textfields(i).text match {
@@ -471,14 +471,16 @@ object DrawParameters {
 						}
 					}
 					if (continue) {
+						Constants.periods = new Array [Time.Period] (Constants.nb_period)
 						for (i <- 0 to Constants.nb_period - 1) {
-							Constants.periods = new Array [Time.Period] (Constants.nb_period)
-							Constants.periods (i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
+							Constants.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
 						}
+						Constants.write_parameters
 						Ksparov.frame.contents = new DrawMenu.Menu
 						Ksparov.frame.peer.setLocationRelativeTo(null)
 					}
 				case 2 =>
+					Constants.write_parameters
 					Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case 1 => 
@@ -504,7 +506,8 @@ object DrawParameters {
 			def apply = {
 				/* When the button is pushed, we write the new parameters in the src/main/resources/Parameters file.
 				   After doing this, we apply the new parameters to that choice is dynamic. */
-				Constants.write_parameters ((Constants.pattern findAllIn Constants.pieces_path).mkString, number.toString)
+				Constants.texture_path = "Texture_small_" + number.toString + ".png"
+				Constants.write_parameters
 				Constants.apply_parameters
 				Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 			}
@@ -522,7 +525,8 @@ object DrawParameters {
 		action = new Action ("") {
 			icon = new javax.swing.ImageIcon(Constants.resources_path + "Pieces/" + number.toString + "/1/King.png")
 			def apply {
-				Constants.write_parameters (number.toString, (Constants.pattern findAllIn Constants.texture_path).mkString (","))
+				Constants.pieces_path = "Pieces/" + number.toString + "/"
+				Constants.write_parameters
 				Constants.apply_parameters
 				Ksparov.frame.contents = new DrawParameters.SubMenus (1)
 			}

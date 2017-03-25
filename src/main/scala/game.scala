@@ -189,7 +189,7 @@ object Constants {
   def apply_parameters = {
     var i = 0
     /* Initializing lines with empty strings. */
-    lines = Array ("", "", "")
+    lines = new Array [String] (7)
 
     /* Reading each lines of the file. */
     for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
@@ -200,6 +200,10 @@ object Constants {
     /* Updating variables. */
     pieces_path = "Pieces/" + lines(1) + "/"
     texture_path = "Texture_small_" + lines(2) + ".png"
+    Constants.ai_speed = lines(3).toInt
+    Constants.nb_alice_board = lines(4).toInt
+    Constants.nb_period = lines(5).toInt
+    parse_period_string(lines(6))
 
     /* Defining the text color depending on the texture selected. */
     lines(2).toInt match {
@@ -212,12 +216,34 @@ object Constants {
   }
 
   /* This method write the new parameters in the Parameters file. */
-  def write_parameters (piece : String, texture : String) {
+  def write_parameters {
     var writer = new PrintWriter(new File ("src/main/resources/Parameters"))
-    writer.write ("Lines of this file : 1 - Pieces, 2 - Texture\n")
-    writer.write (piece + "\n")
-    writer.write (texture + "\n")
+    writer.write ("Lines of this file : 1 - Pieces, 2 - Texture, 3 - IA speed, 4 - Nb Alice board, 5 - Nb period, 6 - Each_period\n")
+    writer.write ((Constants.pattern findAllIn Constants.pieces_path).mkString + "\n")
+    writer.write ((Constants.pattern findAllIn Constants.texture_path).mkString (",") + "\n")
+    writer.write (Constants.ai_speed.toString + "\n")
+    writer.write (Constants.nb_alice_board.toString + "\n")
+    writer.write (Constants.nb_period.toString + "\n")
+    writer.write (Constants.periods_to_string(Constants.periods))
     writer.close
+  }
+
+  def periods_to_string (periods_array : Array [Time.Period]) = {
+    var result = ""
+    for (i <- 0 to periods.length - 1) {
+      result += "(" + periods_array(i).time + "," + periods_array(i).nb_move + "," + periods_array(i).inc + ")"
+    }
+    result
+  }
+
+  def parse_period_string (periods_string : String) {
+    Constants.periods = new Array [Time.Period] (Constants.nb_period)
+    val pattern =  """([0-9]+),([0-9]+),([0-9]+)""".r
+    var i = 0
+    periods_string.split("\\(|\\)").filter(s => s != "").iterator.foreach(x => x match { 
+      case pattern(s1,s2,s3) => Constants.periods(i) = new Time.Period (s1.toInt, s2.toInt, s3.toInt)
+        i += 1
+    })
   }
 
   var selected_case = 0
