@@ -482,6 +482,7 @@ object Ksparov {
     Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     Constants.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
     Constants.hashed_positions = List()
+    Constants.nb_boring_moves = 0
     DrawBoard.init_grids
     DrawBoard.create_grid_dead
     Ksparov.init_board
