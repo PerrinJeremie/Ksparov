@@ -533,6 +533,7 @@ object Ksparov {
         Constants.players(0) = new AI(0)
         Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
+        Constants.clock_available = false
         Constants.players(1) = new Load.Reproducer(1)
         Constants.players(0) = new Load.Reproducer(0)
         Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
@@ -542,8 +543,10 @@ object Ksparov {
     Constants.game_nulle = false
     Constants.curr_player = 1
 
-    Constants.players(0).actual_time = Constants.periods(0).time
-    Constants.players(1).actual_time = Constants.periods(0).time
+    if (Constants.clock_available) {
+      Constants.players(0).actual_time = Constants.periods(0).time
+      Constants.players(1).actual_time = Constants.periods(0).time
+    }
 
     Constants.thread_in_life = true
     Constants.timer.start
