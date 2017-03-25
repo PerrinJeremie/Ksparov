@@ -49,7 +49,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Auxiliary and general methods. Most are self-explainatory.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -146,6 +146,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="Aux#array_to_hashed_string" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="array_to_hashed_string(g:Array[Piece]):Int"></a>
+      <a id="array_to_hashed_string(Array[Piece]):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">array_to_hashed_string</span><span class="params">(<span name="g">g: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="index.html#Aux$@array_to_hashed_string(g:Array[Piece]):Int" title="Permalink" target="_top">
+        <img src="lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Converts an array to a string and hadh it.</p><div class="fullcomment"><div class="comment cmt"><p>Converts an array to a string and hadh it. Used to store boards</p></div></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -180,7 +197,7 @@
       </a>
     </span>
       
-    </li><li name="Aux#check_check" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="Aux#check_check" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="check_check(g:Array[Piece]):Array[List[Piece]]"></a>
       <a id="check_check(Array[Piece]):Array[List[Piece]]"></a>
       <h4 class="signature">
@@ -196,7 +213,8 @@
         <img src="lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Checks for attacks on both kings and returns a list of attackers for each king.</p><div class="fullcomment"><div class="comment cmt"><p>Checks for attacks on both kings and returns a list of attackers for each king.
+    Used in the pre_move function</p></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -220,6 +238,23 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="Aux#contains_triplicates" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="contains_triplicates(positions:List[Int]):Boolean"></a>
+      <a id="contains_triplicates(List[Int]):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">contains_triplicates</span><span class="params">(<span name="positions">positions: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="index.html#Aux$@contains_triplicates(positions:List[Int]):Boolean" title="Permalink" target="_top">
+        <img src="lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Checks if a list contains three identic elements</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -379,7 +414,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="Aux#on_board" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="Aux#on_board" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="on_board(x:Int,y:Int):Boolean"></a>
       <a id="on_board(Int,Int):Boolean"></a>
       <h4 class="signature">
@@ -395,7 +430,7 @@
         <img src="lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Checks if case (x,y) is on the board.</p><div class="fullcomment"><div class="comment cmt"><p>Checks if case (x,y) is on the board. Useful to determine if a piece is dead, since those are in (-1,-1)</p></div></div>
     </li><li name="Aux#piece_of_coord" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="piece_of_coord(x:Int,y:Int,g:Array[Piece],grid_id:Int):Option[Piece]"></a>
       <a id="piece_of_coord(Int,Int,Array[Piece],Int):Option[Piece]"></a>
@@ -412,7 +447,7 @@
         <img src="lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Returns the piece on coords(x,y) or None if there is none</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
