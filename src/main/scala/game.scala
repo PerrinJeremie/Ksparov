@@ -19,6 +19,17 @@ abstract class Player (n : Int) {
   var ai = false
   def getmove : Unit
   def check_pat : Boolean
+  def check_nulle : Boolean = {
+    Constants.game_nulle = Nulle.trivial_nulle( Ksparov.board)
+    Constants.game_nulle
+  }
+  def check_boring_game : Boolean = {
+    Constants.game_nulle = (Constants.nb_boring_moves >= 50)
+    Constants.game_nulle
+    }
+  def check_triple_repetition : Boolean = {
+    Constants.game_nulle = Aux.contains_triplicates(Constants.hashed_positions)
+    Constants.game_nulle }
   def ai_promotion : Unit
   var actual_time = 0
   var nb_move = 0
@@ -87,7 +98,6 @@ class Human(n : Int) extends Player(n : Int) {
       false
     }
   }
-
   override def ai_promotion : Unit = {
     ()
   }
@@ -122,6 +132,7 @@ object Constants {
 
   var resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
+  var nb_boring_moves = 0
   def apply_resolution {
 
     /* Defining the dimension and numbers of the cases */
@@ -148,7 +159,7 @@ object Constants {
     }
   resources_path = "src/main/resources/" + dim_path
   }
-  
+
   val nb_case_board = 8
   var nb_grid = 2
 
@@ -205,7 +216,7 @@ object Constants {
   var promoted_piece = new Pawn (0, -1, -1, 0)
   var selected_promotion = ""
 
-  /* The type of game chosen : 0 for Human vs Human, 1 for Hhuman vs AI and 2 for AI vs AI. */
+  /* The type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI. */
   var game_type = 0
   var alice_chess = false
 
@@ -227,6 +238,7 @@ object Constants {
   var game_nulle = false
   var game_won = false
   var promotion = false
+  var hashed_positions : List[Int] = List()
 
   var time = 0
 
@@ -254,7 +266,7 @@ object Time {
   }
 
   def hhmmss_to_int (time : String) = {
-    var hour = time.substring(0, 2) 
+    var hour = time.substring(0, 2)
     var min = time.substring(3, 5)
     var sec = time.substring(6, 8)
     sec.toInt + 60 * min.toInt + 3600 * hour.toInt
@@ -358,7 +370,7 @@ object Ksparov {
   }
 
   def promotion (p : Int) = {
-    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)  
+    val pawn_index = Ksparov.board.indexOf(Constants.promoted_piece)
     var new_piece = Constants.selected_promotion match {
       case "Knight" => new Knight (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
       case "Bishop" => new Bishop (p, Constants.promoted_piece.pos_x, Constants.promoted_piece.pos_y, Constants.promoted_piece.grid)
@@ -373,7 +385,9 @@ object Ksparov {
     Save.add_prom_to_move(Constants.selected_promotion, !king.attackers.isEmpty)
     DrawActions.disable_promotion (p)
 
-    Constants.curr_player = 1 - Constants.curr_player
+    if ( !Constants.players(Constants.curr_player).ai){
+      Constants.curr_player = 1 - Constants.curr_player
+    }
 
     check_game_status (Constants.curr_player)
 
@@ -387,7 +401,7 @@ object Ksparov {
     if (Checkmate.check_mate (Ksparov.board, player)) {
      /* If so, finish the game. */
       DrawActions.draw_game_messages ("Mate", player)
-      Save.whowins = player 
+      Save.whowins = player
       Constants.game_won = true
     } else {
       /* Check if there is pat. */
@@ -395,6 +409,23 @@ object Ksparov {
         Save.whowins = -1
         DrawActions.draw_game_messages ("Pat", player)
       } else {
+      /*Check if the game is nulle */
+        if (Constants.players(player).check_nulle) {
+          Save.whowins = -1
+          DrawActions.draw_game_messages ("Nulle", player)
+        }
+        else {
+      /*Check if players are not asleep because nothing has been happening for 50 moves */
+          if (Constants.players(player).check_boring_game) {
+            Save.whowins = -1
+            DrawActions.draw_game_messages ("50coups", player)
+          }
+          else {
+            if (Constants.players(player).check_triple_repetition) {
+              Save.whowins = -1
+              DrawActions.draw_game_messages ("TripleRepetition", player)
+            }
+            else {
         /* Else check if there is check. */
         if (Constants.kings(player).attacked) {
           DrawActions.draw_game_messages ("Check", player)
@@ -416,7 +447,9 @@ object Ksparov {
       }
     }
   }
-
+}
+}
+}
   /* Called when click on a case of the board, defines the movment action. */
   def play_move {
     /* Checking if the game has been won. */
@@ -429,6 +462,7 @@ object Ksparov {
         Constants.players(Constants.curr_player).nb_move += 1
         Constants.players(Constants.curr_player).actual_time += Constants.periods(Constants.players(Constants.curr_player).actual_period).inc
         Constants.players(Constants.curr_player).moved = false
+        Constants.hashed_positions = (Aux.array_to_hashed_string(Ksparov.board)) :: Constants.hashed_positions
         check_game_status (1 - Constants.curr_player)
         if (Constants.promotion) {
           DrawActions.draw_game_messages ("Promotion", Constants.curr_player)
@@ -449,11 +483,13 @@ object Ksparov {
     /* Instantiate the kings and then the new board. */
     Constants.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     Constants.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
+    Constants.hashed_positions = List()
+    Constants.nb_boring_moves = 0
     DrawBoard.init_grids
     DrawBoard.create_grid_dead
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.board)
-    Save.init 
+    Save.init
     /* Defines the welcome message and types of players depending on the game type chosen. */
     n match {
       case 1 =>
@@ -476,7 +512,7 @@ object Ksparov {
         Constants.players(0) = new AI(0)
         Constants.players(1) = new Human(1)
         Constants.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
-      case 4 => 
+      case 4 =>
         Constants.game_type = 2
         Constants.players(0) = new Human(0)
         Constants.players(1) = new AI(1)

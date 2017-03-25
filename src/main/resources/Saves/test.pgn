@@ -1,8 +1,10 @@
 [ Event "Ksparov Tournament"]
 [ Site "Ksparov Software"]
-[ Date "2017.3.24"]
+[ Date "2017.03.24"]
 [ Round "Ronde numéro "]
 [ White "Garry Kasparov"]
 [ Black "Bobby Fischer"]
 [ Result "*"]
-*
+1. d2d4 e7e5 (2. d4d5 e5e4)
+2. d4d5 e5e4
+ *
