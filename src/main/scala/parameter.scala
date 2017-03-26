@@ -326,20 +326,12 @@ object DrawParameters {
             case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 100)
             case "nb_alice_board" => Parameters.nb_alice_board = math.max (2, Parameters.nb_alice_board - 1)
             case "nb_period" => Time.nb_period = math.max (0, Time.nb_period - 1)
-              if (Time.nb_period == 0) {
-                Time.clock_available = false
-              } else {
-                Time.clock_available = true
-              }
           }
         } else {
           variable match {
             case "ai_speed" => Parameters.ai_speed += 100
             case "nb_alice_board" => Parameters.nb_alice_board += 1
             case "nb_period" => Time.nb_period += 1
-              if (Time.nb_period > 0) {
-                Time.clock_available = true
-              }
           }
         }
         Ksparov.frame.contents = new DrawParameters.SubMenus (sub_menu_id)

@@ -148,9 +148,9 @@ object Time {
           if (Time.new_time != Time.last_time) {
             var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
             player.actual_time -= 1
-            var dimension = Ksparov.frame.bounds.getSize()
+            //var dimension = Ksparov.frame.bounds.getSize()
             Ksparov.frame.contents = new DrawBoard.Board
-            Ksparov.frame.size = dimension
+            //Ksparov.frame.size = dimension
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
             if (player.actual_time <= 0 && Time.clock_available) {
               if (player.nb_move < Time.periods(player.actual_period).nb_move || player.actual_period + 1 == Time.periods.length) {
@@ -362,6 +362,11 @@ def init_board {
 
   /* Define the variable for a new game, called after the game type selection. */
   def init_game (n : Int) {
+    if (Time.periods.length < 1) {
+      Time.clock_available = false
+    } else {
+      Time.clock_available = true
+    }
     /* Instantiate the kings and then the new board. */
     Ksparov.curr_game.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
