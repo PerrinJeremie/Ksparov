@@ -133,7 +133,7 @@ object Save{
     writer.write( "[ White \"" + white + "\"]\n")
     writer.write( "[ Black \"" + black + "\"]\n")
     writer.write( "[ Result \"" + result + "\"]\n")
-    if(Ksparov.curr_game.nb_grid == 2){
+    if (Ksparov.curr_game.alice_chess) {
     writer.write( "[ Type \"Alice\" ]\n\n")}
   }
 
@@ -188,14 +188,14 @@ object Save{
    Informations have to be filled by players except for result which is the result of the game :
    with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
   /** Returns 0 if all went well. Opens a file, writes tags, then moves, then result into said file.*/
-  def write_to_file (s:String,event:String,site:String,date:String,round:String,white:String,black:String) : Int = {
+  def write_to_file (s : String, event : String, site : String, date : String, round : String, white : String, black : String) : Int = {
     var result = whowins match { case 2 => "*" case 1 => "1-0" case 0 => "0-1" case -1 => "1/2-1/2"}
     is_valid(s+".pgn") match {
       case 0 =>
         date match{
           case Load.datereg(_*) =>
             val writer = new PrintWriter (new File (Display.save_path + s + ".pgn" ))
-            write_tags(writer,event,site,date,round,white,black,result)
+            write_tags(writer, event, site, date, round, white, black, result)
             write_moves(writer)
             writer.write(" "+result)
             writer.close()

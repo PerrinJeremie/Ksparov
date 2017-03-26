@@ -163,7 +163,7 @@ object DrawCharge {
 				case "Game" =>
         	        Load.list_of_moves = List()
         	        Load.get_list_move_from_file(scroll.item)
-        	        Ksparov.curr_game.game_type = 6
+        	        Ksparov.curr_game = new Ksparov.Game (6, 1, false)
         	        Ksparov.init_game(6)
         	        Ksparov.frame.contents = new DrawBoard.Board
 					Ksparov.frame.peer.setLocationRelativeTo(null)
