@@ -11,71 +11,91 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-/* The class that defines a player, it will be extended in Human just below and in AI in rules.scala. */
+/** Defines a player,then extended in Human just below and in AI in rules.scala. */
 abstract class Player (n : Int) {
+  /** The id of the player */
   val id : Int = n
+  /** True if the player has moved */
   var moved = false
-  /* ai is true if and only if the player is an artifical inteligence. */
+  /** ai true if the player is an Computer player or a Reproducer */
   var ai = false
+  /** Method that apply the move chose by the player */
   def getmove : Unit
+  /** Method that check if the player is pat or not */
   def check_pat : Boolean
+  /** Returns true if  */
   def check_nulle : Boolean = {
-    Ksparov.curr_game.game_nulle = Nulle.trivial_nulle( Ksparov.curr_game.board)
+    Ksparov.curr_game.game_nulle = Nulle.trivial_nulle (Ksparov.curr_game.board)
     Ksparov.curr_game.game_nulle
   }
+  /** Return true if the game is nulle because there has been 50 boring move */
   def check_boring_game : Boolean = {
     Ksparov.curr_game.game_nulle = (Ksparov.curr_game.nb_boring_moves >= 50)
     Ksparov.curr_game.game_nulle
-    }
+  }
+  /** Return true if the game is nulle because there has been a triple repetition in position */
   def check_triple_repetition : Boolean = {
     Ksparov.curr_game.game_nulle = Aux.contains_triplicates(Ksparov.curr_game.hashed_positions)
-    Ksparov.curr_game.game_nulle }
+    Ksparov.curr_game.game_nulle 
+  }
+  /** Method that apply the promotion for the AI or the Reproducer */
   def ai_promotion : Unit
+  /** Defines the current time of the player */
   var actual_time = 0
+  /** Defines the number of moves played by the player in the current period */
   var nb_move = 0
+  /** Defines the current period of the player */
   var actual_period = 0
 }
 
-/* The class for a human player, defines some method and mainly the getmove method. */
+/** Class for a human player */
 class Human(n : Int) extends Player(n : Int) {
 
-  /* Take a couple of positions and return true if the piece is owned by the player. */
+  /** Returns true if the piece of the position given in argument is owned by the player. */
   def isHis(x : Int, y : Int, grid : Int) : Boolean = {
+    /** True if every pieces has been checked */
     var done = false
-    /* We run from 0 to 15 for the player 1 (white) and from 16 to 31 for the player 0 (black) */
+    // We run from 0 to 15 for the player 1 (white) and from 16 to 31 for the player 0 (black)
     for (i <- (1 - id) * 16 to (2 - id) * 16 - 1) {
       done = done || ((Ksparov.curr_game.board(i).pos_x == x) && (Ksparov.curr_game.board(i).pos_y == y) && Ksparov.curr_game.board(i).grid == grid)
     }
     return done
   }
 
-  /* Select and apply a move. */
+  /** Apply the move selected by the player */
   override def getmove : Unit = {
-    /* Converting the case selected into x and y. */
+    /** The x axis position */
     var x = Ksparov.curr_game.selected_case % 8
+    /** The y axis position */
     var y = Ksparov.curr_game.selected_case / 8
+    /** The grid for the move */
     var grid = Ksparov.curr_game.selected_grid
-    /* First click, checking if the piece selected is own by the player. */
+    /** The current board of the game */
+    var board = Ksparov.curr_game.board
+    /** The selected piece */
+    var piece = Ksparov.curr_game.selected_piece
+    // First click, checking if the piece selected is own by the player.
     if (isHis(x, y, grid)) {
-      /* If so validate the first clic and open the second click. */
+      // If so validate the first clic and open the second click. 
       Ksparov.curr_game.first_choice_done = true
-      /* Then select the piece of position and draw possible moves. */
+      // Then select the piece of position and draw possible moves. 
       Ksparov.get_piece_of_pos(x, y, grid)
+      piece = Ksparov.curr_game.selected_piece
       DrawActions.clear_possible_moves
-      DrawActions.draw_possible_moves(Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).possible_moves(Ksparov.curr_game.board), x, y, Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).grid)
+      DrawActions.draw_possible_moves(board(piece).possible_moves(board), x, y, board(piece).grid)
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
       if (Ksparov.curr_game.first_choice_done) {
         /* loads part of the move to be added but has to wait for promotion information */
-        Save.add_move1( Ksparov.curr_game.selected_piece, (x,y))
+        Save.add_move1 (Ksparov.curr_game.selected_piece, (x,y))
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
-        var valid = Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).move(x, y, Ksparov.curr_game.board)
+        var valid = board(Ksparov.curr_game.selected_piece).move(x, y, board)
         if (valid) {
           /* the move being valid addit to the list of moves */
           Save.add_move2
           /* If the move is valid, apply the new board */
-          DrawActions.draw_game_board(Ksparov.curr_game.board)
+          DrawActions.draw_game_board(board)
           Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
         } else {
           /* If the move is invalid, research for a first click */
@@ -86,11 +106,14 @@ class Human(n : Int) extends Player(n : Int) {
     }
   }
 
+  /** Returns true if the human player is in pat */
   override def check_pat : Boolean = {
+    /** Number of moves possible for a player */
     var sum = 0
     for (i <- 0 to Ksparov.curr_game.board.length / 2 - 1) {
       sum = sum + Ksparov.curr_game.board(i + 16 * (1 - id)).possible_moves(Ksparov.curr_game.board).length
     }
+    // If there is no move possible, the player is in pat
     if (sum == 0) {
       Ksparov.curr_game.game_nulle = true
       true
@@ -98,21 +121,31 @@ class Human(n : Int) extends Player(n : Int) {
       false
     }
   }
+
+  /** There is no such method for a non-ai player */
   override def ai_promotion : Unit = {
     ()
   }
 }
 
+/** Defines every thing for the time in the game : game clock... */
 object Time {
+  /** Current second time of the computer */
   var new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+  /** Second time of the computer of the last measure */
   var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
 
+  /** Defines a period of game */
   class Period (period_time : Int, period_move : Int, increment : Int) {
+    /** The time for the period */
     var time = period_time
+    /** The minimum number of moves that should be played in the period */
     var nb_move = period_move
+    /** The increment after each move for this period */
     var inc = increment
   }
 
+  /** Add 0 on the left of a number to have a string with exactly 2 digits */
   def convert_in_two_digit (num : Int) = {
     if (num <= 0) {
         "00"
@@ -125,32 +158,46 @@ object Time {
     }
   }
 
+  /** Return the string of a format hh:mm:ss from a time given in second */
   def hhmmss_to_int (time : String) = {
+    /** Number of hours in the time */
     var hour = time.substring(0, 2)
+    /** Number of minutes in the time */
     var min = time.substring(3, 5)
+    /** Number of seconds in the time */
     var sec = time.substring(6, 8)
     sec.toInt + 60 * min.toInt + 3600 * hour.toInt
   }
 
+  /** Return the number of second in a time given in the format hh:mm:ss */
   def int_to_hhmmss (time : Int) = {
+    /** Number of hours in the time */
     var hour = time / 3600
+    /** Number of minutes in the time */
     var min = time / 60 - hour * 60
+    /** Number of seconds in the time */
     var sec = time % 60
     convert_in_two_digit (hour) + ":" + convert_in_two_digit (min) + ":" + convert_in_two_digit (sec)
   }
 
+  /** Defines the thread used to display the current clock during a game, and the board */
   class TimeThread extends Thread {
+    /** Display the board every 200 milliseconds */
     override def run {
+      // The thread runs as long as we do not stop it or the game is not over 
       while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
+        // The display is actualize every 200 milliseconds
         Thread.sleep (200)
+        // If after its sleep the thread is still alive, we update the current date
         if (Ksparov.curr_game.thread_in_life) {
           Time.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+          // If the current date is not the same as the previous one, we adapt the display
           if (Time.new_time != Time.last_time) {
             var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
             player.actual_time -= 1
-            //var dimension = Ksparov.frame.bounds.getSize()
+            var dimension = Ksparov.frame.bounds.getSize()
             Ksparov.frame.contents = new DrawBoard.Board
-            //Ksparov.frame.size = dimension
+            Ksparov.frame.size = dimension
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
             if (player.actual_time <= 0 && Time.clock_available) {
               if (player.nb_move < Time.periods(player.actual_period).nb_move || player.actual_period + 1 == Time.periods.length) {

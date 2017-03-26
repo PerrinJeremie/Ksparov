@@ -384,6 +384,7 @@ object DrawParameters {
       }
     }
 
+    // We define now the BorderPanel with the minus button, the label with the variable and the plus button
     contents += new IncButton ("-")
     contents += new Label {
       preferredSize = Display.dim_small
@@ -396,6 +397,7 @@ object DrawParameters {
     contents += new IncButton ("+")
   }
 
+  /** Draw the selection of the speed of the AI */
   class SpeedAI extends BorderPanel {
     layout (new BackgroundCase (1, 1)) = West
 
@@ -411,6 +413,7 @@ object DrawParameters {
     layout (new BackgroundCase (1, 2)) = East
   }
 
+  /** Draw the selection of the number of board in Alice mode */
   class NbAliceBoard extends BorderPanel {
     layout (new BackgroundCase (1, 1)) = West
 
@@ -426,6 +429,7 @@ object DrawParameters {
     layout (new BackgroundCase (1, 2)) = East
   }
 
+  /** Draw the playibility sub menu */
   class PlayabilitySubMenu extends BorderPanel {
     layout (new BorderPanel {
       layout (new BackgroundCase (7, 1)) = West
@@ -445,10 +449,14 @@ object DrawParameters {
     layout (new BackgroundCase (7, 1)) = East 
   }
 
+  /** Textfield array for the selection of the time of a period */
   var time_textfields = new Array [TextField] (Time.nb_period)
+  /** Textfield array for the selection of the number of move of a period */
   var move_textfields = new Array [TextField] (Time.nb_period)
+  /** Textfield array for the selection of the increment of a period */
   var inc_textfields = new Array [TextField] (Time.nb_period)
 
+  /** Draw the selection of the number of periods */
   class NbPeriodChoice extends BorderPanel {
     layout (new BackgroundCase (1, 2)) = West
 
@@ -464,7 +472,9 @@ object DrawParameters {
     layout (new BackgroundCase (1, 2)) = East
   }
 
+  /** Draw the selection for the parameters of a given period */
   class PeriodOptions (id : Int) extends BorderPanel {
+    // Time of the period
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Durée de la<br>période au<br>format hh:mm:ss</html>") {
         font = Display.para_clock_font
@@ -473,6 +483,7 @@ object DrawParameters {
       layout (time_textfields (id)) = East
     }) = West
 
+    // Number of move of the period
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {
         font = Display.para_clock_font
@@ -481,6 +492,7 @@ object DrawParameters {
       layout (move_textfields (id)) = East
     }) = Center
 
+    // Increment of the period
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Incrément après<br>un coup<br>en seconde</html>") {
         font = Display.para_clock_font
@@ -490,6 +502,7 @@ object DrawParameters {
     }) = East
   }
 
+  /** Draw the selection for every periods of the game */
   class Periods (nb_period : Int) extends GridPanel (2 * nb_period + 1, 1) {
     for (i <- 0 to 2 * nb_period) {
       if (i % 2 == 0) {
@@ -500,21 +513,27 @@ object DrawParameters {
     }
   }
 
+  /** Draw the clock sub-menu */
   class ClockSubMenu (nb_period : Int) extends BorderPanel {
+    // Actualize arrays with the current number of periods
     time_textfields = new Array [TextField] (nb_period)
     move_textfields = new Array [TextField] (nb_period)
     inc_textfields = new Array [TextField] (nb_period)
 
+    // Fill arrays with corresponding textfiels
     for (i <- 0 to nb_period - 1) {
       time_textfields (i) = new TextField {
         font = Display.text_font
         try {
+          // Try to draw the current value of the time of this period
           text = Time.int_to_hhmmss(Time.periods(i).time)
         } catch {
+          // If it is not defined yet, initializes the textfield with the default value
           case _ : Throwable => text = "00:00:00"
         }
         preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
         listenTo(keys)
+        // Restrict the possible keys entered to digits or the caracter ':'
         reactions += {
             case e : KeyTyped => if (!e.char.isDigit && e.char != ':') {e.consume}     
         }
@@ -522,12 +541,15 @@ object DrawParameters {
       move_textfields (i) = new TextField {
         font = Display.text_font
         try {
+          // Try to draw the current value of the number of moves of this period
           text = Time.periods(i).nb_move.toString
         } catch {
+          // If it is not defined yet, initializes the textfield with the default value
           case _ : Throwable => text = "0"
         }
         preferredSize = Display.dim_small
         listenTo(keys)
+        // Restrict the possible keys entered to digits
         reactions += {
             case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
         }
@@ -535,18 +557,22 @@ object DrawParameters {
       inc_textfields (i) = new TextField {
         font = Display.text_font
         try {
+          // Try to draw the current value of the increment of this period
           text = Time.periods(i).inc.toString
         } catch {
+          // If it is not defined yet, initializes the textfield with the default value
           case _ : Throwable => text = "0"
         }
         preferredSize = Display.dim_small
         listenTo(keys)
+        // Restrict the possible keys entered to digits
         reactions += {
             case e: KeyTyped => if (!e.char.isDigit) {e.consume}     
         }
       }
     }
 
+    // Once arrays has been filled, we define the BorderPanel
     layout (new BorderPanel {
       layout (new BackgroundCase (math.max (2 * nb_period + 5, 7), 1)) = West
       layout (new ChoiceColumn (math.max (2 * nb_period + 5, 7), 3)) = East
@@ -571,7 +597,7 @@ object DrawParameters {
     layout (new BackgroundCase (math.max (2 * nb_period + 5, 7), 1)) = East
   }
 
-  /* The final menu with the texture choice first then the piece choice and finally a come back button. */
+  /** Draw the sub-menu given in argument */
   class SubMenus (id : Int) extends GridPanel (1, 1) {
     id match {
       case 1 => contents += new DisplaySubMenu
