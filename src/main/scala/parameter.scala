@@ -11,13 +11,14 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+/** Defines evrything that is linked with the display */
 object Display {
 
+  /** Adapts displays to the resolutions of the screen */
   def apply_resolution {
 
-    /* Defining the dimension and numbers of the cases */
+    /** The resolution of the screen */
     var resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
     if (resolution.getHeight < 1000.0) {
       dim_path = "Min/"
       base_size = 50
@@ -41,47 +42,66 @@ object Display {
         dim_path = "Max/"
       }
     }
+  // Adapt the the resources_path to the resolution of the screen
   resources_path = "src/main/resources/" + dim_path
   }
 
+  /** The path that is changes based on the resolution of the screen */
   var dim_path = ""
+  /** Base size of labels and buttons which is adapt to the resolution */
   var base_size = 70
+  /** The dimension for small item */
   var dim_small = new Dimension (base_size, base_size)
+  /** The dimension for big items */
   var dim_big = new Dimension (base_size * 3, base_size)
+  /** The dimension for the message_drawer of the board, also used for other items */
   var dim_message_drawer = new Dimension (base_size * 5, base_size)
 
+  /** Path where resources are */
   var resources_path = "src/main/resources/Max"
+  /** Path for the set of pieces chosen, defines by Parameters.apply */
   var pieces_path = ""
+  /** Path for the saves */
   var save_path = "src/main/resources/Saves/"
+  /** Path for the texture of the background, defines by Parameters.apply */
   var texture_path = ""
 
+  /** Font for labels and buttons of Ksparov */
   var text_font = new Font ("Gill Sans Cyr MT", 1, 16)
+  /** Color of the text which changes with the background  */
   var text_color = Color.black
+  /** Font for the number of dead pieces */
   var num_dead_font = new Font ("Arial", 0, 25)
+  /** Font for the parameters of clocks */
   var para_clock_font = new Font ("Arial", 1, 14)
 }
 
+/** Defines methods and variables for the parameter */
 object Parameters {
-  def apply = {
-    var i = 0
-    /* Initializing lines with empty strings. */
-    var lines = new Array [String] (7)
 
-    /* Reading each lines of the file. */
+  /** Reads parameters from the src/main/resources/Parameters file and apply it */
+  def apply = {
+    /** Index for the iterator */
+    var i = 0
+    /** Array with lines of the Parameters file */
+    var lines = new Array [String] (Source.fromFile("src/main/resources/Parameters").getLines.length)
+
+    // Reading each lines of the file.
     for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
       lines (i) = line.toString
       i += 1
     }
 
-    /* Updating variables. */
+    // Updating variables.
     Display.pieces_path = "Pieces/" + lines(1) + "/"
     Display.texture_path = "Texture_small_" + lines(2) + ".png"
     Parameters.ai_speed = lines(3).toInt
     Parameters.nb_alice_board = lines(4).toInt
     Time.nb_period = lines(5).toInt
+    // Parse the line that defines every period of the clock
     parse_period_string(lines(6))
 
-    /* Defining the text color depending on the texture selected. */
+    // Defining the text color depending on the texture selected.
     lines(2).toInt match {
       case 1 => Display.text_color = Color.white
       case 2 => Display.text_color = Color.white
@@ -91,6 +111,7 @@ object Parameters {
     }
   }
 
+  /** Write the parameters in the Parameter file */
   def write {
     val pattern = new Regex("\\d")
     var writer = new PrintWriter(new File ("src/main/resources/Parameters"))
@@ -100,30 +121,40 @@ object Parameters {
     writer.write (Parameters.ai_speed.toString + "\n")
     writer.write (Parameters.nb_alice_board.toString + "\n")
     writer.write (Time.nb_period.toString + "\n")
+    // Transform periods in one string and write it in the file
     writer.write (Parameters.periods_to_string(Time.periods))
     writer.close
   }
 
+  /** Concert an Array of perriod into one string */
   def periods_to_string (periods_array : Array [Time.Period]) = {
+    /** The result string */
     var result = ""
     if (periods_array.length > 0) {
       for (i <- 0 to periods_array.length - 1) {
        result += "(" + periods_array(i).time + "," + periods_array(i).nb_move + "," + periods_array(i).inc + ")"
      }
     } else {
+      // If there is no period, the string only contains 0
       result = "0"
     }
     result
   }
 
+  /** Parse the string of the periods to defines game periods */
   def parse_period_string (periods_string : String) {
+    // Initializes the periods array
     Time.periods = new Array [Time.Period] (Time.nb_period)
+    // If there is non periods, disables clocks
     if (periods_string == "0") {
       Time.clock_available = false
     } else {
       Time.clock_available = true
+      /** Pattern to recognize a period definition */
       val pattern =  """([0-9]+),([0-9]+),([0-9]+)""".r
+      /** Index variable for the iterator on each period */
       var i = 0
+      // For each period in the string, fill the periods array with it
       periods_string.split("\\(|\\)").filter(s => s != "").iterator.foreach(x => x match { 
         case pattern(s1,s2,s3) => Time.periods(i) = new Time.Period (s1.toInt, s2.toInt, s3.toInt)
           i += 1
@@ -131,16 +162,18 @@ object Parameters {
     }
   }
 
+  /** Waiting time for the AI to move */
   var ai_speed = 400
+  /** Number of boards used in Alice mode */
   var nb_alice_board = 2
+  /** Number of cases of a board */
   var nb_case_board = 8
 }
 
-/** Contains all classes to draw parameters selections.
-   Parameters are saved in src/main/resources/Parameters */
+/** Contains all classes to draw parameters selections. */
 object DrawParameters {
 
-  /** Defines button for the selection of the sub menu. */
+  /** Defines button for the selection of the parameter sub menu. */
   class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
     preferredSize = new Dimension (Display.base_size, Display.base_size)
     maximumSize = new Dimension (Display.base_size, Display.base_size)
@@ -149,7 +182,7 @@ object DrawParameters {
     action = new Action ("") {
       icon = new javax.swing.ImageIcon(Display.resources_path + "parameter_sub_menu" + id + ".png")
       background = new Color (0, 0, 0)
-      /* The border is red for the selected sub-menu. */
+      // The border is red for the selected sub-menu.
       if (current_menu) {
         border = new javax.swing.border.LineBorder (Color.red, 2)
       }
@@ -183,22 +216,29 @@ object DrawParameters {
     preferredSize = new Dimension (Display.base_size * 9, Display.base_size)
     border = new javax.swing.border.LineBorder (Color.black, 2)
     action = Action("Appliquer les changements et revenir au menu principal") {
+      // The action depends on the sub-menu we are in 
       sub_menu_id match {
+        // The clock sub-menu
         case 3 => 
           /** The regex used to check if time for every period is well formated. */
           val time_regex = """([\d][\d]):([0-5][0-9]):([0-5][0-9])""".r
+          /** True if the time entered is correct, false on the opposite */
           var correct_time = true
           for (i <- 0 to Time.nb_period - 1) {
+            // Check if the time of the period match the regex
             time_textfields(i).text match {
+              // If it is ok, check if the time is non zero, if not display the reason why we do not accept the time given
               case time_regex (_*) => 
                 if (Time.hhmmss_to_int(time_textfields(i).text) == 0) {
                   time_textfields(i).text = "Doit être > 0"
                   correct_time = false
                 }
+              // If not, draw the reason why we do not accept the entry
               case _ => time_textfields(i).text = "hh:mm:ss" 
                 correct_time = false
             }
           }
+          // If all entries are correct, we adjust the periods array, we write the new parameters and we come back to the main menu
           if (correct_time) {
             Time.periods = new Array [Time.Period] (Time.nb_period)
             for (i <- 0 to Time.nb_period - 1) {
@@ -208,47 +248,47 @@ object DrawParameters {
             Ksparov.frame.contents = new DrawMenu.Menu
             Ksparov.frame.peer.setLocationRelativeTo(null)
           }
+        // The playability sub-menu
         case 2 =>
           Parameters.write
           Ksparov.frame.contents = new DrawMenu.Menu
           Ksparov.frame.peer.setLocationRelativeTo(null)
-        case 1 => 
+        // Display sub-menu
+        case 1 =>
+          Parameters.write
           Ksparov.frame.contents = new DrawMenu.Menu
           Ksparov.frame.peer.setLocationRelativeTo(null)
       }
     }
   }
 
-  /* Buttons for the texture choice, the parameter defines which texture the button stands for. */
+  /** Buttons for the texture choice, the parameter defines which texture the button stands for. */
   class TextureOption (number : Int) extends Button {
-    val pattern = new Regex("\\d")
     preferredSize = Display.dim_small
     /* The border is red for the actual parameter and black for other. The regural expression
        get the number in the texture path. */
-    if ((pattern findAllIn Display.texture_path).mkString.toInt == number) {
+    if ((new Regex("\\d") findAllIn Display.texture_path).mkString.toInt == number) {
       border = new javax.swing.border.LineBorder (Color.red, 2)
     } else {
       border = new javax.swing.border.LineBorder (Color.black, 2)
     }
     action = new Action("") {
-      /* The action is different for other button because to have an icon on a button, you have to put in the action. */
+      // Defines the icon of the button
       icon = new javax.swing.ImageIcon(Display.resources_path + "Texture_small_" + number.toString + ".png")
       def apply = {
-        /* When the button is pushed, we write the new parameters in the src/main/resources/Parameters file.
-           After doing this, we apply the new parameters to that choice is dynamic. */
+        // The selected texture is actualize in real time to have a dynamic display
         Display.texture_path = "Texture_small_" + number.toString + ".png"
-        Parameters.write
-        Parameters.apply
         Ksparov.frame.contents = new DrawParameters.SubMenus (1)
       }
     }
   }
 
-  /* Button fot the piece type choice, excatly the same as before. */
+  /** Button for the piece type choice */
   class PieceOption (number : Int) extends Button {
-    val pattern = new Regex("\\d")
     preferredSize = Display.dim_small
-    if ((pattern findAllIn Display.pieces_path).mkString.toInt == number) {
+    /* The border is red for the actual parameter and black for other. The regural expression
+       get the number in the texture path. */
+    if ((new Regex("\\d") findAllIn Display.pieces_path).mkString.toInt == number) {
       border = new javax.swing.border.LineBorder (Color.red, 2)
     } else {
       border = new javax.swing.border.LineBorder (Color.black, 2)
@@ -257,16 +297,14 @@ object DrawParameters {
       icon = new javax.swing.ImageIcon(Display.resources_path + "Pieces/" + number.toString + "/1/King.png")
       def apply {
         Display.pieces_path = "Pieces/" + number.toString + "/"
-        Parameters.write
-        Parameters.apply
         Ksparov.frame.contents = new DrawParameters.SubMenus (1)
       }
     }
   }
 
-  /* The menu for texture : an alternance of background cases and texture option. */
+  /** The menu for texture : an alternance of background cases and texture option. */
   class TextureGrid extends GridPanel (1, 9) {
-    for( i <- 1 to 9) {
+    for (i <- 1 to 9) {
       if (i % 2 == 0) {
         contents += new BackgroundCase (1, 1)
       } else {
@@ -275,9 +313,9 @@ object DrawParameters {
     }
   }
 
-  /* The menu for pieces : an alternance of background cases and pieces option. */
+  /** The menu for pieces : an alternance of background cases and pieces option. */
   class PiecesGrid extends GridPanel (1, 9) {
-    for( i <- 1 to 9) {
+    for (i <- 1 to 9) {
       if (i % 2 == 0 || i > 4) {
         contents += new BackgroundCase (1, 1)
       } else {
@@ -286,6 +324,7 @@ object DrawParameters {
     }
   }
 
+  /** Message to explain the choice that has to be done */
   class ChoiceMessage (text : String) extends Label (text) {
     font = Display.text_font
     border = new javax.swing.border.LineBorder (Color.black, 2)
@@ -293,6 +332,7 @@ object DrawParameters {
     opaque = true
   }
 
+  /** Final display sub-menu with all its items */
   class DisplaySubMenu extends BorderPanel {
     layout (new BorderPanel {
       layout (new BackgroundCase (9, 1)) = West
@@ -314,17 +354,23 @@ object DrawParameters {
     layout (new BackgroundCase (9, 1)) = East
   }
 
+  /** Draw a label with a variable and one plus button and one minus button to increase or decrease the variable */
   class Increment (variable : String, sub_menu_id : Int) extends GridPanel (1, 3) {
+    /** Button to increase or decrease a variable */
     class IncButton (sign : String) extends Button {
       preferredSize = Display.dim_small
       maximumSize = Display.dim_small
       minimumSize = Display.dim_small
       font = Display.text_font
       action = Action (sign) {
+        // The action depends on the sign of the button 
         if (sign == "-") {
           variable match {
+            // The speed should not be under 0
             case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 100)
+            // The number of board for alice game is at least 2
             case "nb_alice_board" => Parameters.nb_alice_board = math.max (2, Parameters.nb_alice_board - 1)
+            // The number of periods can not be under 0
             case "nb_period" => Time.nb_period = math.max (0, Time.nb_period - 1)
           }
         } else {
