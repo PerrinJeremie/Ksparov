@@ -161,9 +161,9 @@ object DrawCharge {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Game" =>
+        	        Ksparov.curr_game = new Ksparov.Game (6, 1, false)
         	        Load.list_of_moves = List()
         	        Load.get_list_move_from_file(scroll.item)
-        	        Ksparov.curr_game = new Ksparov.Game (6, 1, false)
         	        Ksparov.init_game(6)
         	        Ksparov.frame.contents = new DrawBoard.Board
 					Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -607,11 +607,6 @@ object DrawBoard {
 	   we need it in an array to change the icon variable depending on board.
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 	def init_grids {
-		if (Ksparov.curr_game.alice_chess) {
-			Ksparov.curr_game.nb_grid = Parameters.nb_alice_board
-		} else {
-			Ksparov.curr_game.nb_grid = 1
-		}
 		Ksparov.curr_game.grids = new Array [Array[DrawBoard.Case]] (Ksparov.curr_game.nb_grid)
 		for(i <- 0 to Ksparov.curr_game.nb_grid - 1) {
 			Ksparov.curr_game.grids (i) = new Array [Case] (Parameters.nb_case_board * Parameters.nb_case_board)

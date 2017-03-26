@@ -5,8 +5,7 @@
 [ White "Garry Kasparov"]
 [ Black "Bobby Fischer"]
 [ Result "*"]
-1. e2e4 b7b5
-2. e4e5 c7c5
-3. e5e6 f7f5
-4. e6xd7 c5c4
- *
+[ Type "Alice2" ]
+
+1. g2g4 e7e5
+2. b2b3 *

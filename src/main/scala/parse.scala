@@ -125,16 +125,17 @@ object Save{
    }*/
 
   /** Writes the tag of the .PGN file.*/
-  def write_tags(writer : PrintWriter, event : String, site : String, date : String, round : String, white : String, black : String, result : String): Unit ={
-    writer.write( "[ Event \"" + event + "\"]\n")
-    writer.write( "[ Site \"" + site + "\"]\n")
-    writer.write( "[ Date \"" + date + "\"]\n")
-    writer.write( "[ Round \"" + round + "\"]\n")
-    writer.write( "[ White \"" + white + "\"]\n")
-    writer.write( "[ Black \"" + black + "\"]\n")
-    writer.write( "[ Result \"" + result + "\"]\n")
+  def write_tags(writer : PrintWriter, event : String, site : String, date : String, round : String, white : String, black : String, result : String): Unit = {
+    writer.write ("[ Event \"" + event + "\"]\n")
+    writer.write ("[ Site \"" + site + "\"]\n")
+    writer.write ("[ Date \"" + date + "\"]\n")
+    writer.write ("[ Round \"" + round + "\"]\n")
+    writer.write ("[ White \"" + white + "\"]\n")
+    writer.write ("[ Black \"" + black + "\"]\n")
+    writer.write ("[ Result \"" + result + "\"]\n")
     if (Ksparov.curr_game.alice_chess) {
-    writer.write( "[ Type \"Alice\" ]\n\n")}
+      writer.write ("[ Type \"Alice"+ Parameters.nb_alice_board.toString + "\" ]\n\n")
+    }
   }
 
   /** translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).*/
@@ -281,8 +282,8 @@ object Load {
     pos_fin  = (0,0)
   }
 
-  /** Predicates true if char is not a  blank space character */
-  def pnotspace( c : Char) : Boolean = {
+  /** Predicates true if char is not a blank space character */
+  def pnotspace (c : Char) : Boolean = {
     return ( c != ' ' && c != '\t' && c != '\n')
   }
 
@@ -486,15 +487,17 @@ object Load {
   def read_line (lines : String) : Unit = {
     lines match {
       case matchtag(_*) =>
-        matchtag1.findFirstIn(lines) match{
+        matchtag1.findFirstIn(lines) match {
           case Some(s1) =>
-            matchtag2.findFirstIn(lines) match{
+            matchtag2.findFirstIn(lines) match {
               case Some(s2) =>
                 var s11 = s1.filter(pnotspace).filter(pnotspec)
                 var s21 = s2.filter(pnotspec)
                 infos += ( s11 -> s21)
-                if (s11 == "Type" && s21 == "Alice") {
+                if (s11 == "Type") {
+                  var nb_board = s21.substring (5, 6)
                   Ksparov.curr_game.alice_chess = true
+                  Ksparov.curr_game.nb_grid = nb_board.toInt
                 } else {
                   Ksparov.curr_game.alice_chess = false
                 }
@@ -518,7 +521,7 @@ object Load {
     var i = 1
     var texte_entier = ""
 
-    for (lines <- Source.fromFile(Display.save_path + filename + ".pgn").getLines()){
+    for (lines <- Source.fromFile(Display.save_path + filename + ".pgn").getLines()) {
       texte_entier += lines + "\n"
     }
 
