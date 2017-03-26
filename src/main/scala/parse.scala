@@ -148,6 +148,8 @@ object Save{
 
     def write_move(i : Int, move: Moves) : Unit = {
       if (i % 2 == 1){
+        if (Ksparov.curr_game.alice_chess){
+          writer.write("%")}
         writer.write( ((i+1)/2).toString + ".")
       }
       move._1 match{
@@ -495,9 +497,13 @@ object Load {
                 var s21 = s2.filter(pnotspec)
                 infos += ( s11 -> s21)
                 if (s11 == "Type") {
-                  var nb_board = s21.substring (5, 6)
-                  Ksparov.curr_game.alice_chess = true
-                  Ksparov.curr_game.nb_grid = nb_board.toInt
+                  var alicereg = """.*[A a]lice(\d*)""".r
+                  s21 match{
+                    case alicereg(n) =>
+                      Ksparov.curr_game.alice_chess = true
+                      Ksparov.curr_game.nb_grid = n.toInt
+                    case _ => ()
+                  }
                 } else {
                   Ksparov.curr_game.alice_chess = false
                 }
@@ -506,7 +512,11 @@ object Load {
           case None => () /* Not possible */
         }
       case emptyline(_*) => ()
-      case extension(_*) => ()
+      case extension(s) => if(Ksparov.curr_game.alice_chess){
+                              read_moves(s)
+                           } else {
+                              ()
+                           }
       case comments(s1,s2) => read_moves(s1)
       case _ => read_moves(lines)
     }
