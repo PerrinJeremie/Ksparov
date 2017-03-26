@@ -83,14 +83,10 @@ object Parameters {
   def apply = {
     /** Index for the iterator */
     var i = 0
-    /** Array with lines of the Parameters file */
-    var lines = new Array [String] (Source.fromFile("src/main/resources/Parameters").getLines.length)
 
-    // Reading each lines of the file.
-    for (line <- Source.fromFile("src/main/resources/Parameters").getLines) {
-      lines (i) = line.toString
-      i += 1
-    }
+
+    /** Array with lines of the Parameters file */
+    var lines = Source.fromFile("src/main/resources/Parameters").getLines.toArray
 
     // Updating variables.
     Display.pieces_path = "Pieces/" + lines(1) + "/"
