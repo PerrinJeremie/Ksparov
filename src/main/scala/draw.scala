@@ -63,12 +63,10 @@ object DrawMenu {
 		action = Action (name) {
 			name match {
 				case "<html><div style='text-align : center;'>Jouer une<br>partie classique</html>" =>
-					Ksparov.curr_game.alice_chess = false
-					Ksparov.frame.contents = new DrawGameSelection.Menu
+					Ksparov.frame.contents = new DrawGameSelection.Menu (false)
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" =>
-					Ksparov.curr_game.alice_chess = true
-					Ksparov.frame.contents = new DrawGameSelection.Menu
+					Ksparov.frame.contents = new DrawGameSelection.Menu (true)
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Charger une partie" =>
                     DrawCharge.define_listgame
@@ -291,12 +289,12 @@ object DrawSave {
 					return_type match {
 						case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 							Ksparov.frame.peer.setLocationRelativeTo(null)
-						case "Game" => Ksparov.timer = new Time.TimeThread
-    						Ksparov.ai_move = new AIMoveThread
+						case "Game" => Ksparov.curr_game.timer = new Time.TimeThread
+    						Ksparov.curr_game.ai_move = new AIMoveThread
     						Ksparov.curr_game.thread_in_life = true
     						Ksparov.frame.contents = new DrawBoard.Board
-	    					Ksparov.timer.start
-    						Ksparov.ai_move.start
+	    					Ksparov.curr_game.timer.start
+    						Ksparov.curr_game.ai_move.start
 						case "Quit" => Ksparov.frame.dispose()
 				}
             	case -1 =>
@@ -496,17 +494,21 @@ object DrawParameters {
 					/** The regex used to check if time for every period is well formated. */
 					val time_regex = """([\d][\d]):([0-5][0-9]):([0-5][0-9])""".r
 					var correct_time = true
-					for (i <- 0 to Ksparov.curr_game.nb_period - 1) {
+					for (i <- 0 to Time.nb_period - 1) {
 						time_textfields(i).text match {
-							case time_regex (_*) => ()
+							case time_regex (_*) => 
+								if (Time.hhmmss_to_int(time_textfields(i).text) == 0) {
+									time_textfields(i).text = "Doit être > 0"
+									correct_time = false
+								}
 							case _ => time_textfields(i).text = "hh:mm:ss" 
 								correct_time = false
 						}
 					}
 					if (correct_time) {
-						Ksparov.curr_game.periods = new Array [Time.Period] (Ksparov.curr_game.nb_period)
-						for (i <- 0 to Ksparov.curr_game.nb_period - 1) {
-							Ksparov.curr_game.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
+						Time.periods = new Array [Time.Period] (Time.nb_period)
+						for (i <- 0 to Time.nb_period - 1) {
+							Time.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
 						}
 						Parameters.write
 						Ksparov.frame.contents = new DrawMenu.Menu
@@ -627,20 +629,23 @@ object DrawParameters {
 			action = Action (sign) {
 				if (sign == "-") {
 					variable match {
-						case "ai_speed" => Ksparov.curr_game.ai_speed = math.max (0, Ksparov.curr_game.ai_speed - 100)
-						case "nb_alice_board" => Ksparov.curr_game.nb_alice_board = math.max (2, Ksparov.curr_game.nb_alice_board - 1)
-						case "nb_period" => Ksparov.curr_game.nb_period = math.max (0, Ksparov.curr_game.nb_period - 1)
-							if (Ksparov.curr_game.nb_period == 0) {
-								Ksparov.curr_game.clock_available = false
+						case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 100)
+						case "nb_alice_board" => Parameters.nb_alice_board = math.max (2, Parameters.nb_alice_board - 1)
+						case "nb_period" => Time.nb_period = math.max (0, Time.nb_period - 1)
+							if (Time.nb_period == 0) {
+								Time.clock_available = false
 							} else {
-								Ksparov.curr_game.clock_available = true
+								Time.clock_available = true
 							}
 					}
 				} else {
 					variable match {
-						case "ai_speed" => Ksparov.curr_game.ai_speed += 100
-						case "nb_alice_board" => Ksparov.curr_game.nb_alice_board += 1
-						case "nb_period" => Ksparov.curr_game.nb_period += 1
+						case "ai_speed" => Parameters.ai_speed += 100
+						case "nb_alice_board" => Parameters.nb_alice_board += 1
+						case "nb_period" => Time.nb_period += 1
+							if (Time.nb_period > 0) {
+								Time.clock_available = true
+							}
 					}
 				}
 				Ksparov.frame.contents = new DrawParameters.SubMenus (sub_menu_id)
@@ -651,9 +656,9 @@ object DrawParameters {
 		contents += new Label {
 			preferredSize = Display.dim_small
 			variable match {
-				case "ai_speed" => text = Ksparov.curr_game.ai_speed.toString
-				case "nb_alice_board" => text = Ksparov.curr_game.nb_alice_board.toString
-				case "nb_period" => text = Ksparov.curr_game.nb_period.toString
+				case "ai_speed" => text = Parameters.ai_speed.toString
+				case "nb_alice_board" => text = Parameters.nb_alice_board.toString
+				case "nb_period" => text = Time.nb_period.toString
 			}
 		}
 		contents += new IncButton ("+")
@@ -708,9 +713,9 @@ object DrawParameters {
 		layout (new BackgroundCase (7, 1)) = East	
 	}
 
-	var time_textfields = new Array [TextField] (Ksparov.curr_game.nb_period)
-	var move_textfields = new Array [TextField] (Ksparov.curr_game.nb_period)
-	var inc_textfields = new Array [TextField] (Ksparov.curr_game.nb_period)
+	var time_textfields = new Array [TextField] (Time.nb_period)
+	var move_textfields = new Array [TextField] (Time.nb_period)
+	var inc_textfields = new Array [TextField] (Time.nb_period)
 
 	class NbPeriodChoice extends BorderPanel {
 		layout (new BackgroundCase (1, 2)) = West
@@ -769,7 +774,7 @@ object DrawParameters {
 			time_textfields (i) = new TextField {
 				font = Display.text_font
 				try {
-					text = Time.int_to_hhmmss(Ksparov.curr_game.periods(i).time)
+					text = Time.int_to_hhmmss(Time.periods(i).time)
 				} catch {
 					case _ : Throwable => text = "00:00:00"
 				}
@@ -782,7 +787,7 @@ object DrawParameters {
 			move_textfields (i) = new TextField {
 				font = Display.text_font
 				try {
-					text = Ksparov.curr_game.periods(i).nb_move.toString
+					text = Time.periods(i).nb_move.toString
 				} catch {
 					case _ : Throwable => text = "0"
 				}
@@ -795,7 +800,7 @@ object DrawParameters {
 			inc_textfields (i) = new TextField {
 				font = Display.text_font
 				try {
-					text = Ksparov.curr_game.periods(i).inc.toString
+					text = Time.periods(i).inc.toString
 				} catch {
 					case _ : Throwable => text = "0"
 				}
@@ -817,7 +822,7 @@ object DrawParameters {
 				layout (new BackgroundCase (1, 10)) = North
 				layout (new NbPeriodChoice) = South
 			}) = North
-			if (Ksparov.curr_game.nb_period == 0) {
+			if (Time.nb_period == 0) {
 				layout (new BackgroundCase (3, 10)) = Center
 			} else {
 				layout (new Periods (nb_period)) = Center
@@ -836,7 +841,7 @@ object DrawParameters {
 		id match {
 			case 1 => contents += new DisplaySubMenu
 			case 2 => contents += new PlayabilitySubMenu
-			case 3 => contents += new ClockSubMenu (Ksparov.curr_game.nb_period)
+			case 3 => contents += new ClockSubMenu (Time.nb_period)
 		}
 	}
 
@@ -845,12 +850,12 @@ object DrawParameters {
 /* This object is for the game selection : Human vs Human, AI vs AI or AI vs Human. */
 object DrawGameSelection {
 
-	class MessageDrawer extends Label {
+	class MessageDrawer (alice : Boolean) extends Label {
 		font = Display.text_font
 		background = new Color (200, 200, 200)
 		border = new javax.swing.border.LineBorder (Color.black, 2)
 		opaque = true
-		if (Ksparov.curr_game.alice_chess) {
+		if (alice) {
 			text = "<html><div style='text-align : center;'>Vous avez choisi de jouer aux échecs d'Alice,<br>veuillez sélectionner le type de jeu !</html>"
 		} else {
 			text = "<html><div style='text-align : center;'>Vous avez choisi de jouer aux échecs classiques,<br>veuillez sélectionner le type de jeu !</html>"
@@ -858,9 +863,14 @@ object DrawGameSelection {
 	}
 
 	/* The button for the choice selection : change the value of Ksparov.curr_game.game_type when pressed. */
-	class Option (name : String, num : Int) extends PrettyBigButton {
+	class Option (name : String, num : Int, alice : Boolean) extends PrettyBigButton {
 		action = Action (name) {
-			Ksparov.curr_game.game_type = num
+			if (alice) {
+				Ksparov.curr_game = new Ksparov.Game (num, Parameters.nb_alice_board, alice)
+
+			} else {
+				Ksparov.curr_game = new Ksparov.Game (num, 1, alice)
+			}
 			/* Launched a game. */
 		    Ksparov.init_game (num)
     		Ksparov.frame.contents = new DrawBoard.Board
@@ -869,19 +879,19 @@ object DrawGameSelection {
 	}
 
 	/* The menu with options and a come back button. */
-	class CenterGrid extends GridPanel (7, 3) {
+	class CenterGrid (alice : Boolean) extends GridPanel (7, 3) {
 		for (i <- 0 to 6) {
 			i match {
 				case 1 =>
-					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>couleur aléatoire</html>", 2)
+					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>couleur aléatoire</html>", 2, alice)
 					contents += new BackgroundCase (1, 3)
-					contents += new Option ("Humain vs Humain", 1)
+					contents += new Option ("Humain vs Humain", 1, alice)
 				case 3 =>
-					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les blancs</html>", 3)
+					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les blancs</html>", 3, alice)
 					contents += new BackgroundCase (1, 3)
-					contents += new Option ("IA vs IA", 5)
+					contents += new Option ("IA vs IA", 5, alice)
 				case 5 =>
-					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4)
+					contents += new Option ("<html><div style='text-align : center;'>Humain vs IA<br>jouer les noirs</html>", 4, alice)
 					contents += new BackgroundCase (1, 3)
 					contents += new Button {
 						font = Display.text_font
@@ -899,22 +909,22 @@ object DrawGameSelection {
 		}
 	}
 
-	class WelcomeMessage extends BorderPanel {
+	class WelcomeMessage (alice : Boolean) extends BorderPanel {
 		layout (new BackgroundCase (1, 11)) = North
 		layout (new BorderPanel {
 			layout (new BackgroundCase (1, 1)) = West
-			layout (new MessageDrawer) = Center
+			layout (new MessageDrawer (alice)) = Center
 			layout (new BackgroundCase (1, 1)) = East
 		}) = South
 
 	}
 
 	/* The final class with background. */
-	class Menu extends BorderPanel {
+	class Menu (alice : Boolean) extends BorderPanel {
 		layout (new BackgroundCase (7, 1)) = East
-		layout (new CenterGrid) = Center
+		layout (new CenterGrid (alice)) = Center
 		layout (new BackgroundCase (7, 1)) = West
-		layout (new WelcomeMessage) = North
+		layout (new WelcomeMessage (alice)) = North
 	}
 }
 
@@ -930,10 +940,10 @@ object DrawBoard {
 		minimumSize = Display.dim_big
 		maximumSize = Display.dim_big
 		font = Display.text_font
-		if (Ksparov.curr_game.players(player).actual_period + 1 == Ksparov.curr_game.periods.length) {
+		if (Ksparov.curr_game.players(player).actual_period + 1 == Time.periods.length) {
 			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
 		} else {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Ksparov.curr_game.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
 		}
 	}
 
@@ -999,20 +1009,20 @@ object DrawBoard {
 	   The dimension is now in one dimension because mutli dimension array in scala are not well supported. */
 	def init_grids {
 		if (Ksparov.curr_game.alice_chess) {
-			Ksparov.curr_game.nb_grid = Ksparov.curr_game.nb_alice_board
+			Ksparov.curr_game.nb_grid = Parameters.nb_alice_board
 		} else {
 			Ksparov.curr_game.nb_grid = 1
 		}
 		Ksparov.curr_game.grids = new Array [Array[DrawBoard.Case]] (Ksparov.curr_game.nb_grid)
 		for(i <- 0 to Ksparov.curr_game.nb_grid - 1) {
-			Ksparov.curr_game.grids (i) = new Array [Case] (Ksparov.curr_game.nb_case_board * Ksparov.curr_game.nb_case_board)
+			Ksparov.curr_game.grids (i) = new Array [Case] (Parameters.nb_case_board * Parameters.nb_case_board)
 		}
 	}
 
 	def create_grid_cases {
 		for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
-			for (i <- 0 to Ksparov.curr_game.nb_case_board - 1) {
-				for (j <- 0 to Ksparov.curr_game.nb_case_board - 1) {
+			for (i <- 0 to Parameters.nb_case_board - 1) {
+				for (j <- 0 to Parameters.nb_case_board - 1) {
 					Ksparov.curr_game.grids (k) (i + j * 8) = new Case (i, j, k)
 				}
 			}
@@ -1029,9 +1039,9 @@ object DrawBoard {
 	}
 
 	/* The center grid with the board and background with label around. */
-	class Simple_Grid (grid_id : Int) extends GridPanel (Ksparov.curr_game.nb_case_board + 2, Ksparov.curr_game.nb_case_board + 1) {
-		for (i <- -1 to Ksparov.curr_game.nb_case_board) {
-			if (i == - 1 || i == Ksparov.curr_game.nb_case_board) {
+	class Simple_Grid (grid_id : Int) extends GridPanel (Parameters.nb_case_board + 2, Parameters.nb_case_board + 1) {
+		for (i <- -1 to Parameters.nb_case_board) {
+			if (i == - 1 || i == Parameters.nb_case_board) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCaseWithLabel ("A")
 				contents += new BackgroundCaseWithLabel ("B")
@@ -1042,7 +1052,7 @@ object DrawBoard {
 				contents += new BackgroundCaseWithLabel ("G")
 				contents += new BackgroundCaseWithLabel ("H")
 			} else {
-				for (j <- -1 to Ksparov.curr_game.nb_case_board - 1) {
+				for (j <- -1 to Parameters.nb_case_board - 1) {
 					if (j == -1) {
 						contents += new BackgroundCaseWithLabel ((8 - i).toString)
 					} else {
@@ -1054,8 +1064,8 @@ object DrawBoard {
 		}
 	}
 
-	class Number_column extends GridPanel (Ksparov.curr_game.nb_case_board + 2, 1) {
-		for (i <- 0 to Ksparov.curr_game.nb_case_board + 1) {
+	class Number_column extends GridPanel (Parameters.nb_case_board + 2, 1) {
+		for (i <- 0 to Parameters.nb_case_board + 1) {
 			if (i < 1 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 			} else {
@@ -1076,7 +1086,9 @@ object DrawBoard {
 		font = Display.text_font
 			action = Action ("Recommencer une partie") {
 				Ksparov.curr_game.thread_in_life = false
-	    		Ksparov.frame.contents = new DrawGameSelection.Menu
+				Ksparov.curr_game.ai_move.join
+				Ksparov.curr_game.timer.join
+	    		Ksparov.frame.contents = new DrawGameSelection.Menu (Ksparov.curr_game.alice_chess)
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
@@ -1084,6 +1096,8 @@ object DrawBoard {
 		font = Display.text_font
 			action = Action ("Sauvegarder la partie") {
 				Ksparov.curr_game.thread_in_life = false
+				Ksparov.curr_game.ai_move.join
+				Ksparov.curr_game.timer.join
 				Ksparov.frame.contents = new DrawSave.SimpleSave
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -1092,6 +1106,8 @@ object DrawBoard {
 		font = Display.text_font
 			action = Action ("Revenir au menu principal") {
 				Ksparov.curr_game.thread_in_life = false
+				Ksparov.curr_game.ai_move.join
+				Ksparov.curr_game.timer.join
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
@@ -1100,6 +1116,8 @@ object DrawBoard {
 		font = Display.text_font
 			action = Action ("Quitter Ksparov") {
 				Ksparov.curr_game.thread_in_life = false
+				Ksparov.curr_game.ai_move.join
+				Ksparov.curr_game.timer.join
 	    		Ksparov.frame.dispose()
 			}
 		}
@@ -1122,13 +1140,13 @@ object DrawBoard {
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
-			layout (if (Ksparov.curr_game.clock_available) {
+			layout (if (Time.clock_available) {
 					new Clock (1)
 				} else {
 					new BackgroundCase (1, 3)
 				}) = West
 			layout (Ksparov.curr_game.message_drawer) = Center
-			layout (if (Ksparov.curr_game.clock_available) {
+			layout (if (Time.clock_available) {
 					new Clock (0)
 				} else {
 					new BackgroundCase (1, 3)
@@ -1163,8 +1181,8 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the white player. */
-	class Border1 extends GridPanel (Ksparov.curr_game.nb_case_board + 2, 3) {
-		for(i <- 0 to Ksparov.curr_game.nb_case_board + 1) {
+	class Border1 extends GridPanel (Parameters.nb_case_board + 2, 3) {
+		for(i <- 0 to Parameters.nb_case_board + 1) {
 			i match {
 				case 3 =>
 					contents += Ksparov.curr_game.play_buttons (1)
@@ -1199,8 +1217,8 @@ object DrawBoard {
 	}
 
 	/* Border grid with dead pieces for the black player. */
-	class Border0 extends GridPanel (Ksparov.curr_game.nb_case_board + 2, 4) {
-		for(i <- 0 to Ksparov.curr_game.nb_case_board + 1) {
+	class Border0 extends GridPanel (Parameters.nb_case_board + 2, 4) {
+		for(i <- 0 to Parameters.nb_case_board + 1) {
 			if (i < 1 || i > 8) {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
@@ -1304,7 +1322,7 @@ object DrawActions {
 			Ksparov.curr_game.promotion_buttons(p)(i).enabled = false
 			Ksparov.curr_game.promotion_buttons(p)(i).background = new Color (121, 128, 129)
 		}
-		draw_game_board (Ksparov.board)
+		draw_game_board (Ksparov.curr_game.board)
 		Ksparov.frame.contents = new DrawBoard.Board
 		draw_game_messages ("Current_turn", 1 - Ksparov.curr_game.curr_player)
 	}

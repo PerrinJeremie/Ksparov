@@ -113,7 +113,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   /**[Alice Chess] Checks if the corresponding case on the next grid is free */
   def mirror_free (x_a : Int, y_a : Int) = {
     if (Ksparov.curr_game.alice_chess) {
-      Aux.piece_of_coord(x_a, y_a, Ksparov.board, (grid + 1) % (Ksparov.curr_game.nb_grid)) == None
+      Aux.piece_of_coord(x_a, y_a, Ksparov.curr_game.board, (grid + 1) % (Ksparov.curr_game.nb_grid)) == None
     } else {
       true
     }

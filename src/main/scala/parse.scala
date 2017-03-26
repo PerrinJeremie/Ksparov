@@ -58,8 +58,8 @@ object Save{
 
   /** To be called in the getmove method of a Player right before the applied move, loads part of curr_move. */  
   def add_move1 (pos_piece : Int, p : (Int,Int)) : Unit = {
-    val piece : Piece = Ksparov.board(pos_piece)
-    val pre_information : (Boolean, Option[Piece], List[Piece]) = piece.pre_move(p._1,p._2, Ksparov.board)
+    val piece : Piece = Ksparov.curr_game.board(pos_piece)
+    val pre_information : (Boolean, Option[Piece], List[Piece]) = piece.pre_move(p._1,p._2, Ksparov.curr_game.board)
     val s = piece.name match {
       case "pawn" => ""
       case "rook" => "R"
@@ -330,7 +330,7 @@ object Load {
 
     /** Predicates if piece can go to pos_fin position */ 
     def pcangoto( P :Piece): Boolean = {
-      return (P.name == piece && (P.player == Ksparov.curr_game.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.board)._1)
+      return (P.name == piece && (P.player == Ksparov.curr_game.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.curr_game.board)._1)
     }
 
     /** Finds all information related to the move and plays the move once done */
@@ -351,9 +351,9 @@ object Load {
         case droquereg(_*) =>
           w.substring(0,3) match{
             case roquereg(_*) =>
-              Ksparov.board((1-Ksparov.curr_game.curr_player)*16 +14).move(6,(1-Ksparov.curr_game.curr_player)*7, Ksparov.board)
+              Ksparov.curr_game.board((1-Ksparov.curr_game.curr_player)*16 +14).move(6,(1-Ksparov.curr_game.curr_player)*7, Ksparov.curr_game.board)
             case _ =>
-              Ksparov.board((1-Ksparov.curr_game.curr_player)*16 + 14).move(2,(1-Ksparov.curr_game.curr_player)*7,Ksparov.board)
+              Ksparov.curr_game.board((1-Ksparov.curr_game.curr_player)*16 + 14).move(2,(1-Ksparov.curr_game.curr_player)*7,Ksparov.curr_game.board)
           }
           return true
         case "K" => piece = "king"; w = w.substring(1, w.length)
@@ -369,19 +369,19 @@ object Load {
 
       if ( is_x_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
         pos_init = (w(0).toInt - 97,0)
-        piece_Ch = Ksparov.board.filter(pcolumn)(0)
+        piece_Ch = Ksparov.curr_game.board.filter(pcolumn)(0)
         w = w.substring(1, w.length)
       }
       else{
         if( is_y_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
           pos_init = (0,w(0).toInt - 49)
-          piece_Ch = Ksparov.board.filter(pline)(0)
+          piece_Ch = Ksparov.curr_game.board.filter(pline)(0)
           w = w.substring(1,w.length)
         }
         else{
           if (is_x_axis(w(0)) && is_y_axis(w(1)) && (w(2) == 'x' || is_x_axis(w(2)))){
             pos_init = ( w(0).toInt - 97, w(1).toInt - 49)
-            piece_Ch =  Ksparov.board.filter(pexactpos)(0)
+            piece_Ch =  Ksparov.curr_game.board.filter(pexactpos)(0)
             w = w.substring(2,w.length)
           }
         }
@@ -396,7 +396,7 @@ object Load {
       pos_fin = (w(0).toInt - 97, w(1).toInt - 49)
 
       if(piece_Ch.coords == (-1,-1)){
-        piece_Ch = Ksparov.board.filter(pcangoto)(0)
+        piece_Ch = Ksparov.curr_game.board.filter(pcangoto)(0)
       }
 
       w = w.substring(2,w.length)
@@ -424,8 +424,8 @@ object Load {
         case _ => ()
       }
 
-      Save.add_move1(Ksparov.board.indexOf(piece_Ch),pos_fin)
-      piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.board)
+      Save.add_move1(Ksparov.curr_game.board.indexOf(piece_Ch),pos_fin)
+      piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.curr_game.board)
       Save.add_move2
       return true
 
@@ -441,15 +441,15 @@ object Load {
           case _ : Throwable => Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Fichier Corrompu</html>")
         }
         list_of_moves = list_of_moves.tail
-        DrawActions.draw_game_board(Ksparov.board)
+        DrawActions.draw_game_board(Ksparov.curr_game.board)
       }
     }
 
     /** Same check_pat method as AI's*/
     override def check_pat : Boolean = {
       var sum = 0
-      for (i <- 0 to Ksparov.board.length / 2 - 1) {
-        sum = sum + Ksparov.board(i + 16 * (1 - id)).possible_moves(Ksparov.board).length
+      for (i <- 0 to Ksparov.curr_game.board.length / 2 - 1) {
+        sum = sum + Ksparov.curr_game.board(i + 16 * (1 - id)).possible_moves(Ksparov.curr_game.board).length
       }
       if (sum == 0) {
         Ksparov.curr_game.game_nulle = true

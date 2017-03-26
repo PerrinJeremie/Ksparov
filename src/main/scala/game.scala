@@ -20,7 +20,7 @@ abstract class Player (n : Int) {
   def getmove : Unit
   def check_pat : Boolean
   def check_nulle : Boolean = {
-    Ksparov.curr_game.game_nulle = Nulle.trivial_nulle( Ksparov.board)
+    Ksparov.curr_game.game_nulle = Nulle.trivial_nulle( Ksparov.curr_game.board)
     Ksparov.curr_game.game_nulle
   }
   def check_boring_game : Boolean = {
@@ -44,7 +44,7 @@ class Human(n : Int) extends Player(n : Int) {
     var done = false
     /* We run from 0 to 15 for the player 1 (white) and from 16 to 31 for the player 0 (black) */
     for (i <- (1 - id) * 16 to (2 - id) * 16 - 1) {
-      done = done || ((Ksparov.board(i).pos_x == x) && (Ksparov.board(i).pos_y == y) && Ksparov.board(i).grid == grid)
+      done = done || ((Ksparov.curr_game.board(i).pos_x == x) && (Ksparov.curr_game.board(i).pos_y == y) && Ksparov.curr_game.board(i).grid == grid)
     }
     return done
   }
@@ -62,7 +62,7 @@ class Human(n : Int) extends Player(n : Int) {
       /* Then select the piece of position and draw possible moves. */
       Ksparov.get_piece_of_pos(x, y, grid)
       DrawActions.clear_possible_moves
-      DrawActions.draw_possible_moves(Ksparov.board(Ksparov.curr_game.selected_piece).possible_moves(Ksparov.board), x, y, Ksparov.board(Ksparov.curr_game.selected_piece).grid)
+      DrawActions.draw_possible_moves(Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).possible_moves(Ksparov.curr_game.board), x, y, Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).grid)
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
@@ -70,12 +70,12 @@ class Human(n : Int) extends Player(n : Int) {
         /* loads part of the move to be added but has to wait for promotion information */
         Save.add_move1( Ksparov.curr_game.selected_piece, (x,y))
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
-        var valid = Ksparov.board(Ksparov.curr_game.selected_piece).move(x, y, Ksparov.board)
+        var valid = Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).move(x, y, Ksparov.curr_game.board)
         if (valid) {
           /* the move being valid addit to the list of moves */
           Save.add_move2
           /* If the move is valid, apply the new board */
-          DrawActions.draw_game_board(Ksparov.board)
+          DrawActions.draw_game_board(Ksparov.curr_game.board)
           Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
         } else {
           /* If the move is invalid, research for a first click */
@@ -88,8 +88,8 @@ class Human(n : Int) extends Player(n : Int) {
 
   override def check_pat : Boolean = {
     var sum = 0
-    for (i <- 0 to Ksparov.board.length / 2 - 1) {
-      sum = sum + Ksparov.board(i + 16 * (1 - id)).possible_moves(Ksparov.board).length
+    for (i <- 0 to Ksparov.curr_game.board.length / 2 - 1) {
+      sum = sum + Ksparov.curr_game.board(i + 16 * (1 - id)).possible_moves(Ksparov.curr_game.board).length
     }
     if (sum == 0) {
       Ksparov.curr_game.game_nulle = true
@@ -101,54 +101,6 @@ class Human(n : Int) extends Player(n : Int) {
   override def ai_promotion : Unit = {
     ()
   }
-}
-
-class Game {
-  var clock_available = true
-  var ai_speed = 200
-
-  var nb_period = 2
-  var periods = new Array [Time.Period] (nb_period)
-  
-  var nb_alice_board = 2
-  var nb_grid = 1
-  var nb_case_board = 8
-  var ai_turn = false
-  var thread_in_life = true
-  var nb_boring_moves = 0
-
-  var selected_case = 0
-  var selected_grid = 0
-  var selected_piece = -1
-  var promoted_piece = new Pawn (0, -1, -1, 0)
-  var selected_promotion = ""
-
-  /* The type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI. */
-  var game_type = 0
-  var alice_chess = false
-
-  /* Arrays for the game : one with the 63 cases, one which counts the dead pieces for each player. */
-  var grids = new Array [Array[DrawBoard.Case]] (nb_grid)
-  var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
-  var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
-  var play_buttons = new Array [DrawBoard.PlayButton] (2)
-
-  /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
-  var kings = new Array[King](2)
-  var players = new Array[Player](2)
-
-  /* Move variables : who is the current player and has the first choice been done. */
-  var curr_player = 1
-  var first_choice_done = false
-
-  /* Game variable : is the game won or nulle. */
-  var game_nulle = false
-  var game_won = false
-  var promotion = false
-  var hashed_positions : List[Int] = List()
-
-  /* The message drawer is instantiated here so we can change its text in DrawActions.draw_messages. */
-  var message_drawer = new DrawBoard.MessageDrawer ("")
 }
 
 object Time {
@@ -200,14 +152,14 @@ object Time {
             Ksparov.frame.contents = new DrawBoard.Board
             Ksparov.frame.size = dimension
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-            if (player.actual_time <= 0 && Ksparov.curr_game.clock_available) {
-              if (player.nb_move < Ksparov.curr_game.periods(player.actual_period).nb_move || player.actual_period + 1 == Ksparov.curr_game.periods.length) {
+            if (player.actual_time <= 0 && Time.clock_available) {
+              if (player.nb_move < Time.periods(player.actual_period).nb_move || player.actual_period + 1 == Time.periods.length) {
                 DrawActions.clear_possible_moves
                 Ksparov.curr_game.game_won = true
                 DrawActions.draw_game_messages ("Time", 1 - Ksparov.curr_game.curr_player)
               } else {
                player.actual_period += 1
-                player.actual_time = Ksparov.curr_game.periods(player.actual_period).time
+                player.actual_time = Time.periods(player.actual_period).time
                 player.nb_move = 0
               }
             }
@@ -220,68 +172,94 @@ object Time {
       }
     }
   }
+  var nb_period = 2
+  var periods = new Array [Time.Period] (nb_period) 
+  var clock_available = true
 }
 
 /* The main object of the application. */
 object Ksparov {
 
-  var curr_game = new Game
+  class Game (type_id : Int, number_grid : Int, alice : Boolean) {
+  
+  var nb_grid = number_grid
+  var ai_turn = false
+  var thread_in_life = true
+  var nb_boring_moves = 0
 
-  var timer = new Time.TimeThread
-  var ai_move = new AIMoveThread
+  var selected_case = 0
+  var selected_grid = 0
+  var selected_piece = 0
+  var promoted_piece = new Pawn (0, 0, 0, 0)
+  var selected_promotion = ""
 
-  Display.apply_resolution
-  /* Reading the parameters from the file. */
-  Parameters.apply
+  /* The type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI. */
+  var game_type = type_id
+  var alice_chess = alice
 
-
-  /* Define the first frame, later the contents variables will be change to display other frame. */
-  var frame = new MainFrame {
-    title = "Ksparov"
-    contents = new DrawMenu.Menu
-    peer.setLocationRelativeTo(null)
-  }
-
-  /* The 2 * 16 pieces bord is created. */
+  /* Arrays for the game : one with the 63 cases, one which counts the dead pieces for each player. */
+  var grids = new Array [Array[DrawBoard.Case]] (nb_grid)
+  var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+  var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
+  var play_buttons = new Array [DrawBoard.PlayButton] (2)
   var board = new Array[Piece](32)
 
-  /* Define the initial board, 0 for player black and 1 for white with the black player on the top of the chessboard. */
-  def init_board {
+  /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
+  var kings = new Array[King](2)
+  var players = new Array[Player](2)
+
+  /* Move variables : who is the current player and has the first choice been done. */
+  var curr_player = 0
+  var first_choice_done = false
+
+  /* Game variable : is the game won or nulle. */
+  var game_nulle = false
+  var game_won = false
+  var promotion = false
+  var hashed_positions : List[Int] = List()
+
+  /* The message drawer is instantiated here so we can change its text in DrawActions.draw_messages. */
+  var message_drawer = new DrawBoard.MessageDrawer ("")
+  var timer = new Time.TimeThread
+  var ai_move = new AIMoveThread
+}
+
+def init_board {
     for (p <- 0 to 1) {
       for(i <- 0 to 7) {
-        board((1 - p) * 16 + i) = new Pawn(p, i, 1 + (1 - p) * 5, 0)
+        Ksparov.curr_game.board((1 - p) * 16 + i) = new Pawn(p, i, 1 + (1 - p) * 5, 0)
       }
-      board(8 + (1 - p) * 16) = new Rook(p, 0, (1 - p) * 7, 0)
-      board(9 + (1 - p) * 16) = new Rook(p, 7, (1 - p) * 7, 0)
-      board(10 + (1 - p) * 16) = new Knight(p, 1, (1 - p) * 7, 0)
-      board(11 + (1 - p) * 16) = new Knight(p, 6, (1 - p) * 7, 0)
-      board(12 + (1 - p) * 16) = new Bishop(p, 2, (1 - p) * 7, 0)
-      board(13 + (1 - p) * 16) = new Bishop(p, 5, (1 - p) * 7, 0)
-      board(14 + (1 - p) * 16) = Ksparov.curr_game.kings(p)
-      board(15 + (1 - p) * 16) = new Queen(p, 3, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(8 + (1 - p) * 16) = new Rook(p, 0, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(9 + (1 - p) * 16) = new Rook(p, 7, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(10 + (1 - p) * 16) = new Knight(p, 1, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(11 + (1 - p) * 16) = new Knight(p, 6, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(12 + (1 - p) * 16) = new Bishop(p, 2, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(13 + (1 - p) * 16) = new Bishop(p, 5, (1 - p) * 7, 0)
+      Ksparov.curr_game.board(14 + (1 - p) * 16) = Ksparov.curr_game.kings(p)
+      Ksparov.curr_game.board(15 + (1 - p) * 16) = new Queen(p, 3, (1 - p) * 7, 0)
     }
   }
 
   /* Return the index in the game_board of the piece of position (x, y) */
   def get_piece_of_pos (x : Int, y : Int, grid_id : Int) {
     for (i <- 0 to 31){
-      if (Ksparov.board(i).pos_x == x && Ksparov.board(i).pos_y == y && Ksparov.board(i).grid == grid_id){
+      if (Ksparov.curr_game.board(i).pos_x == x && Ksparov.curr_game.board(i).pos_y == y && Ksparov.curr_game.board(i).grid == grid_id){
         Ksparov.curr_game.selected_piece = i
       }
     }
   }
 
   def promotion (p : Int) = {
-    val pawn_index = Ksparov.board.indexOf(Ksparov.curr_game.promoted_piece)
+    val pawn_index = Ksparov.curr_game.board.indexOf(Ksparov.curr_game.promoted_piece)
     var new_piece = Ksparov.curr_game.selected_promotion match {
       case "Knight" => new Knight (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
       case "Bishop" => new Bishop (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
       case "Rook" => new Rook (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
       case "Queen" => new Queen (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
     }
-    board (pawn_index) = new_piece
+    Ksparov.curr_game.board (pawn_index) = new_piece
     var king = Ksparov.curr_game.kings(1 - p)
-    if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, board ) ) {
+    if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, Ksparov.curr_game.board)) {
       king.attackers = king.attackers :+ new_piece
     }
     Save.add_prom_to_move(Ksparov.curr_game.selected_promotion, !king.attackers.isEmpty)
@@ -300,7 +278,7 @@ object Ksparov {
 
   def check_game_status (player : Int) {
   /* Check if there is a mate after the move. */
-    if (Checkmate.check_mate (Ksparov.board, player)) {
+    if (Checkmate.check_mate (Ksparov.curr_game.board, player)) {
      /* If so, finish the game. */
       DrawActions.draw_game_messages ("Mate", player)
       Save.whowins = player
@@ -362,9 +340,11 @@ object Ksparov {
       Ksparov.curr_game.players(Ksparov.curr_game.curr_player).getmove
       if (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved) {
         Ksparov.curr_game.players(Ksparov.curr_game.curr_player).nb_move += 1
-        Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_time += curr_game.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+        if (Time.clock_available) {
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_time += Time.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+        }
         Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = false
-        Ksparov.curr_game.hashed_positions = (Aux.array_to_hashed_string(Ksparov.board)) :: Ksparov.curr_game.hashed_positions
+        Ksparov.curr_game.hashed_positions = (Aux.array_to_hashed_string(Ksparov.curr_game.board)) :: Ksparov.curr_game.hashed_positions
         check_game_status (1 - Ksparov.curr_game.curr_player)
         if (Ksparov.curr_game.promotion) {
           DrawActions.draw_game_messages ("Promotion", Ksparov.curr_game.curr_player)
@@ -390,7 +370,7 @@ object Ksparov {
     DrawBoard.init_grids
     DrawBoard.create_grid_dead
     Ksparov.init_board
-    DrawActions.draw_game_board(Ksparov.board)
+    DrawActions.draw_game_board(Ksparov.curr_game.board)
     Save.init
     /* Defines the welcome message and types of players depending on the game type chosen. */
     n match {
@@ -424,7 +404,7 @@ object Ksparov {
         Ksparov.curr_game.players(0) = new AI(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
-        curr_game.clock_available = false
+        Time.clock_available = false
         Ksparov.curr_game.players(1) = new Load.Reproducer(1)
         Ksparov.curr_game.players(0) = new Load.Reproducer(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
@@ -435,18 +415,28 @@ object Ksparov {
     Ksparov.curr_game.curr_player = 1
     Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
 
-    if (curr_game.clock_available) {
-      Ksparov.curr_game.players(0).actual_time = curr_game.periods(0).time
-      Ksparov.curr_game.players(1).actual_time = curr_game.periods(0).time
+    if (Time.clock_available) {
+      Ksparov.curr_game.players(0).actual_time = Time.periods(0).time
+      Ksparov.curr_game.players(1).actual_time = Time.periods(0).time
     }
 
     Ksparov.curr_game.thread_in_life = true
-    timer.start
-    ai_move.start
+    Ksparov.curr_game.timer.start
+    Ksparov.curr_game.ai_move.start
     Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
 
-  /* The Swing application with frame in it. */
+  var curr_game = new Game (0, 0, false)
+
+  Display.apply_resolution
+  Parameters.apply
+
+  var frame = new MainFrame {
+    title = "Ksparov"
+    contents = new DrawMenu.Menu
+    peer.setLocationRelativeTo(null)
+  }
+
   var application = new SimpleSwingApplication {
     def top = frame
   }

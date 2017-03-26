@@ -73,9 +73,9 @@ object Parameters {
     /* Updating variables. */
     Display.pieces_path = "Pieces/" + lines(1) + "/"
     Display.texture_path = "Texture_small_" + lines(2) + ".png"
-    Ksparov.curr_game.ai_speed = lines(3).toInt
-    Ksparov.curr_game.nb_alice_board = lines(4).toInt
-    Ksparov.curr_game.nb_period = lines(5).toInt
+    Parameters.ai_speed = lines(3).toInt
+    Parameters.nb_alice_board = lines(4).toInt
+    Time.nb_period = lines(5).toInt
     parse_period_string(lines(6))
 
     /* Defining the text color depending on the texture selected. */
@@ -94,28 +94,42 @@ object Parameters {
     writer.write ("Lines of this file : 1 - Pieces, 2 - Texture, 3 - IA speed, 4 - Nb Alice board, 5 - Nb period, 6 - Each_period\n")
     writer.write ((pattern findAllIn Display.pieces_path).mkString + "\n")
     writer.write ((pattern findAllIn Display.texture_path).mkString (",") + "\n")
-    writer.write (Ksparov.curr_game.ai_speed.toString + "\n")
-    writer.write (Ksparov.curr_game.nb_alice_board.toString + "\n")
-    writer.write (Ksparov.curr_game.nb_period.toString + "\n")
-    writer.write (Parameters.periods_to_string(Ksparov.curr_game.periods))
+    writer.write (Parameters.ai_speed.toString + "\n")
+    writer.write (Parameters.nb_alice_board.toString + "\n")
+    writer.write (Time.nb_period.toString + "\n")
+    writer.write (Parameters.periods_to_string(Time.periods))
     writer.close
   }
 
   def periods_to_string (periods_array : Array [Time.Period]) = {
     var result = ""
-    for (i <- 0 to periods_array.length - 1) {
-      result += "(" + periods_array(i).time + "," + periods_array(i).nb_move + "," + periods_array(i).inc + ")"
+    if (periods_array.length > 0) {
+      for (i <- 0 to periods_array.length - 1) {
+       result += "(" + periods_array(i).time + "," + periods_array(i).nb_move + "," + periods_array(i).inc + ")"
+     }
+    } else {
+      result = "0"
     }
     result
   }
 
   def parse_period_string (periods_string : String) {
-    Ksparov.curr_game.periods = new Array [Time.Period] (Ksparov.curr_game.nb_period)
-    val pattern =  """([0-9]+),([0-9]+),([0-9]+)""".r
-    var i = 0
-    periods_string.split("\\(|\\)").filter(s => s != "").iterator.foreach(x => x match { 
-      case pattern(s1,s2,s3) => Ksparov.curr_game.periods(i) = new Time.Period (s1.toInt, s2.toInt, s3.toInt)
-        i += 1
-    })
+    Time.periods = new Array [Time.Period] (Time.nb_period)
+    if (periods_string == "0") {
+      Time.clock_available = false
+    } else {
+      Time.clock_available = true
+      val pattern =  """([0-9]+),([0-9]+),([0-9]+)""".r
+      var i = 0
+      periods_string.split("\\(|\\)").filter(s => s != "").iterator.foreach(x => x match { 
+        case pattern(s1,s2,s3) => Time.periods(i) = new Time.Period (s1.toInt, s2.toInt, s3.toInt)
+          i += 1
+      })
+    }
   }
+
+  var ai_speed = 400
+  var nb_alice_board = 2
+  var nb_case_board = 8
+
 }
