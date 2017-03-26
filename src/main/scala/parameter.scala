@@ -26,6 +26,7 @@ object Display {
       dim_message_drawer = new Dimension (250, 50)
       text_font = new Font ("Gill Sans Cyr MT", 1, 11)
       num_dead_font = new Font("Arial", 0, 20)
+      para_clock_font = new Font ("Arial", 1, 10)
     } else {
       if (resolution.getHeight > 1100.0) {
         dim_path = "Jeroboam/"
@@ -35,6 +36,7 @@ object Display {
         dim_message_drawer = new Dimension (450, 90)
         text_font = new Font ("Gill Sans Cyr MT", 1, 20)
         num_dead_font = new Font("Arial", 0, 30)
+        para_clock_font = new Font ("Arial", 1, 18)
       } else {
         dim_path = "Max/"
       }
@@ -55,7 +57,8 @@ object Display {
 
   var text_font = new Font ("Gill Sans Cyr MT", 1, 16)
   var text_color = Color.black
-  var num_dead_font = new Font("Arial", 0, 25)
+  var num_dead_font = new Font ("Arial", 0, 25)
+  var para_clock_font = new Font ("Arial", 1, 14)
 }
 
 object Parameters {
@@ -426,6 +429,7 @@ object DrawParameters {
   class PeriodOptions (id : Int) extends BorderPanel {
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Durée de la<br>période au<br>format hh:mm:ss</html>") {
+        font = Display.para_clock_font
         preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
       }) = West
       layout (time_textfields (id)) = East
@@ -433,6 +437,7 @@ object DrawParameters {
 
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {
+        font = Display.para_clock_font
         preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
       }) = West
       layout (move_textfields (id)) = East
@@ -440,6 +445,7 @@ object DrawParameters {
 
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Incrément après<br>un coup<br>en seconde</html>") {
+        font = Display.para_clock_font
         preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
       }) = West
       layout (inc_textfields (id)) = Center
