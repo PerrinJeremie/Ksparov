@@ -138,7 +138,7 @@ object Save{
     }
   }
 
-  /** translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).*/
+  /** Translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).*/
   def pos_to_PGN (p : (Int,Int)) : String = {
     (97 + p._1).toChar + (p._2 + 1).toString
   }
