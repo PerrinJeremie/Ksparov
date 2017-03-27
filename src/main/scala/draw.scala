@@ -17,19 +17,36 @@ import java.awt.Image
 import javax.imageio.ImageIO
 import java.awt.{Graphics2D,Color,Font,BasicStroke}       
 
-class ImagePanel extends Panel {                                                                             
-  var _imagePath = ""                                                 
+/* This file is organised in objects, each of then draw a certain windows.
+   To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
+
+/* The exception of the above rule : */
+
+
+/** This class loads an image on a stretchable component */
+class ImagePanel extends Panel {
+  
+  /** Stores the path of the image's file */
+  var _imagePath = "" 
+  
+  /** Stores the bufferedImage */
   var bufferedImage:BufferedImage = null                              
-
+  
+  /** Function to retrieve path */
   def imagePath = _imagePath                                                  
-
+  
+  /** Function to write the new path to the imagePath value and load image
+    * @param value the path given as a string 
+   */
   def imagePath_=(value:String)                                               
   {                                                                           
     _imagePath = value                                                        
     bufferedImage = ImageIO.read(new File(_imagePath))                        
   }                                                                           
 
-
+  /** A modified version of paintComponent which takes into account the scaling depending on the size of the window
+    *  @param g a Graphics instance (context in which to draw)
+    */
   override def paintComponent(g:Graphics2D) =                                 
   {                                                                           
     if (null != bufferedImage){
@@ -39,8 +56,16 @@ class ImagePanel extends Panel {
 
 } 
 
+/**  This class loads an image on a stretchable component with a label on it
+  *  @param f the font to use
+  *  @param s the string to print on theiImage  
+*/
 class ImagePanelWithText(f: Font,s :String) extends ImagePanel
 {
+
+  /** Function to write the new path to the imagePath value, loads image and writes over it 
+    * @param value the path given as a string
+    */
   override def imagePath_=(value:String)                                               
   {                                                                           
     _imagePath = value                                                        
@@ -51,6 +76,10 @@ class ImagePanelWithText(f: Font,s :String) extends ImagePanel
     canvas.drawString(s, bufferedImage.getWidth/2-8, bufferedImage.getHeight/2+8)
     canvas.dispose()
   }       
+
+  /** A modified version of paintComponent which takes into account the scaling depending on the size of the window
+    * @param g a Graphics instance (context in which to draw) 
+    */
   override def paintComponent(g:Graphics2D) =                                 
   {                                                                           
     if (null != bufferedImage){
@@ -59,14 +88,6 @@ class ImagePanelWithText(f: Font,s :String) extends ImagePanel
   }
 }
 
-object ImagePanel                                                             
-{                                                                             
-  def apply() = new ImagePanel()                                              
-} 
-/* This file is organised in objects, each of then draw a certain windows.
-   To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
-
-/* The exception of the above rule : */
 
 /** This class defines a grid of background cases, each background is juste a set of this grid.
 *
@@ -662,6 +683,7 @@ object DrawBoard {
 		// We use the font defines in Display to adjust it to the resolution of the screen
 		font = Display.text_font
 		// We display the current time of the player
+        /** Called to change the text in this label, because the time has changed */
         def change_time : Unit = {
 		if (Ksparov.curr_game.players(player).actual_period + 1 == Time.periods.length) {
 			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
@@ -669,6 +691,7 @@ object DrawBoard {
 			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
 		}
         }
+      //tries to change time but if there are initializing errors, it's no problem. It just doesn't do it.
       try {
         change_time
       }
@@ -889,7 +912,9 @@ object DrawBoard {
 
 	/** Defines the footer of the board screen with the message drawer on it */
 	class Footer extends BorderPanel {
+        /** The clock for the white player. */
         var clock1 = new Clock (1)
+        /** the clock for the black player. */
         var clock0 = new Clock (0)
         Ksparov.curr_game.clock_array = Array(clock0,clock1)
 		layout(new BackgroundCase (1, 2)) = East
@@ -946,7 +971,7 @@ object DrawBoard {
 		for(i <- 0 to Parameters.nb_case_board + 1) {
 			i match {
 				case 3 =>
-					contents += (if (Ksparov.curr_game.game_type == 6){ Ksparov.curr_game.play_buttons (1)} else { new BackgroundCase (1, 1)})
+					contents += (if (Ksparov.curr_game.game_type == 6){ Ksparov.curr_game.play_buttons (1)} else { new BackgroundCase (1, 1)}) // Displays if needed.
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 				case 4 =>
@@ -1021,7 +1046,7 @@ object DrawBoard {
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
-						contents += (if (Ksparov.curr_game.game_type == 6) { Ksparov.curr_game.play_buttons (0)} else { new BackgroundCase (1, 1)} )
+						contents += (if (Ksparov.curr_game.game_type == 6) { Ksparov.curr_game.play_buttons (0)} else { new BackgroundCase (1, 1)} ) //Displays if needed
 					}
 				}
 			}

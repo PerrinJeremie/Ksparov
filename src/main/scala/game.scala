@@ -223,14 +223,11 @@ object Time {
             var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
             // We reduce the time left to to the player for the period of one second
             player.actual_time -= 1
-            /** The dimension of the current frame */
-            var dimension = Ksparov.frame.bounds.getSize()
+            // And display the new time
             if (Time.clock_available){
               Ksparov.curr_game.clock_array(1).change_time
               Ksparov.curr_game.clock_array(0).change_time
             }
-            // We keep the previous size, so user can modify it 
-            Ksparov.frame.size = dimension
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
             // If the current player is out of time for the priod
             if (player.actual_time <= 0 && Time.clock_available) {
@@ -513,7 +510,7 @@ object Ksparov {
         Ksparov.curr_game.ai_turn = true
       }
     }
-
+    // Draw the board at the end
     Ksparov.frame.contents = new DrawBoard.Board {
       preferredSize = Ksparov.frame.contents(0).bounds.getSize()
     }
