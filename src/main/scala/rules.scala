@@ -555,7 +555,7 @@ object Nulle {
   * @param g The board we will use 
   * @return Pieces that are not dead and not kings
   */
-  def living_pieces (g : Array[Piece]) ={
+  def living_pieces (g : Array[Piece]) = {
     g.filter(is_living)
   }
 
@@ -570,7 +570,7 @@ object Nulle {
       case 0  => true
       case 1  => var remaining_piece = reduced_g(0).name ; (remaining_piece == "knight" || remaining_piece == "bishop")
       case 2 =>  var p1 = reduced_g(0) ; var p2 = reduced_g(1) ;
-                (p1.name =="bishop" && p2.name == "bishop" && p2.player != p1.player && p1.pos_x+8*p1.pos_y == p2.pos_x +8*p2.pos_y)
+                (p1.name =="bishop" && p2.name == "bishop" && p2.player != p1.player && p1.pos_x + 8 * p1.pos_y == p2.pos_x + 8 * p2.pos_y)
      case _ => false
     }
   }
