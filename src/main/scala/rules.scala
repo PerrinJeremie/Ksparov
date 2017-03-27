@@ -342,6 +342,7 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
   var attackers : List[Piece] = Nil
   /**Indicates if the piece has already moved. Used for castling*/
   var has_moved : Boolean = false
+  /**Indicates if the king is under attack */
   def attacked = attackers.nonEmpty
   def pattern(x_a : Int, y_a : Int)={
     (math.abs(pos_x - x_a) <= 1) && (math.abs(pos_y - y_a) <= 1)
