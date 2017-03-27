@@ -519,6 +519,10 @@ object DrawParameters {
     // Number of move of the period
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {
+        if (id == Time.nb_period - 1) {
+          enabled = false
+          text = "<html><div style='text-align : center;'>Dernière période, pas de mouvement"
+        }
         font = Display.para_clock_font
         preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
       }) = West
@@ -585,6 +589,10 @@ object DrawParameters {
         } catch {
           // If it is not defined yet, initializes the textfield with the default value
           case _ : Throwable => text = "0"
+        }
+        if (i == nb_period - 1) {
+          enabled = false
+          text = ""
         }
         preferredSize = Display.dim_small
         listenTo(keys)
