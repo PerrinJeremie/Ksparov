@@ -26,8 +26,8 @@ abstract class Player (n : Int) {
   def getmove : Unit
   /** Method that check if the player is pat or not */
   def check_pat : Boolean
-  /** Returns true if  */
-  def check_nulle : Boolean = {
+  /** Returns true if players do not have enough pieces to mate */
+  def check_trivial_nulle : Boolean = {
     Ksparov.curr_game.game_nulle = Nulle.trivial_nulle (Ksparov.curr_game.board)
     Ksparov.curr_game.game_nulle
   }
@@ -433,7 +433,7 @@ object Ksparov {
         DrawActions.draw_game_messages ("Pat", player)
       } else {
         /*Check if the game is nulle */
-        if (Ksparov.curr_game.players(player).check_nulle) {
+        if (Ksparov.curr_game.players(player).check_trivial_nulle) {
           Save.whowins = -1
           DrawActions.draw_game_messages ("Nulle", player)
         }
