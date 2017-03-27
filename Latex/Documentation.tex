@@ -154,6 +154,12 @@ Plus précisément, la méthode maintient un tableau de booléen à jour défini
 
 Si un mouvement est possible, elle choisit alors une des cases possibles aléatoirement, sinon, si aucun mouvement n'a été appliqué, on vérifie s'il reste des mouvement possibles (s'il existe une case à \textit{false} dans \textit{already\_check}), si tel est le cas on boucle, sinon l'IA est en pat. 
 
+\section{parse.scala ou les dangers de la PGN}
+
+\paragraph{L'objet \textit{Save} :} La sauvegarde de la partie en cours se fait via cet objet. Les méthodes sont internes pour la plupart. Il faut faire particulièrement attention à comment on récupère un mouvement. En effet, les deux méthodes à utiliser sont \textit{add\_move1} et \textit{add\_move2} et doivent être inserées dans la méthode \textit{get\_move} de toutes les sous-classes de player afin de récuperer les mouvements les uns aprés les autres. La première doit être placé juste avant l'application du mouvement, la deuxième après si le mouvement a bien eu lieux. La méthode à appeler pour sauvegarder une partie est \textit{write\_to\_file}.
+
+\paragraph{L'objet \textit{Load} :} Cet objet a pour fonction de lire un fichier au format PGN (Portable Game Notation). Pour cela une méthode \textit{get\_list\_move\_from\_file} permet de récuperer la liste des mouvements (non encore parsés). Une fois cette liste établie, une partie peut être lancée avec comme joueur des \textit{Reproducers}. \textit{Reproducer} est une sous-classe de player et est un robot, en utilisant les règles du jeu définies dans Rules, il comprend le PGN. Il commence son tour en lisant la tête de l'attribut \textit{list\_of\_moves}, qui est un coup au format PGN. S'il y a ambiguïté il décide, en faisant appel a la méthode \textit{pre\_move} des piéces, quelle piéce doit bouger et applique le mouvement.
+
 \section{Les défauts et erreurs connues}
 
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
