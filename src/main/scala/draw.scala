@@ -957,6 +957,7 @@ object DrawBoard {
 				// Creates new players
 				Ksparov.curr_game.players (player) = new Human (player)
 				Ksparov.curr_game.players (1 - player) = new AI (1 - player)
+                DrawActions.draw_game_messages ("Current_turn", player)
 				// Disables play button and set their display as a backgroundcase 
 				Ksparov.frame.contents = new DrawBoard.Board{
                   preferredSize = Ksparov.frame.contents(0).bounds.getSize()
@@ -1215,13 +1216,12 @@ object DrawActions {
 				case _ => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>le "+ joueur_string +" ne peut plus bouger !</html>"
 					Ksparov.curr_game.message_drawer.foreground = Color.red
 			}
+            
 			// Draw if there is no more checkmate possible 
-			case "Nulle" => Ksparov.curr_game.game_type match {
-				case 6 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : "+ joueur_string +" ne peut plus mater !</html>"
-					Ksparov.curr_game.message_drawer.foreground = Color.red
-				case _ => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle : le "+ joueur_string +" ne peut plus mater !</html>"
-					Ksparov.curr_game.message_drawer.foreground = Color.red
-			}
+			case "Nulle" => 
+                Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Partie nulle, les joueurs ne peuvent ne peuvent plus mater !</html>"
+				Ksparov.curr_game.message_drawer.foreground = Color.red
+			
 			// Draw if 50 moves has been made without a pawn move or a piece taken
 			case "50coups" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'> Partie nulle : 50 coups sans prise ni mouvement de pion ! </html>"
 				Ksparov.curr_game.message_drawer.foreground = Color.red
