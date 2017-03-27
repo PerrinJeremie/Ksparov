@@ -12,7 +12,35 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import sys.process._
 import scala.language.postfixOps
+import java.awt.image.BufferedImage  
+import java.awt.Image                                                                                            
+import javax.imageio.ImageIO       
 
+class ImagePanel extends Panel                                                
+{                                                                             
+  var _imagePath = ""                                                 
+  var bufferedImage:BufferedImage = null                              
+
+  def imagePath = _imagePath                                                  
+
+  def imagePath_=(value:String)                                               
+  {                                                                           
+    _imagePath = value                                                        
+    bufferedImage = ImageIO.read(new File(_imagePath))                        
+  }                                                                           
+
+
+  override def paintComponent(g:Graphics2D) =                                 
+  {                                                                           
+    if (null != bufferedImage) g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)         
+  }
+
+}                                                                             
+
+object ImagePanel                                                             
+{                                                                             
+  def apply() = new ImagePanel()                                              
+} 
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
 
@@ -24,14 +52,15 @@ import scala.language.postfixOps
 class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	for (k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
-			contents += new Label {
-				/* The size of a grid (the same for the entire application) is difined in the object Display
-				   in game.scala, idem for paths to resources. */
-				preferredSize = Display.dim_small
+			contents += new ImagePanel {
+              imagePath = (Display.resources_path + Display.texture_path)
+              	preferredSize = Display.dim_small
 				minimumSize = Display.dim_small
 				maximumSize = Display.dim_small
-				icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
-			}
+            }
+				/* The size of a grid (the same for the entire application) is difined in the object Display
+				   in game.scala, idem for paths to resources. */
+
 		}
 	}
 }
