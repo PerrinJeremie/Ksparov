@@ -13,7 +13,7 @@ import java.util.Calendar
 import sys.process._
 import scala.language.postfixOps
 import java.awt.image.BufferedImage  
-import java.awt.Image                                                                                            
+import java.awt.Image           
 import javax.imageio.ImageIO
 import java.awt.{Graphics2D,Color,Font,BasicStroke}       
 
@@ -21,7 +21,6 @@ import java.awt.{Graphics2D,Color,Font,BasicStroke}
    To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
 
 /* The exception of the above rule : */
-
 /** This class loads an image on a stretchable component */
 class ImagePanel extends Panel {
   
@@ -29,7 +28,7 @@ class ImagePanel extends Panel {
   var _imagePath = "" 
   
   /** Stores the bufferedImage */
-  var bufferedImage:BufferedImage = null                              
+  var bufferedImageloc:BufferedImage = null                              
   
   /** Function to retrieve path */
   def imagePath = _imagePath                                                  
@@ -38,17 +37,19 @@ class ImagePanel extends Panel {
     * @param value the path given as a string 
    */
   def imagePath_=(value:String)                                               
-  {                                                                           
-    _imagePath = value                                                        
-    bufferedImage = ImageIO.read(new File(_imagePath))                        
+  {  
+    bufferedImageloc = new BufferedImage(Display.bufferedImage.getWidth,Display.bufferedImage.getHeight,1) 
+    val g = bufferedImageloc.getGraphics()
+    g.drawImage(Display.bufferedImage,0,0,null);
+    g.dispose()
   }                                                                           
 
   /** A modified version of paintComponent which takes into account the scaling depending on the size of the window
     *  @param g a Graphics instance (context in which to draw)
     */
   override def paintComponent (g : Graphics2D) = {                                                                           
-    if (null != bufferedImage){
-      g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
+    if (null != bufferedImageloc){
+      g.drawImage(bufferedImageloc.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
       g.dispose()
     }
   }
@@ -68,12 +69,14 @@ class ImagePanelWithText(f: Font,s :String) extends ImagePanel
   override def imagePath_=(value:String)                                               
   {                                                                           
     _imagePath = value                                                        
-    bufferedImage = ImageIO.read(new File(_imagePath))
-    val canvas = bufferedImage.createGraphics()
+    bufferedImageloc =  new BufferedImage(Display.bufferedImage.getWidth,Display.bufferedImage.getHeight,1)     
+    val canvas = bufferedImageloc.getGraphics()
+    canvas.drawImage(Display.bufferedImage,0,0,null)
     canvas.setColor(Color.white)
     canvas.setFont(f)
-    canvas.drawString(s, bufferedImage.getWidth/2-8, bufferedImage.getHeight/2+8)
+    canvas.drawString(s, bufferedImageloc.getWidth/2-8, bufferedImageloc.getHeight/2+8)
     canvas.dispose()
+    return ()
   }       
 
   /** A modified version of paintComponent which takes into account the scaling depending on the size of the window
@@ -81,8 +84,8 @@ class ImagePanelWithText(f: Font,s :String) extends ImagePanel
     */
   override def paintComponent(g:Graphics2D) =                                 
   {                                                                           
-    if (null != bufferedImage){
-      g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
+    if (null != bufferedImageloc){
+      g.drawImage(bufferedImageloc.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
       g.dispose()
     }
   }
