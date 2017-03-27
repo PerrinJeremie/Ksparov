@@ -60,7 +60,11 @@ object Save {
     curr_move = (0,false,"","",false,false,(0,0),(0,0))
   }
 
-  /** To be called in the getmove method of a Player right before the applied move, loads part of curr_move. */  
+  /** To be called in the getmove method of a Player right before the applied move, loads part of curr_move. 
+  *
+  * @param pos_piece The index of the piece in the current game board
+  * @param p The pair of coordinates where the piece will be after the move 
+  */  
   def add_move1 (pos_piece : Int, p : (Int,Int)) : Unit = {
     val piece : Piece = Ksparov.curr_game.board(pos_piece)
     val pre_information : (Boolean, Option[Piece], List[Piece]) = piece.pre_move(p._1,p._2, Ksparov.curr_game.board)
@@ -101,8 +105,12 @@ object Save {
     list_of_moves = curr_move :: list_of_moves
   }
 
-  /** Called in the promotion method of object Ksparov, modifies curr_move. If add2_happened = true, replaces the head of list_of_moves by the new value of curr_move. */
-  def add_prom_to_move( s: String, b:Boolean) : Unit ={
+  /** Called in the promotion method of object Ksparov, modifies curr_move. 
+      If add2_happened = true, replaces the head of list_of_moves by the new value of curr_move. 
+  * @param s The name of the piece selected for the promotion
+  * @param b True if the king of the oppponent player is attacked
+  */
+  def add_prom_to_move (s : String, b : Boolean) : Unit = {
     val piece_prom : String =
       s match {
         case "Knight" => "N"
@@ -110,14 +118,24 @@ object Save {
         case "Rook" => "R"
         case "Queen" => "Q"
       }
-    curr_move = (curr_move._1,true,piece_prom,curr_move._4,curr_move._5,curr_move._6 || b,curr_move._7,curr_move._8)
-    if ( add2_happened) {
+    curr_move = (curr_move._1, true, piece_prom, curr_move._4, curr_move._5, curr_move._6 || b, curr_move._7, curr_move._8)
+    if (add2_happened) {
       list_of_moves = curr_move :: list_of_moves.tail
     }
   }
 
-  /** Writes the tag of the .PGN file.*/
-  def write_tags(writer : PrintWriter, event : String, site : String, date : String, round : String, white : String, black : String, result : String): Unit = {
+  /** Writes the tag of the .PGN file.
+  *
+  * @param writer The PrintWriter we will write in
+  * @param event The name of the event of the game
+  * @param site The site of the game
+  * @param date The date the game took place
+  * @param round The round of the game 
+  * @param white The name of the white player
+  * @param black The name of the black player
+  * @param result The result of the game
+  */
+  def write_tags (writer : PrintWriter, event : String, site : String, date : String, round : String, white : String, black : String, result : String) : Unit = {
     writer.write ("[ Event \"" + event + "\"]\n")
     writer.write ("[ Site \"" + site + "\"]\n")
     writer.write ("[ Date \"" + date + "\"]\n")
@@ -130,12 +148,18 @@ object Save {
     }
   }
 
-  /** Translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).*/
+  /** Translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).
+  *
+  * @param p The position we will convert
+  */
   def pos_to_PGN (p : (Int,Int)) : String = {
     (97 + p._1).toChar + (p._2 + 1).toString
   }
 
-  /** Write all moves in the previously opened file */
+  /** Write all moves in the previously opened file 
+  *
+  * @param writer The PrintWriter we will write into
+  */
   def write_moves(writer : PrintWriter) : Unit = {
 
     def write_move(i : Int, move: Moves) : Unit = {
@@ -182,7 +206,19 @@ object Save {
   /* returns 0 if all went well, -1 if it's not the case.
    Informations have to be filled by players except for result which is the result of the game :
    with "1/2-1/2" if null, "1-0" if white won, "0-1" if black won, "*" if unfinished */
-  /** Returns 0 if all went well. Opens a file, writes tags, then moves, then result into said file.*/
+
+  /** Returns 0 if all went well. Opens a file, writes tags, then moves, then result into said file.
+  *
+  * @param s The name of the file we will write in
+  * @param event The name of the event of the game
+  * @param site The site of the game
+  * @param date The date the game took place
+  * @param round The round of the game 
+  * @param white The name of the white player
+  * @param black The name of the black player
+  * @param result The result of the game
+  * @return 0 if the save went well, -1 otherwise 
+  */
   def write_to_file (s : String, event : String, site : String, date : String, round : String, white : String, black : String) : Int = {
     var result = whowins match { case 2 => "*" case 1 => "1-0" case 0 => "0-1" case -1 => "1/2-1/2"}
     is_valid(s+".pgn") match {
@@ -276,23 +312,38 @@ object Load {
     pos_fin  = (0,0)
   }
 
-  /** Predicates true if char is not a blank space character */
+  /** Predicates true if char is not a blank space character 
+  *
+  * @param c The character investigated
+  * @return True if the character is not a blank space
+  */
   def pnotspace (c : Char) : Boolean = {
     return ( c != ' ' && c != '\t' && c != '\n')
   }
 
-  /** Predicates true if char is not " nor [ */
-  def pnotspec( c : Char) : Boolean = {
-    return ( c != '\"' && c != '[' )
+  /** Predicates true if char is not " nor [  
+  *
+  * @param c The character investigated
+  * @return True if the character is not " nor [
+  */
+  def pnotspec (c : Char) : Boolean = {
+    return (c != '\"' && c != '[')
   }
 
-  /** Represents a robot player which can read from Load.list_of_moves a move and play it, it is he who understands PGN move notation */
-  class Reproducer(n : Int) extends Player(n : Int) {
+  /** Represents a robot player which can read from Load.list_of_moves a move and play it, it is he who understands PGN move notation 
+  *
+  * @param n The id of the player
+  */
+  class Reproducer (n : Int) extends Player (n : Int) {
 
     /** It is a robot */
     ai = true
 
-    /** Predicates if char is [a-h] */
+    /** Predicates if char is [a-h] 
+    *
+    * @param c The character investigated
+    * @return True if the character is between 'a' and 'h'
+    */
     def is_x_axis (c : Char) : Boolean = {
       return xaxistag.findFirstIn(c.toString) match {
         case Some(s) => true
@@ -300,35 +351,59 @@ object Load {
       }
     }
 
-    /** Predicates if char is [1-8] */
-    def is_y_axis(c : Char) : Boolean = {
+    /** Predicates if char is [1-8]
+    *
+    * @param c The character investigated
+    * @return True if the character is between '1' and '8'
+    */
+    def is_y_axis (c : Char) : Boolean = {
       yaxistag.findFirstIn(c.toString) match{
         case Some(s) => true
         case None => false
       }
     }
 
-    /** Predicates if piece is in column of pos_init */
-    def pcolumn( P : Piece) : Boolean = {
+    /** Predicates if piece is in column of pos_init 
+    *
+    * @param P The piece investigated
+    * @return True if the piece is in the column of pos_init
+    */
+    def pcolumn (P : Piece) : Boolean = {
       return ((P.name == piece) && (P.player == Ksparov.curr_game.curr_player) && P.pos_x == pos_init._1)
     }
 
-    /** Predicates if piece is in pos_init's line*/
-    def pline( P : Piece) : Boolean = {
+    /** Predicates if piece is in pos_init's line
+    *
+    * @param P The piece investigated
+    * @return True if the piece is in the line of pos_init
+    */
+    def pline (P : Piece) : Boolean = {
       return (P.name == piece && P.player == Ksparov.curr_game.curr_player && P.pos_y == pos_init._2)
     }
 
-    /** Predicates if piece is in pos_init position */ 
-    def pexactpos( P : Piece) : Boolean = {
+    /** Predicates if piece is in pos_init position 
+    *
+    * @param P The piece investigated
+    * @return True if the piece is at the position of pos_init
+    */
+    def pexactpos (P : Piece) : Boolean = {
       return (P.name == piece && P.player == Ksparov.curr_game.curr_player && P.coords == pos_init)
     }
 
-    /** Predicates if piece can go to pos_fin position */ 
-    def pcangoto( P :Piece): Boolean = {
+    /** Predicates if piece can go to pos_fin position 
+    *
+    * @param P The piece investigated
+    * @return True if the piece can reach the pos_fin position
+    */ 
+    def pcangoto (P :Piece): Boolean = {
       return (P.name == piece && (P.player == Ksparov.curr_game.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.curr_game.board)._1)
     }
 
-    /** Finds all information related to the move and plays the move once done */
+    /** Finds all information related to the move and plays the move once done 
+    *
+    * @param s The move in a string 
+    * @return True the string is a move, False if we did not manage to parse the string
+    */
     def parse_word (s : String) : Boolean = {
 
       s match {
@@ -460,7 +535,10 @@ object Load {
     }
   }
 
-  /** reads a move and adds it to list_of_moves */
+  /** Reads a move and adds it to list_of_moves 
+  *
+  * @param lines The move in a string
+  */
   def read_moves (lines : String) : Unit = {
     if (!infos.contains("White")) {
           infos += ("White" -> "Garry Kasparov") }
@@ -477,7 +555,10 @@ object Load {
         }
   }
 
-  /** reads a line and treats it differently depending of PGN requirements */
+  /** Reads a line and treats it differently depending of PGN requirements 
+  *
+  * @param lines The line we will read
+  */
   def read_line (lines : String) : Unit = {
     lines match {
       case matchtag(_*) =>
@@ -514,8 +595,12 @@ object Load {
     }
   }
 
-  /** Reads from file. filename is the name of the file without the .pgn extension. It escapes variations and comments and linefeed character.*/
-  def get_list_move_from_file (filename : String)  : Unit = {
+  /** Reads from file. filename is the name of the file without the .pgn extension. 
+      It escapes variations and comments and linefeed character.
+  *
+  * @param filename The name of the file we will read
+  */
+  def get_list_move_from_file (filename : String) : Unit = {
 
     infos = Map()
     infos += ("filename" -> filename)
@@ -532,6 +617,4 @@ object Load {
     texte_entier.split('\n').iterator.foreach(read_line)
     list_of_moves = list_of_moves.reverse
   }
-
-
 }
