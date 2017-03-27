@@ -122,7 +122,11 @@ object Parameters {
     writer.close
   }
 
-  /** Concert an Array of perriod into one string */
+  /** Convert an Array of perriod into one string 
+  *
+  * @param periods_array The array of period to be converted
+  * @return The string corresponding to the periods given
+  */
   def periods_to_string (periods_array : Array [Time.Period]) = {
     /** The result string */
     var result = ""
@@ -137,7 +141,10 @@ object Parameters {
     result
   }
 
-  /** Parse the string of the periods to defines game periods */
+  /** Parse the string of the periods to defines game periods 
+  *
+  * @param periods_string The string to be parsed
+  */
   def parse_period_string (periods_string : String) {
     // Initializes the periods array
     Time.periods = new Array [Time.Period] (Time.nb_period)
@@ -169,7 +176,11 @@ object Parameters {
 /** Contains all classes to draw parameters selections. */
 object DrawParameters {
 
-  /** Defines button for the selection of the parameter sub menu. */
+  /** Defines button for the selection of the parameter sub menu. 
+  *
+  * @param id The id of the submenu
+  * @param current_menu True if this menu is the one the user is in 
+  */
   class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
     preferredSize = new Dimension (Display.base_size, Display.base_size)
     maximumSize = new Dimension (Display.base_size, Display.base_size)
@@ -188,7 +199,11 @@ object DrawParameters {
     }
   }
 
-  /** Defines the column with all buttons for sub-menu and background cases elsewhere. */
+  /** Defines the column with all buttons for sub-menu and background cases elsewhere
+  *
+  * @param height The height of the column
+  * @param current_menu The id of the menu the user is in
+  */
   class ChoiceColumn (height : Int, current_menu : Int) extends GridPanel (height, 2) {
     for (i <- 0 to height - 1) {
       for (j <- 0 to 1) {
@@ -206,7 +221,10 @@ object DrawParameters {
     }
   }
 
-  /** Defines the button to apply parameters and come back to the main menu. */
+  /** Defines the button to apply parameters and come back to the main menu. 
+  *
+  * @param sub_menu_id The id of the submenu where this button is set
+  */
   class ComeBack (sub_menu_id : Int) extends Button {
     font = Display.text_font
     preferredSize = new Dimension (Display.base_size * 9, Display.base_size)
@@ -258,7 +276,10 @@ object DrawParameters {
     }
   }
 
-  /** Buttons for the texture choice, the parameter defines which texture the button stands for. */
+  /** Buttons for the texture choice, the parameter defines which texture the button stands for. 
+  *
+  * @param number The id of the texture drawn 
+  */
   class TextureOption (number : Int) extends Button {
     preferredSize = Display.dim_small
     /* The border is red for the actual parameter and black for other. The regural expression
@@ -279,7 +300,10 @@ object DrawParameters {
     }
   }
 
-  /** Button for the piece type choice */
+  /** Button for the piece type choice 
+  *
+  * @param number The id of the drawn piece option
+  */
   class PieceOption (number : Int) extends Button {
     preferredSize = Display.dim_small
     /* The border is red for the actual parameter and black for other. The regural expression
@@ -320,7 +344,10 @@ object DrawParameters {
     }
   }
 
-  /** Message to explain the choice that has to be done */
+  /** Message to explain the choice that has to be done 
+  *
+  * @param text The message displayed by the label
+  */
   class ChoiceMessage (text : String) extends Label (text) {
     font = Display.text_font
     border = new javax.swing.border.LineBorder (Color.black, 2)
@@ -350,9 +377,16 @@ object DrawParameters {
     layout (new BackgroundCase (9, 1)) = East
   }
 
-  /** Draw a label with a variable and one plus button and one minus button to increase or decrease the variable */
+  /** Draw a label with a variable and one plus button and one minus button to increase or decrease the variable 
+  * 
+  * @param variable The variable that will be changed
+  * @param sub_menu_id The id of the submenu the increment is in
+  */
   class Increment (variable : String, sub_menu_id : Int) extends GridPanel (1, 3) {
-    /** Button to increase or decrease a variable */
+    /** Button to increase or decrease a variable 
+    *
+    * @param sign The sign : - or + that defines the action of the button : increase or decrease
+    */
     class IncButton (sign : String) extends Button {
       preferredSize = Display.dim_small
       maximumSize = Display.dim_small
@@ -468,7 +502,10 @@ object DrawParameters {
     layout (new BackgroundCase (1, 2)) = East
   }
 
-  /** Draw the selection for the parameters of a given period */
+  /** Draw the selection for the parameters of a given period 
+  *
+  * @param id The id of the period, in fact the number of the period
+  */
   class PeriodOptions (id : Int) extends BorderPanel {
     // Time of the period
     layout (new BorderPanel {
@@ -498,7 +535,10 @@ object DrawParameters {
     }) = East
   }
 
-  /** Draw the selection for every periods of the game */
+  /** Draw the selection for every periods of the game 
+  *
+  * @param nb_period The number of periods to be drawn
+  */
   class Periods (nb_period : Int) extends GridPanel (2 * nb_period + 1, 1) {
     for (i <- 0 to 2 * nb_period) {
       if (i % 2 == 0) {
@@ -509,7 +549,10 @@ object DrawParameters {
     }
   }
 
-  /** Draw the clock sub-menu */
+  /** Draw the clock sub-menu 
+  *
+  * @param nb_period The number of period that will be drawn in the submenu
+  */
   class ClockSubMenu (nb_period : Int) extends BorderPanel {
     // Actualize arrays with the current number of periods
     time_textfields = new Array [TextField] (nb_period)
@@ -593,7 +636,10 @@ object DrawParameters {
     layout (new BackgroundCase (math.max (2 * nb_period + 5, 7), 1)) = East
   }
 
-  /** Draw the sub-menu given in argument */
+  /** Draw the sub-menu given in argument 
+  *
+  * @param id The id of the submenu we want to draw
+  */
   class SubMenus (id : Int) extends GridPanel (1, 1) {
     id match {
       case 1 => contents += new DisplaySubMenu

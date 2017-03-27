@@ -1,54 +1,88 @@
 /** Auxiliary and general methods. Most are self-explainatory. */
 object Aux {
+  /** Array to restraint moves to a 64 cases board */
   var cases = new Array [(Int,Int)] (64)
   for (i <- 0 to 7) {
-    for(j <- 0 to 7) {
+    for (j <- 0 to 7) {
       cases(8 * i + j) = (i, j)
     }
   }
-  /**Checks if case (x,y) is on the board. Useful to determine if a piece is dead, since those are in (-1,-1) */
+
+  /** Checks if case (x,y) is on the board. Useful to determine if a piece is dead, since those are in (-1,-1) 
+  *
+  * @param x The x coordinate of the case
+  * @param y The y coordinate of the case
+  * @return True if the case is on the board
+  */
   def on_board (x : Int, y : Int) = {
     (0 <= x) && (x <= 7) && (0 <= y) && (y <= 7);
   }
-/**Converts an array to a string and hadh it. Used to store boards */
- def array_to_hashed_string (g : Array[Piece]) :Int = {
-   var st = ""
-   for (i <- 0 to g.size - 1){
-     st += g(i).name + g(i).player.toString + g(i).pos_x.toString + g(i).pos_y.toString
-     g(i).name match {
-       case "king" => st+=g(i).asInstanceOf[King].has_moved
-       case "rook" => st+=g(i).asInstanceOf[Rook].has_moved
-       case _ => ()
-     }
-   }
-   st.hashCode()
- }
- /**Checks if a list contains three identic elements */
- def contains_triplicates ( positions : List[Int] ) : Boolean = {
-   var l = positions.sorted
-   var cmpt = 0
-   var old_x = -1
-   for ( x <- l if cmpt < 2){
-     if (old_x ==x){
-       cmpt+=1
-     }
-     else {
-       cmpt = 0
-     }
-     old_x =x
-   }
-   cmpt == 2
+
+  /** Converts an array to a string and hash it. Used to store boards 
+  *
+  * @param g The array of pieces that will be converted 
+  * @return The hashed board in a string
+  */
+  def array_to_hashed_string (g : Array[Piece]) : Int = {
+    /** The string to be hashed */
+    var st = ""
+    // For each piece, we add it to the string, so that st will finnally be the entire board
+    for (i <- 0 to g.size - 1) {
+      st += g(i).name + g(i).player.toString + g(i).pos_x.toString + g(i).pos_y.toString
+      // If the piece is a king or a rook, we should write the fact that this piece has moved or not 
+      g(i).name match {
+        case "king" => st+=g(i).asInstanceOf[King].has_moved
+        case "rook" => st+=g(i).asInstanceOf[Rook].has_moved
+        case _ => ()
+      }
+    }
+    st.hashCode()
   }
-  /**Returns the piece on coords(x,y) or None if there is none*/
+
+ /** Checks if a list contains three identic elements 
+ * 
+ * @param positions The list of position we want to check 
+ * @return True is there is 3 times the same position
+ */
+  def contains_triplicates (positions : List[Int]) : Boolean = {
+    /** The list of position sorted */
+    var l = positions.sorted
+    /** Counter for the number of same positions found minus 1 */
+    var cmpt = 0
+    /** The previous position checked */
+    var old_x = -1
+    for (x <- l if cmpt < 2) {
+      if (old_x == x){
+        cmpt+=1
+      } else {
+        cmpt = 0
+      }
+      old_x =x
+    }
+    cmpt == 2
+  }
+
+  /** Returns the piece on coords(x,y) or None if there is none 
+  *
+  * @param x The x coordinate of the piece
+  * @param y The f coordinate of the piece
+  * @param g The board we will check on
+  * @param grid_id The id of the grid 
+  * @return The piece of the given coordinates
+  */
   def piece_of_coord (x : Int, y : Int, g : Array[Piece], grid_id : Int) : Option[Piece] = {
     g find (p => p.pos_x == x && p.pos_y == y && p.grid == grid_id)
   }
 
-  /**Checks for attacks on both kings and returns a list of attackers for each king.
-    Used in the pre_move function*/
+  /** Checks for attacks on both kings and returns a list of attackers for each king.
+    Used in the pre_move function
+  *
+  * @param g The actual game board
+  * @return List of attackers on each king
+  */
   def check_check (g : Array[Piece]) : Array[List[Piece]] = {
     var attacks = Array(Nil:List[Piece], Nil : List[Piece])
-      for (i <- 0 to g.size - 1){
+      for (i <- 0 to g.size - 1) {
         var p = g(i)
         var (x, y, color) = (p.pos_x, p.pos_y, p.player)
         //Checking if the piece isn't dead :
@@ -70,7 +104,13 @@ object Aux {
  }
 }
 
-/**The general class from which all pieces inherit*/
+/** The general class from which all pieces inherit
+*
+* @param play The player who owned the piece
+* @param x The x coordinate of the piece
+* @param y The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   /**x coordinate of a piece */
   var pos_x = x
@@ -92,9 +132,9 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   var piece_path : String
   /**0 if the piece is blac, 1 if it is white*/
   var player = play
-  /**1 if the player is black, -1 if it is white*/
+  /** Returns 1 if the player is black, -1 if it is white */
   def player_to_direction = {
-    if (play == 0){
+    if (play == 0) {
       1
     }
     else {
@@ -103,10 +143,20 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   }
   /**[Alice Chess] indicates the grid in which the piece is*/
   var grid : Int = grid_id
-  /**The way the piece is allowed to move, independantly from the board*/
+  /** The way the piece is allowed to move, independantly from the board
+  * 
+  * @param x_a The x coordinate of the arrival case
+  * @param y_a The y coordinate of the arrival case
+  * @return True is the case is in the pattern of the piece
+  */
   def pattern(x_a : Int, y_a : Int) : Boolean
 
-  /**Returns the directions of a movement (-1, 0 or 1) */
+  /**Returns the directions of a movement (-1, 0 or 1) 
+  * 
+  * @param x_a The x coordinate of the arrival case
+  * @param y_a The y coordinate of the arrival case
+  * @return The movment direction -1 for south or west, 1 for north or east and 0 if there is no movement
+  */
   def get_dirs (x_a : Int, y_a : Int) : (Int, Int) = {
     (math.signum(x_a - pos_x), math.signum(y_a - pos_y))
   }

@@ -16,8 +16,7 @@ import java.awt.image.BufferedImage
 import java.awt.Image                                                                                            
 import javax.imageio.ImageIO       
 
-class ImagePanel extends Panel                                                
-{                                                                             
+class ImagePanel extends Panel {                                                                             
   var _imagePath = ""                                                 
   var bufferedImage:BufferedImage = null                              
 
@@ -55,14 +54,13 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	for (k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
 			contents += new ImagePanel {
-              				/* The size of a grid (the same for the entire application) is difined in the object Display
-				   in game.scala, idem for paths to resources. */
               imagePath = (Display.resources_path + Display.texture_path)
               	preferredSize = Display.dim_small
 				minimumSize = Display.dim_small
 				maximumSize = Display.dim_small
             }
-
+				/* The size of a grid (the same for the entire application) is difined in the object Display
+				   in game.scala, idem for paths to resources. */
 
 		}
 	}
@@ -501,7 +499,7 @@ object DrawSave {
     	}) = East
 	}
 
-    /** A panel which regroups all components of the advanced-menu */
+    /** A panel which gather all components of the advanced-menu */
 	class AdvancedSave extends BorderPanel {
 		layout (new BorderPanel {
 			layout (new BackgroundCase (13, 1)) = West
@@ -597,7 +595,7 @@ object DrawGameSelection {
 
 	/** Draw the welcome message with bordercases around. 
 	*
-	* @param True if the game will be an Alice one 
+	* @param alice True if the game will be an Alice one 
 	*/
 	class WelcomeMessage (alice : Boolean) extends BorderPanel {
 		layout (new BackgroundCase (1, 11)) = North
@@ -611,7 +609,7 @@ object DrawGameSelection {
 
 	/** Final menu with buttons on. 
 	*
-	* @param True if the game will be an Alice one 
+	* @param alice True if the game will be an Alice one 
 	*/
 	class Menu (alice : Boolean) extends BorderPanel {
 		layout (new BackgroundCase (7, 1)) = East
@@ -641,19 +639,11 @@ object DrawBoard {
 		// We use the font defines in Display to adjust it to the resolution of the screen
 		font = Display.text_font
 		// We display the current time of the player
-      def change_time : Unit ={
 		if (Ksparov.curr_game.players(player).actual_period + 1 == Time.periods.length) {
-		  text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
 		} else {
-		  text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
+			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
 		}
-      }
-
-      try{
-        change_time
-      }
-      catch{
-        case _ : Throwable => ()}
 	}
 
 	/** Defines backgroundcase with the given string on it 
@@ -690,7 +680,11 @@ object DrawBoard {
 		}
 	}
 
-	/** Cases which represent how many piece of a certain type are dead */
+	/** Cases which represent how many piece of a certain type are dead 
+	*
+	* @param player The player the number of dead piece stand for
+	* @param number The number of dead piece that will be displayed
+	*/
 	class NumDeadCase (player : Int, number : Int) extends Label {
 		preferredSize = Display.dim_small
 		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
@@ -701,7 +695,12 @@ object DrawBoard {
 		text = number.toString
 	}
 
-	/** Basic case of the board, colored in black or white and an action that defines the selected piece for mouvment  */
+	/** Basic case of the board, colored in black or white and an action that defines the selected piece for mouvment 
+	*
+	* @param x The x coordinate of the case
+	* @param y The y coordinate of the case
+	* @param grid_id The id of the grid on which the case is
+	*/
 	class Case (x : Int, y : Int, grid_id : Int) extends Button {
 		preferredSize = Display.dim_small
 		if ((x + y) % 2 == 0) {
@@ -748,7 +747,10 @@ object DrawBoard {
 		}
 	}
 
-	/** Center element of the frame with the board, labels around but not on the right side of the board  */
+	/** Center element of the frame with the board, labels around but not on the right side of the board 
+	*
+	* @param grid_id The id of the grid 
+	*/
 	class Simple_Grid (grid_id : Int) extends GridPanel (Parameters.nb_case_board + 2, Parameters.nb_case_board + 1) {
 		for (i <- -1 to Parameters.nb_case_board) {
 			if (i == - 1 || i == Parameters.nb_case_board) {
@@ -847,7 +849,10 @@ object DrawBoard {
 		}
 	}
 
-	/** Defines the label which display game messages passed in argument : mat, pat ... */
+	/** Defines the label which display game messages passed in argument : mat, pat ... 
+	*
+	* @param message The message displayed by the label
+ 	*/
 	class MessageDrawer (message : String) extends Label (message) {
 		font = Display.text_font
 		preferredSize = Display.dim_message_drawer
@@ -861,15 +866,12 @@ object DrawBoard {
 
 	/** Defines the footer of the board screen with the message drawer on it */
 	class Footer extends BorderPanel {
-        var clock1 = new Clock (1)
-        var clock0 = new Clock (0)
-        Ksparov.curr_game.clock_array = Array(clock0,clock1)
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
 			// We only draw a clock if clocks are enabled 
 			layout (if (Time.clock_available) {
-					clock1
+					new Clock (1)
 				} else {
 					new BackgroundCase (1, 3)
 				}) = West
@@ -878,14 +880,17 @@ object DrawBoard {
 
 			// We only draw a clock if clocks are enabled 
 			layout (if (Time.clock_available) {
-					clock0
+					new Clock (0)
 				} else {
 					new BackgroundCase (1, 3)
 				}) = East
 		}) = Center
 	}
 
-	/** Button to start to play in a loaded game, display play button if we are in a loaded game and a background case else */
+	/** Button to start to play in a loaded game, display play button if we are in a loaded game and a background case else 
+	*
+	* @param player The player that the human will control by clicking on this button
+	*/
 	class PlayButton (player : Int) extends Button {
 		preferredSize = Display.dim_small
 		action = new Action ("") {
@@ -1019,7 +1024,10 @@ object DrawBoard {
 /** Draw actions on the board : move, promotion... */
 object DrawActions {
 
-	/** Draw a game board (an array of pieces) on the chessboard. */
+	/** Draw a game board (an array of pieces) on the chessboard. 
+	*
+	* @param game_board The board to be drawn
+	*/
 	def draw_game_board (game_board : Array[Piece]) {
 		// Reinitializing the dead piece array to avoid mutli-counting.
 		Ksparov.curr_game.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
@@ -1044,19 +1052,23 @@ object DrawActions {
 		}
 	}
 
-	/** Enables dead button for the promotion so the player can selected the piece for the promotion */
+	/** Enables dead button for the promotion so the player can selected the piece for the promotion 
+	*
+	* @param p The player the promotion is for
+	*/
 	def enable_promotion (p : Int) {
 		Ksparov.curr_game.promotion = true
 		for (i <- 0 to 3) {
 			Ksparov.curr_game.promotion_buttons(p)(i).enabled = true
 			Ksparov.curr_game.promotion_buttons(p)(i).background = Color.red
 		}
-		Ksparov.frame.contents = new DrawBoard.Board{
-          preferredSize = Ksparov.frame.bounds.getSize()
-        }
+		Ksparov.frame.contents = new DrawBoard.Board
 	}
 
-	/** Disables dead button because the promotion is over */
+	/** Disables dead button because the promotion is over 
+	*
+	* @param p The player the promotion was for
+	*/
 	def disable_promotion (p : Int) {
 		Ksparov.curr_game.promotion = false
 		for (i <- 0 to 3) {
@@ -1065,17 +1077,21 @@ object DrawActions {
 		}
 		// Actualizes the new board and swith to the next player
 		draw_game_board (Ksparov.curr_game.board)
-		Ksparov.frame.contents = new DrawBoard.Board{
-          preferredSize = Ksparov.frame.bounds.getSize()
-        }
+		Ksparov.frame.contents = new DrawBoard.Board
 		draw_game_messages ("Current_turn", 1 - Ksparov.curr_game.curr_player)
 	}
 
-	/** Colors in red the reachables cases for a piece on the boad of the piece and the next one . */
-	def draw_possible_moves (case_list : Array[(Int, Int)], pice_position_x : Int, piece_position_y : Int, grid : Int) {
+	/** Colors in red the reachables cases for a piece on the boad of the piece and the next one 
+	*
+	* @param case_list The list of cases that will be colored
+	* @param piece_position_x The x position of the piece that is about to move
+	* @param piece_position_y The y position of the piece that is about to move
+	* @param grid The grid on which the piece is 
+	*/
+	def draw_possible_moves (case_list : Array[(Int, Int)], piece_position_x : Int, piece_position_y : Int, grid : Int) {
 		// Coloring the position of the piece yellow on the boad of the piece and the next one 
-		Ksparov.curr_game.grids(grid)(pice_position_x + piece_position_y * 8).background = Color.yellow
-		Ksparov.curr_game.grids((grid + 1) % (Ksparov.curr_game.nb_grid))(pice_position_x + piece_position_y * 8).background = Color.yellow
+		Ksparov.curr_game.grids(grid)(piece_position_x + piece_position_y * 8).background = Color.yellow
+		Ksparov.curr_game.grids((grid + 1) % (Ksparov.curr_game.nb_grid))(piece_position_x + piece_position_y * 8).background = Color.yellow
 		// For each reachable case, colors it into red on the boad of the piece and the next one 
    		for (i <- 0 to case_list.length - 1) {
             var (j, l) = case_list(i)
@@ -1097,7 +1113,11 @@ object DrawActions {
 		}
 	}
 
-	/** Draw a given message on the board, the message depends on the argument passed */
+	/** Draw a given message on the board, the message depends on the argument passed 
+	*
+	* @param message_type The type of message we should display : mat, pat ...
+	* @param player The player the message is for
+	*/
 	def draw_game_messages (message_type : String, player : Int) {
 		/** The name of the player, which is defined in the pgnin the case of a loaded game */
         var joueur_string = Ksparov.curr_game.game_type match {

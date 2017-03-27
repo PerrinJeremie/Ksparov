@@ -11,7 +11,10 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-/** Defines a player,then extended in Human just below and in AI in rules.scala. */
+/** Defines a player,then extended in Human just below and in AI in rules.scala. 
+*
+* @param n The id of the player 
+*/
 abstract class Player (n : Int) {
   /** The id of the player */
   val id : Int = n
@@ -51,7 +54,13 @@ abstract class Player (n : Int) {
 /** Class for a human player */
 class Human(n : Int) extends Player(n : Int) {
 
-  /** Returns true if the piece of the position given in argument is owned by the player. */
+  /** Returns true if the piece of the position given in argument is owned by the player. 
+  *
+  * @param x The x position of the piece
+  * @param y The y position of the piece 
+  * @param grid The grid id of the piece
+  * @return True if the piece is owned by the player
+  */
   def isHis(x : Int, y : Int, grid : Int) : Boolean = {
     /** True if every pieces has been checked */
     var done = false
@@ -135,7 +144,12 @@ object Time {
   /** Second time of the computer of the last measure */
   var last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
 
-  /** Defines a period of game */
+  /** Defines a period of game 
+  *
+  * @param period_time The duration of the period
+  * @param period_move The minimum amount of moves the player should have done by the end of the period
+  * @param increment The increment of the period, 0 if there is no 
+  */
   class Period (period_time : Int, period_move : Int, increment : Int) {
     /** The time for the period */
     var time = period_time
@@ -145,7 +159,11 @@ object Time {
     var inc = increment
   }
 
-  /** Add 0 on the left of a number to have a string with exactly 2 digits */
+  /** Add 0 on the left of a number to have a string with exactly 2 digits *
+  *
+  * @param num The number to convert
+  * @return The string with the 2 digits number with 0 on the left is needed
+  */
   def convert_in_two_digit (num : Int) = {
     if (num <= 0) {
         "00"
@@ -158,7 +176,11 @@ object Time {
     }
   }
 
-  /** Return the string of a format hh:mm:ss from a time given in second */
+  /** Return the string of a format hh:mm:ss from a time given in second 
+  *
+  * @param time The time to be converted
+  * @return The number of second in the time given
+  */
   def hhmmss_to_int (time : String) = {
     /** Number of hours in the time */
     var hour = time.substring(0, 2)
@@ -169,7 +191,11 @@ object Time {
     sec.toInt + 60 * min.toInt + 3600 * hour.toInt
   }
 
-  /** Return the number of second in a time given in the format hh:mm:ss */
+  /** Return the number of second in a time given in the format hh:mm:ss 
+  *
+  * @param time The number of second to be converted
+  * @return The string of the time in format hh:mm:ss
+  */
   def int_to_hhmmss (time : Int) = {
     /** Number of hours in the time */
     var hour = time / 3600
@@ -208,7 +234,7 @@ object Time {
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
             // If the current player is out of time for the priod
             if (player.actual_time <= 0 && Time.clock_available) {
-              // If he has not play enough movment or if he is in the last period, the player lose the game due to the clock
+              // If he has not play enough movement or if he is in the last period, the player lose the game due to the clock
               if (player.nb_move < Time.periods(player.actual_period).nb_move || player.actual_period + 1 == Time.periods.length) {
                 DrawActions.clear_possible_moves
                 Ksparov.curr_game.game_won = true
@@ -237,7 +263,12 @@ object Time {
 /** The main application of Ksparov */
 object Ksparov {
 
-  /** Defines all the variables of a game */
+  /** Defines all the variables of a game 
+  *
+  * @param type_id The game type 
+  * @param number_grid The number of grids used for the game
+  * @param alice True if the game is an Alice one 
+  */
   class Game (type_id : Int, number_grid : Int, alice : Boolean) {
 
   /** Direct access to the clock components */
@@ -325,7 +356,12 @@ object Ksparov {
     }
   }
 
-  /** Return the index in the game_board of the given grid of the piece of position passed in argument */
+  /** Set Ksparov.curr_game.selected_piece to the index in the game_board of the given grid of the piece of position passed in argument 
+  *
+  * @param x The x coordinate of the piece
+  * @param y The y coordinate of the piece
+  * @param grid_id The grid_id coordinate of the piece
+  */
   def get_piece_of_pos (x : Int, y : Int, grid_id : Int) {
     for (i <- 0 to 31) {
       if (Ksparov.curr_game.board(i).pos_x == x && Ksparov.curr_game.board(i).pos_y == y && Ksparov.curr_game.board(i).grid == grid_id){
@@ -334,7 +370,10 @@ object Ksparov {
     }
   }
 
-  /** Apply the promotion with the selected piece */
+  /** Apply the promotion with the selected piece *
+  *
+  * @param p The player the promotion is for
+  */
   def promotion (p : Int) = {
     /** The index of the pawn that is promoted */
     val pawn_index = Ksparov.curr_game.board.indexOf(Ksparov.curr_game.promoted_piece)
@@ -376,7 +415,10 @@ object Ksparov {
     }
   }
 
-  /** Check every possible status of the game and adpat game variables to the new status */
+  /** Check every possible status of the game and adpat game variables to the new status *
+  *
+  * @param player The player we will check the status
+  */
   def check_game_status (player : Int) {
   /* Check if there is a mate after the move. */
     if (Checkmate.check_mate (Ksparov.curr_game.board, player)) {
@@ -432,7 +474,7 @@ object Ksparov {
     }
   }
 
-  /** Apply all the steps of a movment */
+  /** Apply all the steps of a movement */
   def play_move {
     /** The current player */
     var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
@@ -582,7 +624,10 @@ object Ksparov {
     def top = frame
   }
 
-  /** Call the swing application to be launched. */
+  /** Call the swing application to be launched. 
+  *
+  * @param argv The array of strings of the argument passed to the program
+  */
   def main (argv : Array[String]) {
     application.main(Array())
   }
