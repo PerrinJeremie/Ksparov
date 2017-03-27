@@ -470,7 +470,10 @@ object Ksparov {
     }
   }
 
-  /** Initializes the game after the game type selection */
+  /** Initializes the game after the game type selection 
+  *
+  * @param n The game type selected by the user
+  */
   def init_game (n : Int) {
     // If there is no periods, we disable clocks
     if (Time.periods.length < 1) {
@@ -573,7 +576,7 @@ object Ksparov {
   }
 
   /** Call the swing application to be launched. */
-  def main(argv : Array[String]) {
+  def main (argv : Array[String]) {
     application.main(Array())
   }
 }
