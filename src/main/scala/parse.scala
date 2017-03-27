@@ -1,7 +1,7 @@
 import java.io._
 import scala.io.Source
 import sys.process._
-
+import scala.language.postfixOps
 
 
 /** Object which regroups the functions and values associated with saving games.*/
