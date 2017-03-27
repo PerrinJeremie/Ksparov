@@ -1,4 +1,5 @@
-<!DOCTYPE html >
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
           <title>DrawParameters - DrawParameters</title>
@@ -8,11 +9,6 @@
           
       <link href="lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
-      <script type="text/javascript" src="lib/jquery.js" id="jquery-js"></script>
-      <script type="text/javascript" src="lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="lib/template.js"></script>
-      <script type="text/javascript" src="lib/tools.tooltip.js"></script>
-      
       <script type="text/javascript">
          if(top === self) {
             var url = 'index.html';
@@ -28,15 +24,9 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img alt="Object" src="lib/object_big.png" />
+        <img src="lib/object_big.png" />
         
-        <h1>DrawParameters</h1><h3><span class="morelinks"><div>Related Doc:
-            <a href="package.html" class="extype" name="_root_">package root</a>
-          </div></span></h3><span class="permalink">
-      <a href="index.html#DrawParameters$" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+        <h1>DrawParameters</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -49,7 +39,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Contains all classes to draw parameters selections.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -62,7 +52,7 @@
               <ol>
                 
                 <li class="alpha in"><span>Alphabetic</span></li>
-                <li class="inherit out"><span>By Inheritance</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
               </ol>
             </div>
         <div id="ancestors">
@@ -75,8 +65,9 @@
             <span class="filtertype"></span>
             <ol>
               <li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show All</span></li>
+              <li class="showall in"><span>Show all</span></li>
             </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -91,7 +82,7 @@
         <div id="types" class="types members">
               <h3>Type Members</h3>
               <ol><li name="DrawParameters.ChoiceColumn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ChoiceColumnextendsAnyRef"></a>
+      <a id="ChoiceColumnextendsGridPanel"></a>
       <a id="ChoiceColumn:ChoiceColumn"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -99,16 +90,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$ChoiceColumn.html"><span class="name">ChoiceColumn</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$ChoiceColumn.html"><span class="name">ChoiceColumn</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@ChoiceColumnextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Defines the column with all buttons for sub-menu and background cases elsewhere
+</p>
     </li><li name="DrawParameters.ChoiceMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ChoiceMessageextendsAnyRef"></a>
+      <a id="ChoiceMessageextendsLabel"></a>
       <a id="ChoiceMessage:ChoiceMessage"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -116,16 +104,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$ChoiceMessage.html"><span class="name">ChoiceMessage</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$ChoiceMessage.html"><span class="name">ChoiceMessage</span></a><span class="result"> extends <span class="extype" name="scala.swing.Label">Label</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@ChoiceMessageextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Message to explain the choice that has to be done
+</p>
     </li><li name="DrawParameters.ClockSubMenu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ClockSubMenuextendsAnyRef"></a>
+      <a id="ClockSubMenuextendsBorderPanel"></a>
       <a id="ClockSubMenu:ClockSubMenu"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -133,16 +118,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$ClockSubMenu.html"><span class="name">ClockSubMenu</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$ClockSubMenu.html"><span class="name">ClockSubMenu</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@ClockSubMenuextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the clock sub-menu
+</p>
     </li><li name="DrawParameters.ComeBack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ComeBackextendsAnyRef"></a>
+      <a id="ComeBackextendsButton"></a>
       <a id="ComeBack:ComeBack"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -150,16 +132,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$ComeBack.html"><span class="name">ComeBack</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$ComeBack.html"><span class="name">ComeBack</span></a><span class="result"> extends <span class="extype" name="scala.swing.Button">Button</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@ComeBackextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Defines the button to apply parameters and come back to the main menu.</p>
     </li><li name="DrawParameters.DisplaySubMenu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DisplaySubMenuextendsAnyRef"></a>
+      <a id="DisplaySubMenuextendsBorderPanel"></a>
       <a id="DisplaySubMenu:DisplaySubMenu"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -167,16 +145,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$DisplaySubMenu.html"><span class="name">DisplaySubMenu</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$DisplaySubMenu.html"><span class="name">DisplaySubMenu</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@DisplaySubMenuextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Final display sub-menu with all its items</p>
     </li><li name="DrawParameters.Increment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="IncrementextendsAnyRef"></a>
+      <a id="IncrementextendsGridPanel"></a>
       <a id="Increment:Increment"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -184,16 +158,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$Increment.html"><span class="name">Increment</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$Increment.html"><span class="name">Increment</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@IncrementextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw a label with a variable and one plus button and one minus button to increase or decrease the variable
+</p>
     </li><li name="DrawParameters.NbAliceBoard" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="NbAliceBoardextendsAnyRef"></a>
+      <a id="NbAliceBoardextendsBorderPanel"></a>
       <a id="NbAliceBoard:NbAliceBoard"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -201,16 +172,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$NbAliceBoard.html"><span class="name">NbAliceBoard</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$NbAliceBoard.html"><span class="name">NbAliceBoard</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@NbAliceBoardextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the selection of the number of board in Alice mode</p>
     </li><li name="DrawParameters.NbPeriodChoice" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="NbPeriodChoiceextendsAnyRef"></a>
+      <a id="NbPeriodChoiceextendsBorderPanel"></a>
       <a id="NbPeriodChoice:NbPeriodChoice"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -218,16 +185,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$NbPeriodChoice.html"><span class="name">NbPeriodChoice</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$NbPeriodChoice.html"><span class="name">NbPeriodChoice</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@NbPeriodChoiceextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the selection of the number of periods</p>
     </li><li name="DrawParameters.PeriodOptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PeriodOptionsextendsAnyRef"></a>
+      <a id="PeriodOptionsextendsBorderPanel"></a>
       <a id="PeriodOptions:PeriodOptions"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -235,16 +198,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$PeriodOptions.html"><span class="name">PeriodOptions</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$PeriodOptions.html"><span class="name">PeriodOptions</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@PeriodOptionsextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the selection for the parameters of a given period
+</p>
     </li><li name="DrawParameters.Periods" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PeriodsextendsAnyRef"></a>
+      <a id="PeriodsextendsGridPanel"></a>
       <a id="Periods:Periods"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -252,16 +212,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$Periods.html"><span class="name">Periods</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$Periods.html"><span class="name">Periods</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@PeriodsextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the selection for every periods of the game
+</p>
     </li><li name="DrawParameters.PieceOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PieceOptionextendsAnyRef"></a>
+      <a id="PieceOptionextendsButton"></a>
       <a id="PieceOption:PieceOption"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -269,16 +226,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$PieceOption.html"><span class="name">PieceOption</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$PieceOption.html"><span class="name">PieceOption</span></a><span class="result"> extends <span class="extype" name="scala.swing.Button">Button</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@PieceOptionextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Button for the piece type choice
+</p>
     </li><li name="DrawParameters.PiecesGrid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PiecesGridextendsAnyRef"></a>
+      <a id="PiecesGridextendsGridPanel"></a>
       <a id="PiecesGrid:PiecesGrid"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -286,16 +240,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$PiecesGrid.html"><span class="name">PiecesGrid</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$PiecesGrid.html"><span class="name">PiecesGrid</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@PiecesGridextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The menu for pieces : an alternance of background cases and pieces option.</p>
     </li><li name="DrawParameters.PlayabilitySubMenu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PlayabilitySubMenuextendsAnyRef"></a>
+      <a id="PlayabilitySubMenuextendsBorderPanel"></a>
       <a id="PlayabilitySubMenu:PlayabilitySubMenu"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -303,16 +253,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$PlayabilitySubMenu.html"><span class="name">PlayabilitySubMenu</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$PlayabilitySubMenu.html"><span class="name">PlayabilitySubMenu</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@PlayabilitySubMenuextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the playibility sub menu</p>
     </li><li name="DrawParameters.SpeedAI" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SpeedAIextendsAnyRef"></a>
+      <a id="SpeedAIextendsBorderPanel"></a>
       <a id="SpeedAI:SpeedAI"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -320,16 +266,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$SpeedAI.html"><span class="name">SpeedAI</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$SpeedAI.html"><span class="name">SpeedAI</span></a><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@SpeedAIextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the selection of the speed of the AI</p>
     </li><li name="DrawParameters.SubMenuChoice" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubMenuChoiceextendsAnyRef"></a>
+      <a id="SubMenuChoiceextendsButton"></a>
       <a id="SubMenuChoice:SubMenuChoice"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -337,16 +279,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$SubMenuChoice.html"><span class="name">SubMenuChoice</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$SubMenuChoice.html"><span class="name">SubMenuChoice</span></a><span class="result"> extends <span class="extype" name="scala.swing.Button">Button</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@SubMenuChoiceextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Defines button for the selection of the parameter sub menu.</p>
     </li><li name="DrawParameters.SubMenus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SubMenusextendsAnyRef"></a>
+      <a id="SubMenusextendsGridPanel"></a>
       <a id="SubMenus:SubMenus"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -354,16 +292,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$SubMenus.html"><span class="name">SubMenus</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$SubMenus.html"><span class="name">SubMenus</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@SubMenusextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the sub-menu given in argument
+</p>
     </li><li name="DrawParameters.TextureGrid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="TextureGridextendsAnyRef"></a>
+      <a id="TextureGridextendsGridPanel"></a>
       <a id="TextureGrid:TextureGrid"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -371,16 +306,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$TextureGrid.html"><span class="name">TextureGrid</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$TextureGrid.html"><span class="name">TextureGrid</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@TextureGridextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The menu for texture : an alternance of background cases and texture option.</p>
     </li><li name="DrawParameters.TextureOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="TextureOptionextendsAnyRef"></a>
+      <a id="TextureOptionextendsButton"></a>
       <a id="TextureOption:TextureOption"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -388,14 +319,10 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DrawParameters$$TextureOption.html"><span class="name">TextureOption</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="DrawParameters$$TextureOption.html"><span class="name">TextureOption</span></a><span class="result"> extends <span class="extype" name="scala.swing.Button">Button</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@TextureOptionextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Buttons for the texture choice, the parameter defines which texture the button stands for.</p>
     </li></ol>
             </div>
 
@@ -404,6 +331,19 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -414,12 +354,8 @@
       <span class="symbol">
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -431,13 +367,22 @@
       <span class="symbol">
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@##():Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -448,12 +393,8 @@
       <span class="symbol">
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@==(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -465,11 +406,7 @@
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -482,11 +419,7 @@
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@clone():Object" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -505,11 +438,7 @@
       <span class="symbol">
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -522,11 +451,7 @@
       <span class="symbol">
         <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -539,11 +464,7 @@
       <span class="symbol">
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@finalize():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -562,11 +483,7 @@
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@getClass():Class[_]" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -579,29 +496,21 @@
       <span class="symbol">
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@hashCode():Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="DrawParameters#inc_textfields" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="inc_textfields:&lt;error&gt;"></a>
-      <a id="inc_textfields:&lt;error&gt;"></a>
+      <a id="inc_textfields:Array[scala.swing.TextField]"></a>
+      <a id="inc_textfields:Array[TextField]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">inc_textfields</span><span class="result">: &lt;error&gt;</span>
+        <span class="name">inc_textfields</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.swing.TextField">TextField</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@inc_textfields:&lt;error&gt;" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="shortcomment cmt">Textfield array for the selection of the increment of a period</p>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -613,29 +522,21 @@
       <span class="symbol">
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="DrawParameters#move_textfields" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="move_textfields:&lt;error&gt;"></a>
-      <a id="move_textfields:&lt;error&gt;"></a>
+      <a id="move_textfields:Array[scala.swing.TextField]"></a>
+      <a id="move_textfields:Array[TextField]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">move_textfields</span><span class="result">: &lt;error&gt;</span>
+        <span class="name">move_textfields</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.swing.TextField">TextField</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@move_textfields:&lt;error&gt;" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="shortcomment cmt">Textfield array for the selection of the number of move of a period</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -647,11 +548,7 @@
       <span class="symbol">
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -664,11 +561,7 @@
       <span class="symbol">
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@notify():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -681,11 +574,7 @@
       <span class="symbol">
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@notifyAll():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -698,29 +587,21 @@
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="DrawParameters#time_textfields" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="time_textfields:&lt;error&gt;"></a>
-      <a id="time_textfields:&lt;error&gt;"></a>
+      <a id="time_textfields:Array[scala.swing.TextField]"></a>
+      <a id="time_textfields:Array[TextField]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">time_textfields</span><span class="result">: &lt;error&gt;</span>
+        <span class="name">time_textfields</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.swing.TextField">TextField</span>]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@time_textfields:&lt;error&gt;" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="shortcomment cmt">Textfield array for the selection of the time of a period</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -732,11 +613,7 @@
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@toString():String" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -749,11 +626,7 @@
       <span class="symbol">
         <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@wait():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -772,11 +645,7 @@
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -795,11 +664,7 @@
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#DrawParameters$@wait(x$1:Long):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -836,7 +701,6 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="lib/template.js"></script>
     </body>
       </html>

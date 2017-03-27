@@ -47,8 +47,7 @@ class ImagePanel extends Panel {
   /** A modified version of paintComponent which takes into account the scaling depending on the size of the window
     *  @param g a Graphics instance (context in which to draw)
     */
-  override def paintComponent(g:Graphics2D) =                                 
-  {                                                                           
+  override def paintComponent (g : Graphics2D) = {                                                                           
     if (null != bufferedImage){
       g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
     }

@@ -1,4 +1,5 @@
-<!DOCTYPE html >
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
           <title>root - _root_</title>
@@ -8,11 +9,6 @@
           
       <link href="lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
-      <script type="text/javascript" src="lib/jquery.js" id="jquery-js"></script>
-      <script type="text/javascript" src="lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="lib/template.js"></script>
-      <script type="text/javascript" src="lib/tools.tooltip.js"></script>
-      
       <script type="text/javascript">
          if(top === self) {
             var url = 'index.html';
@@ -28,13 +24,9 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img alt="Package" src="lib/package_big.png" />
+        <img src="lib/package_big.png" />
         
-        <h1>root package</h1><span class="permalink">
-      <a href="index.html#package" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+        <h1>root package</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -77,12 +69,9 @@
       <span class="symbol">
         <a href="AI.html"><span class="name">AI</span></a><span class="result"> extends <a href="Player.html" class="extype" name="Player">Player</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@AIextendsPlayer" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The class for AI players
+</p>
     </li><li name="_root_.AIMoveThread" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AIMoveThreadextendsThread"></a>
       <a id="AIMoveThread:AIMoveThread"></a>
@@ -94,14 +83,10 @@
       <span class="symbol">
         <a href="AIMoveThread.html"><span class="name">AIMoveThread</span></a><span class="result"> extends <span class="extype" name="java.lang.Thread">Thread</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@AIMoveThreadextendsThread" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Thread to make the ai move, wait a certain time before the move</p>
     </li><li name="_root_.BackgroundCase" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="BackgroundCaseextendsAnyRef"></a>
+      <a id="BackgroundCaseextendsGridPanel"></a>
       <a id="BackgroundCase:BackgroundCase"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -109,15 +94,10 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="BackgroundCase.html"><span class="name">BackgroundCase</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="BackgroundCase.html"><span class="name">BackgroundCase</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@BackgroundCaseextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This class defines a grid of background cases,
-   each background is juste a set of this grid.</p>
+      </h4>
+      <p class="comment cmt">This class defines a grid of background cases, each background is juste a set of this grid.</p>
     </li><li name="_root_.Bishop" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BishopextendsPiece"></a>
       <a id="Bishop:Bishop"></a>
@@ -129,12 +109,9 @@
       <span class="symbol">
         <a href="Bishop.html"><span class="name">Bishop</span></a><span class="result"> extends <a href="Piece.html" class="extype" name="Piece">Piece</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@BishopextendsPiece" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The Bishop class</p>
+      </h4>
+      <p class="comment cmt">The Bishop class
+</p>
     </li><li name="_root_.Human" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="HumanextendsPlayer"></a>
       <a id="Human:Human"></a>
@@ -146,12 +123,34 @@
       <span class="symbol">
         <a href="Human.html"><span class="name">Human</span></a><span class="result"> extends <a href="Player.html" class="extype" name="Player">Player</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@HumanextendsPlayer" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Class for a human player</p>
+    </li><li name="_root_.ImagePanel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ImagePanelextendsPanel"></a>
+      <a id="ImagePanel:ImagePanel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ImagePanel.html"><span class="name">ImagePanel</span></a><span class="result"> extends <span class="extype" name="scala.swing.Panel">Panel</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">This class loads an image on a stretchable component</p>
+    </li><li name="_root_.ImagePanelWithText" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ImagePanelWithTextextendsImagePanel"></a>
+      <a id="ImagePanelWithText:ImagePanelWithText"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ImagePanelWithText.html"><span class="name">ImagePanelWithText</span></a><span class="result"> extends <a href="ImagePanel.html" class="extype" name="ImagePanel">ImagePanel</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt"> This class loads an image on a stretchable component with a label on it</p>
     </li><li name="_root_.King" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="KingextendsPiece"></a>
       <a id="King:King"></a>
@@ -163,13 +162,9 @@
       <span class="symbol">
         <a href="King.html"><span class="name">King</span></a><span class="result"> extends <a href="Piece.html" class="extype" name="Piece">Piece</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@KingextendsPiece" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The King class.Overrides for castling</p>
-    </li><li name="_root_.Knight" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      </h4>
+      <p class="comment cmt">The King class.</p>
+    </li><li name="_root_.Knight" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="KnightextendsPiece"></a>
       <a id="Knight:Knight"></a>
       <h4 class="signature">
@@ -180,13 +175,9 @@
       <span class="symbol">
         <a href="Knight.html"><span class="name">Knight</span></a><span class="result"> extends <a href="Piece.html" class="extype" name="Piece">Piece</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@KnightextendsPiece" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The Knight class.</p><div class="fullcomment"><div class="comment cmt"><p>The Knight class. clear_path is overriden</p></div></div>
-    </li><li name="_root_.Pawn" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      </h4>
+      <p class="comment cmt">The Knight class.</p>
+    </li><li name="_root_.Pawn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="PawnextendsPiece"></a>
       <a id="Pawn:Pawn"></a>
       <h4 class="signature">
@@ -197,12 +188,8 @@
       <span class="symbol">
         <a href="Pawn.html"><span class="name">Pawn</span></a><span class="result"> extends <a href="Piece.html" class="extype" name="Piece">Piece</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@PawnextendsPiece" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The Pawn class.</p><div class="fullcomment"><div class="comment cmt"><p>The Pawn class. Clear_path and move are overriden because of pawn's special moves</p></div></div>
+      </h4>
+      <p class="comment cmt">The Pawn class.</p>
     </li><li name="_root_.Piece" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PieceextendsAnyRef"></a>
       <a id="Piece:Piece"></a>
@@ -214,12 +201,9 @@
       <span class="symbol">
         <a href="Piece.html"><span class="name">Piece</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@PieceextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The general class from which all pieces inherit</p>
+      </h4>
+      <p class="comment cmt">The general class from which all pieces inherit
+</p>
     </li><li name="_root_.Player" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PlayerextendsAnyRef"></a>
       <a id="Player:Player"></a>
@@ -231,14 +215,10 @@
       <span class="symbol">
         <a href="Player.html"><span class="name">Player</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@PlayerextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Defines a player,then extended in Human just below and in AI in rules.</p>
     </li><li name="_root_.PrettyBigButton" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PrettyBigButtonextendsAnyRef"></a>
+      <a id="PrettyBigButtonextendsButton"></a>
       <a id="PrettyBigButton:PrettyBigButton"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -246,16 +226,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="PrettyBigButton.html"><span class="name">PrettyBigButton</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="PrettyBigButton.html"><span class="name">PrettyBigButton</span></a><span class="result"> extends <span class="extype" name="scala.swing.Button">Button</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@PrettyBigButtonextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The button we will use with preferences already set</p>
     </li><li name="_root_.PrettyBigLabel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PrettyBigLabelextendsAnyRef"></a>
+      <a id="PrettyBigLabelextendsLabel"></a>
       <a id="PrettyBigLabel:PrettyBigLabel"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -263,14 +239,11 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="PrettyBigLabel.html"><span class="name">PrettyBigLabel</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="PrettyBigLabel.html"><span class="name">PrettyBigLabel</span></a><span class="result"> extends <span class="extype" name="scala.swing.Label">Label</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@PrettyBigLabelextendsAnyRef" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The label we will use with preferences already set *
+</p>
     </li><li name="_root_.Queen" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="QueenextendsPiece"></a>
       <a id="Queen:Queen"></a>
@@ -282,12 +255,9 @@
       <span class="symbol">
         <a href="Queen.html"><span class="name">Queen</span></a><span class="result"> extends <a href="Piece.html" class="extype" name="Piece">Piece</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@QueenextendsPiece" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The Queen class</p>
+      </h4>
+      <p class="comment cmt">The Queen class
+</p>
     </li><li name="_root_.Rook" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RookextendsPiece"></a>
       <a id="Rook:Rook"></a>
@@ -299,29 +269,9 @@
       <span class="symbol">
         <a href="Rook.html"><span class="name">Rook</span></a><span class="result"> extends <a href="Piece.html" class="extype" name="Piece">Piece</a></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@RookextendsPiece" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">The Rook class</p>
-    </li><li name="_root_.TimeThread" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="TimeThreadextendsThread"></a>
-      <a id="TimeThread:TimeThread"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="TimeThread.html"><span class="name">TimeThread</span></a><span class="result"> extends <span class="extype" name="java.lang.Thread">Thread</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@TimeThreadextendsThread" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The Rook class
+</p>
     </li></ol>
             </div>
 
@@ -329,7 +279,7 @@
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="_root_.Aux" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="_root_.Aux" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Aux"></a>
       <a id="Aux:Aux"></a>
       <h4 class="signature">
@@ -340,12 +290,8 @@
       <span class="symbol">
         <a href="Aux$.html"><span class="name">Aux</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Aux" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Auxiliary and general methods.</p><div class="fullcomment"><div class="comment cmt"><p>Auxiliary and general methods. Most are self-explainatory.</p></div></div>
+      </h4>
+      <p class="comment cmt">Auxiliary and general methods.</p>
     </li><li name="_root_.Checkmate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Checkmate"></a>
       <a id="Checkmate:Checkmate"></a>
@@ -357,29 +303,21 @@
       <span class="symbol">
         <a href="Checkmate$.html"><span class="name">Checkmate</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Checkmate" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This object contains methods to determine if there is a Checkmate</p>
-    </li><li name="_root_.Constants" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Constants"></a>
-      <a id="Constants:Constants"></a>
+      </h4>
+      <p class="comment cmt">This object contains methods to determine if there is a Checkmate</p>
+    </li><li name="_root_.Display" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Display"></a>
+      <a id="Display:Display"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Constants$.html"><span class="name">Constants</span></a>
+        <a href="Display$.html"><span class="name">Display</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Constants" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Defines evrything that is linked with the display</p>
     </li><li name="_root_.DrawActions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawActions"></a>
       <a id="DrawActions:DrawActions"></a>
@@ -391,12 +329,8 @@
       <span class="symbol">
         <a href="DrawActions$.html"><span class="name">DrawActions</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawActions" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw actions on the board : move, promotion.</p>
     </li><li name="_root_.DrawBoard" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawBoard"></a>
       <a id="DrawBoard:DrawBoard"></a>
@@ -408,12 +342,8 @@
       <span class="symbol">
         <a href="DrawBoard$.html"><span class="name">DrawBoard</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawBoard" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Draw the chess board of the game</p>
     </li><li name="_root_.DrawCharge" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawCharge"></a>
       <a id="DrawCharge:DrawCharge"></a>
@@ -425,12 +355,8 @@
       <span class="symbol">
         <a href="DrawCharge$.html"><span class="name">DrawCharge</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawCharge" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This object is used to draw the menu for loading games.</p>
+      </h4>
+      <p class="comment cmt">This object is used to draw the menu for loading games.</p>
     </li><li name="_root_.DrawGameSelection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawGameSelection"></a>
       <a id="DrawGameSelection:DrawGameSelection"></a>
@@ -442,13 +368,9 @@
       <span class="symbol">
         <a href="DrawGameSelection$.html"><span class="name">DrawGameSelection</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawGameSelection" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
-    </li><li name="_root_.DrawMenu" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      </h4>
+      <p class="comment cmt">Object to draw the menu for the game selection : Human vs Human, AI vs AI or AI vs Human.</p>
+    </li><li name="_root_.DrawMenu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawMenu"></a>
       <a id="DrawMenu:DrawMenu"></a>
       <h4 class="signature">
@@ -459,13 +381,8 @@
       <span class="symbol">
         <a href="DrawMenu$.html"><span class="name">DrawMenu</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawMenu" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Draw the main menu of the application.</p><div class="fullcomment"><div class="comment cmt"><p>Draw the main menu of the application.
-	A menu is an instance of DrawMenu.Menu.</p></div></div>
+      </h4>
+      <p class="comment cmt">Draw the main menu of the application.</p>
     </li><li name="_root_.DrawParameters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawParameters"></a>
       <a id="DrawParameters:DrawParameters"></a>
@@ -477,12 +394,8 @@
       <span class="symbol">
         <a href="DrawParameters$.html"><span class="name">DrawParameters</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawParameters" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Contains all classes to draw parameters selections.</p>
     </li><li name="_root_.DrawSave" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DrawSave"></a>
       <a id="DrawSave:DrawSave"></a>
@@ -494,12 +407,8 @@
       <span class="symbol">
         <a href="DrawSave$.html"><span class="name">DrawSave</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@DrawSave" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Draws the menus used to save games.</p>
+      </h4>
+      <p class="comment cmt">Draws the menus used to save games.</p>
     </li><li name="_root_.Ksparov" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Ksparov"></a>
       <a id="Ksparov:Ksparov"></a>
@@ -511,12 +420,8 @@
       <span class="symbol">
         <a href="Ksparov$.html"><span class="name">Ksparov</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Ksparov" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">The main application of Ksparov</p>
     </li><li name="_root_.Load" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Load"></a>
       <a id="Load:Load"></a>
@@ -528,12 +433,8 @@
       <span class="symbol">
         <a href="Load$.html"><span class="name">Load</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Load" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Object which regroups functions and values associated with loading a game.</p>
+      </h4>
+      <p class="comment cmt">Object which regroups functions and values associated with loading a game.</p>
     </li><li name="_root_.Nulle" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Nulle"></a>
       <a id="Nulle:Nulle"></a>
@@ -545,12 +446,21 @@
       <span class="symbol">
         <a href="Nulle$.html"><span class="name">Nulle</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Nulle" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">This object contains methods to determine if the game is Nulle</p>
+      </h4>
+      <p class="comment cmt">This object contains methods to determine if the game is Nulle</p>
+    </li><li name="_root_.Parameters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Parameters"></a>
+      <a id="Parameters:Parameters"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Parameters$.html"><span class="name">Parameters</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Defines methods and variables for the parameter</p>
     </li><li name="_root_.Save" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Save"></a>
       <a id="Save:Save"></a>
@@ -562,12 +472,8 @@
       <span class="symbol">
         <a href="Save$.html"><span class="name">Save</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Save" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Object which regroups the functions and values associated with saving games.</p>
+      </h4>
+      <p class="comment cmt">Object which regroups the functions and values associated with saving games.</p>
     </li><li name="_root_.Time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Time"></a>
       <a id="Time:Time"></a>
@@ -579,12 +485,8 @@
       <span class="symbol">
         <a href="Time$.html"><span class="name">Time</span></a>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#package@Time" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      
+      </h4>
+      <p class="comment cmt">Defines every thing for the time in the game : game clock.</p>
     </li></ol>
             </div>
 
@@ -610,7 +512,6 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="lib/template.js"></script>
     </body>
       </html>

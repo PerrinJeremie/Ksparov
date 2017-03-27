@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>Aux - Aux</title>
-          <meta name="description" content="Aux - Aux" />
-          <meta name="keywords" content="Aux Aux" />
+          <title>Game - Ksparov.Game</title>
+          <meta name="description" content="Game - Ksparov.Game" />
+          <meta name="keywords" content="Game Ksparov.Game" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = 'index.html';
-            var hash = 'Aux$';
+            var hash = 'Ksparov$$Game';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,24 +22,25 @@
    	  </script>
     
         </head>
-        <body class="value">
+        <body class="type">
       <div id="definition">
-        <img src="lib/object_big.png" />
-        
-        <h1>Aux</h1>
+        <img src="lib/class_big.png" />
+        <p id="owner"><a href="Ksparov$.html" class="extype" name="Ksparov">Ksparov</a></p>
+        <h1>Game</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Aux</span>
+        <span class="name">Game</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Auxiliary and general methods. Most are self-explainatory.</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Defines all the variables of a game
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -59,7 +60,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="Aux"><span>Aux</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="Ksparov.Game"><span>Game</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -77,7 +78,24 @@
 
       <div id="template">
         <div id="allMembers">
-        
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="Ksparov.Game#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(type_id:Int,number_grid:Int,alice:Boolean):Ksparov.Game"></a>
+      <a id="&lt;init&gt;:Game"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Game</span><span class="params">(<span name="type_id">type_id: <span class="extype" name="scala.Int">Int</span></span>, <span name="number_grid">number_grid: <span class="extype" name="scala.Int">Int</span></span>, <span name="alice">alice: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">type_id</dt><dd class="cmt"><p>The game type</p></dd><dt class="param">number_grid</dt><dd class="cmt"><p>The number of grids used for the game</p></dd><dt class="param">alice</dt><dd class="cmt"><p>True if the game is an Alice one
+</p></dd></dl></div>
+    </li></ol>
+            </div>
 
         
 
@@ -150,21 +168,45 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="Aux#array_to_hashed_string" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="array_to_hashed_string(g:Array[Piece]):Int"></a>
-      <a id="array_to_hashed_string(Array[Piece]):Int"></a>
+    </li><li name="Ksparov.Game#ai_move" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ai_move:AIMoveThread"></a>
+      <a id="ai_move:AIMoveThread"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">array_to_hashed_string</span><span class="params">(<span name="g">g: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">ai_move</span><span class="result">: <a href="AIMoveThread.html" class="extype" name="AIMoveThread">AIMoveThread</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Converts an array to a string and hash it.</p><div class="fullcomment"><div class="comment cmt"><p>Converts an array to a string and hash it. Used to store boards
-</p></div><dl class="paramcmts block"><dt class="param">g</dt><dd class="cmt"><p>The array of pieces that will be converted</p></dd><dt>returns</dt><dd class="cmt"><p>The hashed board in an int
-</p></dd></dl></div>
+      <p class="shortcomment cmt">The thread that get the AI move</p>
+    </li><li name="Ksparov.Game#ai_turn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ai_turn:Boolean"></a>
+      <a id="ai_turn:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ai_turn</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if the turn is for an AI, used to wake up the AIMoveThread</p>
+    </li><li name="Ksparov.Game#alice_chess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="alice_chess:Boolean"></a>
+      <a id="alice_chess:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">alice_chess</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True is the game is an Alice one</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -178,35 +220,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="Aux#cases" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="cases:Array[(Int,Int)]"></a>
-      <a id="cases:Array[(Int,Int)]"></a>
+    </li><li name="Ksparov.Game#board" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="board:Array[Piece]"></a>
+      <a id="board:Array[Piece]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">cases</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
+        <span class="name">board</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Array to restraint moves to a 64 cases board</p>
-    </li><li name="Aux#check_check" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="check_check(g:Array[Piece]):Array[List[Piece]]"></a>
-      <a id="check_check(Array[Piece]):Array[List[Piece]]"></a>
+      <p class="shortcomment cmt">Array of the 32 pieces of the game</p>
+    </li><li name="Ksparov.Game#clock_array" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="clock_array:Array[DrawBoard.Clock]"></a>
+      <a id="clock_array:Array[Clock]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">check_check</span><span class="params">(<span name="g">g: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.List">List</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]]</span>
+        <span class="name">clock_array</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="DrawBoard$$Clock.html" class="extype" name="DrawBoard.Clock">Clock</a>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Checks for attacks on both kings and returns a list of attackers for each king.</p><div class="fullcomment"><div class="comment cmt"><p>Checks for attacks on both kings and returns a list of attackers for each king.
-    Used in the pre_move function
-</p></div><dl class="paramcmts block"><dt class="param">g</dt><dd class="cmt"><p>The actual game board</p></dd><dt>returns</dt><dd class="cmt"><p>List of attackers on each king
-</p></dd></dl></div>
+      <p class="shortcomment cmt">Direct access to the clock components</p>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -226,22 +265,32 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="Aux#contains_triplicates" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="contains_triplicates(positions:List[Int]):Boolean"></a>
-      <a id="contains_triplicates(List[Int]):Boolean"></a>
+    </li><li name="Ksparov.Game#curr_player" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="curr_player:Int"></a>
+      <a id="curr_player:Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">contains_triplicates</span><span class="params">(<span name="positions">positions: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">curr_player</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Checks if a list contains three identic elements
-</p><div class="fullcomment"><div class="comment cmt"><p>Checks if a list contains three identic elements
-</p></div><dl class="paramcmts block"><dt class="param">positions</dt><dd class="cmt"><p>The list of position we want to check</p></dd><dt>returns</dt><dd class="cmt"><p>True is there is 3 times the same position
-</p></dd></dl></div>
+      <p class="shortcomment cmt">The current player</p>
+    </li><li name="Ksparov.Game#dead_pieces" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dead_pieces:Array[Array[Int]]"></a>
+      <a id="dead_pieces:Array[Array[Int]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dead_pieces</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Int">Int</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Array that counts the number of dead pieces for each player</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -287,6 +336,58 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="Ksparov.Game#first_choice_done" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="first_choice_done:Boolean"></a>
+      <a id="first_choice_done:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">first_choice_done</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if the human player has done his first move, the selection of a piece he owns</p>
+    </li><li name="Ksparov.Game#game_nulle" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="game_nulle:Boolean"></a>
+      <a id="game_nulle:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">game_nulle</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if the game is over because of a nulle status</p>
+    </li><li name="Ksparov.Game#game_type" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="game_type:Int"></a>
+      <a id="game_type:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">game_type</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI.</p><div class="fullcomment"><div class="comment cmt"><p>Type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI...</p></div></div>
+    </li><li name="Ksparov.Game#game_won" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="game_won:Boolean"></a>
+      <a id="game_won:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">game_won</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if the game is over because of a player has won it</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -300,6 +401,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="Ksparov.Game#grids" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="grids:Array[Array[DrawBoard.Case]]"></a>
+      <a id="grids:Array[Array[Case]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">grids</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<a href="DrawBoard$$Case.html" class="extype" name="DrawBoard.Case">Case</a>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Array of the grids of the game</p>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -313,6 +427,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="Ksparov.Game#hashed_positions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="hashed_positions:List[Int]"></a>
+      <a id="hashed_positions:List[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashed_positions</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The list of the hashed of the board, it records every board of the game to check the triple repetition</p>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -326,6 +453,58 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="Ksparov.Game#kings" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="kings:Array[King]"></a>
+      <a id="kings:Array[King]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">kings</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="King.html" class="extype" name="King">King</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Array of the two kings of the game</p>
+    </li><li name="Ksparov.Game#message_drawer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="message_drawer:DrawBoard.MessageDrawer"></a>
+      <a id="message_drawer:MessageDrawer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">message_drawer</span><span class="result">: <a href="DrawBoard$$MessageDrawer.html" class="extype" name="DrawBoard.MessageDrawer">MessageDrawer</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The message drawer that is on the bottom of the screen</p>
+    </li><li name="Ksparov.Game#nb_boring_moves" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nb_boring_moves:Int"></a>
+      <a id="nb_boring_moves:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nb_boring_moves</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Count the number of boring moves played, if the amount reach 50, the game is nulle</p>
+    </li><li name="Ksparov.Game#nb_grid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nb_grid:Int"></a>
+      <a id="nb_grid:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nb_grid</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The number of grid used to play the game</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -365,37 +544,123 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="Aux#on_board" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="on_board(x:Int,y:Int):Boolean"></a>
-      <a id="on_board(Int,Int):Boolean"></a>
+    </li><li name="Ksparov.Game#play_buttons" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="play_buttons:Array[DrawBoard.PlayButton]"></a>
+      <a id="play_buttons:Array[PlayButton]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">on_board</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Int">Int</span></span>, <span name="y">y: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">play_buttons</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="DrawBoard$$PlayButton.html" class="extype" name="DrawBoard.PlayButton">PlayButton</a>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Checks if case (x,y) is on the board.</p><div class="fullcomment"><div class="comment cmt"><p>Checks if case (x,y) is on the board. Useful to determine if a piece is dead, since those are in (-1,-1)
-</p></div><dl class="paramcmts block"><dt class="param">x</dt><dd class="cmt"><p>The x coordinate of the case</p></dd><dt class="param">y</dt><dd class="cmt"><p>The y coordinate of the case</p></dd><dt>returns</dt><dd class="cmt"><p>True if the case is on the board
-</p></dd></dl></div>
-    </li><li name="Aux#piece_of_coord" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="piece_of_coord(x:Int,y:Int,g:Array[Piece],grid_id:Int):Option[Piece]"></a>
-      <a id="piece_of_coord(Int,Int,Array[Piece],Int):Option[Piece]"></a>
+      <p class="shortcomment cmt">Array of the 2 butons to start to play in a loaded game</p>
+    </li><li name="Ksparov.Game#players" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="players:Array[Player]"></a>
+      <a id="players:Array[Player]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">piece_of_coord</span><span class="params">(<span name="x">x: <span class="extype" name="scala.Int">Int</span></span>, <span name="y">y: <span class="extype" name="scala.Int">Int</span></span>, <span name="g">g: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>, <span name="grid_id">grid_id: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>
+        <span class="name">players</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="Player.html" class="extype" name="Player">Player</a>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns the piece on coords(x,y) or None if there is none
-</p><div class="fullcomment"><div class="comment cmt"><p>Returns the piece on coords(x,y) or None if there is none
-</p></div><dl class="paramcmts block"><dt class="param">x</dt><dd class="cmt"><p>The x coordinate of the piece</p></dd><dt class="param">y</dt><dd class="cmt"><p>The f coordinate of the piece</p></dd><dt class="param">g</dt><dd class="cmt"><p>The board we will check on</p></dd><dt class="param">grid_id</dt><dd class="cmt"><p>The id of the grid</p></dd><dt>returns</dt><dd class="cmt"><p>The piece of the given coordinates if there is one
-</p></dd></dl></div>
+      <p class="shortcomment cmt">Array of the two players of the game</p>
+    </li><li name="Ksparov.Game#promoted_piece" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="promoted_piece:Pawn"></a>
+      <a id="promoted_piece:Pawn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">promoted_piece</span><span class="result">: <a href="Pawn.html" class="extype" name="Pawn">Pawn</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The piece selected for the promotion of a pawn</p>
+    </li><li name="Ksparov.Game#promotion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="promotion:Boolean"></a>
+      <a id="promotion:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">promotion</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if there is a promotion ongoing</p>
+    </li><li name="Ksparov.Game#promotion_buttons" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="promotion_buttons:Array[Array[DrawBoard.DeadCase]]"></a>
+      <a id="promotion_buttons:Array[Array[DeadCase]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">promotion_buttons</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<a href="DrawBoard$$DeadCase.html" class="extype" name="DrawBoard.DeadCase">DeadCase</a>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Array for the dead piece icon, they are enabled for the promotion to select the piece</p>
+    </li><li name="Ksparov.Game#selected_case" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="selected_case:Int"></a>
+      <a id="selected_case:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">selected_case</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The case selected by the player by a click on a case</p>
+    </li><li name="Ksparov.Game#selected_grid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="selected_grid:Int"></a>
+      <a id="selected_grid:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">selected_grid</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The grid on which the player has clicked</p>
+    </li><li name="Ksparov.Game#selected_piece" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="selected_piece:Int"></a>
+      <a id="selected_piece:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">selected_piece</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The index in the array of piece of the piece selected by the player</p>
+    </li><li name="Ksparov.Game#selected_promotion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="selected_promotion:String"></a>
+      <a id="selected_promotion:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">selected_promotion</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The name of the piece selected for the promotion</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -409,6 +674,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="Ksparov.Game#thread_in_life" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="thread_in_life:Boolean"></a>
+      <a id="thread_in_life:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">thread_in_life</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if threads should be alive, when passed at false, AiMoveThread and TimeThread stop</p>
+    </li><li name="Ksparov.Game#timer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="timer:Time.TimeThread"></a>
+      <a id="timer:TimeThread"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">timer</span><span class="result">: <a href="Time$$TimeThread.html" class="extype" name="Time.TimeThread">TimeThread</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The thread to display the time and the board repetidly</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>

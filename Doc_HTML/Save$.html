@@ -1,4 +1,5 @@
-<!DOCTYPE html >
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
           <title>Save - Save</title>
@@ -8,11 +9,6 @@
           
       <link href="lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
-      <script type="text/javascript" src="lib/jquery.js" id="jquery-js"></script>
-      <script type="text/javascript" src="lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="lib/template.js"></script>
-      <script type="text/javascript" src="lib/tools.tooltip.js"></script>
-      
       <script type="text/javascript">
          if(top === self) {
             var url = 'index.html';
@@ -28,15 +24,9 @@
         </head>
         <body class="value">
       <div id="definition">
-        <img alt="Object" src="lib/object_big.png" />
+        <img src="lib/object_big.png" />
         
-        <h1>Save</h1><h3><span class="morelinks"><div>Related Doc:
-            <a href="package.html" class="extype" name="_root_">package root</a>
-          </div></span></h3><span class="permalink">
-      <a href="index.html#Save$" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+        <h1>Save</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -62,7 +52,7 @@
               <ol>
                 
                 <li class="alpha in"><span>Alphabetic</span></li>
-                <li class="inherit out"><span>By Inheritance</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
               </ol>
             </div>
         <div id="ancestors">
@@ -75,8 +65,9 @@
             <span class="filtertype"></span>
             <ol>
               <li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show All</span></li>
+              <li class="showall in"><span>Show all</span></li>
             </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
           </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
@@ -92,7 +83,7 @@
               <h3>Type Members</h3>
               <ol><li name="Save.Moves" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Moves=(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))"></a>
-      <a id="Moves:Moves"></a>
+      <a id="Moves:(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
@@ -101,11 +92,7 @@
       <span class="symbol">
         <span class="name">Moves</span><span class="result"> = (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Boolean">Boolean</span>, (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>), (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>))</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@Moves=(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">tuple (irock,prom,piece_prom,piece,attack,check,p1,p2) with</p><div class="fullcomment"><div class="comment cmt"><p>tuple (irock,prom,piece_prom,piece,attack,check,p1,p2) with</p><ul><li>irock=0 if no roque, = 1 queen-side, = -1 if king-side.</li><li>prom = true if promotion occurs, then piece_prom indicates chosen piece.</li><li>piece : the piece qui which moves (K king ,Q queen ,B bishop ,N knight ,R rook).</li><li>attack = true if a piece is eaten</li><li>check = true if check occurs</li><li>p1 initial position, p2 final position of piece</li></ul></div></div>
     </li></ol>
             </div>
@@ -115,6 +102,19 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -125,12 +125,8 @@
       <span class="symbol">
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@!=(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -142,13 +138,22 @@
       <span class="symbol">
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@##():Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -159,12 +164,8 @@
       <span class="symbol">
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@==(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="Save#add2_happened" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="add2_happened:Boolean"></a>
       <a id="add2_happened:Boolean"></a>
@@ -176,13 +177,9 @@
       <span class="symbol">
         <span class="name">add2_happened</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@add2_happened:Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">a switch to control wether promotion has to rewrite move or to change curr_move.</p>
-    </li><li name="Save#add_move1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="Save#add_move1" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="add_move1(pos_piece:Int,p:(Int,Int)):Unit"></a>
       <a id="add_move1(Int,(Int,Int)):Unit"></a>
       <h4 class="signature">
@@ -193,12 +190,10 @@
       <span class="symbol">
         <span class="name">add_move1</span><span class="params">(<span name="pos_piece">pos_piece: <span class="extype" name="scala.Int">Int</span></span>, <span name="p">p: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@add_move1(pos_piece:Int,p:(Int,Int)):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">To be called in the getmove method of a Player right before the applied move, loads part of curr_move.</p>
+      </h4>
+      <p class="shortcomment cmt">To be called in the getmove method of a Player right before the applied move, loads part of curr_move.</p><div class="fullcomment"><div class="comment cmt"><p>To be called in the getmove method of a Player right before the applied move, loads part of curr_move.
+</p></div><dl class="paramcmts block"><dt class="param">pos_piece</dt><dd class="cmt"><p>The index of the piece in the current game board</p></dd><dt class="param">p</dt><dd class="cmt"><p>The pair of coordinates where the piece will be after the move
+</p></dd></dl></div>
     </li><li name="Save#add_move2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="add_move2:Unit"></a>
       <a id="add_move2:Unit"></a>
@@ -210,11 +205,7 @@
       <span class="symbol">
         <span class="name">add_move2</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@add_move2:Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">To be called in the getmove method of a Player after the applied move if it succeeded, appends curr_move to list_of_moves.</p>
     </li><li name="Save#add_prom_to_move" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="add_prom_to_move(s:String,b:Boolean):Unit"></a>
@@ -227,12 +218,10 @@
       <span class="symbol">
         <span class="name">add_prom_to_move</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="b">b: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@add_prom_to_move(s:String,b:Boolean):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Called in the promotion method of object Ksparov, modifies curr_move.</p><div class="fullcomment"><div class="comment cmt"><p>Called in the promotion method of object Ksparov, modifies curr_move. If add2_happened = true, replaces the head of list_of_moves by the new value of curr_move.</p></div></div>
+      </h4>
+      <p class="shortcomment cmt">Called in the promotion method of object Ksparov, modifies curr_move.</p><div class="fullcomment"><div class="comment cmt"><p>Called in the promotion method of object Ksparov, modifies curr_move.
+      If add2_happened = true, replaces the head of list_of_moves by the new value of curr_move.</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>The name of the piece selected for the promotion</p></dd><dt class="param">b</dt><dd class="cmt"><p>True if the king of the oppponent player is attacked
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -244,11 +233,7 @@
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@asInstanceOf[T0]:T0" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -261,11 +246,7 @@
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@clone():Object" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -274,21 +255,17 @@
               
         </dd></dl></div>
     </li><li name="Save#curr_move" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="curr_move:Save.Moves"></a>
-      <a id="curr_move:Moves"></a>
+      <a id="curr_move:(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))"></a>
+      <a id="curr_move:(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">curr_move</span><span class="result">: <a href="#Moves=(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))" class="extmbr" name="Save.Moves">Moves</a></span>
+        <span class="name">curr_move</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Boolean">Boolean</span>, (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>), (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>))</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@curr_move:Save.Moves" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">current move filled through the getmove method of a Player and the promotion method of object Ksparov.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -301,11 +278,7 @@
       <span class="symbol">
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -318,11 +291,7 @@
       <span class="symbol">
         <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@equals(x$1:Any):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -335,11 +304,7 @@
       <span class="symbol">
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@finalize():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -358,11 +323,7 @@
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@getClass():Class[_]" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -375,11 +336,7 @@
       <span class="symbol">
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@hashCode():Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="Save#init" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="init:Unit"></a>
@@ -392,11 +349,7 @@
       <span class="symbol">
         <span class="name">init</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@init:Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">resets the list_of_moves value.</p>
     </li><li name="Save#init_curr_move" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="init_curr_move:Unit"></a>
@@ -409,11 +362,7 @@
       <span class="symbol">
         <span class="name">init_curr_move</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@init_curr_move:Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">resets the curr_move value.</p>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -426,13 +375,9 @@
       <span class="symbol">
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="Save#is_valid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="Save#is_valid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="is_valid(s:String):Int"></a>
       <a id="is_valid(String):Int"></a>
       <h4 class="signature">
@@ -443,28 +388,22 @@
       <span class="symbol">
         <span class="name">is_valid</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@is_valid(s:String):Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">tests the validity of the string argument as a filename for the save : -2 if too long, -1 if already exists.</p>
+      </h4>
+      <p class="shortcomment cmt">tests the validity of the string argument as a filename for the save : -2 if too long, -1 if already exists.</p><div class="fullcomment"><div class="comment cmt"><p>tests the validity of the string argument as a filename for the save : -2 if too long, -1 if already exists.
+</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>The string we will check if it could be a filename</p></dd><dt>returns</dt><dd class="cmt"><p>0 if ok, -1 if the name il already existing, -2 if the filename is too long
+</p></dd></dl></div>
     </li><li name="Save#list_of_moves" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="list_of_moves:List[Save.Moves]"></a>
-      <a id="list_of_moves:List[Moves]"></a>
+      <a id="list_of_moves:List[(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))]"></a>
+      <a id="list_of_moves:List[(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">list_of_moves</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="#Moves=(Int,Boolean,String,String,Boolean,Boolean,(Int,Int),(Int,Int))" class="extmbr" name="Save.Moves">Moves</a>]</span>
+        <span class="name">list_of_moves</span><span class="result">: <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Boolean">Boolean</span>, (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>), (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>))]</span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@list_of_moves:List[Save.Moves]" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">list of moves being filled throughout game</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -477,11 +416,7 @@
       <span class="symbol">
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -494,11 +429,7 @@
       <span class="symbol">
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@notify():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -511,13 +442,9 @@
       <span class="symbol">
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@notifyAll():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="Save#pos_to_PGN" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="Save#pos_to_PGN" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="pos_to_PGN(p:(Int,Int)):String"></a>
       <a id="pos_to_PGN((Int,Int)):String"></a>
       <h4 class="signature">
@@ -528,12 +455,10 @@
       <span class="symbol">
         <span class="name">pos_to_PGN</span><span class="params">(<span name="p">p: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@pos_to_PGN(p:(Int,Int)):String" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).</p>
+      </h4>
+      <p class="shortcomment cmt">Translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).</p><div class="fullcomment"><div class="comment cmt"><p>Translates (i,j) into (aj : String) where aj is the board representation of the position (x,y).
+</p></div><dl class="paramcmts block"><dt class="param">p</dt><dd class="cmt"><p>The position we will convert</p></dd><dt>returns</dt><dd class="cmt"><p>The string of the coordinates
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -545,11 +470,7 @@
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -562,11 +483,7 @@
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@toString():String" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -579,11 +496,7 @@
       <span class="symbol">
         <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@wait():Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -602,11 +515,7 @@
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -625,11 +534,7 @@
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@wait(x$1:Long):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -648,13 +553,9 @@
       <span class="symbol">
         <span class="name">whowins</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@whowins:Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
+      </h4>
       <p class="shortcomment cmt">stores the won status of game : -1 if null, 0 if black wins, 1 if white, 2 if nothing has been decided.</p>
-    </li><li name="Save#write_moves" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="Save#write_moves" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="write_moves(writer:java.io.PrintWriter):Unit"></a>
       <a id="write_moves(PrintWriter):Unit"></a>
       <h4 class="signature">
@@ -665,13 +566,12 @@
       <span class="symbol">
         <span class="name">write_moves</span><span class="params">(<span name="writer">writer: <span class="extype" name="java.io.PrintWriter">PrintWriter</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@write_moves(writer:java.io.PrintWriter):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Write all moves in the previously opened file</p>
-    </li><li name="Save#write_tags" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      </h4>
+      <p class="shortcomment cmt">Write all moves in the previously opened file
+</p><div class="fullcomment"><div class="comment cmt"><p>Write all moves in the previously opened file
+</p></div><dl class="paramcmts block"><dt class="param">writer</dt><dd class="cmt"><p>The PrintWriter we will write into
+</p></dd></dl></div>
+    </li><li name="Save#write_tags" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="write_tags(writer:java.io.PrintWriter,event:String,site:String,date:String,round:String,white:String,black:String,result:String):Unit"></a>
       <a id="write_tags(PrintWriter,String,String,String,String,String,String,String):Unit"></a>
       <h4 class="signature">
@@ -682,12 +582,10 @@
       <span class="symbol">
         <span class="name">write_tags</span><span class="params">(<span name="writer">writer: <span class="extype" name="java.io.PrintWriter">PrintWriter</span></span>, <span name="event">event: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="site">site: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="date">date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="round">round: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="white">white: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="black">black: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="result">result: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@write_tags(writer:java.io.PrintWriter,event:String,site:String,date:String,round:String,white:String,black:String,result:String):Unit" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Writes the tag of the .PGN file.</p>
+      </h4>
+      <p class="shortcomment cmt">Writes the tag of the .</p><div class="fullcomment"><div class="comment cmt"><p>Writes the tag of the .PGN file.
+</p></div><dl class="paramcmts block"><dt class="param">writer</dt><dd class="cmt"><p>The PrintWriter we will write in</p></dd><dt class="param">event</dt><dd class="cmt"><p>The name of the event of the game</p></dd><dt class="param">site</dt><dd class="cmt"><p>The site of the game</p></dd><dt class="param">date</dt><dd class="cmt"><p>The date the game took place</p></dd><dt class="param">round</dt><dd class="cmt"><p>The round of the game</p></dd><dt class="param">white</dt><dd class="cmt"><p>The name of the white player</p></dd><dt class="param">black</dt><dd class="cmt"><p>The name of the black player</p></dd><dt class="param">result</dt><dd class="cmt"><p>The result of the game
+</p></dd></dl></div>
     </li><li name="Save#write_to_file" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="write_to_file(s:String,event:String,site:String,date:String,round:String,white:String,black:String):Int"></a>
       <a id="write_to_file(String,String,String,String,String,String,String):Int"></a>
@@ -699,12 +597,10 @@
       <span class="symbol">
         <span class="name">write_to_file</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="event">event: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="site">site: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="date">date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="round">round: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="white">white: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="black">black: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4><span class="permalink">
-      <a href="index.html#Save$@write_to_file(s:String,event:String,site:String,date:String,round:String,white:String,black:String):Int" title="Permalink" target="_top">
-        <img src="lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Returns 0 if all went well.</p><div class="fullcomment"><div class="comment cmt"><p>Returns 0 if all went well. Opens a file, writes tags, then moves, then result into said file.</p></div></div>
+      </h4>
+      <p class="shortcomment cmt">Returns 0 if all went well.</p><div class="fullcomment"><div class="comment cmt"><p>Returns 0 if all went well. Opens a file, writes tags, then moves, then result into said file.
+</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>The name of the file we will write in</p></dd><dt class="param">event</dt><dd class="cmt"><p>The name of the event of the game</p></dd><dt class="param">site</dt><dd class="cmt"><p>The site of the game</p></dd><dt class="param">date</dt><dd class="cmt"><p>The date the game took place</p></dd><dt class="param">round</dt><dd class="cmt"><p>The round of the game</p></dd><dt class="param">white</dt><dd class="cmt"><p>The name of the white player</p></dd><dt class="param">black</dt><dd class="cmt"><p>The name of the black player</p></dd><dt>returns</dt><dd class="cmt"><p>0 if the save went well, -1 otherwise
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -734,7 +630,6 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-
-
+      <script defer="defer" type="text/javascript" id="jquery-js" src="lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="lib/template.js"></script>
     </body>
       </html>
