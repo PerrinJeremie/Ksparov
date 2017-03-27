@@ -55,13 +55,14 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	for (k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
 			contents += new ImagePanel {
+              				/* The size of a grid (the same for the entire application) is difined in the object Display
+				   in game.scala, idem for paths to resources. */
               imagePath = (Display.resources_path + Display.texture_path)
               	preferredSize = Display.dim_small
 				minimumSize = Display.dim_small
 				maximumSize = Display.dim_small
             }
-				/* The size of a grid (the same for the entire application) is difined in the object Display
-				   in game.scala, idem for paths to resources. */
+
 
 		}
 	}
