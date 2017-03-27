@@ -11,6 +11,7 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import sys.process._
+import scala.language.postfixOps
 
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
