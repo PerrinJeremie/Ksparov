@@ -160,7 +160,12 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   def get_dirs (x_a : Int, y_a : Int) : (Int, Int) = {
     (math.signum(x_a - pos_x), math.signum(y_a - pos_y))
   }
-  /**[Alice Chess] Checks if the corresponding case on the next grid is free */
+  /** [Alice Chess] Checks if the corresponding case on the next grid is free 
+  * 
+  * @param x_a The x coordinate of the case we want to reach
+  * @param y_a The y coordinate of the case we want to reach
+  * @return True if the case on the next grid is free
+  */
   def mirror_free (x_a : Int, y_a : Int) = {
     if (Ksparov.curr_game.alice_chess) {
       Aux.piece_of_coord(x_a, y_a, Ksparov.curr_game.board, (grid + 1) % (Ksparov.curr_game.nb_grid)) == None
@@ -169,13 +174,28 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     }
   }
 
-  /**Checks if basic conditions for a piece movement are satisfied */
+  /** Checks if basic conditions for a piece movement are satisfied 
+  *
+  * @param x_a The x coordinate of the case we want to reach
+  * @param y_a The y coordinate of the case we want to reach
+  * @return True if the basic move condition are verified for the case
+  */
   def checks_pre_move (x_a : Int, y_a : Int) = {
     pattern(x_a, y_a) && Aux.on_board(pos_x, pos_y) && Aux.on_board(x_a, y_a) && !(x_a == pos_x && y_a == pos_y) && mirror_free(x_a, y_a)
   }
 
   /**Recursive function that explores the path of a movement.
-  The boolean indicates if the path is clear, and the piece is either the ennemy piece on arrival, an obstacle on the path, or None.*/
+  The boolean indicates if the path is clear, and the piece is either the ennemy piece on arrival, an obstacle on the path, or None.
+  *
+  * @param x_d The x coordinate of the departure case
+  * @param y_d The y coordinate of the departure case
+  * @param x_a The x coordinate of the case we want to reach
+  * @param y_a The y coordinate of the case we want to reach
+  * @param g The current board 
+  * @param dir_x The direction in the x axis
+  * @param dir_y The direction in the y axis
+  * @return True if the path is clear and the opponent piece on arrival if there is one
+  */
   def clear_path (x_d : Int, y_d : Int, x_a : Int, y_a : Int, g : Array[Piece], dir_x : Int, dir_y : Int) : (Boolean, Option[Piece]) = {
     //Getting next case
     var next_x = dir_x + x_d
@@ -195,8 +215,14 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   }
 
   /**Auxiliary function for move : checks if a move is possible but doesn't modify the board
-  Returns the validity of the move, the piece taken, and a list of the pieces attacking the opponent's king*/
-  def pre_move(x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
+  Returns the validity of the move, the piece taken, and a list of the pieces attacking the opponent's king
+  *
+  * @param x_a The x coordinate of the case we want to reach
+  * @param y_a The y coordinate of the case we want to reach
+  * @param g The board that we will use 
+  * @return True is the move is valid, the possible piece taken and a list of attackers on the opponent king
+  */
+  def pre_move (x_a : Int, y_a : Int, g : Array[Piece]) : (Boolean, Option[Piece], List[Piece]) = {
 
     //Checking if the arrival or the piece is on board and if the pattern is respected
     if (!(checks_pre_move(x_a, y_a))) {
@@ -248,7 +274,13 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     }
   }
 
-  /**Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.**/
+  /** Returns the validity of movement and the piece taken or the reason why the move is invalid. If the move is valid, applies it.
+  * 
+  * @param x_a The x coordinate of the case we want to reach
+  * @param y_a The y coordinate of the case we want to reach
+  * @param g The grid we will use 
+  * @return True if the movement is valid
+  */
   def move (x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
     var (move_ok, p_arrival, attackers) = pre_move (x_a, y_a, g)
     if (move_ok) { //If the move is valid, we apply the changes
@@ -274,20 +306,31 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
     move_ok
   }
 
-  /**Auxiliary function for possible_moves returning the possibility of a move */
+  /** Auxiliary function for possible_moves returning the possibility of a move 
+  * 
+  * @param x The couple of position 
+  * @param g The board we will use 
+  * @return True if the move is possible 
+  */
   def aux (x : (Int, Int), g : Array[Piece]) = {
     var (i, j) : (Int, Int) = x
     var (clear, a , b) = pre_move (i, j, g)
     clear
   }
 
-  /**Returns an array of all the cases the piece can go to */
+  /** Returns an array of all the cases the piece can go to */
   def possible_moves (g : Array[Piece]) = {
     Aux.cases.filter (aux (_, g))
   }
 }
 
-/**The Pawn class. Clear_path and move are overriden because of pawn's special moves*/
+/** The Pawn class. Clear_path and move are overriden because of pawn's special moves
+*
+* @param b The player who owned the piece
+* @param x0 The x coordinate of the piece
+* @param y0 The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "pawn"
   var piece_path = "Pawn.png"
@@ -341,7 +384,13 @@ class Pawn (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
   }
 }
 
-/**The Rook class*/
+/**The Rook class
+*
+* @param b The player who owned the piece
+* @param x0 The x coordinate of the piece
+* @param y0 The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 class Rook(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "rook"
   var piece_path = "Rook.png"
@@ -351,7 +400,14 @@ class Rook(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0,
     (x_a == pos_x) || (y_a == pos_y)
   }
 }
-/**The Knight class. clear_path is overriden*/
+
+/**The Knight class. clear_path is overriden
+*
+* @param b The player who owned the piece
+* @param x0 The x coordinate of the piece
+* @param y0 The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 class Knight(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "knight" //I still argue black knights should be called Batmans
   var piece_path = "Knight.png"
@@ -359,8 +415,8 @@ class Knight(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y
     math.abs(pos_x - x_a) + math.abs(pos_y - y_a) == 3 && (pos_x != x_a) && (pos_y != y_a)
   }
 
-  /**Knighs can jump over all other pieces, so we are jumping over the recursive case too*/
-  override def clear_path(x_d:Int, y_d:Int, x_a:Int, y_a:Int, g:Array[Piece], dir_x:Int, dir_y:Int) : (Boolean, Option[Piece]) = {
+  /** Knighs can jump over all other pieces, so we are jumping over the recursive case too */
+  override def clear_path (x_d:Int, y_d:Int, x_a:Int, y_a:Int, g:Array[Piece], dir_x:Int, dir_y:Int) : (Boolean, Option[Piece]) = {
 
     if (Ksparov.curr_game.alice_chess){
       var piece_arrival = Aux.piece_of_coord (x_a, y_a, g, (grid + 1) % (Ksparov.curr_game.nb_grid))
@@ -376,7 +432,14 @@ class Knight(b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y
     }
   }
 }
-/**The Bishop class*/
+
+/**The Bishop class
+*
+* @param b The player who owned the piece
+* @param x0 The x coordinate of the piece
+* @param y0 The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 class Bishop (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "bishop"
   var piece_path = "Bishop.png"
@@ -384,7 +447,14 @@ class Bishop (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, 
     (pos_x - x_a)==(pos_y - y_a) || (pos_x - x_a)== (y_a - pos_y)
   }
 }
-/**The King class.Overrides for castling*/
+
+/** The King class.Overrides for castling
+*
+* @param b The player who owned the piece
+* @param x0 The x coordinate of the piece
+* @param y0 The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "king"
   var piece_path = "King.png"
@@ -454,7 +524,13 @@ class King (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0
     }
   }
 }
-/**The Queen class*/
+/**The Queen class 
+*
+* @param b The player who owned the piece
+* @param x0 The x coordinate of the piece
+* @param y0 The y coordinate of the piece 
+* @param grid_id The id of the grid the piece is on
+*/
 class Queen (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y0, grid_id) {
   var name = "queen"
   var piece_path = "Queen.png"
@@ -465,16 +541,29 @@ class Queen (b : Int, x0 : Int, y0 : Int, grid_id : Int) extends Piece (b, x0, y
 
 /**This object contains methods to determine if the game is Nulle*/
 object Nulle {
-  /**Returns true only if the piece is still living and not a king */
+  /**Returns true only if the piece is still living and not a king 
+  *
+  * @param p The piece studied
+  * @return True if the piece is living and not a king
+  */
   def is_living (p : Piece) : Boolean = {
     Aux.on_board(p.pos_x, p.pos_y) && p.name != "king"
   }
 
-  /**Returns the pieces that are still on board, and not kings*/
+  /** Returns the pieces that are still on board, and not kings
+  *
+  * @param g The board we will use 
+  * @return Pieces that are not dead and not kings
+  */
   def living_pieces (g : Array[Piece]) ={
     g.filter(is_living)
   }
-  /**Checks for various nulle finals */
+
+  /**Checks for various nulle finals 
+  *
+  * @param g The board we will use
+  * @return True if the game is nulle because there is not enough pieces for a mate
+  */
   def trivial_nulle (g : Array[Piece]) : Boolean = {
     var reduced_g = living_pieces (g)
     reduced_g.size match {
@@ -489,13 +578,26 @@ object Nulle {
 
 /**This object contains methods to determine if there is a Checkmate*/
 object Checkmate {
- /**Returns the possibility of the move : Piece p to (x_a,y_a) in game g */
-  def move_is_possible(p : Piece, x_a : Int, y_a : Int, g :Array[Piece] ) : Boolean = {
+ /**Returns the possibility of the move : Piece p to (x_a,y_a) in game g 
+ *
+ * @param p The piece
+ * @param x_a The x coordinate of the arrival case
+ * @param y_a The y coordinate of the arrival case
+ * @param g The board we will use 
+ * @return True if the move is possible 
+ */
+  def move_is_possible (p : Piece, x_a : Int, y_a : Int, g : Array[Piece]) : Boolean = {
     var (possible, a, b) = p.pre_move(x_a, y_a, g)
     possible
   }
-  /**Checks if player pl has lost the game. */
-  def check_mate(g : Array[Piece], pl : Int) : Boolean = {
+
+  /** Checks if player pl has lost the game. 
+  *
+  * @param g The board we will use 
+  * @param pl The player we check the mate for
+  * @return True is the player is in mate 
+  */
+  def check_mate (g : Array[Piece], pl : Int) : Boolean = {
     var king = Ksparov.curr_game.kings(pl)
     var (x_king, y_king) = king.coords
     var checkmate = king.attacked

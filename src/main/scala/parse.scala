@@ -5,7 +5,7 @@ import scala.language.postfixOps
 
 
 /** Object which regroups the functions and values associated with saving games.*/
-object Save{
+object Save {
 
 
   /** tuple (irock,prom,piece_prom,piece,attack,check,p1,p2) with
@@ -29,7 +29,11 @@ object Save{
   /** a switch to control wether promotion has to rewrite move or to change curr_move.*/
   var add2_happened = false
 
-  /** tests the validity of the string argument as a filename for the save : -2 if too long, -1 if already exists. */
+  /** tests the validity of the string argument as a filename for the save : -2 if too long, -1 if already exists. 
+  *
+  * @param s The string we will check if it could be a filename
+  * @return 0 if ok, -1 if the name il already existing, -2 if the filename is too long
+  */
   def is_valid (s:String) : Int = {
     var res : String = ("ls " + Display.save_path) !!;
     if(s.length > 34){
