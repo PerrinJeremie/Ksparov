@@ -42,7 +42,7 @@ class AI (player : Int) extends Player (player) {
           notdone = false
           var (i,j) = t(r.nextInt(t.size))
           /* Save move */
-          Save.add_move1((1-id)*16 + ind, (i,j))
+          Save.add_move1((1 - id) * 16 + ind, (i,j))
           /* Play move */
           Ksparov.curr_game.board((1 - id) * 16 + ind).move(i,j,Ksparov.curr_game.board)
         }
@@ -50,6 +50,7 @@ class AI (player : Int) extends Player (player) {
         if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
           notdone = false
           Ksparov.curr_game.players(Ksparov.curr_game.curr_player).asInstanceOf[AI].pat = true
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).asInstanceOf[AI].moved = true
           Ksparov.curr_game.game_nulle = true
           Ksparov.curr_game.curr_player = 1 - Ksparov.curr_game.curr_player
         }        
