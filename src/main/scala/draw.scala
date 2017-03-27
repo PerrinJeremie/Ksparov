@@ -31,10 +31,28 @@ class ImagePanel extends Panel {
 
   override def paintComponent(g:Graphics2D) =                                 
   {                                                                           
-    if (null != bufferedImage) g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)         
+    if (null != bufferedImage){
+      g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
+    }
   }
 
-}                                                                             
+} 
+
+class ImagePanelWithText extends ImagePanel
+{
+  override def imagePath_=(value:String)                                               
+  {                                                                           
+    _imagePath = value                                                        
+    bufferedImage = ImageIO.read(new File(_imagePath))  
+
+  }       
+  override def paintComponent(g:Graphics2D) =                                 
+  {                                                                           
+    if (null != bufferedImage){
+      g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
+    }
+  }
+}
 
 object ImagePanel                                                             
 {                                                                             
@@ -650,9 +668,9 @@ object DrawBoard {
 	*
 	* @param label The text display by the label : the reference of a lign or column (A, B, C ..., 1, 2, 3 ...)
 	*/
-	class BackgroundCaseWithLabel (label : String) extends Label (label) {
+	class BackgroundCaseWithLabel (label : String) extends ImagePanel {
 		preferredSize = Display.dim_small
-		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
+		imagePath = (Display.resources_path + Display.texture_path)
 		/* This option make the superposition of text and icon possible. */
 		horizontalTextPosition = Alignment.Center
 		foreground = Display.text_color
