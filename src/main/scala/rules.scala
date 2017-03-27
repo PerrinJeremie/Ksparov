@@ -21,7 +21,7 @@ object Aux {
   /** Converts an array to a string and hash it. Used to store boards 
   *
   * @param g The array of pieces that will be converted 
-  * @return The hashed board in a string
+  * @return The hashed board in an int
   */
   def array_to_hashed_string (g : Array[Piece]) : Int = {
     /** The string to be hashed */
@@ -68,7 +68,7 @@ object Aux {
   * @param y The f coordinate of the piece
   * @param g The board we will check on
   * @param grid_id The id of the grid 
-  * @return The piece of the given coordinates
+  * @return The piece of the given coordinates if there is one
   */
   def piece_of_coord (x : Int, y : Int, g : Array[Piece], grid_id : Int) : Option[Piece] = {
     g find (p => p.pos_x == x && p.pos_y == y && p.grid == grid_id)
