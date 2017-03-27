@@ -469,6 +469,9 @@ object Ksparov {
         }
       }
     }
+    Ksparov.frame.contents = new DrawBoard.Board {
+      preferredSize = Ksparov.frame.contents(0).bounds.getSize()
+    }
   }
 
   /** Apply all the steps of a movement */
