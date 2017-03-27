@@ -515,7 +515,7 @@ object Ksparov {
     }
 
     Ksparov.frame.contents = new DrawBoard.Board {
-      preferredSize = Ksparov.frame.bounds.getSize()
+      preferredSize = Ksparov.frame.contents(0).bounds.getSize()
     }
   }
 
