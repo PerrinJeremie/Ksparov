@@ -641,11 +641,19 @@ object DrawBoard {
 		// We use the font defines in Display to adjust it to the resolution of the screen
 		font = Display.text_font
 		// We display the current time of the player
+      def change_time : Unit ={
 		if (Ksparov.curr_game.players(player).actual_period + 1 == Time.periods.length) {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
+		  text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
 		} else {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
+		  text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
 		}
+      }
+
+      try{
+        change_time
+      }
+      catch{
+        case _ : Throwable => ()}
 	}
 
 	/** Defines backgroundcase with the given string on it 
@@ -853,12 +861,15 @@ object DrawBoard {
 
 	/** Defines the footer of the board screen with the message drawer on it */
 	class Footer extends BorderPanel {
+        var clock1 = new Clock (1)
+        var clock0 = new Clock (0)
+        Ksparov.curr_game.clock_array = Array(clock0,clock1)
 		layout(new BackgroundCase (1, 2)) = East
 		layout(new BackgroundCase (1, 2)) = West
 		layout(new BorderPanel {
 			// We only draw a clock if clocks are enabled 
 			layout (if (Time.clock_available) {
-					new Clock (1)
+					clock1
 				} else {
 					new BackgroundCase (1, 3)
 				}) = West
@@ -867,7 +878,7 @@ object DrawBoard {
 
 			// We only draw a clock if clocks are enabled 
 			layout (if (Time.clock_available) {
-					new Clock (0)
+					clock0
 				} else {
 					new BackgroundCase (1, 3)
 				}) = East
@@ -1040,7 +1051,9 @@ object DrawActions {
 			Ksparov.curr_game.promotion_buttons(p)(i).enabled = true
 			Ksparov.curr_game.promotion_buttons(p)(i).background = Color.red
 		}
-		Ksparov.frame.contents = new DrawBoard.Board
+		Ksparov.frame.contents = new DrawBoard.Board{
+          preferredSize = Ksparov.frame.bounds.getSize()
+        }
 	}
 
 	/** Disables dead button because the promotion is over */
@@ -1052,7 +1065,9 @@ object DrawActions {
 		}
 		// Actualizes the new board and swith to the next player
 		draw_game_board (Ksparov.curr_game.board)
-		Ksparov.frame.contents = new DrawBoard.Board
+		Ksparov.frame.contents = new DrawBoard.Board{
+          preferredSize = Ksparov.frame.bounds.getSize()
+        }
 		draw_game_messages ("Current_turn", 1 - Ksparov.curr_game.curr_player)
 	}
 

@@ -199,7 +199,10 @@ object Time {
             player.actual_time -= 1
             /** The dimension of the current frame */
             var dimension = Ksparov.frame.bounds.getSize()
-            Ksparov.frame.contents = new DrawBoard.Board
+            if (Time.clock_available){
+              Ksparov.curr_game.clock_array(1).change_time
+              Ksparov.curr_game.clock_array(0).change_time
+            }
             // We keep the previous size, so user can modify it 
             Ksparov.frame.size = dimension
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
@@ -217,12 +220,7 @@ object Time {
                 player.nb_move = 0
               }
             }
-          } else {
-            // If no modification one the time was done, we still need to adpat the display, for exemple if there is a move ongoing
-            var dimension = Ksparov.frame.bounds.getSize()
-            Ksparov.frame.contents = new DrawBoard.Board
-            Ksparov.frame.size = dimension
-          }
+          } 
         }
       }
     }
@@ -241,7 +239,10 @@ object Ksparov {
 
   /** Defines all the variables of a game */
   class Game (type_id : Int, number_grid : Int, alice : Boolean) {
-  
+
+  /** Direct access to the clock components */
+  var clock_array = Array (new DrawBoard.Clock (0), new DrawBoard.Clock (1))
+
   /** The number of grid used to play the game */
   var nb_grid = number_grid
   /** True if the turn is for an AI, used to wake up the AIMoveThread */
@@ -436,7 +437,9 @@ object Ksparov {
     /** The current player */
     var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
     /** The increment of the current period */
-    var increment = Time.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+    var increment = ( if (Time.clock_available) {
+      Time.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+    } else { 0 })
     // Checking if the game has been won.
     if (Ksparov.curr_game.game_won || Ksparov.curr_game.game_nulle || Ksparov.curr_game.promotion) {
       // If so, don't do anything, just wait for other button to be pressed.
@@ -467,6 +470,10 @@ object Ksparov {
       if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) ) {
         Ksparov.curr_game.ai_turn = true
       }
+    }
+
+    Ksparov.frame.contents = new DrawBoard.Board {
+      preferredSize = Ksparov.frame.bounds.getSize()
     }
   }
 
