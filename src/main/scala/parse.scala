@@ -112,18 +112,6 @@ object Save{
     }
   }
 
-  /*  def init : String = {
-   val r = scala.util.Random
-   var name  = "0000000000000000"
-   while ! (is_valid(name + ".pgn")) {
-   name = ""
-   for( i <- 0 to 15){
-   name = name + (r.nextInt(10)).toString
-   }
-   }
-   return name + ".pgn"
-   }*/
-
   /** Writes the tag of the .PGN file.*/
   def write_tags(writer : PrintWriter, event : String, site : String, date : String, round : String, white : String, black : String, result : String): Unit = {
     writer.write ("[ Event \"" + event + "\"]\n")

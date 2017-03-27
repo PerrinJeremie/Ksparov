@@ -40,7 +40,7 @@ abstract class Player (n : Int) {
   }
   /** Method that apply the promotion for the AI or the Reproducer */
   def ai_promotion : Unit
-  /** Defines the current time of the player */
+  /** Defines the amount of time the player have for its current period */
   var actual_time = 0
   /** Defines the number of moves played by the player in the current period */
   var nb_move = 0
@@ -191,26 +191,34 @@ object Time {
         // If after its sleep the thread is still alive, we update the current date
         if (Ksparov.curr_game.thread_in_life) {
           Time.new_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
-          // If the current date is not the same as the previous one, we adapt the display
+          // If the current date is not the same as the previous one, we adapt the display to display the new second
           if (Time.new_time != Time.last_time) {
+            /** The actual player of the game */
             var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
+            // We reduce the time left to to the player for the period of one second
             player.actual_time -= 1
+            /** The dimension of the current frame */
             var dimension = Ksparov.frame.bounds.getSize()
             Ksparov.frame.contents = new DrawBoard.Board
+            // We keep the previous size, so user can modify it 
             Ksparov.frame.size = dimension
             Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+            // If the current player is out of time for the priod
             if (player.actual_time <= 0 && Time.clock_available) {
+              // If he has not play enough movment or if he is in the last period, the player lose the game due to the clock
               if (player.nb_move < Time.periods(player.actual_period).nb_move || player.actual_period + 1 == Time.periods.length) {
                 DrawActions.clear_possible_moves
                 Ksparov.curr_game.game_won = true
                 DrawActions.draw_game_messages ("Time", 1 - Ksparov.curr_game.curr_player)
               } else {
-               player.actual_period += 1
+                // Else, we switch to the next period 
+                player.actual_period += 1
                 player.actual_time = Time.periods(player.actual_period).time
                 player.nb_move = 0
               }
             }
           } else {
+            // If no modification one the time was done, we still need to adpat the display, for exemple if there is a move ongoing
             var dimension = Ksparov.frame.bounds.getSize()
             Ksparov.frame.contents = new DrawBoard.Board
             Ksparov.frame.size = dimension
@@ -219,59 +227,87 @@ object Time {
       }
     }
   }
+
+  /** Number of periods of the game */
   var nb_period = 2
+  /** Array of all periods of the game */
   var periods = new Array [Time.Period] (nb_period) 
+  /** True if clocks are enabled */
   var clock_available = true
 }
 
-/* The main object of the application. */
+/** The main application of Ksparov */
 object Ksparov {
 
+  /** Defines all the variables of a game */
   class Game (type_id : Int, number_grid : Int, alice : Boolean) {
   
+  /** The number of grid used to play the game */
   var nb_grid = number_grid
+  /** True if the turn is for an AI, used to wake up the AIMoveThread */
   var ai_turn = false
+  /** True if threads should be alive, when passed at false, AiMoveThread and TimeThread stop */
   var thread_in_life = true
+  /** Count the number of boring moves played, if the amount reach 50, the game is nulle */
   var nb_boring_moves = 0
 
+  /** The case selected by the player by a click on a case */
   var selected_case = 0
+  /** The grid on which the player has clicked */
   var selected_grid = 0
+  /** The index in the array of piece of the piece selected by the player */
   var selected_piece = 0
+  /** The piece selected for the promotion of a pawn */
   var promoted_piece = new Pawn (0, 0, 0, 0)
+  /** The name of the piece selected for the promotion */
   var selected_promotion = ""
 
-  /* The type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI. */
+  /** Type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI... */
   var game_type = type_id
+  /** True is the game is an Alice one */
   var alice_chess = alice
 
-  /* Arrays for the game : one with the 63 cases, one which counts the dead pieces for each player. */
+  /** Array of the grids of the game */
   var grids = new Array [Array[DrawBoard.Case]] (nb_grid)
+  /** Array that counts the number of dead pieces for each player */
   var dead_pieces = Array(new Array[Int](5), new Array[Int](5))
+  /** Array for the dead piece icon, they are enabled for the promotion to select the piece */
   var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
+  /** Array of the 2 butons to start to play in a loaded game */
   var play_buttons = new Array [DrawBoard.PlayButton] (2)
+  /** Array of the 32 pieces of the game */
   var board = new Array[Piece](32)
 
-  /* Arrays for kings : because we need an access to them we should instentiate them, idem for players. */
+  /** Array of the two kings of the game */
   var kings = new Array[King](2)
+  /** Array of the two players of the game */
   var players = new Array[Player](2)
 
-  /* Move variables : who is the current player and has the first choice been done. */
+  /** The current player */
   var curr_player = 0
+  /** True if the human player has done his first move, the selection of a piece he owns */
   var first_choice_done = false
 
-  /* Game variable : is the game won or nulle. */
+  /** True if the game is over because of a nulle status */
   var game_nulle = false
+  /** True if the game is over because of a player has won it */
   var game_won = false
+  /** True if there is a promotion ongoing */
   var promotion = false
+  /** The list of the hashed of the board, it records every board of the game to check the triple repetition */
   var hashed_positions : List[Int] = List()
 
-  /* The message drawer is instantiated here so we can change its text in DrawActions.draw_messages. */
+  /** The message drawer that is on the bottom of the screen */
   var message_drawer = new DrawBoard.MessageDrawer ("")
+  /** The thread to display the time and the board repetidly */
   var timer = new Time.TimeThread
+  /** The thread that get the AI move */
   var ai_move = new AIMoveThread
 }
 
-def init_board {
+  /** Method to initialize the first board of the game */
+  def init_board {
+    // For each player we add the 8 pawns, and then each piece
     for (p <- 0 to 1) {
       for(i <- 0 to 7) {
         Ksparov.curr_game.board((1 - p) * 16 + i) = new Pawn(p, i, 1 + (1 - p) * 5, 0)
@@ -282,47 +318,64 @@ def init_board {
       Ksparov.curr_game.board(11 + (1 - p) * 16) = new Knight(p, 6, (1 - p) * 7, 0)
       Ksparov.curr_game.board(12 + (1 - p) * 16) = new Bishop(p, 2, (1 - p) * 7, 0)
       Ksparov.curr_game.board(13 + (1 - p) * 16) = new Bishop(p, 5, (1 - p) * 7, 0)
+      // Kings are instantiate in a Game to have a quick access to them 
       Ksparov.curr_game.board(14 + (1 - p) * 16) = Ksparov.curr_game.kings(p)
       Ksparov.curr_game.board(15 + (1 - p) * 16) = new Queen(p, 3, (1 - p) * 7, 0)
     }
   }
 
-  /* Return the index in the game_board of the piece of position (x, y) */
+  /** Return the index in the game_board of the given grid of the piece of position passed in argument */
   def get_piece_of_pos (x : Int, y : Int, grid_id : Int) {
-    for (i <- 0 to 31){
+    for (i <- 0 to 31) {
       if (Ksparov.curr_game.board(i).pos_x == x && Ksparov.curr_game.board(i).pos_y == y && Ksparov.curr_game.board(i).grid == grid_id){
         Ksparov.curr_game.selected_piece = i
       }
     }
   }
 
+  /** Apply the promotion with the selected piece */
   def promotion (p : Int) = {
+    /** The index of the pawn that is promoted */
     val pawn_index = Ksparov.curr_game.board.indexOf(Ksparov.curr_game.promoted_piece)
+    /** The promoted pawn */
+    var pawn = Ksparov.curr_game.promoted_piece
+    /** The new piece that will replace the pawn */
     var new_piece = Ksparov.curr_game.selected_promotion match {
-      case "Knight" => new Knight (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
-      case "Bishop" => new Bishop (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
-      case "Rook" => new Rook (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
-      case "Queen" => new Queen (p, Ksparov.curr_game.promoted_piece.pos_x, Ksparov.curr_game.promoted_piece.pos_y, Ksparov.curr_game.promoted_piece.grid)
+      case "Knight" => new Knight (p, pawn.pos_x, pawn.pos_y, pawn.grid)
+      case "Bishop" => new Bishop (p, pawn.pos_x, pawn.pos_y, pawn.grid)
+      case "Rook" => new Rook (p, pawn.pos_x, pawn.pos_y, pawn.grid)
+      case "Queen" => new Queen (p, pawn.pos_x, pawn.pos_y, pawn.grid)
     }
+    // We set the promotion
     Ksparov.curr_game.board (pawn_index) = new_piece
+    // We check if after the promotion there no mate 
     var king = Ksparov.curr_game.kings(1 - p)
     if (Checkmate.move_is_possible (new_piece, king.pos_x, king.pos_y, Ksparov.curr_game.board)) {
       king.attackers = king.attackers :+ new_piece
     }
     Save.add_prom_to_move(Ksparov.curr_game.selected_promotion, !king.attackers.isEmpty)
+    // We disable the promotion buttons
     DrawActions.disable_promotion (p)
 
-    if ( !Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai){
+    // If the current player is not an ai, we switch to the next player because it has not been done since, for the ai it is different
+    if (!Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai) {
       Ksparov.curr_game.curr_player = 1 - Ksparov.curr_game.curr_player
     }
 
-    check_game_status (Ksparov.curr_game.curr_player)
+    /** The current player */
+    var player = Ksparov.curr_game.curr_player
+    /** The current game type */
+    var game_type = Ksparov.curr_game.game_type
 
-    if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) || (Ksparov.curr_game.game_type == 6 && !Ksparov.curr_game.players(1 - Ksparov.curr_game.curr_player).ai)) {
+    check_game_status (player)
+
+    // If we are in a Human vs ai and it is the turn of the ai, we launch it
+    if ((Ksparov.curr_game.players(player).ai && game_type == 2)) {
       Ksparov.curr_game.ai_turn = true
     }
   }
 
+  /** Check every possible status of the game and adpat game variables to the new status */
   def check_game_status (player : Int) {
   /* Check if there is a mate after the move. */
     if (Checkmate.check_mate (Ksparov.curr_game.board, player)) {
@@ -336,102 +389,120 @@ def init_board {
         Save.whowins = -1
         DrawActions.draw_game_messages ("Pat", player)
       } else {
-      /*Check if the game is nulle */
+        /*Check if the game is nulle */
         if (Ksparov.curr_game.players(player).check_nulle) {
           Save.whowins = -1
           DrawActions.draw_game_messages ("Nulle", player)
         }
         else {
-      /*Check if players are not asleep because nothing has been happening for 50 moves */
+          /*Check if players are not asleep because nothing has been happening for 50 moves */
           if (Ksparov.curr_game.players(player).check_boring_game) {
             Save.whowins = -1
             DrawActions.draw_game_messages ("50coups", player)
           }
           else {
+            // Check if there has been 3 repitition of positions 
             if (Ksparov.curr_game.players(player).check_triple_repetition) {
               Save.whowins = -1
               DrawActions.draw_game_messages ("TripleRepetition", player)
             }
             else {
-        /* Else check if there is check. */
-        if (Ksparov.curr_game.kings(player).attacked) {
-          DrawActions.draw_game_messages ("Check", player)
-        } else {
-          if (Load.specialmessage != ""){
-            DrawActions.draw_game_messages (Load.specialmessage,player)
-            Load.specialmessage = ""
-          } else {
-            if (Load.finalresult != ""){
-              DrawActions.draw_game_messages (Load.finalresult,player)
-              Load.finalresult = ""
-            }
-            else{
-              /* Else, else, else ... Continue and give the hand to the other player. */
-              DrawActions.draw_game_messages ("Current_turn", player)
+              /* Else check if there is check. */
+              if (Ksparov.curr_game.kings(player).attacked) {
+                DrawActions.draw_game_messages ("Check", player)
+              } else {
+                if (Load.specialmessage != ""){
+                  DrawActions.draw_game_messages (Load.specialmessage,player)
+                  Load.specialmessage = ""
+                } else {
+                  if (Load.finalresult != ""){
+                    DrawActions.draw_game_messages (Load.finalresult,player)
+                    Load.finalresult = ""
+                  } else {
+                  /* Else, else, else ... Continue and give the hand to the other player. */
+                  DrawActions.draw_game_messages ("Current_turn", player)
+                  }
+                }
+              }
             }
           }
         }
       }
     }
   }
-}
-}
-}
-  /* Called when click on a case of the board, defines the movment action. */
+
+  /** Apply all the steps of a movment */
   def play_move {
-    /* Checking if the game has been won. */
+    /** The current player */
+    var player = Ksparov.curr_game.players(Ksparov.curr_game.curr_player)
+    /** The increment of the current period */
+    var increment = Time.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+    // Checking if the game has been won.
     if (Ksparov.curr_game.game_won || Ksparov.curr_game.game_nulle || Ksparov.curr_game.promotion) {
-      /* If so, don't do anything, just wait for other button to be pressed. */
+      // If so, don't do anything, just wait for other button to be pressed.
     } else {
-      /* Else get the move, and if the player has moved, go on. */
-      Ksparov.curr_game.players(Ksparov.curr_game.curr_player).getmove
-      if (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved) {
-        Ksparov.curr_game.players(Ksparov.curr_game.curr_player).nb_move += 1
+      // Else get the move, and if the player has moved, go on.
+      player.getmove
+      if (player.moved) {
+        // If the clock is enabled, adjust the number of moves of this period and the current time left of the player
         if (Time.clock_available) {
-          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_time += Time.periods(Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_period).inc
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).nb_move += 1
+          Ksparov.curr_game.players(Ksparov.curr_game.curr_player).actual_time += increment
         }
         Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = false
+        // We add the board to the hashed position list 
         Ksparov.curr_game.hashed_positions = (Aux.array_to_hashed_string(Ksparov.curr_game.board)) :: Ksparov.curr_game.hashed_positions
+        // We check the status after the move 
         check_game_status (1 - Ksparov.curr_game.curr_player)
+        // If there is a promotion after the move, we enable it, else we continue the game 
         if (Ksparov.curr_game.promotion) {
           DrawActions.draw_game_messages ("Promotion", Ksparov.curr_game.curr_player)
         } else {
           Ksparov.curr_game.curr_player = 1 - Ksparov.curr_game.curr_player
         }
+        // Reinitializes the choice for the player 
         Ksparov.curr_game.first_choice_done = false
       }
-      /* If the next player is an IA and we are in Human vs AI, play the AI move in a row. */
-      if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) || (Ksparov.curr_game.game_type == 6 && !Ksparov.curr_game.players(1 - Ksparov.curr_game.curr_player).ai)) {
+      // If the next player is an IA and we are in Human vs AI, play the AI move in a row.
+      if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) ) {
         Ksparov.curr_game.ai_turn = true
       }
     }
   }
 
-  /* Define the variable for a new game, called after the game type selection. */
+  /** Initializes the game after the game type selection */
   def init_game (n : Int) {
+    // If there is no periods, we disable clocks
     if (Time.periods.length < 1) {
       Time.clock_available = false
     } else {
       Time.clock_available = true
     }
-    /* Instantiate the kings and then the new board. */
+    // Instantiates the kings, play button, hashed position...
     Ksparov.curr_game.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
     Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
     Ksparov.curr_game.hashed_positions = List()
     Ksparov.curr_game.nb_boring_moves = 0
+
+    // Initializes grids for hte game
     DrawBoard.init_grids
     DrawBoard.create_grid_dead
+
+    //Initializes the board and draw it 
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.curr_game.board)
+
+    // Saves the initialisation
     Save.init
-    /* Defines the welcome message and types of players depending on the game type chosen. */
+
+    // Defines players and welcome message based on the game type
     n match {
       case 1 =>
         Ksparov.curr_game.players(0) = new Human(0)
         Ksparov.curr_game.players(1) = new Human(1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
       case 2 =>
-        /* Draw a random number to know the color of each players. */
+        // Case of random colors for the human player in a game Human vs AI
         if (scala.util.Random.nextInt(2) == 0) {
           Ksparov.curr_game.players(0) = new Human(0)
           Ksparov.curr_game.players(1) = new AI(1)
@@ -461,39 +532,47 @@ def init_board {
         Ksparov.curr_game.players(0) = new Load.Reproducer(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
     }
-    /* Defines the game as not yet won, and the white player as the first player. */
+
+    // Defines the game as not yet won, and the white player as the first player
     Ksparov.curr_game.game_won = false
     Ksparov.curr_game.game_nulle = false
     Ksparov.curr_game.curr_player = 1
-    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
 
+    // If clocks are enabled, initializes time for each player 
     if (Time.clock_available) {
       Ksparov.curr_game.players(0).actual_time = Time.periods(0).time
       Ksparov.curr_game.players(1).actual_time = Time.periods(0).time
     }
 
+    // Start all threads 
     Ksparov.curr_game.thread_in_life = true
     Ksparov.curr_game.timer.start
     Ksparov.curr_game.ai_move.start
+
+    // Defines the start time of the game 
     Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
 
+  /** The current played game */
   var curr_game = new Game (0, 0, false)
 
+  // On the begining adapt the display to the resolution and apply Parameters from the Parameters file 
   Display.apply_resolution
   Parameters.apply
 
+  /** The frame of the application */
   var frame = new MainFrame {
     title = "Ksparov"
     contents = new DrawMenu.Menu
     peer.setLocationRelativeTo(null)
   }
 
+  /** The application Ksparov */
   var application = new SimpleSwingApplication {
     def top = frame
   }
 
-  /* Call the swing application to be launched. */
+  /** Call the swing application to be launched. */
   def main(argv : Array[String]) {
     application.main(Array())
   }

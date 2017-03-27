@@ -794,6 +794,7 @@ object DrawBoard {
 			/* When actionned, this button changes players to human players of the selected color and AI for the other, it also
 			   disables the play button */
 			def apply {
+				Ksparov.curr_game.game_type = 2
 				// Creates new players
 				Ksparov.curr_game.players (player) = new Human (player)
 				Ksparov.curr_game.players (1 - player) = new AI (1 - player)
@@ -1084,7 +1085,7 @@ object DrawActions {
 
         	case "!?" => Ksparov.curr_game.message_drawer.text =  joueur_string +" nous cache-t-il quelque chose ?"
 				Ksparov.curr_game.message_drawer.foreground = Color.black
-				
+
         	case "?!" => Ksparov.curr_game.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
 				Ksparov.curr_game.message_drawer.foreground = Color.black
 		}
