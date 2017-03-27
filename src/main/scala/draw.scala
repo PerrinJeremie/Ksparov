@@ -14,7 +14,8 @@ import sys.process._
 import scala.language.postfixOps
 import java.awt.image.BufferedImage  
 import java.awt.Image                                                                                            
-import javax.imageio.ImageIO       
+import javax.imageio.ImageIO
+import java.awt.{Graphics2D,Color,Font,BasicStroke}       
 
 class ImagePanel extends Panel {                                                                             
   var _imagePath = ""                                                 
@@ -38,14 +39,17 @@ class ImagePanel extends Panel {
 
 } 
 
-/*class ImagePanelWithText(s :String) extends ImagePanel
+class ImagePanelWithText(f: Font,s :String) extends ImagePanel
 {
   override def imagePath_=(value:String)                                               
   {                                                                           
     _imagePath = value                                                        
     bufferedImage = ImageIO.read(new File(_imagePath))
-    var canvas
-
+    val canvas = bufferedImage.createGraphics()
+    canvas.setColor(Color.white)
+    canvas.setFont(f)
+    canvas.drawString(s, bufferedImage.getWidth/2-8, bufferedImage.getHeight/2+8)
+    canvas.dispose()
   }       
   override def paintComponent(g:Graphics2D) =                                 
   {                                                                           
@@ -53,7 +57,7 @@ class ImagePanel extends Panel {
       g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
     }
   }
-}*/
+}
 
 object ImagePanel                                                             
 {                                                                             
@@ -677,12 +681,9 @@ object DrawBoard {
 	*
 	* @param label The text display by the label : the reference of a lign or column (A, B, C ..., 1, 2, 3 ...)
 	*/
-	class BackgroundCaseWithLabel (label : String) extends Label {
+	class BackgroundCaseWithLabel (label : String) extends ImagePanelWithText(Display.text_font,label) {
 		preferredSize = Display.dim_small
-		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
-		/* This option make the superposition of text and icon possible. */
-		horizontalTextPosition = Alignment.Center
-		foreground = Display.text_color
+		imagePath = (Display.resources_path +Display.texture_path)
 	}
 
 	/** Cases to represent the dead piece, are also used as promotion button 
@@ -712,14 +713,9 @@ object DrawBoard {
 	* @param player The player the number of dead piece stand for
 	* @param number The number of dead piece that will be displayed
 	*/
-	class NumDeadCase (player : Int, number : Int) extends Label {
+	class NumDeadCase (player : Int, number : Int) extends ImagePanelWithText(Display.num_dead_font,number.toString) {
 		preferredSize = Display.dim_small
-		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
-		// Used to stack icon and text
-		horizontalTextPosition = Alignment.Center
-		foreground = Display.text_color
-		font = Display.num_dead_font
-		text = number.toString
+		imagePath = (Display.resources_path + Display.texture_path)
 	}
 
 	/** Basic case of the board, colored in black or white and an action that defines the selected piece for mouvment 
@@ -917,26 +913,19 @@ object DrawBoard {
 		}) = Center
 	}
 
-	/** Button to start to play in a loaded game, display play button if we are in a loaded game and a background case else 
+	/** Button to start to play in a loaded game, display play button if we are in a loaded game
 	*
 	* @param player The player that the human will control by clicking on this button
 	*/
 	class PlayButton (player : Int) extends Button {
 		preferredSize = Display.dim_small
 		action = new Action ("") {
-			// By default the button is not enabled and it only displays a backgroundcase
-			enabled = false
-			borderPainted = false
-			icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
-			disabledIcon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
 			// If we are in a loaded game, the button is enaled and displays a play button of the color of the player
-			if (Ksparov.curr_game.game_type == 6) {
 				enabled = true
 				background = Color.red
 				borderPainted = true
 				border = new javax.swing.border.LineBorder (Color.black, 1)
 				icon = new javax.swing.ImageIcon(Display.resources_path + "Play_button" + player.toString + ".png")
-			}
 			/* When actionned, this button changes players to human players of the selected color and AI for the other, it also
 			   disables the play button */
 			def apply {
@@ -945,11 +934,9 @@ object DrawBoard {
 				Ksparov.curr_game.players (player) = new Human (player)
 				Ksparov.curr_game.players (1 - player) = new AI (1 - player)
 				// Disables play button and set their display as a backgroundcase 
-				for (k <- 0 to 1) {
-					Ksparov.curr_game.play_buttons(k).enabled = false
-					Ksparov.curr_game.play_buttons(k).borderPainted = false
-					Ksparov.curr_game.play_buttons(k).icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
-				}
+				Ksparov.frame.contents = new DrawBoard.Board{
+                  preferredSize = Ksparov.frame.contents(0).bounds.getSize()
+                }
 			}
 		}
 	}
@@ -959,7 +946,7 @@ object DrawBoard {
 		for(i <- 0 to Parameters.nb_case_board + 1) {
 			i match {
 				case 3 =>
-					contents += Ksparov.curr_game.play_buttons (1)
+					contents += (if (Ksparov.curr_game.game_type == 6){ Ksparov.curr_game.play_buttons (1)} else { new BackgroundCase (1, 1)})
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 				case 4 =>
@@ -1034,7 +1021,7 @@ object DrawBoard {
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
-						contents += Ksparov.curr_game.play_buttons (0)
+						contents += (if (Ksparov.curr_game.game_type == 6) { Ksparov.curr_game.play_buttons (0)} else { new BackgroundCase (1, 1)} )
 					}
 				}
 			}

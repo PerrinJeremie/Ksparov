@@ -530,9 +530,8 @@ object Ksparov {
     } else {
       Time.clock_available = true
     }
-    // Instantiates the kings, play button, hashed position...
+    // Instantiates the kings, hashed position...
     Ksparov.curr_game.kings = Array(new King (0, 4, 7, 0), new King (1, 4, 0, 0))
-    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))
     Ksparov.curr_game.hashed_positions = List()
     Ksparov.curr_game.nb_boring_moves = 0
 
@@ -543,6 +542,9 @@ object Ksparov {
     //Initializes the board and draw it 
     Ksparov.init_board
     DrawActions.draw_game_board(Ksparov.curr_game.board)
+
+    //Initializes the play buttons 
+      Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))   
 
     // Saves the initialisation
     Save.init
