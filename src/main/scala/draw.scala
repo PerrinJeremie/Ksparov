@@ -22,7 +22,6 @@ import java.awt.{Graphics2D,Color,Font,BasicStroke}
 
 /* The exception of the above rule : */
 
-
 /** This class loads an image on a stretchable component */
 class ImagePanel extends Panel {
   
@@ -50,6 +49,7 @@ class ImagePanel extends Panel {
   override def paintComponent (g : Graphics2D) = {                                                                           
     if (null != bufferedImage){
       g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
+      g.dispose()
     }
   }
 
@@ -83,6 +83,7 @@ class ImagePanelWithText(f: Font,s :String) extends ImagePanel
   {                                                                           
     if (null != bufferedImage){
       g.drawImage(bufferedImage.getScaledInstance(this.size.width, this.size.height, java.awt.Image.SCALE_SMOOTH), 0, 0, null)
+      g.dispose()
     }
   }
 }
