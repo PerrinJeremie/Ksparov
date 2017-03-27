@@ -46,9 +46,11 @@ object ImagePanel
 
 /* The exception of the above rule : */
 
-/**This class defines a grid of background cases,
-   each background is juste a set of this grid. */
-
+/** This class defines a grid of background cases, each background is juste a set of this grid.
+*
+* @param i Height of the grid
+* @param j Width of the grid
+*/
 class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	for (k <- 0 to i - 1) {
 		for(l <- 0 to j - 1) {
@@ -65,7 +67,10 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 	}
 }
 
-/** The label we will use with preferences already set */
+/** The label we will use with preferences already set *
+*
+* @param text Text of the label
+*/
 class PrettyBigLabel (text : String) extends Label (text) {
     border = new javax.swing.border.LineBorder (Color.black, 2)
 	preferredSize = Display.dim_message_drawer
@@ -88,7 +93,10 @@ class PrettyBigButton extends Button {
 object DrawMenu {
 
 	/** This is the generic class for each option botton in the main menu,
-	the role of a particular is defined depending on the parameter passed to the class. */
+	the role of a particular is defined depending on the parameter passed to the class. 
+	*
+	* @param name The name on the button, defines the behaviour of the button 
+	*/
 	class Option (name : String) extends PrettyBigButton {
 		action = Action (name) {
 			name match {
@@ -147,12 +155,20 @@ object DrawMenu {
 /** This object is used to draw the menu for loading games. */
 object DrawCharge {
 
-	/** Returns the string passed in argument without the 4 last characters. */
+	/** Returns the string passed in argument without the 4 last characters. 
+	*
+	* @param s The string that should be cut
+	* @return The argument minus its four last characters
+	*/
     def shorten(s : String) : String = {
         return s.substring(Display.save_path.length, s.length - 4)
     }
 
-    /** Predicates if a string contains at least one space character. */
+    /** Predicates if a string contains at least one space character. 
+    *
+    * @param s The inquired string 
+    * @return True if the string contains a space caracter
+    */
     def pred_nospace(s : String) : Boolean = {
       return !s.contains (' ')
     }
@@ -184,7 +200,11 @@ object DrawCharge {
         }
     }
 
-    /** Defines the button for the loading menu. */
+    /** Defines the button for the loading menu. 
+    *
+    * @param text Text display on the button
+    * @param return_type Defines the action when the button is pressed
+    */
   	class Option (text : String, return_type : String) extends PrettyBigButton {
 		action = Action (text) {
 			return_type match {
@@ -205,7 +225,10 @@ object DrawCharge {
 		}
 	}
 
-	/** Defines the labels used in the loading menu, with the characteristics defined in Display. */
+	/** Defines the labels used in the loading menu, with the characteristics defined in Display. 
+	*
+	* @param text The text of the label
+	*/
 	class PrettyLabel (text : String) extends PrettyBigLabel (text) {
 		background = new Color (200, 200, 200)
 		opaque = true
@@ -257,7 +280,10 @@ object DrawCharge {
 /** Draws the menus used to save games.*/
 object DrawSave {
 
-    /** A text field that stores a certain information conserning the save, to be filled by the user. */
+    /** A text field that stores a certain information conserning the save, to be filled by the user. 
+    *
+    * @param default The default string display in the textfield
+    * @param col The columns0 argument of a TextField*/
 	class SaveArgument (default : String, col : Int) extends TextField (default, col) {
 		border = new javax.swing.border.LineBorder (Color.black, 2)
         preferredSize = Display.dim_message_drawer
@@ -273,7 +299,10 @@ object DrawSave {
     	}
   	}
 
-    /** A label. */
+    /** The label that indicates what the texfield bellow stands for
+    *
+    * @param str Text display on the label
+    */
   	class SaveLabel (str : String) extends PrettyBigLabel (str) {
 		preferredSize = Display.dim_message_drawer
 		minimumSize = Display.dim_message_drawer
@@ -282,7 +311,13 @@ object DrawSave {
 		opaque = true
   	}
 
-    /** Returns the result tag associated with (player, game_won, game_null). */
+    /** Returns the result tag associated with (player, game_won, game_null). 
+    *
+    * @param p Player id 
+    * @param gw True if the game is won
+    * @param gn True if the game is nulle 
+    * @return The result tag for the game
+    */
     def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
       (p, gw, gn) match {
         case (_, _, true) => "1/2-1/2"
@@ -307,7 +342,11 @@ object DrawSave {
     /** A text field, it's name explains it all. */
 	val textBlack = new SaveArgument ("Bobby Fischer", 0)
 
-    /** Button component which saves game and brings you back : to the menu with "Menu" as argument, to the game with "Game" as argument, to quit Ksparov with "Quit" as argument.*/
+    /** Button component which saves game and brings you back where the retur_type tells you to
+    *
+    * @param text The text display on the button
+    * @param return_type Where you want to come back on the click of the button, defines the action of the button
+    */
 	class ComeBack (text : String, return_type : String) extends PrettyBigButton {
 		preferredSize = Display.dim_message_drawer
 		minimumSize = Display.dim_message_drawer
@@ -354,7 +393,10 @@ object DrawSave {
 		}
 	}
 
-    /** Button switches between simple-save (only choice is filename), and advanced-save (all choices). */
+    /** Button switches between simple-save (only choice is filename), and advanced-save (all choices). 
+    *
+    * @param switch_type Defines which type of save you want to go to
+    */
 	class SwitchButton (switch_type : String) extends PrettyBigButton {
 		preferredSize = Display.dim_message_drawer
 		minimumSize = Display.dim_message_drawer
@@ -479,7 +521,10 @@ object DrawSave {
 /** Object to draw the menu for the game selection : Human vs Human, AI vs AI or AI vs Human. */
 object DrawGameSelection {
 
-	/** Label to remember the player what type of game he has chosen : Alice or classic. */
+	/** Label to remember the player what type of game he has chosen : Alice or classic. 
+	*
+	* @param alice True if the game will be an Alice one, defines the text drawn
+	*/
 	class MessageDrawer (alice : Boolean) extends Label {
 		font = Display.text_font
 		background = new Color (200, 200, 200)
@@ -493,7 +538,12 @@ object DrawGameSelection {
 		}
 	}
 
-	/** Button for lauching the game, it creates a new game with the right parameters depending on the mode of play */
+	/** Button for lauching the game, it creates a new game with the right parameters depending on the mode of play 
+	*
+	* @param name The text display by the button
+	* @param num The id of the game_type if this button is chosen
+	* @param alice True if the game will be an Alice one
+	*/
 	class Option (name : String, num : Int, alice : Boolean) extends PrettyBigButton {
 		action = Action (name) {
 			// Create the new game with its parameters
@@ -510,7 +560,10 @@ object DrawGameSelection {
 		}
 	}
 
-	/** Menu for the type of game selection. */
+	/** Menu for the type of game selection. 
+	*
+	* @param alice True if the game will be an Alice one
+	*/
 	class CenterGrid (alice : Boolean) extends GridPanel (7, 3) {
 		for (i <- 0 to 6) {
 			i match {
@@ -541,7 +594,10 @@ object DrawGameSelection {
 		}
 	}
 
-	/** Draw the welcome message with bordercases around. */
+	/** Draw the welcome message with bordercases around. 
+	*
+	* @param True if the game will be an Alice one 
+	*/
 	class WelcomeMessage (alice : Boolean) extends BorderPanel {
 		layout (new BackgroundCase (1, 11)) = North
 		layout (new BorderPanel {
@@ -552,7 +608,10 @@ object DrawGameSelection {
 
 	}
 
-	/** Final menu with buttons on. */
+	/** Final menu with buttons on. 
+	*
+	* @param True if the game will be an Alice one 
+	*/
 	class Menu (alice : Boolean) extends BorderPanel {
 		layout (new BackgroundCase (7, 1)) = East
 		layout (new CenterGrid (alice)) = Center
@@ -564,7 +623,10 @@ object DrawGameSelection {
 /** Draw the chess board of the game */
 object DrawBoard {
 
-	/** Draw a clock for the player given in argument. */
+	/** Draw a clock for the player given in argument. 
+	*
+	* @param player The player the clock is for
+	*/
 	class Clock (player : Int) extends Label {
 		// The color depends on the player black background and white text for player 0 and the opposite for the player 1  
 		foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)
@@ -585,7 +647,10 @@ object DrawBoard {
 		}
 	}
 
-	/** Defines backgroundcase with the given string on it */
+	/** Defines backgroundcase with the given string on it 
+	*
+	* @param label The text display by the label : the reference of a lign or column (A, B, C ..., 1, 2, 3 ...)
+	*/
 	class BackgroundCaseWithLabel (label : String) extends Label (label) {
 		preferredSize = Display.dim_small
 		icon = new javax.swing.ImageIcon(Display.resources_path + Display.texture_path)
@@ -594,7 +659,11 @@ object DrawBoard {
 		foreground = Display.text_color
 	}
 
-	/** Cases to represent the dead piece, are also used as promotion button */
+	/** Cases to represent the dead piece, are also used as promotion button 
+	*
+	* @param player The player the dead case is for
+	* @param piece The piece the icon will be for
+	*/
 	class DeadCase (player : Int, piece : String) extends Button {
 		preferredSize = Display.dim_small
 		background = new Color (121, 128, 129)
