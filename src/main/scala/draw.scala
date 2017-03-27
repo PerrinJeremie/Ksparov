@@ -671,8 +671,7 @@ object DrawBoard {
 	* @param player The player the clock is for
 	*/
 	class Clock (player : Int) extends Label {
-		// The color depends on the player black background and white text for player 0 and the opposite for the player 1  
-		foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)
+		// The color depends on the player black background and white text for player 0 and the opposite for the player 1 
 		background = new Color (player * 255, player * 255, player * 255)
 		// We should define the opaque to true because by default a label is not opaque
 		opaque = true
@@ -685,19 +684,33 @@ object DrawBoard {
 		// We display the current time of the player
         /** Called to change the text in this label, because the time has changed */
         def change_time : Unit = {
-		if (Ksparov.curr_game.players(player).actual_period + 1 == Time.periods.length) {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Dernière période</html>"
-		} else {
-			text = "<html><div style='text-align : center;'>" + Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time) + "<br>" + "Encore " + (math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)) + " coups </html>"
-		}
+            var actual_time = Time.int_to_hhmmss(Ksparov.curr_game.players(player).actual_time)
+            var nb_move = math.max(Time.periods(Ksparov.curr_game.players(player).actual_period).nb_move - Ksparov.curr_game.players(player).nb_move, 0)
+            var inc = Time.periods(Ksparov.curr_game.players(player).actual_period).inc
+            var inc_string = 
+                if (inc == 0) {
+                     ""
+                } else {
+                    "<br>Incrément : + " + inc.toString
+                }
+            if (Ksparov.curr_game.players(player).actual_time < 5 && nb_move > 0) {
+                foreground = Color.red
+            } else { 
+                foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)
+            }
+            if (Ksparov.curr_game.players(player).actual_period + 1 == Time.periods.length) {
+                text = "<html><div style='text-align : center;'>" + "Dernière période <br>" + actual_time  + "<br>" + inc_string + "</html>"
+            } else {
+                text = "<html><div style='text-align : center;'>" + "Encore " + nb_move + " coups <br>" + actual_time + inc_string + "</html>"
+            }
         }
-      //tries to change time but if there are initializing errors, it's no problem. It just doesn't do it.
-      try {
-        change_time
-      }
-      catch {
-        case _ : Throwable => ()
-      }
+        //tries to change time but if there are initializing errors, it's no problem. It just doesn't do it.
+        try {
+            change_time
+        }
+        catch {
+            case _ : Throwable => ()
+        }
 	}
 
 	/** Defines backgroundcase with the given string on it 

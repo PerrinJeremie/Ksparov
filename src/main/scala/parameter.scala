@@ -592,7 +592,6 @@ object DrawParameters {
         }
         if (i == nb_period - 1) {
           enabled = false
-          text = ""
         }
         preferredSize = Display.dim_small
         listenTo(keys)
