@@ -209,7 +209,8 @@ object DrawCharge {
             chooser.setDialogTitle("Choississez un fichier PGN à charger")
             chooser.setFileFilter(pgn_filter)
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                file_chosen.text = chooser.getSelectedFile.toString
+                file_chosen.path = chooser.getSelectedFile.toString
+                file_chosen.text = chooser.getSelectedFile.getName()
                 val src = new File(file_chosen.text)
                 val dest = new File("src/main/resources/Saves/" + new File (file_chosen.text).getName())
                 new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue ) 
@@ -231,6 +232,7 @@ object DrawCharge {
 
     /** Label that display the name of the file chosen by the file explorer */
     var file_chosen = new Label ("Fichier choisi") {
+        var path = ""
         preferredSize = Display.dim_message_drawer
     }
 
@@ -296,7 +298,7 @@ object DrawCharge {
         	        Load.list_of_moves = List()
                     if (full_name) {
                         if (file_chosen.text != "Aucun fichier choisi") {
-                            Load.get_list_move_from_file(file_chosen.text, true)
+                            Load.get_list_move_from_file(file_chosen.path, true)
                             Ksparov.init_game(6)
                             Ksparov.frame.contents = new DrawBoard.Board
                             Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -313,7 +315,7 @@ object DrawCharge {
                     Load.list_of_moves = List()
                     if (full_name) {
                         if (file_chosen.text != "Aucun fichier choisi") {
-                            Load.get_list_move_from_file(file_chosen.text, true)
+                            Load.get_list_move_from_file(file_chosen.path, true)
                             Ksparov.init_game(7)
                             Ksparov.play_move
                             Ksparov.frame.contents = new DrawBoard.Board
