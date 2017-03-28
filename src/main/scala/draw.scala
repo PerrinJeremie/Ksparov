@@ -4,7 +4,6 @@ import java.awt.Dimension
 import java.awt.Color
 import scala.swing.BorderPanel.Position._
 import scala.io.Source
-import java.io.File
 import java.io.PrintWriter
 import scala.util.matching.Regex
 import java.util.Date
@@ -16,7 +15,8 @@ import java.awt.image.BufferedImage
 import java.awt.Image                                                                                            
 import javax.imageio.ImageIO
 import java.awt.{Graphics2D,Color,Font,BasicStroke} 
-import javax.swing.JFileChooser      
+import javax.swing.JFileChooser     
+import java.io.{File,FileInputStream,FileOutputStream}
 
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
@@ -210,6 +210,9 @@ object DrawCharge {
             chooser.setFileFilter(pgn_filter)
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 file_chosen.text = chooser.getSelectedFile.toString
+                val src = new File(file_chosen.text)
+                val dest = new File("src/main/resources/Saves/" + new File (file_chosen.text).getName())
+                new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue ) 
                 Ksparov.frame.contents = new DrawCharge.Dcharge
             } else {
                 file_chosen.text = "Aucun fichier choisi"
@@ -280,6 +283,7 @@ object DrawCharge {
     *
     * @param text Text display on the button
     * @param return_type Defines the action when the button is pressed
+    * @param full_name True if the file is given by its full path, else the file is in the Saves folder
     */
   	class Option (text : String, return_type : String, full_name : Boolean) extends PrettyBigButton {
 		action = Action (text) {

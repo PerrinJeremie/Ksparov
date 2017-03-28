@@ -600,6 +600,7 @@ object Load {
       It escapes variations and comments and linefeed character.
   *
   * @param filename The name of the file we will read
+  * @param full_name True is the file is given with its full path
   */
   def get_list_move_from_file (filename : String, full_name : Boolean) : Unit = {
 
@@ -609,6 +610,7 @@ object Load {
     var i = 1
     var texte_entier = ""
 
+    // If we have the full path, we do not do anything, else we complete the path with path to the Saves folder 
     if (full_name) {
       for (lines <- Source.fromFile(filename).getLines()) {
         texte_entier += lines + "\n"
