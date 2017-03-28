@@ -68,7 +68,7 @@ Le code a ici été séparé en plusieurs objets, chaque objet comprend tout ce 
 
 Le lancement d'une partie fait appel à un autre menu, celui qui permet de choisir le mode de jeu pour la partie : Humain/Humain, Humain/IA ou IA/IA. Après tout ces choix, l'échiquier apparaît enfin !
 
-\paragraph{L'organisation générale d'un objet DrawQuelquechose :}Chaque objet du fichier \textit{draw.scala} a un nom construit comme \textit{DrawUnechose} où \textit{Unechose} est l'élément affiché par cet objet (\textit{DrawParameters}, \textit{DrawMenu}, \textit{DrawBoard}...). Tous les objets sont construits de la même manière : tout les éléments d'une fenêtre sont des extensions de \textit{GridPanel} qui sont ensuite organisés via un \textit{BorderPanel} dans l'interface. Au final, toute fenêtre est découpée en carré de 80 pixel. \\
+\paragraph{L'organisation générale d'un objet DrawQuelquechose :}Chaque objet du fichier \textit{draw.scala} a un nom construit comme \textit{DrawUnechose} où \textit{Unechose} est l'élément affiché par cet objet (\textit{DrawParameters}, \textit{DrawMenu}, \textit{DrawBoard}...). Tous les objets sont construits de la même manière : tout les éléments d'une fenêtre sont des extensions de \textit{GridPanel} qui sont ensuite organisés via un \textit{BorderPanel} dans l'interface. \\
 
 Pour avoir un code plus propre une classe commune à tous les objets a été créé : \textit{BackgroundCase} qui étend un \textit{GridPanel} et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond. Avec l'utilisation des \textit{Panel} et des images bufferisées, ces cases sont extensibles, ce qui permet à l'utilisateur d'adapter la taille de la fenêtre tout en gardant un fond uni.
 
@@ -93,6 +93,8 @@ C'est aussi sous l'échiquier que l'on retrouve les horloges, il y en a une par 
 
 Si à un moment de la partie le temps restant du joueur passe sous les 5 secondes et qu'il n'a pas fait le nombre de mouvement nécessaire, l'horloge s'affiche en rouge pour l'indiquer au joueur. \\
 
+Dans le cas d'une partie chargée, des boutons pour prendre la main sur la partie sont présents, ils sont décrit dans la section \ref{parse} qui traite du chargement de la sauvegarde des parties. \\
+
 Finalement on retrouve en haut de la fenêtre un menu rapide qui permet de sauvegarder, de recommencer une partie, de revenir au menu ou de quitter Ksparov.
 
 \paragraph{Les actions dynamiques de l'interface :}Le plateau de jeu est plus ou moins dynamique pour afin en temps réel les mouvements des pièces, les messages et le nombre de pièce morte. Tout cela est défini dans l'objet \textit{DrawActions}. \\
@@ -101,11 +103,39 @@ L'affichage des pièces passe par l'appel de la méthode \textit{DrawActions.dra
 
 A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique le déplacement, vérifie si un évènement s'est produit suite à ce mouvement (échec, échec et mat ou pat). Si elle détecte un évènement elle affiche le message correspondant, sinon et affiche un message indiquant que la main est pour le joueur suivant. \\
 
-Dans le cas d'une promotion on fait appel à la méthode \textit{enable\_promotion} qui active les boutons des pièces mortes de manière à ce que l'utilisateur puisse choisir la pièce de la promotion. A la fin de la promotion, on appel \textit{disable\_promotion} pour désactiver les buttons.
+Dans le cas d'une promotion on fait appel à la méthode \textit{enable\_promotion} qui active les boutons des pièces mortes de manière à ce que l'utilisateur puisse choisir la pièce de la promotion. A la fin de la promotion, on appel \textit{disable\_promotion} pour désactiver les buttons. \\
+
+Pour l'affichage de toutes informations du jeu la méthode \textit{DrawActions.draw\_game\_message} est appelée. Elle prend en argument le type de message a afficher et le joueur auquel il s'applique. C'est ainsi que s'affiche les messages de mate, de partie de nulle. Lors d'une partie chargée, c'est aussi ces méthodes qui permet d'afficher les commentaires présents dans le PGN, comme par exemple les !, !?, ?? ... De plus les tags des noms des joueurs présent dans un PGN sont lus pour actualiser l'affichage correctement. 
 
 \section{parameter.scala ou définir son propre Ksparov}
 
-\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétiques mais ceci est un autre problème. Les paramètres et leurs modifications sont enregistrés dans un fichier : \textit{src/main/resources/Parameters} ce qui permet de conserver les choix précédent à chaque ouverture de l'application.
+Ce fichier permet de personnaliser l'application Ksparov. On y retrouve trois objets : \textit{Display} qui définit les paramètres d'affichage, \textit{Parameter} pour les autres paramètres et enfin l'objet \textit{DrawParameters} qui permet d'afficher le menu de choix des paramètres. 
+
+\paragraph{L'objet \textit{Display} :}Cet objet comprend toutes les variables ajustant l'affichage, c'est-à-dire les chemins vers les ressources, les dimensions des composants, les dimensions du texte, les couleurs du texte... \\
+
+On y retrouve aussi la méthode \textit{apply\_resolution} qui permet d'ajuster l'affichage selon la résolution de l'écran. En effet trois jeux de ressource sont disponibles, on les retrouve dans les dossiers \textit{Min/}, \textit{Max/} et \textit{Jeroboam/} dans les ressources. Ainsi cette méthode récupère la résolution utilisée par le joueur et choisit le jeu de ressource en fonction. Les ressources dans \textit{Min/} sont utilisées si la largeur de la résolution est inférieure à 1000, entre 1000 et 1100, on utilise le jeu présent dans \textit{Max/}, pour les autres utilisateurs on utilise le jeu \textit{Jeroboam/}. 
+
+\paragraph{\textit{Parameter} et le fichier \textit{src/main/resources/Parameters} :}L'objet \textit{Parameter} définit les autres variables de paramétrisation de l'application ainsi que les méthodes pour lire et appliquer les paramètres dans le fichier de paramètre. \\
+
+Les autres variables de paramétrisations sont aux nombre de trois : \textit{speed\_ai} qui définit le temps de l'attente de l'IA avant qu'elle ne joue son mouvement, \textit{nb\_alice\_board} qui indique combien de plateau sont utilisés dans la variante des jeux d'Alice et \textit{nb\_case\_board} qui donne le nombre de case du plateau. \\
+
+Plus importantes sont les méthodes \textit{apply} et \textit{write} pour conserver les paramètres. La méthode \textit{apply} est appelée au lancement de l'application, elle cherche à ouvrir le fichier \textit{src/main/resources/Parameters} dans lequel sont enregistrés les paramètres. Si elle réussit à trouver et à ouvrir un tel fichier, elle le lit ligne après après ligne pour ajuster les variables courantes aux paramètres sauvegardés. Dans le cas où le fichier est manquant, ou bien qu'une exception est lancée à un moment de la lecture de ce dernier, l'application est ouverte avec les valeurs par défaut et ces valeurs sont enregistrés dans un nouveau fichier qui vient écrasé le précédent. 
+
+De la même manière, \textit{write} prend les valeurs des variables à sauvegarder et les enregistre dans le fichier de sauvegarde des paramètres. Pour ces deux méthodes les variables enregistrées sont : 
+\begin{itemize}
+\item La texture de fond
+\item Le jeu de pièce utilisé
+\item La vitesse de l'IA
+\item Le nombre de plateau pour les échecs d'Alice
+\item Le nombre de période d'horloge
+\item Le descriptif de chaque période
+\end{itemize}
+
+Pour enregistrer chaque période de façon détaillé, une méthode est appelée pour transformer le tableau en une chaîne de caractères. Une autre méthode est appelée pour lire de fichier de paramètre pour parser les périodes. 
+
+\paragraph{Afficher le menu de sélection des paramètres :}Le dernier objet de ce fichier permet d'afficher le menu des paramètres. Étant donné le nombre de paramètre enregistré, c'est un menu un petit peu plus complexe que les précédents. Il est organisé en trois sous-menus qui sont : affichage, jouabilité ou pour l'horloge. 
+
+Le menu pour régler l'affichage permet de sélectionner le fond utilisé pour l'application et le jeu de pièce. Celui pour la jouabilité permet d'ajuster la vitesse de l'IA et le nombre de plateau pour les parties d'Alice. Enfin le menu pour l'horloge permet de sélectionner le nombre de périodes, l'affichage dynamique permet de renseigner les différents champs d'une période : temps, nombre de mouvement et incrément. 
 
 \section{rules.scala ou l'implémentation des règles des échecs}
 
@@ -126,6 +156,8 @@ Le cavalier, quant à lui, peut passer au dessus des autres pièces, et nécessi
 Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, des booléens indiquant s'il est en échec et s'il a bougé, et a une version de \textit{move} différente pour gérer le cas du roque. 
 
 \paragraph{\textit{check\_mate}, vérification de l'échec et mat :} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction \textit{Checkmate.check\_mate} vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant, voir le prendre.
+
+\paragraph{Les échecs d'Alice :}Pour la variante nous avons implémenté les échecs d'Alice, une variante utilisant deux plateaux pour jouer. Pour plus de détails : 
 
 \section{game.scala ou l'on peut enfin jouer}
 
@@ -164,12 +196,21 @@ Enfin si l'on dans le cas d'une partie entre un joueur et une IA et que le joueu
 Il est important de noter que dans le cas d'une partie entre deux IA il faut cliquer sur une case pour obtenir le prochain mouvement, ce qui n'est pas le cas lors d'un matche entre une IA et un humain. 
 
 \section{parse.scala ou les dangers de la PGN}
+\label{parse}
 
 \paragraph{L'objet \textit{Save} :} La sauvegarde de la partie en cours se fait via cet objet. Les méthodes sont internes pour la plupart. Il faut faire particulièrement attention à comment on récupère un mouvement. En effet, les deux méthodes à utiliser sont \textit{add\_move1} et \textit{add\_move2} et doivent être insérées dans la méthode \textit{get\_move} de toutes les sous-classes de player afin de récupérer les mouvements les uns après les autres. La première doit être placé juste avant l'application du mouvement, la deuxième après si le mouvement a bien eu lieux. La méthode à appeler pour sauvegarder une partie est \textit{write\_to\_file}. \\
 
-Pour l'affichage de l'interface de sauvegarde deux menus sont présents. Tout d'abord un menu pour la
+Pour l'affichage de l'interface de sauvegarde deux menus sont présents. Tout d'abord un menu pour la sauvegarde, c'est un menu qui ne permet que de choisir le nom de la sauvegarde, il propose ensuite plusieurs buttons pour quitter ce menu en sauvegardant. 
 
-\paragraph{L'objet \textit{Load} :} Cet objet a pour fonction de lire un fichier au format PGN (Portable Game Notation). Pour cela une méthode \textit{get\_list\_move\_from\_file} permet de récupérer la liste des mouvements (non encore parsés). Une fois cette liste établie, une partie peut être lancée avec comme joueur des \textit{Reproducers}. \textit{Reproducer} est une sous-classe de player et est un robot, en utilisant les règles du jeu définies dans Rules, il comprend le PGN. Il commence son tour en lisant la tête de l'attribut \textit{list\_of\_moves}, qui est un coup au format PGN. S'il y a ambiguïté il décide, en faisant appel a la méthode \textit{pre\_move} des pièces, quelle pièce doit bouger et applique le mouvement.
+Il y a ensuite un deuxième menu, un menu de sauvegarde avancée qui permet de définir tous les champs d'un PGN : nom des joueurs, date, lieu... Dans le premier menu, ces champs sont automatiquement remplis.
+
+\paragraph{L'objet \textit{Load} :} Cet objet a pour fonction de lire un fichier au format PGN (Portable Game Notation). Pour cela une méthode \textit{get\_list\_move\_from\_file} permet de récupérer la liste des mouvements (non encore parsés). Une fois cette liste établie, une partie peut être lancée avec comme joueur des \textit{Reproducers}. \textit{Reproducer} est une sous-classe de player et est un robot, en utilisant les règles du jeu définies dans Rules, il comprend le PGN. Il commence son tour en lisant la tête de l'attribut \textit{list\_of\_moves}, qui est un coup au format PGN. S'il y a ambiguïté il décide, en faisant appel a la méthode \textit{pre\_move} des pièces, quelle pièce doit bouger et applique le mouvement. \\
+
+Le menu de chargement permet deux méthodes de chargement. Dans un premier temps le joueur peut sélectionner un des fichiers présents dans le dossier \textit{src/main/resources/Saves}, ce qui donne un accès rapide aux fichiers. 
+
+La seconde méthode consiste à ouvrir un explorateur de fichier pour sélectionner un fichier PGN. Lorsqu'un fichier est sélectionné, son chemin est conservé dans une variables, on peut alors le charger. Si aucun fichier ne portait le même nom dans le dossiers \textit{Saves}, alors le fichier est copié dans le dossier pour faciliter son chargement. 
+
+Dans les deux cas l'utilisateur peut choisir deux façons de charger le fichier : soit il commence par le premier mouvement présent dans le fichier, soit il va directement à la fin du fichier ce qui permet de reprendre immédiatement le fichier là où il en était. 
 
 \section{solve.scala ou l'intelligence limitée}
 
@@ -189,5 +230,4 @@ De même pour chaque nouvelle fenêtre, chaque nouveau mouvement un grand nombre
 
 En ce qui concerne rules, l'implémentation du roque est quelque peu lourde, et demande quelques répétitions de code. \\
 
-Les pions promus ne comptent pas comme pions morts mais c'est logique connard.
 \end{document}

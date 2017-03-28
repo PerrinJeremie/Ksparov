@@ -104,10 +104,7 @@ class BackgroundCase (i : Int, j : Int) extends GridPanel (i, j) {
 				minimumSize = Display.dim_small
 				maximumSize = Display.dim_small
             }
-				/* The size of a grid (the same for the entire application) is difined in the object Display
-				   in game.scala, idem for paths to resources. */
-
-		}
+        }
 	}
 }
 
