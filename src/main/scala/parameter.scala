@@ -10,9 +10,6 @@ import scala.util.matching.Regex
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.awt.image.BufferedImage  
-import java.awt.Image           
-import javax.imageio.ImageIO
 
 /** Defines evrything that is linked with the display */
 object Display {
@@ -77,8 +74,6 @@ object Display {
   var num_dead_font = new Font ("Arial", 0, 25)
   /** Font for the parameters of clocks */
   var para_clock_font = new Font ("Arial", 1, 14)
-  /** The chosen backgroundcase */
-  var bufferedImage:BufferedImage = null
 }
 
 /** Defines methods and variables for the parameter */
@@ -96,7 +91,6 @@ object Parameters {
     // Updating variables.
     Display.pieces_path = "Pieces/" + lines(1) + "/"
     Display.texture_path = "Texture_small_" + lines(2) + ".png"
-    Display.bufferedImage = ImageIO.read(new File(Display.resources_path + Display.texture_path))
     Parameters.ai_speed = lines(3).toInt
     Parameters.nb_alice_board = lines(4).toInt
     Time.nb_period = lines(5).toInt
@@ -301,7 +295,6 @@ object DrawParameters {
       def apply = {
         // The selected texture is actualize in real time to have a dynamic display
         Display.texture_path = "Texture_small_" + number.toString + ".png"
-        Display.bufferedImage = ImageIO.read(new File(Display.resources_path + Display.texture_path))
         Ksparov.frame.contents = new DrawParameters.SubMenus (1)
       }
     }
