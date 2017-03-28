@@ -969,7 +969,7 @@ object DrawBoard {
 	*
 	* @param player The player that the human will control by clicking on this button
 	*/
-	class PlayButton (player : Int) extends Button {
+	class PlayButton (player_id : Int, player_type : String) extends Button {
 		preferredSize = Display.dim_small
 		action = new Action ("") {
 			// If we are in a loaded game, the button is enaled and displays a play button of the color of the player
@@ -977,18 +977,29 @@ object DrawBoard {
 				background = Color.red
 				borderPainted = true
 				border = new javax.swing.border.LineBorder (Color.black, 1)
-				icon = new javax.swing.ImageIcon(Display.resources_path + "Play_button" + player.toString + ".png")
+				icon = new javax.swing.ImageIcon(Display.resources_path + "Play_buttons_" + player_type.toString + player_id.toString + ".png")
 			/* When actionned, this button changes players to human players of the selected color and AI for the other, it also
 			   disables the play button */
 			def apply {
-				Ksparov.curr_game.game_type = 2
-				// Creates new players
-				Ksparov.curr_game.players (player) = new Human (player)
-				Ksparov.curr_game.players (1 - player) = new AI (1 - player)
-                DrawActions.draw_game_messages ("Current_turn", player)
+                if (player_type == "ai") {
+                    // Creates new players for AI vs Human
+    				Ksparov.curr_game.game_type = 2
+                    Ksparov.curr_game.players (player_id) = new Human (player_id)
+				    Ksparov.curr_game.players (1 - player_id) = new AI (1 - player_id)
+                } else {
+                    // Creates new players for Human vs Human
+                    Ksparov.curr_game.game_type = 1
+                    Ksparov.curr_game.players (player_id) = new Human (player_id)
+                    Ksparov.curr_game.players (1 - player_id) = new Human (1 - player_id)
+
+                }
+                DrawActions.draw_game_messages ("Current_turn", Ksparov.curr_game.curr_player)
 				// Disables play button and set their display as a backgroundcase 
-				Ksparov.frame.contents = new DrawBoard.Board{
-                  preferredSize = Ksparov.frame.contents(0).bounds.getSize()
+				Ksparov.frame.contents = new DrawBoard.Board {
+                    preferredSize = Ksparov.frame.contents(0).bounds.getSize()
+                }
+                if (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai) {
+                    Ksparov.play_move
                 }
 			}
 		}
@@ -998,8 +1009,22 @@ object DrawBoard {
 	class Border1 extends GridPanel (Parameters.nb_case_board + 2, 3) {
 		for(i <- 0 to Parameters.nb_case_board + 1) {
 			i match {
+                case 2 => 
+                    // Displays if needed
+                    contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                            Ksparov.curr_game.play_buttons (3)
+                        } else { 
+                            new BackgroundCase (1, 1)
+                        })
+                    contents += new BackgroundCase (1, 1)
+                    contents += new BackgroundCase (1, 1)
 				case 3 =>
-					contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type ) ){ Ksparov.curr_game.play_buttons (1)} else { new BackgroundCase (1, 1)}) // Displays if needed.
+                    // Displays if needed
+					contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                            Ksparov.curr_game.play_buttons (2)
+                        } else { 
+                            new BackgroundCase (1, 1)
+                        })
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 				case 4 =>
@@ -1039,7 +1064,7 @@ object DrawBoard {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else {
-				if (i > 6) {
+				if (i > 7) {
 					contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
@@ -1074,7 +1099,22 @@ object DrawBoard {
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
-						contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) { Ksparov.curr_game.play_buttons (0)} else { new BackgroundCase (1, 1)} ) //Displays if needed
+                        // Displays if needed
+						contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                                Ksparov.curr_game.play_buttons (0)
+                            } else { 
+                                new BackgroundCase (1, 1)
+                            })
+                    case 7 =>
+                        contents += new BackgroundCaseWithLabel ((9 - i).toString)
+                        contents += new BackgroundCase (1, 1)
+                        contents += new BackgroundCase (1, 1)
+                        // Displays if needed
+                        contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                                Ksparov.curr_game.play_buttons (1)
+                            } else { 
+                                new BackgroundCase (1, 1)
+                            }) 
 					}
 				}
 			}

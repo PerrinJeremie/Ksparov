@@ -306,7 +306,7 @@ object Ksparov {
   /** Array for the dead piece icon, they are enabled for the promotion to select the piece */
   var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
   /** Array of the 2 butons to start to play in a loaded game */
-  var play_buttons = new Array [DrawBoard.PlayButton] (2)
+  var play_buttons = new Array [DrawBoard.PlayButton] (4)
   /** Array of the 32 pieces of the game */
   var board = new Array[Piece](32)
 
@@ -551,7 +551,7 @@ object Ksparov {
     DrawActions.draw_game_board(Ksparov.curr_game.board)
 
     //Initializes the play buttons 
-      Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0), new DrawBoard.PlayButton (1))   
+      Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0, "h"), new DrawBoard.PlayButton (0, "ai"), new DrawBoard.PlayButton (1, "h"), new DrawBoard.PlayButton (1, "ai"))   
 
     // Saves the initialisation
     Save.init
