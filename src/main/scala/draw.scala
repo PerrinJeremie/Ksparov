@@ -253,12 +253,20 @@ object DrawCharge {
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Game" =>
+				case "Game_begin" =>
         	        Ksparov.curr_game = new Ksparov.Game (6, 1, false)
         	        Load.list_of_moves = List()
         	        Load.get_list_move_from_file(scroll.item)
         	        Ksparov.init_game(6)
         	        Ksparov.frame.contents = new DrawBoard.Board
+					Ksparov.frame.peer.setLocationRelativeTo(null)
+              case "Game_end" =>
+                    Ksparov.curr_game = new Ksparov.Game (7, 1,false)
+                    Load.list_of_moves = List()
+                    Load.get_list_move_from_file(scroll.item)
+        	        Ksparov.init_game(7)
+                    Ksparov.play_move
+                    Ksparov.frame.contents = new DrawBoard.Board
 					Ksparov.frame.peer.setLocationRelativeTo(null)
               case "Delete" =>
                     val res_ = ("rm " + Display.save_path + scroll.item + ".pgn") !!;
@@ -278,8 +286,8 @@ object DrawCharge {
 	}
 
 	/** The main grid of the loading menu with everything. */
-	class CenterGrid extends GridPanel (10,1) {
-		for (i <- 0 to 9) {
+	class CenterGrid extends GridPanel (12,1) {
+		for (i <- 0 to 11) {
    	 		i match {
 				case 1 =>
                     if (list_empty) {
@@ -301,11 +309,17 @@ object DrawCharge {
                     }
                 case 6 =>
                     if (!list_empty) {
-                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie</html>", "Game")
+                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie depuis le début</html>", "Game_begin")
                     } else {
                     	contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>")
                     }
-		  		case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
+                case 8 =>
+                    if (!list_empty) {
+                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie à la fin</html>", "Game_end")
+                    } else {
+                    	contents += new BackgroundCase (1,5)
+                    }
+		  		case 10 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
 		  		case _ => contents += new BackgroundCase (1, 5)
     		}
 		}
@@ -314,8 +328,8 @@ object DrawCharge {
 	/** The final menu with the central grid and background columns on each sides of it. */
 	class Dcharge extends BorderPanel {
 		define_listgame
-    	layout (new BackgroundCase (10,1)) = East
-    	layout (new BackgroundCase (10,1)) = West
+    	layout (new BackgroundCase (12,1)) = East
+    	layout (new BackgroundCase (12,1)) = West
     	layout (new CenterGrid) = Center
 	}
 }
@@ -985,7 +999,7 @@ object DrawBoard {
 		for(i <- 0 to Parameters.nb_case_board + 1) {
 			i match {
 				case 3 =>
-					contents += (if (Ksparov.curr_game.game_type == 6){ Ksparov.curr_game.play_buttons (1)} else { new BackgroundCase (1, 1)}) // Displays if needed.
+					contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type ) ){ Ksparov.curr_game.play_buttons (1)} else { new BackgroundCase (1, 1)}) // Displays if needed.
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
 				case 4 =>
@@ -1060,7 +1074,7 @@ object DrawBoard {
 						contents += new BackgroundCaseWithLabel ((9 - i).toString)
 						contents += new BackgroundCase (1, 1)
 						contents += new BackgroundCase (1, 1)
-						contents += (if (Ksparov.curr_game.game_type == 6) { Ksparov.curr_game.play_buttons (0)} else { new BackgroundCase (1, 1)} ) //Displays if needed
+						contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) { Ksparov.curr_game.play_buttons (0)} else { new BackgroundCase (1, 1)} ) //Displays if needed
 					}
 				}
 			}
