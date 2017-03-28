@@ -25,7 +25,7 @@
 BOUSSIDAN Aaron, PERRIN Jérémie et REY Simon\\[5cm]
 \begin{center}
 \HRule
-\\[0.4cm]{\huge\bfseries Projet de Programmation 2 - Ksparov 1.0\\[0.4cm]}
+\\[0.4cm]{\huge\bfseries Projet de Programmation 2 - Ksparov 2.0\\[0.4cm]}
 \HRule \\[0.5cm]
 Année 2016-2017, Semestre 2\\[12cm]
 \includegraphics[scale=0.7]{Images/Logo_ENS_PS.jpg}
@@ -48,12 +48,14 @@ Garry Kasparov
 
 \section{L'organisation générale du code}
 
-Le code de notre projet a été divisé en quatre parties (chacune dans un fichier) qui correspondent chacune à une fonction particulière du code. On retrouve donc :
+Le code de notre projet a été divisé en plusieurs parties (chacune dans un fichier) qui correspondent chacune à une fonction particulière du code. On retrouve donc :
 \begin{itemize}
 \item \textbf{draw.scala} qui comprend tout ce qui concerne l'affichage de l'interface du jeu
+\item \textbf{parameter.scala} qui définit l'affichage, et la sauvegarde/chargement des paramètres depuis le fichier de paramètres
 \item \textbf{rules.scala} qui implémente toutes les règles du jeu pour chaque pièce
 \item \textbf{game.scala} qui gère le lancement du jeu et qui fait l'interface entre les règles et l'application
 \item \textbf{solve.scala} qui définit ce qui a trait à la résolution par l'intelligence artificielle
+\item \textbf{parse.scala} qui implémente la sauvegarde et le chargement des parties
 \end{itemize}~
 
 Nous allons donc à présent étudier en détail chacun de ces fichiers.
@@ -70,8 +72,6 @@ Le lancement d'une partie fait appel à un autre menu, celui qui permet de chois
 
 Pour avoir un code plus propre une classe commune à tous les objets a été créé : \textit{BackgroundCase} qui étend un \textit{GridPanel} et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond.
 
-\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétiques mais ceci est un autre problème. Les paramètres et leurs modifications sont enregistrés dans un fichier : \textit{src/main/resources/Parameters} ce qui permet de conserver les choix précédent à chaque ouverture de l'application.
-
 \paragraph{Le plateau de jeu :}Le plateau de jeu est, heureusement, la fenêtre la plus complète, on y retrouve plusieurs éléments. \\
 
 Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces se rajoutent via une icône. La particularité étant que le plateau ne dessine pasles pièces lorsque l'on en créé une nouvelle instance, il faut appeler \textbf{DrawActions.draw\_board} pour cela. \\
@@ -87,6 +87,10 @@ Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le 
 L'affichage des pièces passe par l'appel de la méthode \textit{DrawActions.draw\_board}. Cette méthode prend chaque pièce et définit l'icône correspondante sur la case des coordonnées de la pièces. Les pièces ayant des coordonnées négatives sont des pièces mortes et donc \textit{draw\_board} actualise le compte des pièces mortes à chaque fois qu'il en trouve une. La méthode fini par une actualisation de la fenêtre ce qui permet d'afficher les pièces sur le plateau et le compte des pièces mortes. \\
 
 A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique le déplacement, vérifie si un évènement s'est produit suite à ce mouvement (échec, échec et mat ou pat). Si elle détecte un évènement elle affiche le message correspondant, sinon et affiche un message indiquant que la main est pour le joueur suivant.
+
+\section{parameter.scala ou le paramétrage de du jeu}
+
+\paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétiques mais ceci est un autre problème. Les paramètres et leurs modifications sont enregistrés dans un fichier : \textit{src/main/resources/Parameters} ce qui permet de conserver les choix précédent à chaque ouverture de l'application.
 
 \section{rules.scala ou l'implémentation des règles des échecs}
 
@@ -144,6 +148,12 @@ Enfin si l'on dans le cas d'une partie entre un joueur et une IA et que le joueu
 
 Il est important de noter que dans le cas d'une partie entre deux IA il faut cliquer sur une case pour obtenir le prochain mouvement, ce qui n'est pas le cas lors d'un matche entre une IA et un humain. 
 
+\section{parse.scala ou les dangers de la PGN}
+
+\paragraph{L'objet \textit{Save} :} La sauvegarde de la partie en cours se fait via cet objet. Les méthodes sont internes pour la plupart. Il faut faire particulièrement attention à comment on récupère un mouvement. En effet, les deux méthodes à utiliser sont \textit{add\_move1} et \textit{add\_move2} et doivent être inserées dans la méthode \textit{get\_move} de toutes les sous-classes de player afin de récuperer les mouvements les uns aprés les autres. La première doit être placé juste avant l'application du mouvement, la deuxième après si le mouvement a bien eu lieux. La méthode à appeler pour sauvegarder une partie est \textit{write\_to\_file}.
+
+\paragraph{L'objet \textit{Load} :} Cet objet a pour fonction de lire un fichier au format PGN (Portable Game Notation). Pour cela une méthode \textit{get\_list\_move\_from\_file} permet de récuperer la liste des mouvements (non encore parsés). Une fois cette liste établie, une partie peut être lancée avec comme joueur des \textit{Reproducers}. \textit{Reproducer} est une sous-classe de player et est un robot, en utilisant les règles du jeu définies dans Rules, il comprend le PGN. Il commence son tour en lisant la tête de l'attribut \textit{list\_of\_moves}, qui est un coup au format PGN. S'il y a ambiguïté il décide, en faisant appel a la méthode \textit{pre\_move} des piéces, quelle piéce doit bouger et applique le mouvement.
+
 \section{solve.scala ou l'intelligence limitée}
 
 \paragraph{L'intelligence artificielle :}Pour le moment l'intelligence artificielle est encore pas très au point puisqu'elle choisit aléatoirement ses coups à chaque mouvement, mais elle permet de jouer contre quelqu'un. Son code a malgré tout été relativement optimisé. 
@@ -153,12 +163,6 @@ Il est important de noter que dans le cas d'une partie entre deux IA il faut cli
 Plus précisément, la méthode maintient un tableau de booléen à jour définissant si la pièce sélectionnée à déjà été testée. Ce tableau est initialisée en retirant les pièces mortes pour ne pas perdre de temps. Un nombre aléatoire en 1 et 16 est tiré, si la pièce n'a pas été testée (case du tableau \textit{already\_check} à \textit{false}) alors la méthode cherche à savoir si un mouvement est possible. \\
 
 Si un mouvement est possible, elle choisit alors une des cases possibles aléatoirement, sinon, si aucun mouvement n'a été appliqué, on vérifie s'il reste des mouvement possibles (s'il existe une case à \textit{false} dans \textit{already\_check}), si tel est le cas on boucle, sinon l'IA est en pat. 
-
-\section{parse.scala ou les dangers de la PGN}
-
-\paragraph{L'objet \textit{Save} :} La sauvegarde de la partie en cours se fait via cet objet. Les méthodes sont internes pour la plupart. Il faut faire particulièrement attention à comment on récupère un mouvement. En effet, les deux méthodes à utiliser sont \textit{add\_move1} et \textit{add\_move2} et doivent être inserées dans la méthode \textit{get\_move} de toutes les sous-classes de player afin de récuperer les mouvements les uns aprés les autres. La première doit être placé juste avant l'application du mouvement, la deuxième après si le mouvement a bien eu lieux. La méthode à appeler pour sauvegarder une partie est \textit{write\_to\_file}.
-
-\paragraph{L'objet \textit{Load} :} Cet objet a pour fonction de lire un fichier au format PGN (Portable Game Notation). Pour cela une méthode \textit{get\_list\_move\_from\_file} permet de récuperer la liste des mouvements (non encore parsés). Une fois cette liste établie, une partie peut être lancée avec comme joueur des \textit{Reproducers}. \textit{Reproducer} est une sous-classe de player et est un robot, en utilisant les règles du jeu définies dans Rules, il comprend le PGN. Il commence son tour en lisant la tête de l'attribut \textit{list\_of\_moves}, qui est un coup au format PGN. S'il y a ambiguïté il décide, en faisant appel a la méthode \textit{pre\_move} des piéces, quelle piéce doit bouger et applique le mouvement.
 
 \section{Les défauts et erreurs connues}
 
