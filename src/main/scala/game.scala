@@ -616,7 +616,7 @@ object Ksparov {
     if (n != 1) {
       Ksparov.curr_game.ai_move.start
     }
-    
+
     // Defines the start time of the game 
     Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
@@ -646,5 +646,7 @@ object Ksparov {
   */
   def main (argv : Array[String]) {
     application.main(Array())
+    var chooser = new javax.swing.JFileChooser()
+    var file = chooser.getSelectedFile
   }
 }

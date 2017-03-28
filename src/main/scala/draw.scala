@@ -15,7 +15,8 @@ import scala.language.postfixOps
 import java.awt.image.BufferedImage  
 import java.awt.Image                                                                                            
 import javax.imageio.ImageIO
-import java.awt.{Graphics2D,Color,Font,BasicStroke}       
+import java.awt.{Graphics2D,Color,Font,BasicStroke} 
+import javax.swing.JFileChooser      
 
 /* This file is organised in objects, each of then draw a certain windows.
    To change the application window, we juste change the contents of Ksparov.frame in game.scala. */
@@ -198,6 +199,38 @@ object DrawMenu {
 /** This object is used to draw the menu for loading games. */
 object DrawCharge {
 
+    /** Defines a JFileChooser method to get PGN in a file explorer */
+    class ChoosePGN {
+        /** Method that runs the File Chooser itself */
+        def run {
+            var chooser = new JFileChooser()
+            var pgn_filter = new javax.swing.filechooser.FileNameExtensionFilter ("PGN", "pgn")
+            chooser.setCurrentDirectory(new java.io.File("."))
+            chooser.setDialogTitle("Choississez un fichier PGN à charger")
+            chooser.setFileFilter(pgn_filter)
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                file_chosen.text = chooser.getSelectedFile.toString
+                Ksparov.frame.contents = new DrawCharge.Dcharge
+            } else {
+                file_chosen.text = "Aucun fichier choisi"
+                Ksparov.frame.contents = new DrawCharge.Dcharge
+            }
+        }
+    }
+
+    /** Button to launch the file explorer */
+    class FileChooserButton extends PrettyBigButton {
+        action = Action ("Choissir depuis un fichier") {
+            var file_chooser = new ChoosePGN
+            file_chooser.run
+        }
+    }
+
+    /** Label that display the name of the file chosen by the file explorer */
+    var file_chosen = new Label ("Fichier choisi") {
+        preferredSize = Display.dim_message_drawer
+    }
+
 	/** Returns the string passed in argument without the 4 last characters. 
 	*
 	* @param s The string that should be cut
@@ -248,26 +281,48 @@ object DrawCharge {
     * @param text Text display on the button
     * @param return_type Defines the action when the button is pressed
     */
-  	class Option (text : String, return_type : String) extends PrettyBigButton {
+  	class Option (text : String, return_type : String, full_name : Boolean) extends PrettyBigButton {
 		action = Action (text) {
 			return_type match {
 				case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
+
 				case "Game_begin" =>
         	        Ksparov.curr_game = new Ksparov.Game (6, 1, false)
         	        Load.list_of_moves = List()
-        	        Load.get_list_move_from_file(scroll.item)
-        	        Ksparov.init_game(6)
-        	        Ksparov.frame.contents = new DrawBoard.Board
-					Ksparov.frame.peer.setLocationRelativeTo(null)
+                    if (full_name) {
+                        if (file_chosen.text != "Aucun fichier choisi") {
+                            Load.get_list_move_from_file(file_chosen.text, true)
+                            Ksparov.init_game(6)
+                            Ksparov.frame.contents = new DrawBoard.Board
+                            Ksparov.frame.peer.setLocationRelativeTo(null)
+                        }
+                    } else {
+                        Load.get_list_move_from_file(scroll.item, false)
+                        Ksparov.init_game(6)
+                        Ksparov.frame.contents = new DrawBoard.Board
+                        Ksparov.frame.peer.setLocationRelativeTo(null)
+                    }
+
               case "Game_end" =>
-                    Ksparov.curr_game = new Ksparov.Game (7, 1,false)
+                    Ksparov.curr_game = new Ksparov.Game (7, 1, false)
                     Load.list_of_moves = List()
-                    Load.get_list_move_from_file(scroll.item)
-        	        Ksparov.init_game(7)
-                    Ksparov.play_move
-                    Ksparov.frame.contents = new DrawBoard.Board
-					Ksparov.frame.peer.setLocationRelativeTo(null)
+                    if (full_name) {
+                        if (file_chosen.text != "Aucun fichier choisi") {
+                            Load.get_list_move_from_file(file_chosen.text, true)
+                            Ksparov.init_game(7)
+                            Ksparov.play_move
+                            Ksparov.frame.contents = new DrawBoard.Board
+                            Ksparov.frame.peer.setLocationRelativeTo(null)
+                        }
+                    } else {
+                        Load.get_list_move_from_file(scroll.item, false)
+                        Ksparov.init_game(7)
+                        Ksparov.play_move
+                        Ksparov.frame.contents = new DrawBoard.Board
+                        Ksparov.frame.peer.setLocationRelativeTo(null)
+                    }
+
               case "Delete" =>
                     val res_ = ("rm " + Display.save_path + scroll.item + ".pgn") !!;
                     define_listgame
@@ -286,8 +341,9 @@ object DrawCharge {
 	}
 
 	/** The main grid of the loading menu with everything. */
-	class CenterGrid extends GridPanel (12,1) {
-		for (i <- 0 to 11) {
+	class CenterGrid extends BorderPanel {
+        layout (new GridPanel (10,1) {
+		for (i <- 0 to 9) {
    	 		i match {
 				case 1 =>
                     if (list_empty) {
@@ -295,34 +351,59 @@ object DrawCharge {
                     } else {
                     	contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>")
                     }
+
 		  		case 2 =>
                     if (!list_empty) {
                     	contents += scroll}
                 	else {
                     	contents += new BackgroundCase (1,5)
                     }
+
 		  		case 4 =>
                     if (!list_empty) {
-                    	contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete")
-                    } else {
-                    	contents += new BackgroundCase (1,5)
-                    }
-                case 6 =>
-                    if (!list_empty) {
-                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie depuis le début</html>", "Game_begin")
+                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> depuis le début</html>", "Game_begin", false)
                     } else {
                     	contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>")
                     }
-                case 8 =>
+
+                case 6 =>
                     if (!list_empty) {
-                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie à la fin</html>", "Game_end")
+                    	contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> à la fin</html>", "Game_end", false)
                     } else {
                     	contents += new BackgroundCase (1,5)
                     }
-		  		case 10 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu")
+
+                case 8 =>
+                    if (!list_empty) {
+                        contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete", true)
+                    } else {
+                        contents += new BackgroundCase (1,5)
+                    }
+
 		  		case _ => contents += new BackgroundCase (1, 5)
     		}
 		}
+        }) = West
+
+        layout (new BackgroundCase (10, 1)) = Center
+
+        layout (new GridPanel (10, 1) {
+            for (i <- 0 to 9) {
+            i match {
+                case 1 => contents += new FileChooserButton
+
+                case 2 => contents += file_chosen
+
+                case 4 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> depuis le début</html>", "Game_begin", true)
+                    
+                case 6 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> à la fin</html>", "Game_end", true)
+
+                case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu", false)
+
+                case _ => contents += new BackgroundCase (1, 5)
+            }
+        }
+        }) = East
 	}
 
 	/** The final menu with the central grid and background columns on each sides of it. */

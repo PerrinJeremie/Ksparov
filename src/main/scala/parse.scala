@@ -601,7 +601,7 @@ object Load {
   *
   * @param filename The name of the file we will read
   */
-  def get_list_move_from_file (filename : String) : Unit = {
+  def get_list_move_from_file (filename : String, full_name : Boolean) : Unit = {
 
     infos = Map()
     infos += ("filename" -> filename)
@@ -609,8 +609,14 @@ object Load {
     var i = 1
     var texte_entier = ""
 
-    for (lines <- Source.fromFile(Display.save_path + filename + ".pgn").getLines()) {
-      texte_entier += lines + "\n"
+    if (full_name) {
+      for (lines <- Source.fromFile(filename).getLines()) {
+        texte_entier += lines + "\n"
+      }
+    } else {
+      for (lines <- Source.fromFile(Display.save_path + filename + ".pgn").getLines()) {
+        texte_entier += lines + "\n"
+      }
     }
 
     var tableau = texte_entier.split("\\(|\\)").zipWithIndex.filter(x => x._2 % 2 == 0).map(_._1)
