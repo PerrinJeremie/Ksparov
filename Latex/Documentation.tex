@@ -99,7 +99,9 @@ Finalement on retrouve en haut de la fenêtre un menu rapide qui permet de sauve
 
 L'affichage des pièces passe par l'appel de la méthode \textit{DrawActions.draw\_board}. Cette méthode prend chaque pièce et définit l'icône correspondante sur la case des coordonnées de la pièces. Les pièces ayant des coordonnées négatives sont des pièces mortes et donc \textit{draw\_board} actualise le compte des pièces mortes à chaque fois qu'il en trouve une. La méthode fini par une actualisation de la fenêtre ce qui permet d'afficher les pièces sur le plateau et le compte des pièces mortes. \\
 
-A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique le déplacement, vérifie si un évènement s'est produit suite à ce mouvement (échec, échec et mat ou pat). Si elle détecte un évènement elle affiche le message correspondant, sinon et affiche un message indiquant que la main est pour le joueur suivant.
+A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique le déplacement, vérifie si un évènement s'est produit suite à ce mouvement (échec, échec et mat ou pat). Si elle détecte un évènement elle affiche le message correspondant, sinon et affiche un message indiquant que la main est pour le joueur suivant. \\
+
+Dans le cas d'une promotion on fait appel à la méthode \textit{enable\_promotion} qui active les boutons des pièces mortes de manière à ce que l'utilisateur puisse choisir la pièce de la promotion. A la fin de la promotion, on appel \textit{disable\_promotion} pour désactiver les buttons.
 
 \section{parameter.scala ou définir son propre Ksparov}
 
