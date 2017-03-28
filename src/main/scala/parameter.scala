@@ -80,30 +80,54 @@ object Display {
 object Parameters {
 
   /** Reads parameters from the src/main/resources/Parameters file and apply it */
-  def apply = {
+  def apply : Unit = {
     /** Index for the iterator */
     var i = 0
 
+    // We try to read for the Parameter file 
+    try {
+      /** Array with lines of the Parameters file */
+      var lines = Source.fromFile("src/main/resources/Parameters").getLines.toArray
 
-    /** Array with lines of the Parameters file */
-    var lines = Source.fromFile("src/main/resources/Parameters").getLines.toArray
+      // Updating variables.
+      Display.pieces_path = "Pieces/" + lines(1) + "/"
+      Display.texture_path = "Texture_small_" + lines(2) + ".png"
+      Parameters.ai_speed = lines(3).toInt
+      Parameters.nb_alice_board = lines(4).toInt
+      Time.nb_period = lines(5).toInt
+      // Parse the line that defines every period of the clock
+      parse_period_string(lines(6))
 
-    // Updating variables.
-    Display.pieces_path = "Pieces/" + lines(1) + "/"
-    Display.texture_path = "Texture_small_" + lines(2) + ".png"
-    Parameters.ai_speed = lines(3).toInt
-    Parameters.nb_alice_board = lines(4).toInt
-    Time.nb_period = lines(5).toInt
-    // Parse the line that defines every period of the clock
-    parse_period_string(lines(6))
-
-    // Defining the text color depending on the texture selected.
-    lines(2).toInt match {
-      case 1 => Display.text_color = Color.white
-      case 2 => Display.text_color = Color.white
-      case 3 => Display.text_color = Color.black
-      case 4 => Display.text_color = Color.black
-      case 5 => Display.text_color = Color.red
+      // Defining the text color depending on the texture selected.
+      lines(2).toInt match {
+        case 1 => Display.text_color = Color.white
+        case 2 => Display.text_color = Color.white
+        case 3 => Display.text_color = Color.black
+        case 4 => Display.text_color = Color.black
+        case 5 => Display.text_color = Color.red
+      }
+    } catch { 
+      // If we are not able to read from the file for any reason, we create the file and initialize Ksparov with default values
+      case _ : Throwable =>
+        var writer = new PrintWriter ("src/main/resources/Parameters")
+        writer.write ("blabla \n")
+        writer.write ("2 \n")
+        writer.write ("2 \n")
+        writer.write ("800 \n")
+        writer.write ("2 \n")
+        writer.write ("2 \n")
+        writer.write ("(5400,40,0)(3600,0,0) \n")
+        writer.close
+        // We set permissions to read and write in the file
+        new File ("src/main/resources/Parameters").setReadable(true, false)
+        new File ("src/main/resources/Parameters").setWritable(true, false)
+        // We apply the default settings 
+        Display.pieces_path = "Pieces/2/"
+        Display.texture_path = "Texture_small_2.png"
+        Parameters.ai_speed = 800
+        Parameters.nb_alice_board = 2
+        Time.nb_period = 2
+        Time.periods = Array (new Time.Period (5400, 40, 0), new Time.Period (3600, 0, 0))
     }
   }
 
