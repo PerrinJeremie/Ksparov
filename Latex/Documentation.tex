@@ -157,21 +157,27 @@ Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, d
 
 \paragraph{\textit{check\_mate}, vérification de l'échec et mat :} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction \textit{Checkmate.check\_mate} vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant, voir le prendre.
 
+\paragraph{La vérification du pat :}La vérification du pat se fait par une méthode définit dans la classe joueur. Pour un joueur humain et consiste à faire la somme du nombre de mouvements possibles pour chaque pièce. Si cette somme faut 0, le joueur est en pat. 
+
+Pour une AI, le pat est déjà implémenté dans sa fonction de mouvement, ainsi la méthode \textit{check\_pat} pour une IA consiste juste à renvoyer le booléen \textit{pat} définit par la méthode \textit{get\_move}. 
+
 \paragraph{Les échecs d'Alice :}Pour la variante nous avons implémenté les échecs d'Alice, une variante utilisant deux plateaux pour jouer. Pour plus de détails : 
 
 \section{game.scala ou l'on peut enfin jouer}
 
-\paragraph{L'objet \textit{Constants} :}L'un des objets du fichier game.scala est \textit{Constants}. C'est un objet qui contient toutes les variables qui sont utilisés par les différentes parties du code. On y retrouve donc la plupart des booléens nécessaires à l'exécution de la partie, mais aussi des constants comme les chemin vers les icônes, la couleur du text, la taille des cases... L'idée a été ici de regrouper tout ce qui est en commun avec plusieurs objets dans un seul et même objet. \\
-
-Notons par ailleurs que bien qu'il s'appelle \textit{Constants} une bonne partie des variables de cet objet sont variables. 
+\paragraph{L'objet \textit{Time} :}Cet objet sert à gérer tout ce qui a trait aux temps dans l'application, il comprend la classe de threads \textit{TimeThread} qui est décrite à la fin de cette section, il comprend aussi des méthodes permettant de passer d'un temps en seconde en un temps d'affichage plus facile à lire au format hh:mm:ss, et réciproquement.
 
 \paragraph{Les joueurs :} La classe \textit{Player} est une classe abstraite qui contient l'identifiant du joueur (0 pour le noir et 1 pour le blanc), des booléens utiles pour le déplacement (\textit{ai} et \textit{move}) ainsi que la méthode \textit{get\_move} qui permet le déplacement des pièces. \\
 
 Cette classe est étendue en deux : \textit{AI} pour les joueurs de type intelligence artificielle et \textit{Human} pour les joueurs humains. La classe \textit{AI} est présenté en section 5 sur le fichier solve.scala. 
 
-\paragraph{La méthode \textit{get\_move} de la classe \textit{Human} :}Pour un joueur humain le déplacement se fait en deux étapes : sélection de la pièce et sélection de la case où se déplacer. La méthode \textit{get\_move} s'applique pour une case sur laquelle le joueur a cliqué, elle commence par vérifier que la pièce sélectionnée appartient bien au joueur (méthode \textit{isHis}). Si tel est le cas, le booléen \textit{Constants.first\_choice\_done} passe à \textit{true} ce qui ouvre la sélection de la case, et les cases possibles du déplacement se colorie en rouge par appel de la méthode \textit{DrawActions.draw\_possiblie\_moves}. \\
+\paragraph{La méthode \textit{get\_move} de la classe \textit{Human} :}Pour un joueur humain le déplacement se fait en deux étapes : sélection de la pièce et sélection de la case où se déplacer. La méthode \textit{get\_move} s'applique pour une case sur laquelle le joueur a cliqué, elle commence par vérifier que la pièce sélectionnée appartient bien au joueur (méthode \textit{isHis}). Si tel est le cas, le booléen \textit{first\_choice\_done} passe à \textit{true} ce qui ouvre la sélection de la case, et les cases possibles du déplacement se colorie en rouge par appel de la méthode \textit{DrawActions.draw\_possiblie\_moves}. \\
 
-Lorsque le joueur clique sur une deuxième case \textit{get\_move} est à nouveau appelée, puisque l'on ne peut pas se déplacer sur une case contenant une de nos pièce, elle passe la première sélection (\textit{isHis} renvoi false) et si le premier choix a été fait elle teste si la case est atteignable par la pièce dans ce cas elle applique le mouvement, sinon elle repasse \textit{Constants.first\_choice\_done} à \textit{false}. 
+Lorsque le joueur clique sur une deuxième case \textit{get\_move} est à nouveau appelée, puisque l'on ne peut pas se déplacer sur une case contenant une de nos pièce, elle passe la première sélection (\textit{isHis} renvoi false) et si le premier choix a été fait elle teste si la case est atteignable par la pièce dans ce cas elle applique le mouvement, sinon elle repasse \textit{first\_choice\_done} à \textit{false}. \\
+
+Dans le cas d'une partie d'Alice, le mouvement se fait de la même manière rien ne change, puisque toutes les fonctions prennent l'échiquier en paramètre, ce qui permet de garder toutes les même fonctions sans les changer. 
+
+\paragraph{La classe \textit{game} :}Cette classe comprend toutes les variables nécessaires pour une partie : les différents booléens, les tableaux de pièces, de message, les joueurs... Au début de chaque partie on instancie une \textit{game} dans une variable. 
 
 \paragraph{L'objet \textit{Ksparov}:}C'est l'objet central de notre application, c'est lui qui définit tout et qui fait appel au reste du code. Il comprend plusieurs éléments différents. 
 
@@ -181,19 +187,21 @@ Lorsque le joueur clique sur une deuxième case \textit{get\_move} est à nouvea
 
 \paragraph{L'initialisation du jeu :}La méthode \textit{Ksparov.init\_game} est appelée après le choix du type de jeu dans le second menu de sélection, elle initialise les variables nécessaires pour commencer une partie. Elle commence par initialiser les pièces (via \textit{Ksparov.init\_board}) ensuite selon le type de jeu choisi elle définit les variables des joueurs correspondantes, enfin elle modifie les booléens aux bonnes valeurs. On peut noter ici que dans le cas d'une partie opposant une IA et un humain le choix de la couleur des joueurs est aléatoire. 
 
-\paragraph{Jouer un mouvement :}Lorsqu'un joueur clique sur une case la méthode \textit{Ksparov.play\_move} est appelée, c'est elle qui gère tous les déplacements, son exécution est une longue série de conditions imbriquées. Tout d'abord elle vérifie si la partie n'a pas déjà été gagnée par un des joueurs (le booléen \textit{Constants.game\_won}), dans ce cas elle ne fait rien. En effet dans ce cas les cases ne doivent pas répondre aux clics des joueurs. \\
+\paragraph{Jouer un mouvement :}Lorsqu'un joueur clique sur une case la méthode \textit{Ksparov.play\_move} est appelée, c'est elle qui gère tous les déplacements, son exécution est une longue série de conditions imbriquées. Tout d'abord elle vérifie si la partie n'a pas déjà été gagnée par un des joueurs (le booléen \textit{game\_won} d'une partie), dans ce cas elle ne fait rien. En effet dans ce cas les cases ne doivent pas répondre aux clics des joueurs. \\
 
-Dans un second temps elle vérifie si l'IA n'est pas en pat à travers le booléen \textit{Constants.game\_nulle}). En effet étant aléatoire l'IA finit souvent à n'avoir plus aucuns mouvements possibles, le pat a donc été implémenté pour l'IA, de manière à ne pas boucler à l'infini dans le choix du mouvement de l'IA. \\
+Dans un second temps elle vérifie si l'IA n'est pas en pat à travers le booléen \textit{game\_nulle}). En effet étant aléatoire l'IA finit souvent à n'avoir plus aucuns mouvements possibles, le pat a donc été implémenté pour l'IA, de manière à ne pas boucler à l'infini dans le choix du mouvement de l'IA. \\
 
 Si ces deux conditions ne sont pas vérifiées \textit{Ksparov.play\_move} appelle la méthode \textit{get\_move} du joueur actif sur la case sélectionnée. Si à l'issu de \textit{get\_move} le joueur s'est déplacé (booléen \textit{moved} du joueur), il faut vérifier l'état de la partie après ce déplacement. \\ 
 
-Il y a alors une série de test qui vérifient, dans l'ordre d'exécution, s'il y a échec et mat, si l'IA peut toujours se déplacer ou s'il y a échec. Dans chacun de ces cas un message particulier est affiché donnant l'évènement en question et les booléens correspondant sont mis à jour. \\ 
+Il y a alors une série de test qui vérifient, dans l'ordre d'exécution, s'il y a échec et mat, s'il y a nulle ou s'il y a échec. Dans chacun de ces cas un message particulier est affiché donnant l'évènement en question et les booléens correspondant sont mis à jour. Si aucun de ces tests n'est validés, alors la main passe au joueur suivant et le booléen \textit{first\_choice\_done} est remis à \textit{false}.\\
 
-Si aucun de ces tests n'est validés, alors la main passe au joueur suivant et le booléen \textit{Constants.first\_choice\_done} est remis à \textit{false}.\\
-
-Enfin si l'on dans le cas d'une partie entre un joueur et une IA et que le joueur courant (donc après déplacement du joueur qui vient de cliquer) est l'IA, on appelle directement la méthode \textit{get\_move} de l'IA. \\ 
+Enfin si l'on est dans le cas d'une partie entre un joueur et une IA et que le joueur courant (donc après déplacement du joueur qui vient de cliquer) est l'IA, on applique le mouvement de l'IA en ouvrant le thread du mouvement de l'IA. \\ 
 
 Il est important de noter que dans le cas d'une partie entre deux IA il faut cliquer sur une case pour obtenir le prochain mouvement, ce qui n'est pas le cas lors d'un matche entre une IA et un humain. 
+
+\paragraph{Les threads lors d'une partie :}Lors d'une partie il y généralement deux threads qui tournent en plus du thread principal. Un premier qui est une instance de \textit{Time.TimeThread} qui actualise toutes les 200 millisecondes le temps des joueurs. Tant qu'il est en vie, le thread ajuste le temps actuel du joueur courant, si a un moment le temps arrive à 0 alors que le joueur n'a pas effectué le nombre de coups nécessaires le thread termine immédiatement la partie et annonce quel joueur a gagné. \\
+
+Un autre thread, qui est une instance de \textit{Ksparov.AIMoveThread} et qui attend patiemment que le créneau soit ouvert pour jouer les coups des IA. Lors que l'on ouvre la possibilité de se déplacer pour un IA le thread commence par s'endormir le temps définit dans les paramètres, ensuite il applique le coup. 
 
 \section{parse.scala ou les dangers de la PGN}
 \label{parse}
@@ -222,11 +230,13 @@ Plus précisément, la méthode maintient un tableau de booléen à jour défini
 
 Si un mouvement est possible, elle choisit alors une des cases possibles aléatoirement, sinon, si aucun mouvement n'a été appliqué, on vérifie s'il reste des mouvement possibles (s'il existe une case à \textit{false} dans \textit{already\_check}), si tel est le cas on boucle, sinon l'IA est en pat. 
 
+\paragraph{La promotion pour les IA :}La promotion pour les IA se fait de manière aléatoire, l'IA choisit donc une pièce aléatoirement parmi la tour, la dame, le fou ou le cavalier, on applique ensuite la promotion de manière classique.
+
 \section{Les défauts et erreurs connues}
 
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
 
-De même pour chaque nouvelle fenêtre, chaque nouveau mouvement un grand nombre de classes sont instanciées, principalement dans la partie graphique, ce qui peut être lourd en mémoire. \\ 
+De même pour chaque nouvelle fenêtre, chaque nouveau mouvement un grand nombre de classes sont instanciées, principalement dans la partie graphique, ce qui peut être lourd en mémoire. Ainsi on observe lors de certaines parties des ralentissement extrême dont nous n'avons pas réussi à comprendre la provenance. \\ 
 
 En ce qui concerne rules, l'implémentation du roque est quelque peu lourde, et demande quelques répétitions de code. \\
 
