@@ -213,7 +213,10 @@ object DrawCharge {
                 file_chosen.text = chooser.getSelectedFile.getName()
                 val src = new File(file_chosen.text)
                 val dest = new File("src/main/resources/Saves/" + new File (file_chosen.text).getName())
-                new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue ) 
+                // If the file already exists in Saves, we do not copy it to the folder
+                if (! dest.exists) {
+                    new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue)
+                } 
                 Ksparov.frame.contents = new DrawCharge.Dcharge
             } else {
                 file_chosen.text = "Aucun fichier choisi"
@@ -232,6 +235,7 @@ object DrawCharge {
 
     /** Label that display the name of the file chosen by the file explorer */
     var file_chosen = new Label ("Fichier choisi") {
+        /** Contain the entire path, whereas text only contains the file name */
         var path = ""
         preferredSize = Display.dim_message_drawer
     }
