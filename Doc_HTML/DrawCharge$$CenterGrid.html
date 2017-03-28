@@ -35,13 +35,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">CenterGrid</span><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
+        <span class="name">CenterGrid</span><span class="result"> extends <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The main grid of the loading menu with everything.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.swing.GridPanel">GridPanel</span>, <span class="extype" name="scala.swing.SequentialContainer.Wrapper">Wrapper</span>, <span class="extype" name="scala.swing.SequentialContainer">SequentialContainer</span>, <span class="extype" name="scala.swing.Panel">Panel</span>, <span class="extype" name="scala.swing.Container.Wrapper">Wrapper</span>, <span class="extype" name="scala.swing.Container">Container</span>, <span class="extype" name="scala.swing.Component">Component</span>, <span class="extype" name="scala.swing.UIElement">UIElement</span>, <span class="extype" name="scala.swing.LazyPublisher">LazyPublisher</span>, <span class="extype" name="scala.swing.Publisher">Publisher</span>, <span class="extype" name="scala.swing.Reactor">Reactor</span>, <span class="extype" name="scala.Proxy">Proxy</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.swing.BorderPanel">BorderPanel</span>, <span class="extype" name="scala.swing.LayoutContainer">LayoutContainer</span>, <span class="extype" name="scala.swing.Panel">Panel</span>, <span class="extype" name="scala.swing.Container.Wrapper">Wrapper</span>, <span class="extype" name="scala.swing.Container">Container</span>, <span class="extype" name="scala.swing.Component">Component</span>, <span class="extype" name="scala.swing.UIElement">UIElement</span>, <span class="extype" name="scala.swing.LazyPublisher">LazyPublisher</span>, <span class="extype" name="scala.swing.Publisher">Publisher</span>, <span class="extype" name="scala.swing.Reactor">Reactor</span>, <span class="extype" name="scala.Proxy">Proxy</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +59,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="DrawCharge.CenterGrid"><span>CenterGrid</span></li><li class="in" name="scala.swing.GridPanel"><span>GridPanel</span></li><li class="in" name="scala.swing.SequentialContainer.Wrapper"><span>Wrapper</span></li><li class="in" name="scala.swing.SequentialContainer"><span>SequentialContainer</span></li><li class="in" name="scala.swing.Panel"><span>Panel</span></li><li class="in" name="scala.swing.Container.Wrapper"><span>Wrapper</span></li><li class="in" name="scala.swing.Container"><span>Container</span></li><li class="in" name="scala.swing.Component"><span>Component</span></li><li class="in" name="scala.swing.UIElement"><span>UIElement</span></li><li class="in" name="scala.swing.LazyPublisher"><span>LazyPublisher</span></li><li class="in" name="scala.swing.Publisher"><span>Publisher</span></li><li class="in" name="scala.swing.Reactor"><span>Reactor</span></li><li class="in" name="scala.Proxy"><span>Proxy</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="DrawCharge.CenterGrid"><span>CenterGrid</span></li><li class="in" name="scala.swing.BorderPanel"><span>BorderPanel</span></li><li class="in" name="scala.swing.LayoutContainer"><span>LayoutContainer</span></li><li class="in" name="scala.swing.Panel"><span>Panel</span></li><li class="in" name="scala.swing.Container.Wrapper"><span>Wrapper</span></li><li class="in" name="scala.swing.Container"><span>Container</span></li><li class="in" name="scala.swing.Component"><span>Component</span></li><li class="in" name="scala.swing.UIElement"><span>UIElement</span></li><li class="in" name="scala.swing.LazyPublisher"><span>LazyPublisher</span></li><li class="in" name="scala.swing.Publisher"><span>Publisher</span></li><li class="in" name="scala.swing.Reactor"><span>Reactor</span></li><li class="in" name="scala.Proxy"><span>Proxy</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -97,7 +97,20 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="scala.swing.Container.Wrapper.Content" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="scala.swing.BorderPanel.Constraints" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Constraints=scala.swing.BorderPanel.Position.Value"></a>
+      <a id="Constraints:Constraints"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Constraints</span><span class="result"> = <span class="extype" name="scala.Enumeration.Value">scala.swing.BorderPanel.Position.Value</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BorderPanel → LayoutContainer</dd></dl></div>
+    </li><li name="scala.swing.Container.Wrapper.Content" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ContentextendsBufferWrapper[scala.swing.Component]"></a>
       <a id="Content:Content"></a>
       <h4 class="signature">
@@ -208,6 +221,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Wrapper</dd></dl></div>
+    </li><li name="scala.swing.BorderPanel#add" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="add(c:scala.swing.Component,l:BorderPanel.this.Constraints):Unit"></a>
+      <a id="add(Component,Constraints):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">add</span><span class="params">(<span name="c">c: <span class="extype" name="scala.swing.Component">Component</span></span>, <span name="l">l: <a href="#Constraints=scala.swing.BorderPanel.Position.Value" class="extmbr" name="DrawCharge.CenterGrid.Constraints">Constraints</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>BorderPanel → LayoutContainer</dd></dl></div>
+    </li><li name="scala.swing.BorderPanel#areValid" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="areValid(c:BorderPanel.this.Constraints):(Boolean,String)"></a>
+      <a id="areValid(Constraints):(Boolean,String)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">areValid</span><span class="params">(<span name="c">c: <a href="#Constraints=scala.swing.BorderPanel.Position.Value" class="extmbr" name="DrawCharge.CenterGrid.Constraints">Constraints</a></span>)</span><span class="result">: (<span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>)</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>BorderPanel → LayoutContainer</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -305,45 +344,32 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="scala.swing.GridPanel#columns" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="columns:Int"></a>
-      <a id="columns:Int"></a>
+    </li><li name="scala.swing.BorderPanel#constraintsFor" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="constraintsFor(comp:scala.swing.Component):scala.swing.BorderPanel.Position.Value"></a>
+      <a id="constraintsFor(Component):scala.swing.BorderPanel.Position.Value"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">columns</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">constraintsFor</span><span class="params">(<span name="comp">comp: <span class="extype" name="scala.swing.Component">Component</span></span>)</span><span class="result">: <span class="extype" name="scala.Enumeration.Value">scala.swing.BorderPanel.Position.Value</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#columns_=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="columns_=(n:Int):Unit"></a>
-      <a id="columns_=(Int):Unit"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>BorderPanel → LayoutContainer</dd></dl></div>
+    </li><li name="scala.swing.Container.Wrapper#contents" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="contents:Seq[scala.swing.Component]"></a>
+      <a id="contents:Seq[Component]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: columns_$eq" class="name">columns_=</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">contents</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.swing.Component">Component</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
-    </li><li name="scala.swing.SequentialContainer.Wrapper#contents" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="contents:scala.collection.mutable.Buffer[scala.swing.Component]"></a>
-      <a id="contents:Buffer[Component]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">contents</span><span class="result">: <span class="extype" name="scala.collection.mutable.Buffer">Buffer</span>[<span class="extype" name="scala.swing.Component">Component</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Wrapper → Wrapper → SequentialContainer → Container</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Wrapper → Container</dd></dl></div>
     </li><li name="scala.swing.UIElement#cursor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="cursor:java.awt.Cursor"></a>
       <a id="cursor:Cursor"></a>
@@ -558,32 +584,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#hGap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hGap:Int"></a>
-      <a id="hGap:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hGap</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#hGap_=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hGap_=(n:Int):Unit"></a>
-      <a id="hGap_=(Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: hGap_$eq" class="name">hGap_=</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
     </li><li name="scala.swing.Component#hasFocus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hasFocus:Boolean"></a>
       <a id="hasFocus:Boolean"></a>
@@ -701,6 +701,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Component</dd></dl></div>
+    </li><li name="scala.swing.LayoutContainer#layout" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="layout:scala.collection.mutable.Map[scala.swing.Component,LayoutContainer.this.Constraints]"></a>
+      <a id="layout:Map[Component,Constraints]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">layout</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.swing.Component">Component</span>, <a href="#Constraints=scala.swing.BorderPanel.Position.Value" class="extmbr" name="DrawCharge.CenterGrid.Constraints">Constraints</a>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutContainer</dd></dl></div>
+    </li><li name="scala.swing.BorderPanel#layoutManager" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="layoutManager:java.awt.BorderLayout"></a>
+      <a id="layoutManager:BorderLayout"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">layoutManager</span><span class="result">: <span class="extype" name="java.awt.BorderLayout">BorderLayout</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BorderPanel</dd></dl></div>
     </li><li name="scala.swing.Reactor#listenTo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="listenTo(ps:scala.swing.Publisher*):Unit"></a>
       <a id="listenTo(Publisher*):Unit"></a>
@@ -1000,8 +1026,8 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Component</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#peer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="peer:javax.swing.JPanelwithGridPanel.this.SuperMixin"></a>
+    </li><li name="scala.swing.BorderPanel#peer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="peer:javax.swing.JPanelwithBorderPanel.this.SuperMixin"></a>
       <a id="peer:JPanelwithSuperMixin"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1012,7 +1038,7 @@
         <span class="name">peer</span><span class="result">: <span class="extype" name="javax.swing.JPanel">JPanel</span> with <a href="#SuperMixinextendsJComponent" class="extmbr" name="DrawCharge.CenterGrid.SuperMixin">SuperMixin</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel → Panel → Wrapper → Component → UIElement</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BorderPanel → Panel → Wrapper → Component → UIElement</dd></dl></div>
     </li><li name="scala.swing.UIElement#preferredSize" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="preferredSize:java.awt.Dimension"></a>
       <a id="preferredSize:Dimension"></a>
@@ -1130,32 +1156,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Component</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#rows" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="rows:Int"></a>
-      <a id="rows:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">rows</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#rows_=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="rows_=(n:Int):Unit"></a>
-      <a id="rows_=(Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: rows_$eq" class="name">rows_=</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
     </li><li name="scala.swing.UIElement#self" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="self:java.awt.Component"></a>
       <a id="self:Component"></a>
@@ -1286,32 +1286,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LazyPublisher → Publisher</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#vGap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="vGap:Int"></a>
-      <a id="vGap:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">vGap</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
-    </li><li name="scala.swing.GridPanel#vGap_=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="vGap_=(n:Int):Unit"></a>
-      <a id="vGap_=(Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: vGap_$eq" class="name">vGap_=</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GridPanel</dd></dl></div>
     </li><li name="scala.swing.UIElement#visible" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="visible:Boolean"></a>
       <a id="visible:Boolean"></a>
@@ -1456,12 +1430,10 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.swing.GridPanel">
-              <h3>Inherited from <span class="extype" name="scala.swing.GridPanel">GridPanel</span></h3>
-            </div><div class="parent" name="scala.swing.SequentialContainer.Wrapper">
-              <h3>Inherited from <span class="extype" name="scala.swing.SequentialContainer.Wrapper">Wrapper</span></h3>
-            </div><div class="parent" name="scala.swing.SequentialContainer">
-              <h3>Inherited from <span class="extype" name="scala.swing.SequentialContainer">SequentialContainer</span></h3>
+        <div class="parent" name="scala.swing.BorderPanel">
+              <h3>Inherited from <span class="extype" name="scala.swing.BorderPanel">BorderPanel</span></h3>
+            </div><div class="parent" name="scala.swing.LayoutContainer">
+              <h3>Inherited from <span class="extype" name="scala.swing.LayoutContainer">LayoutContainer</span></h3>
             </div><div class="parent" name="scala.swing.Panel">
               <h3>Inherited from <span class="extype" name="scala.swing.Panel">Panel</span></h3>
             </div><div class="parent" name="scala.swing.Container.Wrapper">

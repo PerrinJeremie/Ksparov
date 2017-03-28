@@ -15,6 +15,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{turnstile}
+\usepackage{hyperref}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \geometry{hmargin=2.5cm,vmargin=1.8cm}
@@ -58,7 +59,15 @@ Le code de notre projet a été divisé en plusieurs parties (chacune dans un fi
 \item \textbf{parse.scala} qui implémente la sauvegarde et le chargement des parties
 \end{itemize}~
 
-Nous allons donc à présent étudier en détail chacun de ces fichiers.
+Nous allons donc à présent étudier en détail chacun de ces fichiers. \\
+
+Il est important de noter que cette documentation vient en complément du site suivant qui comporte toute l'api de notre projet : 
+
+\begin{center}
+\begin{large}
+\textbf{\url{http://siolan.ddns.net/Ksparov/}}
+\end{large}
+\end{center}
 
 \section{draw.scala ou l'interface utilisateur}
 
@@ -139,7 +148,7 @@ Le menu pour régler l'affichage permet de sélectionner le fond utilisé pour l
 
 \section{rules.scala ou l'implémentation des règles des échecs}
 
-\paragraph{Les fonctionnalités :} Toutes les règles de base des échecs sont présentes, à l'exception de la prise en passant, de la promotion, et des règles conduisant à une égalité (l'égalité est partiellement codée pour les IA). Notamment, il est possible de roquer dans le jeu, qui est un des mouvements du roi !
+\paragraph{Les fonctionnalités :} Toutes les règles de base des échecs sont présentes, dont en particulier la prise en passant, la promotion, et les règles conduisant à une égalité.
 
 \paragraph{Structure de rules :} Toutes les pièces héritent d'une classe abstraite \textit{Piece}, qui contient principalement une méthode utile pour le reste du jeu : la fonction \textit{move}, qui effectue un mouvement. \\
 Chaque pièce particulière (pion, tours,..) hérite ensuite de \textit{Piece} et se distingue par un "pattern" particulier, qui traduit l'ensemble de ses mouvements possibles. \\
@@ -157,11 +166,39 @@ Le roi, enfin, possède en attribut la liste des pièces le mettant en échec, d
 
 \paragraph{\textit{check\_mate}, vérification de l'échec et mat :} Plutôt que de vérifier si tous les mouvements possibles laissent le roi en échec (ce qui aurait une complexité assez grande), la fonction \textit{Checkmate.check\_mate} vérifie si le roi peut bouger, et si une autre pièce peut s'interposer sur le chemin de son attaquant, voir le prendre.
 
-\paragraph{La vérification du pat :}La vérification du pat se fait par une méthode définit dans la classe joueur. Pour un joueur humain et consiste à faire la somme du nombre de mouvements possibles pour chaque pièce. Si cette somme faut 0, le joueur est en pat. 
+\paragraph{Les conditions d'égalité :} Plusieurs cas de partie nulle sont testés à chaque tour dans la fonction \textit{check\_game\_status} : 
+\begin{itemize}
+\item L'impossibilité de mater : A chaque tour, le programme vérifie s'il reste assez de pièces pour aboutir à un mat. Les configurations nulles sont : Roi contre Roi, Roi et (cavalier ou fou) contre Roi, et Roi et fou contre Roi et fou de la même couleur. Ce travail est effectué par \textit{check\_nulle\_finale} dans rules.
+
+\item La règle des 50 coups : S'il y a 50 coups sans prise ni mouvement de pion, la partie est nulle. Ceci est simplement fait en incrémentant le compteur \text\_it{nb\_boring\_moves} à chacun de ces coups, et en vérifiant qu'il ne dépasse pas 50.
+
+\item La triple répétition de position : Si 3 positions identiques se répètent lors d'une partie, celle-ci est nulle. Pour éviter de stocker tous les plateaux, on convertit chaque plateau en chaîne de caractère, qu'on hash ensuite grâce à la fonction de hashage intégrée de Scala \textit{string.hashCode()}. Ceci est effectué par \textit{array\_to\_hashed\_string}. Il n'y a après plus qu'à vérifier s'il n'y a pas de triplicata.
+
+\item La vérification du pat : La vérification du pat se fait par une méthode définit dans la classe joueur. Pour un joueur humain et consiste à faire la somme du nombre de mouvements possibles pour chaque pièce. Si cette somme fait 0, le joueur est en pat. 
 
 Pour une AI, le pat est déjà implémenté dans sa fonction de mouvement, ainsi la méthode \textit{check\_pat} pour une IA consiste juste à renvoyer le booléen \textit{pat} définit par la méthode \textit{get\_move}. 
+\end{itemize} 
 
-\paragraph{Les échecs d'Alice :}Pour la variante nous avons implémenté les échecs d'Alice, une variante utilisant deux plateaux pour jouer. Pour plus de détails : 
+\paragraph{Les échecs d'Alice :}Pour la variante nous avons implémenté les échecs d'Alice, une variante utilisant deux plateaux pour jouer. Pour plus de détails : \\
+La partie commence avec un plateau rempli comme aux échecs conventionnels, et un plateau vide. A tout moment du jeu, les mouvements valides sont les mouvements qui sont valides sur la plateau de la pièce, et dont la case d'arrivé est inoccupée sur le second plateau. Après un mouvement, la pièce bougée change de plateau, et se retrouve à la case correspondante sur l'autre plateau.\\
+
+Notez donc en particulier qu'on ne peut manger qu'une pièce qui se trouve sur le même plateau que celui d'origine. Les règles de l'échec, du mat, et de la partie nulle sont les mêmes pour les échecs d'Alice. \\
+
+Le roque et la prise en passant ne sont toutefois pas présents dans les échecs d'Alice, faute de règle officielle (et la prise en passant perd de son sens étant donné l'alternance des plateaux). \\
+
+On notera également que, comme le code était facilement modulable, la variante des échecs d'Alice est aussi bien jouable à N plateaux qu'à 2. Le principe reste le même, les pièces cyclent juste entre les différents plateaux. Cette extension restant anecdotique, l'interface graphique n'est pas prévue pour être très fonctionnelle au-delà de 3 plateaux. \\
+
+Au niveau du code, cette variante demande peu de changements. Il y en a cependant quelques-uns : 
+
+\begin{itemize}
+
+\item{Chaque pièce a dorénavant un attribut grid, qui dénote le plateau sur lequel elle est. Associés à cet attribut sont les méthodes \textit{next\_grid} et \textit{previous\_grid} qui avance ou recule la pièce d'un plateau}
+\item{La fonction \textit{mirror\_free}, qui vérifie qu'une case est libre sur le plateau suivant}
+\item{\textit{clear\_path} a été modifiée de façon à inclure \textit{mirror\_free} dans ses tests préliminaires, ce qui permet d'assurer la nouvelle règle.}
+\item{De même, certains override ont également du être modifiés pour gérer le cas des échecs d'Alice}
+\end{itemize}
+
+En définitive, la variante n'impose pas une trop grande contrainte sur le code, et est implantée de façon à ce qu'il n'y ait pas sans cesse à vérifier si le jeu en cours est une partie Alice ou non. La modularité de la programmation orientée objet s'est avérée très utile.
 
 \section{game.scala ou l'on peut enfin jouer}
 

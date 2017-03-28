@@ -1,0 +1,8 @@
+\BOOKMARK [1][-]{section.1}{L'organisation g\351n\351rale du code}{}% 1
+\BOOKMARK [1][-]{section.2}{draw.scala ou l'interface utilisateur}{}% 2
+\BOOKMARK [1][-]{section.3}{parameter.scala ou d\351finir son propre Ksparov}{}% 3
+\BOOKMARK [1][-]{section.4}{rules.scala ou l'impl\351mentation des r\350gles des \351checs}{}% 4
+\BOOKMARK [1][-]{section.5}{game.scala ou l'on peut enfin jouer}{}% 5
+\BOOKMARK [1][-]{section.6}{parse.scala ou les dangers de la PGN}{}% 6
+\BOOKMARK [1][-]{section.7}{solve.scala ou l'intelligence limit\351e}{}% 7
+\BOOKMARK [1][-]{section.8}{Les d\351fauts et erreurs connues}{}% 8

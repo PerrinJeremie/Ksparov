@@ -2,6 +2,26 @@ import java.io._
 import scala.io.Source
 import sys.process._
 import scala.language.postfixOps
+import swing._
+import swing.event._
+import java.awt.Dimension
+import java.awt.Color
+import scala.swing.BorderPanel.Position._
+import scala.io.Source
+import java.io.PrintWriter
+import scala.util.matching.Regex
+import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import sys.process._
+import scala.language.postfixOps
+import java.awt.image.BufferedImage  
+import java.awt.Image                                                                                            
+import javax.imageio.ImageIO
+import java.awt.{Graphics2D,Color,Font,BasicStroke} 
+import javax.swing.JFileChooser     
+import java.io.{File,FileInputStream,FileOutputStream}
+
 
 
 /** Object which regroups the functions and values associated with saving games.*/
