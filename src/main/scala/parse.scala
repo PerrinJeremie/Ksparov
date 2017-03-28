@@ -627,3 +627,474 @@ object Load {
     list_of_moves = list_of_moves.reverse
   }
 }
+
+
+/** This object is used to draw the menu for loading games. */
+object DrawCharge {
+
+    /** Defines a JFileChooser method to get PGN in a file explorer */
+    class ChoosePGN {
+        /** Method that runs the File Chooser itself */
+        def run {
+            var chooser = new JFileChooser()
+            var pgn_filter = new javax.swing.filechooser.FileNameExtensionFilter ("PGN", "pgn")
+            chooser.setCurrentDirectory(new java.io.File("."))
+            chooser.setDialogTitle("Choississez un fichier PGN à charger")
+            chooser.setFileFilter(pgn_filter)
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                file_chosen.path = chooser.getSelectedFile.toString
+                file_chosen.text = chooser.getSelectedFile.getName()
+                val src = new File(file_chosen.text)
+                val dest = new File("src/main/resources/Saves/" + new File (file_chosen.text).getName())
+                // If the file already exists in Saves, we do not copy it to the folder
+                if (! dest.exists) {
+                    new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue)
+                } 
+                Ksparov.frame.contents = new DrawCharge.Dcharge
+            } else {
+                file_chosen.text = "Aucun fichier choisi"
+                Ksparov.frame.contents = new DrawCharge.Dcharge
+            }
+        }
+    }
+
+    /** Button to launch the file explorer */
+    class FileChooserButton extends PrettyBigButton {
+        action = Action ("Choissir depuis un fichier") {
+            var file_chooser = new ChoosePGN
+            file_chooser.run
+        }
+    }
+
+    /** Label that display the name of the file chosen by the file explorer */
+    var file_chosen = new Label ("Fichier choisi") {
+        /** Contain the entire path, whereas text only contains the file name */
+        var path = ""
+        preferredSize = Display.dim_message_drawer
+    }
+
+  /** Returns the string passed in argument without the 4 last characters. 
+  *
+  * @param s The string that should be cut
+  * @return The argument minus its four last characters
+  */
+    def shorten(s : String) : String = {
+        return s.substring(Display.save_path.length, s.length - 4)
+    }
+
+    /** Predicates if a string contains at least one space character. 
+    *
+    * @param s The inquired string 
+    * @return True if the string contains a space caracter
+    */
+    def pred_nospace(s : String) : Boolean = {
+      return !s.contains (' ')
+    }
+
+    /** Stores the result of the loaded game. */
+    var result : String = "";
+    /** Stores the list of games found in src/main/resources/Saves folder. */
+    var listgame : List[String] = List("")
+    /** The component used to display the listgame value. */
+    var scroll = new ComboBox(listgame)
+    /** True if and only if listgame is empty after trying to load saved games. i.e no game in src/main/resources/Saves folder.*/
+    var list_empty = false
+    /** A switch to know what to print depending on the emptiness of listgame. */
+    var text_label = ""
+
+    /** Defines the value of result with the list of pgn files found in src/main/resources/Saves,
+    and actualizes other value depending on the fact that there is files or not. */
+    def define_listgame {
+        result = "find src/main/resources/Saves/ -regex .*[.]pgn " !!;
+        if (result.length == 0) {
+          list_empty = true
+          text_label = "nosaves"
+        } else {
+          list_empty = false
+        DrawCharge.listgame = result.split('\n').map(shorten).filter(pred_nospace).toList.sortBy(_.toLowerCase)
+        DrawCharge.scroll = new ComboBox(listgame) {
+          font = Display.text_font
+        }
+        }
+    }
+
+    /** Defines the button for the loading menu. 
+    *
+    * @param text Text display on the button
+    * @param return_type Defines the action when the button is pressed
+    * @param full_name True if the file is given by its full path, else the file is in the Saves folder
+    */
+    class Option (text : String, return_type : String, full_name : Boolean) extends PrettyBigButton {
+    action = Action (text) {
+      return_type match {
+        case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+          Ksparov.frame.peer.setLocationRelativeTo(null)
+
+        case "Game_begin" =>
+                  Ksparov.curr_game = new Ksparov.Game (6, 1, false)
+                  Load.list_of_moves = List()
+                    if (full_name) {
+                        if (file_chosen.text != "Aucun fichier choisi") {
+                            Load.get_list_move_from_file(file_chosen.path, true)
+                            Ksparov.init_game(6)
+                            Ksparov.frame.contents = new DrawBoard.Board
+                            Ksparov.frame.peer.setLocationRelativeTo(null)
+                        }
+                    } else {
+                        Load.get_list_move_from_file(scroll.item, false)
+                        Ksparov.init_game(6)
+                        Ksparov.frame.contents = new DrawBoard.Board
+                        Ksparov.frame.peer.setLocationRelativeTo(null)
+                    }
+
+              case "Game_end" =>
+                    Ksparov.curr_game = new Ksparov.Game (7, 1, false)
+                    Load.list_of_moves = List()
+                    if (full_name) {
+                        if (file_chosen.text != "Aucun fichier choisi") {
+                            Load.get_list_move_from_file(file_chosen.path, true)
+                            Ksparov.init_game(7)
+                            Ksparov.play_move
+                            Ksparov.frame.contents = new DrawBoard.Board
+                            Ksparov.frame.peer.setLocationRelativeTo(null)
+                        }
+                    } else {
+                        Load.get_list_move_from_file(scroll.item, false)
+                        Ksparov.init_game(7)
+                        Ksparov.play_move
+                        Ksparov.frame.contents = new DrawBoard.Board
+                        Ksparov.frame.peer.setLocationRelativeTo(null)
+                    }
+
+              case "Delete" =>
+                    val res_ = ("rm " + Display.save_path + scroll.item + ".pgn") !!;
+                    define_listgame
+                    Ksparov.frame.contents = new DrawCharge.Dcharge
+      }
+    }
+  }
+
+  /** Defines the labels used in the loading menu, with the characteristics defined in Display. 
+  *
+  * @param text The text of the label
+  */
+  class PrettyLabel (text : String) extends PrettyBigLabel (text) {
+    background = new Color (200, 200, 200)
+    opaque = true
+  }
+
+  /** The main grid of the loading menu with everything. */
+  class CenterGrid extends BorderPanel {
+        layout (new GridPanel (10,1) {
+    for (i <- 0 to 9) {
+        i match {
+        case 1 =>
+                    if (list_empty) {
+                        contents += new PrettyLabel ("<html><div style='text-align : center;'>Aucune sauvegarde n'est disponible !</html>")
+                    } else {
+                      contents += new PrettyLabel ("<html><div style='text-align : center;'>Quelle sauvegarde voulez-vous charger ?</html>")
+                    }
+
+          case 2 =>
+                    if (!list_empty) {
+                      contents += scroll}
+                  else {
+                      contents += new BackgroundCase (1,5)
+                    }
+
+          case 4 =>
+                    if (!list_empty) {
+                      contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> depuis le début</html>", "Game_begin", false)
+                    } else {
+                      contents += new PrettyLabel ("<html><div style='text-align : center;'> Chessgames.com pour télécharger des parties !</html>")
+                    }
+
+                case 6 =>
+                    if (!list_empty) {
+                      contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> à la fin</html>", "Game_end", false)
+                    } else {
+                      contents += new BackgroundCase (1,5)
+                    }
+
+                case 8 =>
+                    if (!list_empty) {
+                        contents += new Option  ("<html><div style='text-align : center;'>Supprimer la partie</html>", "Delete", true)
+                    } else {
+                        contents += new BackgroundCase (1,5)
+                    }
+
+          case _ => contents += new BackgroundCase (1, 5)
+        }
+    }
+        }) = West
+
+        layout (new BackgroundCase (10, 1)) = Center
+
+        layout (new GridPanel (10, 1) {
+            for (i <- 0 to 9) {
+            i match {
+                case 1 => contents += new FileChooserButton
+
+                case 2 => contents += file_chosen
+
+                case 4 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> depuis le début</html>", "Game_begin", true)
+                    
+                case 6 => contents += new Option ("<html><div style='text-align : center;'>Charger la partie ci-dessus <br> à la fin</html>", "Game_end", true)
+
+                case 8 => contents += new Option ("<html><div style='text-align : center;'>Revenir au menu</html>", "Menu", false)
+
+                case _ => contents += new BackgroundCase (1, 5)
+            }
+        }
+        }) = East
+  }
+
+  /** The final menu with the central grid and background columns on each sides of it. */
+  class Dcharge extends BorderPanel {
+    define_listgame
+      layout (new BackgroundCase (12,1)) = East
+      layout (new BackgroundCase (12,1)) = West
+      layout (new CenterGrid) = Center
+  }
+}
+
+/** Draws the menus used to save games.*/
+object DrawSave {
+
+    /** A text field that stores a certain information conserning the save, to be filled by the user. 
+    *
+    * @param default The default string display in the textfield
+    * @param col The columns0 argument of a TextField*/
+  class SaveArgument (default : String, col : Int) extends TextField (default, col) {
+    border = new javax.swing.border.LineBorder (Color.black, 2)
+        preferredSize = Display.dim_message_drawer
+    minimumSize = Display.dim_message_drawer
+    maximumSize = Display.dim_message_drawer
+    font = Display.text_font
+    foreground = Color.black
+    listenTo(mouse.clicks)
+      reactions += {
+          case _ : event.MouseClicked =>
+            foreground = Color.black
+            text = ""
+      }
+    }
+
+    /** The label that indicates what the texfield bellow stands for
+    *
+    * @param str Text display on the label
+    */
+    class SaveLabel (str : String) extends PrettyBigLabel (str) {
+    preferredSize = Display.dim_message_drawer
+    minimumSize = Display.dim_message_drawer
+    maximumSize = Display.dim_message_drawer
+    background = new Color (200, 200, 200)
+    opaque = true
+    }
+
+    /** Returns the result tag associated with (player, game_won, game_null). 
+    *
+    * @param p Player id 
+    * @param gw True if the game is won
+    * @param gn True if the game is nulle 
+    * @return The result tag for the game
+    */
+    def resultgame (p : Int, gw : Boolean, gn : Boolean) : String = {
+      (p, gw, gn) match {
+        case (_, _, true) => "1/2-1/2"
+        case (1, true, _) => "1-0"
+        case (0, true, _) => "0-1"
+        case _ => "*"
+      }
+    }
+
+    /** A text field, it's name explains it all. */
+  val textFileName = new SaveArgument ("", 0)
+    /** A text field, it's name explains it all. */
+  val textEvent = new SaveArgument ("Ksparov Tournament", 0)
+    /** A text field, it's name explains it all. */
+  val textSite = new SaveArgument ("Ksparov Software", 0)
+    /** A text field, it's name explains it all. */
+  val textDate = new SaveArgument (new SimpleDateFormat("yyyy.MM.dd").format(Calendar.getInstance().getTime()), 0)
+    /** A text field, it's name explains it all. */
+  val textRound = new SaveArgument ("Ronde numéro ", 0)
+    /** A text field, it's name explains it all. */
+  val textWhite = new SaveArgument ("Garry Kasparov", 0)
+    /** A text field, it's name explains it all. */
+  val textBlack = new SaveArgument ("Bobby Fischer", 0)
+
+    /** Button component which saves game and brings you back where the retur_type tells you to
+    *
+    * @param text The text display on the button
+    * @param return_type Where you want to come back on the click of the button, defines the action of the button
+    */
+  class ComeBack (text : String, return_type : String) extends PrettyBigButton {
+    preferredSize = Display.dim_message_drawer
+    minimumSize = Display.dim_message_drawer
+    maximumSize = Display.dim_message_drawer
+    action = Action (text) {
+      Save.write_to_file(textFileName.text.replaceAllLiterally(" ","_"), textEvent.text, textSite.text, textDate.text, textRound.text, textWhite.text, textBlack.text) match {
+              case 0 =>
+          textFileName.text = ""
+          return_type match {
+            case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+              Ksparov.frame.peer.setLocationRelativeTo(null)
+            case "Game" => Ksparov.curr_game.timer = new Time.TimeThread
+                Ksparov.curr_game.ai_move = new AIMoveThread
+                Ksparov.curr_game.thread_in_life = true
+                Ksparov.frame.contents = new DrawBoard.Board
+                Ksparov.curr_game.timer.start
+                Ksparov.curr_game.ai_move.start
+            case "Quit" => Ksparov.frame.dispose()
+        }
+              case -1 =>
+                textFileName.foreground = Color.red
+          textFileName.text = "SAUVEGARDE DEJA EXISTANTE"
+                case -2 =>
+                  textFileName.text = " 30 Caractères Max. "
+                case -3 =>
+                    textDate.foreground = Color.red
+                    textDate.text = "FORMAT AAAA.MM.JJ A RESPECTER"
+          }
+    }
+  }
+
+    /** Button component brings you back to the game without saving. */
+  class CancelButton extends PrettyBigButton {
+    preferredSize = Display.dim_message_drawer
+    minimumSize = Display.dim_message_drawer
+    maximumSize = Display.dim_message_drawer
+    action = Action ("Annuler") {
+      Ksparov.curr_game.timer = new Time.TimeThread
+        Ksparov.curr_game.ai_move = new AIMoveThread
+        Ksparov.curr_game.thread_in_life = true
+        Ksparov.frame.contents = new DrawBoard.Board
+        Ksparov.curr_game.timer.start
+        Ksparov.curr_game.ai_move.start
+    }
+  }
+
+    /** Button switches between simple-save (only choice is filename), and advanced-save (all choices). 
+    *
+    * @param switch_type Defines which type of save you want to go to
+    */
+  class SwitchButton (switch_type : String) extends PrettyBigButton {
+    preferredSize = Display.dim_message_drawer
+    minimumSize = Display.dim_message_drawer
+    maximumSize = Display.dim_message_drawer
+    if (switch_type == "AdvancedSave") {
+      action = Action ("<html><div style='text-align : center;'>Passer en mode<br>sauvegarde avancée</html>") {
+        Ksparov.frame.contents = new DrawSave.AdvancedSave
+        Ksparov.frame.peer.setLocationRelativeTo(null)
+      }
+    } else {
+      action = Action ("<html><div style='text-align : center;'>Revenir à la<br>sauvegarde simple</html>") {
+        Ksparov.frame.contents = new DrawSave.SimpleSave
+        Ksparov.frame.peer.setLocationRelativeTo(null)
+      }
+    }
+  }
+
+    /** Left component part of the simple-save menu.*/
+  class LeftSimpleGrid extends GridPanel (8, 1) {
+    for (i <- 0 to 7) {
+      i match {
+          case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (30 caractères max) ?</html>")
+          case 2 => contents += textFileName
+          case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+          case 6 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
+          case _ => contents += new BackgroundCase (1, 5)
+        }
+    }
+  }
+
+    /** Right component part of the simple-save menu. */
+  class RightSimpleGrid extends GridPanel (8, 1) {
+    for(i <- 0 to 7) {
+      i match {
+        case 1 => contents += new SwitchButton ("AdvancedSave")
+        case 4 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
+        case 6 => contents += new CancelButton
+        case _ => contents += new BackgroundCase (1, 5)
+      }
+    }
+  }
+
+    /** Left component part of the advanced-save menu.*/
+  class LeftAdvancedGrid extends GridPanel (13, 1) {
+    for (i <- 0 to 8) {
+      i match {
+        case 1 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle nom donner à la sauvegarde (20 caractères max) ?</html>")
+          contents += textFileName
+        case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quel est l'évènement<br>de cette partie ? </html>")
+          contents += textEvent
+        case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Où s'est déroulé<br> cet évènement ? </html>")
+          contents += textSite
+        case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les blancs ?</html>")
+          contents += textWhite
+        case _ => contents += new BackgroundCase (1, 5)
+      }
+    }
+  }
+
+    /** Center component part of the advanced-save menu.*/
+  class CenterAdvancedGrid extends GridPanel (13, 1) {
+    for (i <- 0 to 8) {
+      i match {
+        case 1 => contents += new BackgroundCase (1, 5)
+          contents += new BackgroundCase (1, 5)
+        case 3 => contents += new SaveLabel ("<html><div style='text-align : center;'>Quelle est la date<br>de cette partie ? </html>")
+          contents += textDate
+        case 5 => contents += new SaveLabel ("<html><div style='text-align : center;'>Cette partie joue<br> pour quelle ronde ? </html>")
+          contents += textRound
+        case 7 => contents += new SaveLabel ("<html><div style='text-align : center;'>Qui joue les noirs ?</html>")
+          contents += textBlack
+        case _ => contents += new BackgroundCase (1, 5)
+      }
+    }
+  }
+
+    /** Right component part of the advanced-save menu.*/
+  class RightAdvancedGrid extends GridPanel (13, 1) {
+    for (i <- 0 to 12){
+      i match {
+        case 1 => contents += new SwitchButton ("SimpleSave")
+        case 5 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>quitter</html>", "Quit")
+        case 7 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir à la partie</html>", "Game")
+        case 9 => contents += new ComeBack ("<html><div style='text-align : center;'>Sauvegarder et<br>revenir au menu principal</html>", "Menu")
+        case 11 => contents += new CancelButton
+        case _ => contents += new BackgroundCase (1, 5)
+      }
+    }
+  }
+
+    /** A panel that regroups all components of the simple-menu */
+  class SimpleSave extends BorderPanel {
+      layout (new BorderPanel {
+        layout (new BackgroundCase (8,1)) = West
+        layout (new LeftSimpleGrid) = East
+        }) = West
+      layout (new BackgroundCase (8,1)) = Center
+      layout (new BorderPanel {
+        layout (new RightSimpleGrid) = West
+        layout (new BackgroundCase (8, 1)) = East
+      }) = East
+  }
+
+    /** A panel which gather all components of the advanced-menu */
+  class AdvancedSave extends BorderPanel {
+    layout (new BorderPanel {
+      layout (new BackgroundCase (13, 1)) = West
+      layout (new LeftAdvancedGrid) = East
+    }) = West
+    layout (new BorderPanel {
+      layout (new BackgroundCase (13, 1)) = West
+      layout (new CenterAdvancedGrid) = East
+    }) = Center
+    layout (new BorderPanel {
+      layout (new BackgroundCase (13, 1)) = West
+      layout (new RightAdvancedGrid) = Center
+      layout (new BackgroundCase (13, 1)) = East
+    }) = East
+  }
+}
