@@ -516,11 +516,15 @@ object Ksparov {
         Ksparov.curr_game.ai_turn = true
       }
     }
-
-    Ksparov.frame.contents = new DrawBoard.Board {
-      preferredSize = Ksparov.frame.contents(0).bounds.getSize()
+    if ( !(Ksparov.curr_game.game_type == 7) || Load.list_of_moves.length <= 1 || player.moved){
+      Ksparov.frame.contents = new DrawBoard.Board {
+        preferredSize = Ksparov.frame.contents(0).bounds.getSize()
+      }
+    } else {
+      play_move
     }
   }
+
 
   /** Initializes the game after the game type selection 
   *
@@ -584,6 +588,11 @@ object Ksparov {
         Ksparov.curr_game.players(0) = new AI(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
+        Time.clock_available = false
+        Ksparov.curr_game.players(1) = new Load.Reproducer(1)
+        Ksparov.curr_game.players(0) = new Load.Reproducer(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
+        case 7 =>
         Time.clock_available = false
         Ksparov.curr_game.players(1) = new Load.Reproducer(1)
         Ksparov.curr_game.players(0) = new Load.Reproducer(0)
