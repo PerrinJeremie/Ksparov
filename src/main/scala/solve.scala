@@ -12,8 +12,7 @@ class AI (player : Int) extends Player (player) {
   var already_check = new Array[Boolean](16)
 
   override def getmove {
-    /* All piece are initially possible, so the array is false, 
-       but if a piece is dead (x negative), it should not be tried to move */
+    // All piece are initially possible, so the array is false, but if a piece is dead (x negative), it should not be tried to move
     for (i <- 0 to 15) {
       if (Ksparov.curr_game.board((1 - id) * 16 + i).pos_x < 0) {
         already_check (i) = true
@@ -27,26 +26,25 @@ class AI (player : Int) extends Player (player) {
     /** True while no move was played */
     var notdone = true
 
-    /* While no movement has been done and there are still pieces to try, 
-       search for a piece with a possible movement. */
+    // While no movement has been done and there are still pieces to try, search for a piece with a possible movement.
     while (notdone) {
       /** The random piece seleted */
       var ind = r.nextInt (16)
-      /* If the piece has not been tried, let's do it */
+      // If the piece has not been tried, let's do it
       if (!already_check (ind)) {
         already_check (ind) = true
         /** The list of possible moves for the random piece */
         var t = Ksparov.curr_game.board ((1 - id) * 16 + ind).possible_moves (Ksparov.curr_game.board)
-        /* If there are possible moves, select one of them and apply it */
+        // If there are possible moves, select one of them and apply it
         if (t.nonEmpty) {
           notdone = false
           var (i,j) = t(r.nextInt(t.size))
-          /* Save move */
+          // Save move
           Save.add_move1((1 - id) * 16 + ind, (i,j))
-          /* Play move */
+          // Play move 
           Ksparov.curr_game.board((1 - id) * 16 + ind).move(i,j,Ksparov.curr_game.board)
         }
-        /* If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle */
+        // If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle
         if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
           notdone = false
           Ksparov.curr_game.players(Ksparov.curr_game.curr_player).asInstanceOf[AI].pat = true
@@ -57,7 +55,7 @@ class AI (player : Int) extends Player (player) {
       }
     }
     Save.add_move2
-    /* Draw the new board */
+    // Draw the new board
     DrawActions.draw_game_board(Ksparov.curr_game.board)
     Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
   }

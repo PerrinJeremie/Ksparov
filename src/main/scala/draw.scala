@@ -696,7 +696,7 @@ object DrawBoard {
                 } else {
                     "<br>Incrément : + " + inc.toString
                 }
-            if (Ksparov.curr_game.players(player).actual_time < 5 && nb_move > 0) {
+            if (Ksparov.curr_game.players(player).actual_time <= 5 && nb_move > 0) {
                 foreground = Color.red
             } else { 
                 foreground = new Color ((1 - player) * 255, (1 - player) * 255, (1 - player) * 255)

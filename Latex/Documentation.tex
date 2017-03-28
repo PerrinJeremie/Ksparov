@@ -70,17 +70,30 @@ Le lancement d'une partie fait appel à un autre menu, celui qui permet de chois
 
 \paragraph{L'organisation générale d'un objet DrawQuelquechose :}Chaque objet du fichier \textit{draw.scala} a un nom construit comme \textit{DrawUnechose} où \textit{Unechose} est l'élément affiché par cet objet (\textit{DrawParameters}, \textit{DrawMenu}, \textit{DrawBoard}...). Tous les objets sont construits de la même manière : tout les éléments d'une fenêtre sont des extensions de \textit{GridPanel} qui sont ensuite organisés via un \textit{BorderPanel} dans l'interface. Au final, toute fenêtre est découpée en carré de 80 pixel. \\
 
-Pour avoir un code plus propre une classe commune à tous les objets a été créé : \textit{BackgroundCase} qui étend un \textit{GridPanel} et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond.
+Pour avoir un code plus propre une classe commune à tous les objets a été créé : \textit{BackgroundCase} qui étend un \textit{GridPanel} et qui permet selon ses paramètres de dessiner un certain nombre de cases de fond. Avec l'utilisation des \textit{Panel} et des images bufferisées, ces cases sont extensibles, ce qui permet à l'utilisateur d'adapter la taille de la fenêtre tout en gardant un fond uni.
 
 \paragraph{Le plateau de jeu :}Le plateau de jeu est, heureusement, la fenêtre la plus complète, on y retrouve plusieurs éléments. \\
 
-Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces se rajoutent via une icône. La particularité étant que le plateau ne dessine pasles pièces lorsque l'on en créé une nouvelle instance, il faut appeler \textbf{DrawActions.draw\_board} pour cela. \\
+Tout d'abord le plateau, qui est constitué de case sur lesquelles les pièces se rajoutent via une icône. La particularité étant que le plateau ne dessine pas les pièces lorsque l'on en créé une nouvelle instance, il faut appeler \textit{DrawActions.draw\_board} pour cela. 
 
-Sur chaque coté du plateau on retrouve un compte des pièces mortes pour chaque joueur. Ceci est fait par le dessin des pièces via \textit{DrawActions.draw\_board} pour lequel les pièces ayant des positions négatives sont mortes. \\
+Le nombre de plateau dessiné dépend d'une variable de la partie en cours \textit{nb\_grid}, dans tous lors de la construction du plateau, on vérifie sa valeur et on y adapte l'affichage. Ceci permet de garder un code très modulaire pour l'implémentation des échecs d'Alice. \\
 
-Sous l'échiquier on retrouve un simple encart qui permet d'afficher des messages, c'est ici que les échecs et échecs et mat s'affichent. \\
+Sur chaque coté du plateau on retrouve un compte des pièces mortes pour chaque joueur. Ceci est fait par le dessin des pièces via \textit{DrawActions.draw\_board} pour lequel les pièces ayant des positions négatives sont mortes.
 
-Finalement on retrouve en haut de la fenêtre un menu rapide qui permet pour le moment simplement de revenir au menu.
+Ce sont ces cases de pièces mortes qui serviront dans le cas d'une promotion. En effet ce sont des buttons qui sont par défaut désactivés mais qui lorsqu'une promotion doit être faite s'activent pour que le joueur sélectionne la pièce de la promotion. En respect des règles des échecs, toutes les cases s'activent sauf celle du pion. \\
+
+Sous l'échiquier on retrouve un encart qui permet d'afficher des messages, c'est ici que les échecs et échecs et mat s'affichent.
+
+C'est aussi sous l'échiquier que l'on retrouve les horloges, il y en a une par joueur et affichent toutes les informations de la période. Ainsi, l'horloge affiche :
+\begin{itemize}
+\item Le temps restant pour la période
+\item Le nombre de coup restant à jouer, ou 0 si tous les coups ont été joué
+\item L'incrément de la période s'il y en a un 
+\end{itemize}
+
+Si à un moment de la partie le temps restant du joueur passe sous les 5 secondes et qu'il n'a pas fait le nombre de mouvement nécessaire, l'horloge s'affiche en rouge pour l'indiquer au joueur. \\
+
+Finalement on retrouve en haut de la fenêtre un menu rapide qui permet de sauvegarder, de recommencer une partie, de revenir au menu ou de quitter Ksparov.
 
 \paragraph{Les actions dynamiques de l'interface :}Le plateau de jeu est plus ou moins dynamique pour afin en temps réel les mouvements des pièces, les messages et le nombre de pièce morte. Tout cela est défini dans l'objet \textit{DrawActions}. \\
 
@@ -88,7 +101,7 @@ L'affichage des pièces passe par l'appel de la méthode \textit{DrawActions.dra
 
 A chaque fin de mouvement, la méthode \textit{Ksparov.play\_move}, qui applique le déplacement, vérifie si un évènement s'est produit suite à ce mouvement (échec, échec et mat ou pat). Si elle détecte un évènement elle affiche le message correspondant, sinon et affiche un message indiquant que la main est pour le joueur suivant.
 
-\section{parameter.scala ou le paramétrage de du jeu}
+\section{parameter.scala ou définir son propre Ksparov}
 
 \paragraph{Les paramètres :}Tous les visuels des textures des cases et des pièces de jeu peuvent être modifiées dans les paramètres. La plupart des textures ne sont pas très esthétiques mais ceci est un autre problème. Les paramètres et leurs modifications sont enregistrés dans un fichier : \textit{src/main/resources/Parameters} ce qui permet de conserver les choix précédent à chaque ouverture de l'application.
 
