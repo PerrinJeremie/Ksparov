@@ -971,6 +971,16 @@ object DrawBoard {
 	*/
 	class PlayButton (player_id : Int, player_type : String) extends Button {
 		preferredSize = Display.dim_small
+        listenTo(mouse.moves)
+        reactions += {
+            case _ : event.MouseEntered  => 
+                if (player_type == "ai") {
+                    DrawActions.draw_game_messages ("Info PlayButton AI", player_id)
+                } else {
+                    DrawActions.draw_game_messages ("Info PlayButton h", player_id)
+                }
+            case _ : event.MouseExited => DrawActions.draw_game_messages ("Current_turn", Ksparov.curr_game.curr_player)
+        }
 		action = new Action ("") {
 			// If we are in a loaded game, the button is enaled and displays a play button of the color of the player
 				enabled = true
@@ -1336,6 +1346,13 @@ object DrawActions {
 
         	case "?!" => Ksparov.curr_game.message_drawer.text = "Qu'espère  " + joueur_string + " en jouant ce coup ?"
 				Ksparov.curr_game.message_drawer.foreground = Color.black
+
+            case "Info PlayButton AI" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Cliquer pour reprendre la partie avec <br> ce joueur contre une IA</html>"
+                Ksparov.curr_game.message_drawer.foreground = Color.red
+
+            case "Info PlayButton h" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Cliquer pour reprendre la partie avec <br> ce joueur contre un humain</html>"
+                Ksparov.curr_game.message_drawer.foreground = Color.red
+
 		}
 	}
 }

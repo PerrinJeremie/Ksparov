@@ -613,8 +613,10 @@ object Ksparov {
     // Start all threads 
     Ksparov.curr_game.thread_in_life = true
     Ksparov.curr_game.timer.start
-    Ksparov.curr_game.ai_move.start
-
+    if (n != 1) {
+      Ksparov.curr_game.ai_move.start
+    }
+    
     // Defines the start time of the game 
     Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }

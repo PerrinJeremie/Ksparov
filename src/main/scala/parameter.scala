@@ -205,7 +205,7 @@ object DrawParameters {
   * @param id The id of the submenu
   * @param current_menu True if this menu is the one the user is in 
   */
-  class SubMenuChoice (id : Int, current_menu : Boolean) extends Button {
+  class SubMenuChoice (id : Int, current_menu : Int) extends Button {
     preferredSize = new Dimension (Display.base_size, Display.base_size)
     maximumSize = new Dimension (Display.base_size, Display.base_size)
     minimumSize = new Dimension (Display.base_size, Display.base_size)
@@ -214,11 +214,42 @@ object DrawParameters {
       icon = new javax.swing.ImageIcon(Display.resources_path + "parameter_sub_menu" + id + ".png")
       background = new Color (0, 0, 0)
       // The border is red for the selected sub-menu.
-      if (current_menu) {
+      if (current_menu == id) {
         border = new javax.swing.border.LineBorder (Color.red, 2)
       }
       def apply = {
-        Ksparov.frame.contents = new DrawParameters.SubMenus(id)
+        if (current_menu == 3) {
+          /** The regex used to check if time for every period is well formated. */
+          val time_regex = """([\d][\d]):([0-5][0-9]):([0-5][0-9])""".r
+          /** True if the time entered is correct, false on the opposite */
+          var correct_time = true
+          for (i <- 0 to Time.nb_period - 1) {
+            // Check if the time of the period match the regex
+            time_textfields(i).text match {
+              // If it is ok, check if the time is non zero, if not display the reason why we do not accept the time given
+              case time_regex (_*) => 
+                if (Time.hhmmss_to_int(time_textfields(i).text) == 0) {
+                  time_textfields(i).text = "Doit être > 0"
+                  correct_time = false
+                }
+              // If not, draw the reason why we do not accept the entry
+              case _ => time_textfields(i).text = "hh:mm:ss" 
+                correct_time = false
+            }
+          }
+          // If all entries are correct, we adjust the periods array, we write the new parameters and we come back to the main menu
+          if (correct_time) {
+            Time.periods = new Array [Time.Period] (Time.nb_period)
+            for (i <- 0 to Time.nb_period - 1) {
+              Time.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
+            }
+            Parameters.write
+            Ksparov.frame.contents = new DrawParameters.SubMenus (id)
+          }
+        } else {
+          Parameters.write
+          Ksparov.frame.contents = new DrawParameters.SubMenus (id)
+        }
       }
     }
   }
@@ -233,9 +264,9 @@ object DrawParameters {
       for (j <- 0 to 1) {
         if (j == 0) {
           i match {
-            case 1 => contents += new SubMenuChoice (1, 1 == current_menu)
-            case 3 => contents += new SubMenuChoice (2, 2 == current_menu)
-            case 5 => contents += new SubMenuChoice (3, 3 == current_menu) 
+            case 1 => contents += new SubMenuChoice (1, current_menu)
+            case 3 => contents += new SubMenuChoice (2, current_menu)
+            case 5 => contents += new SubMenuChoice (3, current_menu) 
             case _ => contents += new BackgroundCase (1, 1)
           }
         } else {
@@ -256,6 +287,7 @@ object DrawParameters {
     action = Action("Appliquer les changements et revenir au menu principal") {
       // The action depends on the sub-menu we are in 
       sub_menu_id match {
+        
         // The clock sub-menu
         case 3 => 
           /** The regex used to check if time for every period is well formated. */
@@ -286,11 +318,13 @@ object DrawParameters {
             Ksparov.frame.contents = new DrawMenu.Menu
             Ksparov.frame.peer.setLocationRelativeTo(null)
           }
+
         // The playability sub-menu
         case 2 =>
           Parameters.write
           Ksparov.frame.contents = new DrawMenu.Menu
           Ksparov.frame.peer.setLocationRelativeTo(null)
+
         // Display sub-menu
         case 1 =>
           Parameters.write
@@ -543,9 +577,10 @@ object DrawParameters {
     // Number of move of the period
     layout (new BorderPanel {
       layout (new Label ("<html><div style='text-align : center;'>Nombre de coup<br>de la période</html>") {
+        foreground = Color.black
         if (id == Time.nb_period - 1) {
-          enabled = false
           text = "<html><div style='text-align : center;'>Dernière période, pas de mouvement"
+          foreground = Color.red
         }
         font = Display.para_clock_font
         preferredSize = new Dimension (Display.base_size * 2, Display.base_size)
