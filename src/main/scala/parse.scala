@@ -664,12 +664,13 @@ object DrawCharge {
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 file_chosen.path = chooser.getSelectedFile.toString
                 file_chosen.text = chooser.getSelectedFile.getName()
-                val src = new File(file_chosen.text)
-                val dest = new File("src/main/resources/Saves/" + new File (file_chosen.text).getName())
+                val src = chooser.getSelectedFile
+                val dest = new File("src/main/resources/Saves/" + file_chosen.text)
                 // If the file already exists in Saves, we do not copy it to the folder
                 if (! dest.exists) {
-                    new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue)
-                } 
+                  "touch src/main/resources/Saves/" + file_chosen.text !!;
+                  new FileOutputStream(dest) getChannel() transferFrom(new FileInputStream(src) getChannel, 0, Long.MaxValue)
+                }
                 Ksparov.frame.contents = new DrawCharge.Dcharge
             } else {
                 file_chosen.text = "Aucun fichier choisi"
@@ -680,14 +681,14 @@ object DrawCharge {
 
     /** Button to launch the file explorer */
     class FileChooserButton extends PrettyBigButton {
-        action = Action ("Choissir depuis un fichier") {
+        action = Action ("Choisir un fichier sur l'ordinateur") {
             var file_chooser = new ChoosePGN
             file_chooser.run
         }
     }
 
     /** Label that display the name of the file chosen by the file explorer */
-    var file_chosen = new Label ("Fichier choisi") {
+    var file_chosen = new Label ("Aucun fichier choisi") {
         /** Contain the entire path, whereas text only contains the file name */
         var path = ""
         preferredSize = Display.dim_message_drawer
