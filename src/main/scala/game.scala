@@ -621,7 +621,7 @@ object Ksparov {
     Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
   }
 
-  // The current played game
+  /** The current played game */
   var curr_game = new Game (0, 0, false)
 
   // On the begining adapt the display to the resolution and apply Parameters from the Parameters file 

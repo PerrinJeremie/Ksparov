@@ -528,7 +528,7 @@ object Load {
         reset_when_parsing
         try {
           Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = parse_word(list_of_moves.head)
-        }catch{
+        } catch {
           case _ : Throwable => Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Fichier Corrompu</html>")
         }
         list_of_moves = list_of_moves.tail
