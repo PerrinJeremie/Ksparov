@@ -1,7 +1,7 @@
 # Ksparov
 Repository for Ksparov, our awesome chess game.
 
-You can find the documentation at : http://siolan.ddns/Ksparov
+You can find the Doc at : siolan.ddns.net/Ksparov
 
 (*************** Useful Information *************)
 
