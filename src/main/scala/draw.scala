@@ -162,35 +162,41 @@ object DrawMenu {
 	}
 
 	/** The principal menu : for each line there are two buttons and a background between them. */
-	class MenuGrid extends GridPanel (7, 3) {
+	class MenuGrid extends GridPanel (7,3) {
     	for( i <- 0 to 6) {
     		i match {
 	        	case 1 =>
-	        		contents += new Option ("<html><div style='text-align : center;'>Jouer une<br>partie classique</html>")
+                    contents += new Option ("<html><div style='text-align : center;'>Jouer une<br>partie classique</html>")
 					contents += new BackgroundCase (1, 3)
         			contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
+                    
         		case 3 =>
         			contents += new Option ("Charger une partie")
         			contents += new BackgroundCase (1, 3)
         			contents += new Option ("Voir les scores")
+                    
         		case 5 =>
         			contents += new Option ("Gérer les paramètres")
         			contents += new BackgroundCase (1, 3)
         			contents += new Option ("Quitter Ksparov")
+                    
         		case _ =>
         			contents += new BackgroundCase (1, 3)
         			contents += new BackgroundCase (1, 3)
         			contents += new BackgroundCase (1, 3)
+
     		}
     	}
 	}
 
-	/** The final appearance with the principal menu between two columns of background cases. */
-	class Menu extends BorderPanel {
-    	layout (new BackgroundCase (7, 1)) = East
-    	layout (new BackgroundCase (7, 1)) = West
-    	layout (new MenuGrid) = Center
+  /** The final appearance with the principal menu between two columns of background cases. */
+  class Menu extends BoxPanel(Orientation.Horizontal) {
+    contents += new BorderPanel {
+      layout(new BackgroundCase (7, 1)) = West
+      layout(new MenuGrid) = Center
+      layout(new BackgroundCase (7, 1)) = East
 	}
+  }
 }
 
 /** Object to draw the menu for the game selection : Human vs Human, AI vs AI or AI vs Human. */
