@@ -16,3 +16,5 @@ You can find the Doc at : siolan.ddns.net/Ksparov
    -Then the 2 bishops
    -Then the queen, then the king
    And then the same for the black pieces 
+   
+   Coucou
