@@ -100,4 +100,6 @@ test.scala
 
 *.pgn
 
+src/main/resources/Parameters
+
 # End of https://www.gitignore.io/api/emacs
