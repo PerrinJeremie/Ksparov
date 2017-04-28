@@ -131,9 +131,22 @@ object AlphaBeta {
 
   var playerprom : Int = 0
 
+  var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
+
   def alphabeta(board : Array[Piece], player : Int, depth : Int) : Array[(Int,Int)] = {
     playerprom = player 
+
+    have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
+
     var i = alphaBetaMax(board,-1000000,1000000, player, depth)._2
+
+    Ksparov.curr_game.board(8).asInstanceOf[Rook].has_moved = have_moved_init._1
+    Ksparov.curr_game.board(14).asInstanceOf[King].has_moved = have_moved_init._2
+    Ksparov.curr_game.board(9).asInstanceOf[Rook].has_moved = have_moved_init._3
+    Ksparov.curr_game.board(24).asInstanceOf[Rook].has_moved = have_moved_init._4
+    Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5 
+    Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
+
     return i
   }
 
