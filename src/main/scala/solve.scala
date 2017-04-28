@@ -122,14 +122,7 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
 
   /** The promotion method for an ai player */
   def ai_promotion {
-    /** The random piece for the promotion choice */
-    val rand = scala.util.Random
-    rand.nextInt(4) match {
-      case 0 => Ksparov.curr_game.selected_promotion = "Queen"
-      case 1 => Ksparov.curr_game.selected_promotion = "Bishop"
-      case 2 => Ksparov.curr_game.selected_promotion = "Knight"
-      case 3 => Ksparov.curr_game.selected_promotion = "Rook"
-    }
-    Ksparov.promotion (Ksparov.curr_game.curr_player)
+    Ksparov.curr_game.selected_promotion = "Queen"
+    Ksparov.promotion (AlphaBeta.playerprom)
   }
 }

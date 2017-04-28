@@ -129,7 +129,10 @@ object AlphaBeta {
 
   var evaluate : (Array[Piece],Int) => Int = Evals.Simple_Eval.evaluate _
 
+  var playerprom : Int = 0
+
   def alphabeta(board : Array[Piece], player : Int, depth : Int) : Array[(Int,Int)] = {
+    playerprom = player 
     var i = alphaBetaMax(board,-1000000,1000000, player, depth)._2
     return i
   }
@@ -161,7 +164,7 @@ object AlphaBeta {
   
 
   def alphaBetaMax( board : Array[Piece],alpha : Int, beta : Int, player : Int, depth : Int) : (Int,Array[(Int,Int)]) = {
-    var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int)](32) 
+    var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int,Int)](32) 
     var score = 0
     var alphap = alpha
     var betap = beta 
@@ -176,13 +179,19 @@ object AlphaBeta {
           for (k <- 0 to 31)  {
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
+          playerprom = 1 - player
           board(i).move(tab(j)._1,tab(j)._2,board)
+          playerprom = player
           score = alphaBetaMin( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
-            board(k).pos_x = old_pos(k)._1
-            board(k).pos_y = old_pos(k)._2
-            board(k).grid = old_pos(k)._3
-          }     
+            if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && board(k).name != "pawn"){
+              board(k) = new Pawn (player,old_pos(k)._1, old_pos(k)._2,old_pos(k)._3)
+            } else {
+              board(k).pos_x = old_pos(k)._1
+              board(k).pos_y = old_pos(k)._2
+              board(k).grid = old_pos(k)._3
+            }
+          }
           if( score >= betap ){
             return (betap,Array(board(i).coords,tab(j)))
           }
@@ -198,7 +207,7 @@ object AlphaBeta {
   }
 
   def alphaBetaMin( board : Array[Piece],alpha : Int, beta : Int, player : Int, depth : Int) : (Int,Array[(Int,Int)]) = {
-    var old_pos : Array[(Int,Int)] = new Array[(Int,Int)](32) 
+    var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int,Int)](32) 
     var score = 0
     var alphap = alpha
     var betap = beta 
@@ -214,12 +223,18 @@ object AlphaBeta {
           for (k <- 0 to 31)  {
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
+          playerprom = 1 - player
           board(i).move(tab(j)._1,tab(j)._2,board)
+          playerprom = player
           score = alphaBetaMax( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
-            board(k).pos_x = old_pos(k)._1
-            board(k).pos_y = old_pos(k)._2
-            board(k).grid = old_pos(k)._3
+             if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && board(k).name != "pawn"){
+              board(k) = new Pawn (player,old_pos(k)._1, old_pos(k)._2,old_pos(k)._3)
+            } else {
+              board(k).pos_x = old_pos(k)._1
+              board(k).pos_y = old_pos(k)._2
+              board(k).grid = old_pos(k)._3
+            }
           }    
           if( score <= alphap ){
             return (alphap,Array(board(i).coords,tab(j)))

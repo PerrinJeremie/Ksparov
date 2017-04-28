@@ -396,7 +396,9 @@ object Ksparov {
     }
     Save.add_prom_to_move(Ksparov.curr_game.selected_promotion, !king.attackers.isEmpty)
     // We disable the promotion buttons
-    DrawActions.disable_promotion (p)
+    if (! Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai){
+      DrawActions.disable_promotion (p)
+    }
 
     // If the current player is not an ai, we switch to the next player because it has not been done since, for the ai it is different
     if (!Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai) {
@@ -585,7 +587,7 @@ object Ksparov {
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
       case 5 =>
         Ksparov.curr_game.players(1) = new AI2(4,1)
-        Ksparov.curr_game.players(0) = new AI2(5,0)
+        Ksparov.curr_game.players(0) = new AI(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
         Time.clock_available = false
