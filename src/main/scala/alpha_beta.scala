@@ -178,6 +178,7 @@ object AlphaBeta {
 
   def alphaBetaMax( board : Array[Piece],alpha : Int, beta : Int, player : Int, depth : Int) : (Int,Array[(Int,Int)]) = {
     var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int,Int)](32) 
+    var pawns : Array[Boolean] = new Array[Boolean](8)
     var score = 0
     var alphap = alpha
     var betap = beta 
@@ -190,6 +191,11 @@ object AlphaBeta {
         var tab = board(i).possible_moves(board)
         for (j <- 0 to tab.length - 1){
           for (k <- 0 to 31)  {
+            if (k >= (1-player)*16  && k <= (1-player) * 16 + 7){
+                pawns(k - (1-player)*16) = board(k).name match {
+                  case "pawn" => true 
+                  case _ =>  false }
+            }
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
           playerprom = 1 - player
@@ -197,7 +203,7 @@ object AlphaBeta {
           playerprom = player
           score = alphaBetaMin( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
-            if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && board(k).name != "pawn"){
+            if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && pawns(k - (1-player)*16)){
               board(k) = new Pawn (player,old_pos(k)._1, old_pos(k)._2,old_pos(k)._3)
             } else {
               board(k).pos_x = old_pos(k)._1
