@@ -315,7 +315,7 @@ abstract class Piece (play : Int, x : Int, y : Int, grid_id : Int) {
   def aux (x : (Int, Int), g : Array[Piece]) = {
     var (i, j) : (Int, Int) = x
     var (clear, a , b) = pre_move (i, j, g)
-    clear
+    clear 
   }
 
   /** Returns an array of all the cases the piece can go to */

@@ -410,7 +410,7 @@ object DrawBoard {
 				// The click on a case gives the case selected and the grid selected for moving
 				Ksparov.curr_game.selected_case = x + y * 8
 				Ksparov.curr_game.selected_grid = grid_id
-                Ksparov.play_move
+                  Ksparov.play_move
 			}
 		}
 	}

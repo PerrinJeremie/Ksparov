@@ -94,3 +94,42 @@ class AIMoveThread extends Thread {
     }
   }
 }
+
+class AI2 (depth : Int, player : Int) extends Player (player) {
+
+  /** True if the ai is in pat */
+  var pat = false
+
+  ai = true
+  /** Array of boolean, true if the piece has already been checked for a move */
+  var already_check = new Array[Boolean](16)
+
+  override def getmove {
+    var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, depth)
+    def predicate( p : Piece) : Boolean = {
+      return p.pos_x == tab(0)._1 && p.pos_y == tab(0)._2
+    }
+    var piece = Ksparov.curr_game.board.filter(predicate)(0)
+
+    piece.move(tab(1)._1,tab(1)._2,Ksparov.curr_game.board)
+    DrawActions.draw_game_board(Ksparov.curr_game.board)
+    Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
+  }
+
+  override def check_pat : Boolean = {
+    pat
+  }
+
+  /** The promotion method for an ai player */
+  def ai_promotion {
+    /** The random piece for the promotion choice */
+    val rand = scala.util.Random
+    rand.nextInt(4) match {
+      case 0 => Ksparov.curr_game.selected_promotion = "Queen"
+      case 1 => Ksparov.curr_game.selected_promotion = "Bishop"
+      case 2 => Ksparov.curr_game.selected_promotion = "Knight"
+      case 3 => Ksparov.curr_game.selected_promotion = "Rook"
+    }
+    Ksparov.promotion (Ksparov.curr_game.curr_player)
+  }
+}
