@@ -105,7 +105,24 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
   var already_check = new Array[Boolean](16)
 
   override def getmove {
+    for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
+	  for (i <- 0 to Parameters.nb_case_board - 1) {
+		for (j <- 0 to Parameters.nb_case_board - 1) {
+		  Ksparov.curr_game.grids (k) (i + j * 8).enabled = false
+		}
+	  }
+	}
+
     var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, depth)
+
+    for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
+	  for (i <- 0 to Parameters.nb_case_board - 1) {
+		for (j <- 0 to Parameters.nb_case_board - 1) {
+		  Ksparov.curr_game.grids (k) (i + j * 8).enabled = true
+		}
+	  }
+	}
+
     def predicate( p : Piece) : Boolean = {
       return p.pos_x == tab(0)._1 && p.pos_y == tab(0)._2
     }

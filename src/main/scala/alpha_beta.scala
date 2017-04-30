@@ -227,6 +227,7 @@ object AlphaBeta {
 
   def alphaBetaMin( board : Array[Piece],alpha : Int, beta : Int, player : Int, depth : Int) : (Int,Array[(Int,Int)]) = {
     var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int,Int)](32) 
+    var pawns : Array[Boolean] = new Array[Boolean](8)
     var score = 0
     var alphap = alpha
     var betap = beta 
@@ -240,6 +241,11 @@ object AlphaBeta {
         var name = board(i).name
         for (j <- 0 to tab.length - 1){
           for (k <- 0 to 31)  {
+            if (k >= (1-player)*16  && k <= (1-player) * 16 + 7){
+                pawns(k - (1-player)*16) = board(k).name match {
+                  case "pawn" => true 
+                  case _ =>  false }
+            }
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
           playerprom = 1 - player
