@@ -131,12 +131,16 @@ object AlphaBeta {
 
   var playerprom : Int = 0
 
+  var save_boring : Int = 0
+
   var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
 
   def alphabeta(board : Array[Piece], player : Int, depth : Int) : Array[(Int,Int)] = {
     playerprom = player 
 
     have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
+
+    save_boring =  Ksparov.curr_game.nb_boring_moves
 
     var i = alphaBetaMax(board,-1000000,1000000, player, depth)._2
 
@@ -146,6 +150,8 @@ object AlphaBeta {
     Ksparov.curr_game.board(24).asInstanceOf[Rook].has_moved = have_moved_init._4
     Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5 
     Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
+
+    Ksparov.curr_game.nb_boring_moves = save_boring
 
     return i
   }
@@ -253,7 +259,7 @@ object AlphaBeta {
           playerprom = player
           score = alphaBetaMax( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
-             if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && board(k).name != "pawn"){
+             if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 &&  pawns(k - (1-player)*16)){
               board(k) = new Pawn (player,old_pos(k)._1, old_pos(k)._2,old_pos(k)._3)
             } else {
               board(k).pos_x = old_pos(k)._1

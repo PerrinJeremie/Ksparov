@@ -105,6 +105,7 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
   var already_check = new Array[Boolean](16)
 
   override def getmove {
+
     for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 	  for (i <- 0 to Parameters.nb_case_board - 1) {
 		for (j <- 0 to Parameters.nb_case_board - 1) {
