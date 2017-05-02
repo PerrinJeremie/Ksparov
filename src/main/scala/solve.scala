@@ -141,6 +141,6 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
   /** The promotion method for an ai player */
   def ai_promotion {
     Ksparov.curr_game.selected_promotion = "Queen"
-    Ksparov.promotion (AlphaBeta.playerprom)
+    Ksparov.promotion (1 - AlphaBeta.playerprom)
   }
 }
