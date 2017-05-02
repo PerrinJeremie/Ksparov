@@ -204,9 +204,8 @@ object AlphaBeta {
             }
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
-          playerprom = 1 - player
-          board(i).move(tab(j)._1,tab(j)._2,board)
           playerprom = player
+          board(i).move(tab(j)._1,tab(j)._2,board)
           score = alphaBetaMin( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
             if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && pawns(k - (1-player)*16)){
@@ -254,9 +253,8 @@ object AlphaBeta {
             }
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
-          playerprom = 1 - player
-          board(i).move(tab(j)._1,tab(j)._2,board)
           playerprom = player
+          board(i).move(tab(j)._1,tab(j)._2,board)
           score = alphaBetaMax( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
              if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 &&  pawns(k - (1-player)*16)){

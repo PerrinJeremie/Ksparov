@@ -6,7 +6,7 @@ def init_alt_board (s : String) = {
     case "prom" =>
       for (p <- 0 to 1) {
         for(i <- 0 to 7) {
-          Ksparov.curr_game.board((1 - p) * 16 + i) = new Pawn(p, i, 1 + p* 5, 0)
+          Ksparov.curr_game.board((1 - p) * 16 + i) = new Pawn(p, i, 1 + (1-p)* 5, 0)
         }
         Ksparov.curr_game.board(8 + (1 - p) * 16) = new Rook(p, -1, -1, 0)
         Ksparov.curr_game.board(9 + (1 - p) * 16) = new Rook(p, -1, -1, 0)
@@ -15,7 +15,7 @@ def init_alt_board (s : String) = {
         Ksparov.curr_game.board(12 + (1 - p) * 16) = new Bishop(p, -1, -1, 0)
         Ksparov.curr_game.board(13 + (1 - p) * 16) = new Bishop(p, -1, -1, 0)
         // Kings are instantiate in a Game to have a quick access to them
-        Ksparov.curr_game.kings(p) = new King (p, 4, 5, 0)
+        Ksparov.curr_game.kings(p) = new King (p, 4, 7, 0)
         Ksparov.curr_game.board(14 + (1 - p) * 16) = Ksparov.curr_game.kings(p)
         Ksparov.curr_game.board(15 + (1 - p) * 16) = new Queen(p, -1, -1, 0)
       }
