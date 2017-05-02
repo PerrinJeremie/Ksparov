@@ -410,7 +410,7 @@ object DrawBoard {
 				// The click on a case gives the case selected and the grid selected for moving
 				Ksparov.curr_game.selected_case = x + y * 8
 				Ksparov.curr_game.selected_grid = grid_id
-                  Ksparov.play_move
+                Ksparov.play_move
 			}
 		}
 	}
@@ -783,6 +783,7 @@ object DrawActions {
 			// If the piece is alive, update the icon of the case of its position.
 			if (coord >= 0) {
 				Ksparov.curr_game.grids(game_board(i).grid)(coord).action.icon = new javax.swing.ImageIcon(Display.resources_path + Display.pieces_path + game_board(i).player.toString + "/" + game_board(i).piece_path)
+				Ksparov.curr_game.grids(game_board(i).grid)(coord).action.disabledIcon = new javax.swing.ImageIcon(Display.resources_path + Display.pieces_path + game_board(i).player.toString + "/" + game_board(i).piece_path)
 			// Else, if the piece is dead, update the array which counts the number of dead piece for each players.
 			} else {
 				game_board(i).name match {
