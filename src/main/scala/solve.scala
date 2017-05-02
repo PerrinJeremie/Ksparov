@@ -114,15 +114,6 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
 	  }
 	}
 
-    for (i <- 1 to Ksparov.curr_game.board(14).possible_moves(Ksparov.curr_game.board).length) {
-      print(Ksparov.curr_game.board(14).possible_moves(Ksparov.curr_game.board)(i-1))
-    }
-      print("\n")
-
-    for (i <- 1 to Ksparov.curr_game.board(8).possible_moves(Ksparov.curr_game.board).length) {
-      print(Ksparov.curr_game.board(8).possible_moves(Ksparov.curr_game.board)(i-1))
-    }
-
     var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, depth)
 
     for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {

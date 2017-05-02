@@ -133,23 +133,12 @@ object AlphaBeta {
 
   var save_boring : Int = 0
 
-  var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
-
   def alphabeta(board : Array[Piece], player : Int, depth : Int) : Array[(Int,Int)] = {
     playerprom = player 
-
-    have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
 
     save_boring =  Ksparov.curr_game.nb_boring_moves
 
     var i = alphaBetaMax(board,-1000000,1000000, player, depth)._2
-
-    Ksparov.curr_game.board(8).asInstanceOf[Rook].has_moved = have_moved_init._1
-    Ksparov.curr_game.board(14).asInstanceOf[King].has_moved = have_moved_init._2
-    Ksparov.curr_game.board(9).asInstanceOf[Rook].has_moved = have_moved_init._3
-    Ksparov.curr_game.board(24).asInstanceOf[Rook].has_moved = have_moved_init._4
-    Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5 
-    Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
 
     Ksparov.curr_game.nb_boring_moves = save_boring
 
@@ -188,6 +177,7 @@ object AlphaBeta {
     var score = 0
     var alphap = alpha
     var betap = beta 
+    var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
     var mv : Array[(Int,Int)] = Array((0,0),(0,0))
     if ( depth == 0 ){
       return (evaluate(board,player), mv)
@@ -196,6 +186,7 @@ object AlphaBeta {
       if (board(i).pos_x >= 0){
         var tab = board(i).possible_moves(board)
         for (j <- 0 to tab.length - 1){
+
           for (k <- 0 to 31)  {
             if (k >= (1-player)*16  && k <= (1-player) * 16 + 7){
                 pawns(k - (1-player)*16) = board(k).name match {
@@ -204,13 +195,14 @@ object AlphaBeta {
             }
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
-          playerprom = player
-          if (tab(j) == (0,2) && depth == 5) {
 
-            println("OK")
-          }
+          have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
+
+          playerprom = player
+
           board(i).move(tab(j)._1,tab(j)._2,board)
           score = alphaBetaMin( board,alphap,betap, 1 - player, depth - 1 )._1
+
           for (k <- 0 to 31)  {
             if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 && pawns(k - (1-player)*16)){
               board(k) = new Pawn (player,old_pos(k)._1, old_pos(k)._2,old_pos(k)._3)
@@ -220,9 +212,14 @@ object AlphaBeta {
               board(k).grid = old_pos(k)._3
             }
           }
-          if (depth == 5) {
-            print(board(i).name + tab(j).toString + score.toString + "\n")
-          }
+
+          Ksparov.curr_game.board(8).asInstanceOf[Rook].has_moved = have_moved_init._1
+          Ksparov.curr_game.board(14).asInstanceOf[King].has_moved = have_moved_init._2
+          Ksparov.curr_game.board(9).asInstanceOf[Rook].has_moved = have_moved_init._3
+          Ksparov.curr_game.board(24).asInstanceOf[Rook].has_moved = have_moved_init._4
+          Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5
+          Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
+
           if( score >= betap ){
             return (betap,Array(board(i).coords,tab(j)))
           }
@@ -243,6 +240,7 @@ object AlphaBeta {
     var score = 0
     var alphap = alpha
     var betap = beta 
+    var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
     var mv : Array[(Int,Int)] = Array((0,0),(0,0))
     if ( depth == 0 ){
       return ( -evaluate(board,player), mv)
@@ -260,9 +258,14 @@ object AlphaBeta {
             }
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
+
+          have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
+
           playerprom = player
+
           board(i).move(tab(j)._1,tab(j)._2,board)
           score = alphaBetaMax( board,alphap,betap, 1 - player, depth - 1 )._1
+
           for (k <- 0 to 31)  {
              if (k >= (1-player)*16  && k <= (1-player) * 16 + 7 &&  pawns(k - (1-player)*16)){
               board(k) = new Pawn (player,old_pos(k)._1, old_pos(k)._2,old_pos(k)._3)
@@ -272,6 +275,14 @@ object AlphaBeta {
               board(k).grid = old_pos(k)._3
             }
           }    
+
+          Ksparov.curr_game.board(8).asInstanceOf[Rook].has_moved = have_moved_init._1
+          Ksparov.curr_game.board(14).asInstanceOf[King].has_moved = have_moved_init._2
+          Ksparov.curr_game.board(9).asInstanceOf[Rook].has_moved = have_moved_init._3
+          Ksparov.curr_game.board(24).asInstanceOf[Rook].has_moved = have_moved_init._4
+          Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5
+          Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
+
           if( score <= alphap ){
             return (alphap,Array(board(i).coords,tab(j)))
           }

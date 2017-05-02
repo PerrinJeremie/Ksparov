@@ -530,7 +530,7 @@ object Ksparov {
     DrawBoard.create_grid_dead
 
     //Initializes the board and draw it 
-    BoardsT.init_alt_board("roque")
+    BoardsT.init_alt_board("legal")
     DrawActions.draw_game_board(Ksparov.curr_game.board)
 
     //Initializes the play buttons 
