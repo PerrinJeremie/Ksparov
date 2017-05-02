@@ -338,13 +338,6 @@ object Ksparov {
   var ai_move = new AIMoveThread
 }
 
-  /** Method to initialize the first board of the game */
-  def init_board {
-    // For each player we add the 8 pawns, and then each piece
-    BoardsT.init_alt_board("prom")
-
-  }
-
   /** Set Ksparov.curr_game.selected_piece to the index in the game_board of the given grid of the piece of position passed in argument 
   *
   * @param x The x coordinate of the piece
@@ -537,7 +530,7 @@ object Ksparov {
     DrawBoard.create_grid_dead
 
     //Initializes the board and draw it 
-    Ksparov.init_board
+    BoardsT.init_alt_board("prom")
     DrawActions.draw_game_board(Ksparov.curr_game.board)
 
     //Initializes the play buttons 
