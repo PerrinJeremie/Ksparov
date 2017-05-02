@@ -205,6 +205,10 @@ object AlphaBeta {
             old_pos(k) = (board(k).pos_x,board(k).pos_y,board(k).grid)
           }
           playerprom = player
+          if (tab(j) == (0,2) && depth == 5) {
+
+            println("OK")
+          }
           board(i).move(tab(j)._1,tab(j)._2,board)
           score = alphaBetaMin( board,alphap,betap, 1 - player, depth - 1 )._1
           for (k <- 0 to 31)  {
@@ -215,6 +219,9 @@ object AlphaBeta {
               board(k).pos_y = old_pos(k)._2
               board(k).grid = old_pos(k)._3
             }
+          }
+          if (depth == 5) {
+            print(board(i).name + tab(j).toString + score.toString + "\n")
           }
           if( score >= betap ){
             return (betap,Array(board(i).coords,tab(j)))
