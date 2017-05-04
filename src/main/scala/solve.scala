@@ -101,8 +101,6 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
   var pat = false
 
   ai = true
-  /** Array of boolean, true if the piece has already been checked for a move */
-  var already_check = new Array[Boolean](16)
 
   override def getmove {
 
@@ -127,7 +125,9 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
     def predicate( p : Piece) : Boolean = {
       return p.pos_x == tab(0)._1 && p.pos_y == tab(0)._2
     }
+
     var piece = Ksparov.curr_game.board.filter(predicate)(0)
+    println(piece.name + piece.coords.toString + tab(1).toString)
 
     piece.move(tab(1)._1,tab(1)._2,Ksparov.curr_game.board)
     DrawActions.draw_game_board(Ksparov.curr_game.board)

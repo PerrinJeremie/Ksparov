@@ -178,6 +178,7 @@ object AlphaBeta {
     var alphap = alpha
     var betap = beta 
     var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
+    var attackers : Array[List[Piece]] = new Array[List[Piece]] (2)
     var mv : Array[(Int,Int)] = Array((0,0),(0,0))
     if ( depth == 0 ){
       return (evaluate(board,player), mv)
@@ -197,6 +198,9 @@ object AlphaBeta {
           }
 
           have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
+
+          attackers(0) = Ksparov.curr_game.kings(0).attackers
+          attackers(1) = Ksparov.curr_game.kings(1).attackers
 
           playerprom = player
 
@@ -220,6 +224,9 @@ object AlphaBeta {
           Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5
           Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
 
+          Ksparov.curr_game.kings(0).attackers = attackers(0)
+          Ksparov.curr_game.kings(1).attackers = attackers(1) 
+
           if( score >= betap ){
             return (betap,Array(board(i).coords,tab(j)))
           }
@@ -241,6 +248,7 @@ object AlphaBeta {
     var alphap = alpha
     var betap = beta 
     var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
+    var attackers : Array[List[Piece]] = new Array[List[Piece]] (2)
     var mv : Array[(Int,Int)] = Array((0,0),(0,0))
     if ( depth == 0 ){
       return ( -evaluate(board,player), mv)
@@ -260,6 +268,9 @@ object AlphaBeta {
           }
 
           have_moved_init = (board(8).asInstanceOf[Rook].has_moved, board(14).asInstanceOf[King].has_moved, board(9).asInstanceOf[Rook].has_moved, board(24).asInstanceOf[Rook].has_moved,board(30).asInstanceOf[King].has_moved,board(25).asInstanceOf[Rook].has_moved)
+
+          attackers(0) = Ksparov.curr_game.kings(0).attackers
+          attackers(1) = Ksparov.curr_game.kings(1).attackers
 
           playerprom = player
 
@@ -282,6 +293,9 @@ object AlphaBeta {
           Ksparov.curr_game.board(24).asInstanceOf[Rook].has_moved = have_moved_init._4
           Ksparov.curr_game.board(30).asInstanceOf[King].has_moved = have_moved_init._5
           Ksparov.curr_game.board(25).asInstanceOf[Rook].has_moved = have_moved_init._6
+
+          Ksparov.curr_game.kings(0).attackers = attackers(0)
+          Ksparov.curr_game.kings(1).attackers = attackers(1) 
 
           if( score <= alphap ){
             return (alphap,Array(board(i).coords,tab(j)))
