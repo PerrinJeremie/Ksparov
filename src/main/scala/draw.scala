@@ -630,10 +630,26 @@ object DrawBoard {
 	  }
 	}
 
-  class Header extends GridPanel (1,2) {
-    contents += new Header1
-    // Quit Ksparov
-    contents += new Button {
+  class Header extends GridBagPanel {
+
+    def constraints(x: Int, y: Int, 
+		    gridwidth: Int = 1, gridheight: Int = 1,
+		    weightx: Double = 0.0, weighty: Double = 0.0,
+		    fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both) 
+    : Constraints = {
+      val c = new Constraints
+      c.gridx = x
+      c.gridy = y
+      c.gridwidth = gridwidth
+      c.gridheight = gridheight
+      c.weightx = weightx
+      c.weighty = weighty
+      c.fill = fill
+      c
+    }
+
+    add(new Header1, constraints(0,0))
+    add(new Button {
       font = Display.text_font
 	  action = Action ("<html><div style='text-align : center;'> Quitter <br> Ksparov </html>") {
 		// Stop the threads and wait for them to finish
@@ -643,7 +659,7 @@ object DrawBoard {
 		// Close the frame so quit Ksparov
 	    Ksparov.frame.dispose()
 	  }
-    }
+    }, constraints(12,0,gridwidth = 10))
   }
 
 	/** Defines the label which display game messages passed in argument : mat, pat ... 
