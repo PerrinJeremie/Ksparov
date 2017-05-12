@@ -41,8 +41,16 @@ class AI (player : Int) extends Player (player) {
           var (i,j) = t(r.nextInt(t.size))
           // Save move
           Save.add_move1((1 - id) * 16 + ind, (i,j))
+          if (Ksparov.curr_game.game_type > 7) {
+            Ksparov.curr_game.write_to_the_pipe = (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString
+          }
           // Play move 
           Ksparov.curr_game.board((1 - id) * 16 + ind).move(i,j,Ksparov.curr_game.board)
+          if (Ksparov.curr_game.game_type > 7) {
+            Ksparov.curr_game.write_to_the_pipe = Ksparov.curr_game.write_to_the_pipe + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString + "\n"
+            print(Ksparov.curr_game.write_to_the_pipe)
+            Ksparov.curr_game.something_to_send = true
+          }
         }
         // If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle
         if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
@@ -131,6 +139,11 @@ class AI2 (player : Int) extends Player (player) {
     piece.move(tab(1)._1,tab(1)._2,Ksparov.curr_game.board)
     DrawActions.draw_game_board(Ksparov.curr_game.board)
     Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
+    if (Ksparov.curr_game.game_type > 7) {
+      Ksparov.curr_game.write_to_the_pipe = (tab(0)._1 + 97).toChar + (tab(0)._2 + 1).toString + (tab(1)._1 + 97).toChar + (tab(1)._2 + 1).toString + "\n"
+      print(Ksparov.curr_game.write_to_the_pipe)
+      Ksparov.curr_game.something_to_send = true
+    }
   }
 
   override def check_pat : Boolean = {

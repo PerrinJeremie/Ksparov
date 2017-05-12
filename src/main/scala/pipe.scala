@@ -53,8 +53,8 @@ object Pipe {
 						case opp_move(s) => 
 							Ksparov.curr_game.new_move_available = true
 							Ksparov.curr_game.last_move_gnuchess = s
-							print(s)
-						case _ => print(curr_line)
+    			            Ksparov.play_move
+						case _ => ()
 					}
 					curr_line = ""
 					curr_char = 'a'
@@ -74,17 +74,16 @@ object Pipe {
 
 		def get_piece = {
 			var gnu_move = Ksparov.curr_game.last_move_gnuchess
-			print("Départ : " + (gnu_move(0).toInt - 97).toString + " ; " + (gnu_move(1).asDigit - 1).toString + "\n")
 			Ksparov.get_piece_of_pos (gnu_move(0).toInt - 97, gnu_move(1).asDigit - 1, 0)
 		}
 
 		override def getmove : Unit = {
 			if (Ksparov.curr_game.new_move_available) {
 				get_piece
-				print("Piece : " + Ksparov.curr_game.selected_piece + "\n")
 				var gnu_move = Ksparov.curr_game.last_move_gnuchess
-				print("Arrivée : " + (gnu_move(2).toInt - 97).toString + " ; " + (gnu_move(3).asDigit - 1).toString + "\n")
 				Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).move(gnu_move(2).toInt - 97, gnu_move(3).asDigit - 1, Ksparov.curr_game.board)
+				DrawActions.draw_game_board(Ksparov.curr_game.board)
+				Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
 				Ksparov.curr_game.new_move_available = false
 			}
 		}

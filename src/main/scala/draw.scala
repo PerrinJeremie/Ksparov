@@ -489,7 +489,6 @@ object DrawBoard {
   		action = new Action ("") {
 			def apply = {
 				// The click on a case gives the case selected and the grid selected for moving
-				print("Case : " + x.toString + " ; " + y.toString + "\n")
 				Ksparov.curr_game.selected_case = x + y * 8
 				Ksparov.curr_game.selected_grid = grid_id
                 Ksparov.play_move
