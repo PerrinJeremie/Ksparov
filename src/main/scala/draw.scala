@@ -574,7 +574,8 @@ object DrawBoard {
 	}
 
 	/** Defines a little menu to save, start a new game, come back to the main menu and quit Ksparov */
-	class Header extends GridPanel (2, 2) {
+
+	class Header1 extends GridPanel (2, 2) {
 		// Start a new game button
 		contents += new Button {
 			font = Display.text_font
@@ -614,19 +615,37 @@ object DrawBoard {
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
-		// Quit Ksparov button
-		contents += new Button {
-			font = Display.text_font
-			action = Action ("Quitter Ksparov") {
-				// Stop the threads and wait for them to finish
-				Ksparov.curr_game.thread_in_life = false
-				Ksparov.curr_game.ai_move.join
-				Ksparov.curr_game.timer.join
-				// Close the frame so quit Ksparov 
-	    		Ksparov.frame.dispose()
-			}
+	  // Change parameters
+	  contents += new Button {
+		font = Display.text_font
+		action = Action ("Gérer les paramètres") {
+		  // Stop the threads and wait for them to finish
+		  Ksparov.curr_game.thread_in_life = false
+		  Ksparov.curr_game.ai_move.join
+		  Ksparov.curr_game.timer.join
+		  // Close the frame so quit Ksparov
+          DrawParameters.where_cb = 1
+          Ksparov.frame.contents = new DrawParameters.SubMenus (2)
+		  Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
+	  }
 	}
+
+  class Header extends GridPanel (1,2) {
+    contents += new Header1
+    // Quit Ksparov
+    contents += new Button {
+      font = Display.text_font
+	  action = Action ("<html><div style='text-align : center;'> Quitter <br> Ksparov </html>") {
+		// Stop the threads and wait for them to finish
+		Ksparov.curr_game.thread_in_life = false
+		Ksparov.curr_game.ai_move.join
+		Ksparov.curr_game.timer.join
+		// Close the frame so quit Ksparov
+	    Ksparov.frame.dispose()
+	  }
+    }
+  }
 
 	/** Defines the label which display game messages passed in argument : mat, pat ... 
 	*
