@@ -39,6 +39,7 @@ object Pipe {
 	var curr_char = 'a'
 	var curr_line = ""
 	val opp_move = new Regex("""My move is : (.*)\n""")
+	val promotion = new Regex("""My move is : (.*)([q|r|b|n])\n""")
 
 	class ListenThread extends Thread {
 		override def run {
@@ -50,6 +51,16 @@ object Pipe {
 					curr_line match {
 						case "Chess\n" => print(curr_line)
 							Ksparov.curr_game.ready_to_gnu = true
+						case promotion(s,l) => 
+							l match {
+								case "q" => Ksparov.curr_game.selected_promotion = "Queen"
+								case "b" => Ksparov.curr_game.selected_promotion = "Bishop"
+								case "n" => Ksparov.curr_game.selected_promotion = "Knight"
+								case "r" => Ksparov.curr_game.selected_promotion = "Rook"
+							}
+							Ksparov.curr_game.new_move_available = true
+							Ksparov.curr_game.last_move_gnuchess = s
+    			            Ksparov.play_move
 						case opp_move(s) => 
 							Ksparov.curr_game.new_move_available = true
 							Ksparov.curr_game.last_move_gnuchess = s
