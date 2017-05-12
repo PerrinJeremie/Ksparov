@@ -100,6 +100,6 @@ test.scala
 
 *.pgn
 
-Parameters
+*Parameters
 
 # End of https://www.gitignore.io/api/emacs
