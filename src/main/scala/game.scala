@@ -603,12 +603,12 @@ object Ksparov {
         Ksparov.curr_game.something_to_send = true
         Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
         Ksparov.curr_game.players(0) = new AI2(0)
-        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA noire joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
       case 9 => 
         Time.clock_available = false
-        Ksparov.curr_game.players(1) = new AI(1)
+        Ksparov.curr_game.players(1) = new AI2(1)
         Ksparov.curr_game.players(0) = new Pipe.PipePlayer(0)
-        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA noire joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
       case 10 => 
         Time.clock_available = false
         Ksparov.curr_game.write_to_the_pipe = "go\n"
@@ -620,7 +620,7 @@ object Ksparov {
         Time.clock_available = false
         Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
         Ksparov.curr_game.players(0) = new Human(0)
-        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")    
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les blancs !</html>")    
     }
 
     // Defines the game as not yet won, and the white player as the first player

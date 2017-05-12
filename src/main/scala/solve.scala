@@ -48,7 +48,6 @@ class AI (player : Int) extends Player (player) {
           Ksparov.curr_game.board((1 - id) * 16 + ind).move(i,j,Ksparov.curr_game.board)
           if (Ksparov.curr_game.game_type > 7) {
             Ksparov.curr_game.write_to_the_pipe = Ksparov.curr_game.write_to_the_pipe + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString + "\n"
-            print(Ksparov.curr_game.write_to_the_pipe)
             Ksparov.curr_game.something_to_send = true
           }
         }
