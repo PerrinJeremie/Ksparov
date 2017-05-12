@@ -455,7 +455,7 @@ object DrawParameters {
         if (sign == "-") {
           variable match {
             // The speed should not be under 0
-            case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 100)
+            case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 1)
             // The number of board for alice game is at least 2
             case "nb_alice_board" => Parameters.nb_alice_board = math.max (2, Parameters.nb_alice_board - 1)
             // The number of periods can not be under 0
@@ -463,7 +463,7 @@ object DrawParameters {
           }
         } else {
           variable match {
-            case "ai_speed" => Parameters.ai_speed += 100
+            case "ai_speed" => Parameters.ai_speed += 1
             case "nb_alice_board" => Parameters.nb_alice_board += 1
             case "nb_period" => Time.nb_period += 1
           }
@@ -493,7 +493,7 @@ object DrawParameters {
       contents += new Label {
         preferredSize = Display.dim_big
         font = Display.text_font
-        text = "<html><div style='text-align : center;'>Vitesse de jeu de l'IA<br>en milliseconde</html>"
+        text = "<html><div style='text-align : center;'>Difficulté de l'IA<br>(0 : Aléatoire)</html>"
       }
       contents += new Increment ("ai_speed", 2)
     }) = Center
