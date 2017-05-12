@@ -558,16 +558,16 @@ object Ksparov {
         }
       case 3 =>
         Ksparov.curr_game.game_type = 2
-        Ksparov.curr_game.players(0) = new AI2(6,0)
+        Ksparov.curr_game.players(0) = new AI2(0)
         Ksparov.curr_game.players(1) = new Human(1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
       case 4 =>
         Ksparov.curr_game.game_type = 2
         Ksparov.curr_game.players(0) = new Human(0)
-        Ksparov.curr_game.players(1) = new AI2(6,1)
+        Ksparov.curr_game.players(1) = new AI2(1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
       case 5 =>
-        Ksparov.curr_game.players(1) = new AI2(5,1)
+        Ksparov.curr_game.players(1) = new AI2(1)
         Ksparov.curr_game.players(0) = new AI(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>

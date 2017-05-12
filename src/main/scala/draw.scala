@@ -525,8 +525,8 @@ object DrawBoard {
 			action = Action ("Revenir au menu principal") {
 				// Stop the threads and wait for them to finish
 				Ksparov.curr_game.thread_in_life = false
-				Ksparov.curr_game.ai_move.join
-				Ksparov.curr_game.timer.join
+				Ksparov.curr_game.ai_move.join				
+                Ksparov.curr_game.timer.join
 				// Draw the main menu 
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -619,7 +619,7 @@ object DrawBoard {
                     // Creates new players for AI vs Human
     				Ksparov.curr_game.game_type = 2
                     Ksparov.curr_game.players (player_id) = new Human (player_id)
-				    Ksparov.curr_game.players (1 - player_id) = new AI (1 - player_id)
+				    Ksparov.curr_game.players (1 - player_id) = new AI2 (1 - player_id)
                 } else {
                     // Creates new players for Human vs Human
                     Ksparov.curr_game.game_type = 1

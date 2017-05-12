@@ -84,8 +84,7 @@ class AIMoveThread extends Thread {
   override def run {
     // While threads should be alive
     while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
-      // We wait a time defines in parameters
-      Thread.sleep (Parameters.ai_speed)
+      Thread.sleep(100)
       // If it is our turn, we move a piece
       if (Ksparov.curr_game.ai_turn) {
         Ksparov.play_move
@@ -95,7 +94,7 @@ class AIMoveThread extends Thread {
   }
 }
 
-class AI2 (depth : Int, player : Int) extends Player (player) {
+class AI2 (player : Int) extends Player (player) {
 
   /** True if the ai is in pat */
   var pat = false
@@ -112,7 +111,7 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
 	  }
 	}
 
-    var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, depth)
+    var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, Parameters.ai_speed)
 
     for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 	  for (i <- 0 to Parameters.nb_case_board - 1) {
