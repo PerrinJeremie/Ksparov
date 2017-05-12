@@ -19,66 +19,41 @@ import java.io.{File,FileInputStream,FileOutputStream}
  * Pipe implementation in Scala.
  */
 object Pipe {
-
-	def main(args: Array[String]) {
-
-	val command = "/usr/games/gnuchessx"
-//	val command = "/home/simon/Scripts/pipe.sh"
-
-	val proc = Runtime.getRuntime.exec(command)
-	val lineList = List("b2b3\n", "a2a3\n", "c2c3\n", "d2d3\n", "e2e3\n")
-
-	// redirect proc stderr to System.err
-	new Thread("stderr reader for " + command) {
-	  override def run() {
-		for(line <- Source.fromInputStream(proc.getErrorStream).getLines)
-		  System.err.println(line)
-	  }
-	}.start()
-
-	var thread_in_life = true
-	var something_to_send = false
-
-	var i = 0
-
 	//pipe data to proc stdin
-	new Thread {
+	class SendThread extends Thread {
 		override def run() {
-			var out = new PrintWriter(proc.getOutputStream)
-			while (thread_in_life) {
-				if (something_to_send) {
-					out.write(lineList(i))
+			var out = new PrintWriter(Ksparov.curr_game.gnuchess.getOutputStream)
+			while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
+				if (Ksparov.curr_game.something_to_send && Ksparov.curr_game.ready_to_gnu) {
+					out.write(Ksparov.curr_game.write_to_the_pipe)
 					out.flush()
-					something_to_send = false
-					i += 1
+					Ksparov.curr_game.something_to_send = false
 				} else {
 					Thread.sleep(300)
 				}
 			}
 			out.close()
 		}
-	}.start()
+	}
 
 	var curr_char = 'a'
 	var curr_line = ""
-	var curr_move = 0
-
-	val move = new Regex("""[0-9]+[.](.*)\n""")
 	val opp_move = new Regex("""My move is : (.*)\n""")
 
-	new Thread {
+	class ListenThread extends Thread {
 		override def run {
-			while (thread_in_life) {
+			while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
 				Thread.sleep(100)
-				curr_char = proc.getInputStream.read().toChar
+				curr_char = Ksparov.curr_game.gnuchess.getInputStream.read().toChar
 				curr_line += curr_char
 				if (curr_char == '\n') {
 					curr_line match {
 						case "Chess\n" => print(curr_line)
-							something_to_send = true
-						case move(s) => print(curr_line)
-						case opp_move(s) => print(s)
-							something_to_send = true
+							Ksparov.curr_game.ready_to_gnu = true
+						case opp_move(s) => 
+							Ksparov.curr_game.new_move_available = true
+							Ksparov.curr_game.last_move_gnuchess = s
+							print(s)
 						case _ => print(curr_line)
 					}
 					curr_line = ""
@@ -86,7 +61,32 @@ object Pipe {
 				}
 			}
 		}
-	}.start()
+	}
 
-}
+	class PipePlayer(id : Int) extends Player (id) {
+		override def check_pat : Boolean = {
+			false
+		}
+
+		override def ai_promotion : Unit = {
+			()
+		}
+
+		def get_piece = {
+			var gnu_move = Ksparov.curr_game.last_move_gnuchess
+			print("Départ : " + (gnu_move(0).toInt - 97).toString + " ; " + (gnu_move(1).asDigit - 1).toString + "\n")
+			Ksparov.get_piece_of_pos (gnu_move(0).toInt - 97, gnu_move(1).asDigit - 1, 0)
+		}
+
+		override def getmove : Unit = {
+			if (Ksparov.curr_game.new_move_available) {
+				get_piece
+				print("Piece : " + Ksparov.curr_game.selected_piece + "\n")
+				var gnu_move = Ksparov.curr_game.last_move_gnuchess
+				print("Arrivée : " + (gnu_move(2).toInt - 97).toString + " ; " + (gnu_move(3).asDigit - 1).toString + "\n")
+				Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).move(gnu_move(2).toInt - 97, gnu_move(3).asDigit - 1, Ksparov.curr_game.board)
+				Ksparov.curr_game.new_move_available = false
+			}
+		}
+	}
 }

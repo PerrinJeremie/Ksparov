@@ -336,6 +336,23 @@ object Ksparov {
   var timer = new Time.TimeThread
   /** The thread that get the AI move */
   var ai_move = new AIMoveThread
+
+  /** True if there is someting to send via the pipe */
+  var something_to_send = false
+  /** String of the movment we want to write in the pipe */
+  var write_to_the_pipe = ""
+  /**  True if the pipe has sent something new */
+  var new_move_available = false
+  /** String of the last move of gnuchess */
+  var last_move_gnuchess = ""
+  /** Thread to send to gnuchess */
+  var send_to_gnuchess = new Pipe.SendThread
+  /** Thread to receive from gnuchess */
+  var listen_to_gnuchess = new Pipe.ListenThread
+  /** Processus to launch gnuchess */
+  var gnuchess = Runtime.getRuntime.exec("echo")
+  /** True if gnuchess is ready to play */
+  var ready_to_gnu = false
 }
 
   /** Set Ksparov.curr_game.selected_piece to the index in the game_board of the given grid of the piece of position passed in argument 
@@ -345,8 +362,11 @@ object Ksparov {
   * @param grid_id The grid_id coordinate of the piece
   */
   def get_piece_of_pos (x : Int, y : Int, grid_id : Int) {
+    print("Je teste pour : x=" + x.toString + " et y=" + y.toString + "et grid=" + grid_id.toString + "\n")
     for (i <- 0 to 31) {
+      print("Ici : x=" + Ksparov.curr_game.board(i).pos_x.toString + " et y=" + Ksparov.curr_game.board(i).pos_y.toString + "\n")
       if (Ksparov.curr_game.board(i).pos_x == x && Ksparov.curr_game.board(i).pos_y == y && Ksparov.curr_game.board(i).grid == grid_id){
+        print("TROUVEEEEE !\n")
         Ksparov.curr_game.selected_piece = i
       }
     }
@@ -534,7 +554,7 @@ object Ksparov {
     DrawActions.draw_game_board(Ksparov.curr_game.board)
 
     //Initializes the play buttons 
-      Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0, "h"), new DrawBoard.PlayButton (0, "ai"), new DrawBoard.PlayButton (1, "h"), new DrawBoard.PlayButton (1, "ai"))   
+    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0, "h"), new DrawBoard.PlayButton (0, "ai"), new DrawBoard.PlayButton (1, "h"), new DrawBoard.PlayButton (1, "ai"))   
 
     // Saves the initialisation
     Save.init
@@ -558,13 +578,13 @@ object Ksparov {
         }
       case 3 =>
         Ksparov.curr_game.game_type = 2
-        Ksparov.curr_game.players(0) = new AI2(6,0)
+        Ksparov.curr_game.players(0) = new AI2(5,0)
         Ksparov.curr_game.players(1) = new Human(1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov,<br> les blancs commençent la partie !</html>")
       case 4 =>
         Ksparov.curr_game.game_type = 2
         Ksparov.curr_game.players(0) = new Human(0)
-        Ksparov.curr_game.players(1) = new AI2(6,1)
+        Ksparov.curr_game.players(1) = new AI2(5,1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
       case 5 =>
         Ksparov.curr_game.players(1) = new AI2(5,1)
@@ -575,11 +595,35 @@ object Ksparov {
         Ksparov.curr_game.players(1) = new Load.Reproducer(1)
         Ksparov.curr_game.players(0) = new Load.Reproducer(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
-        case 7 =>
+      case 7 =>
         Time.clock_available = false
         Ksparov.curr_game.players(1) = new Load.Reproducer(1)
         Ksparov.curr_game.players(0) = new Load.Reproducer(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
+      case 8 => 
+        Time.clock_available = false
+        Ksparov.curr_game.write_to_the_pipe = "go\n"
+        Ksparov.curr_game.something_to_send = true
+        Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
+        Ksparov.curr_game.players(0) = new AI(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
+      case 9 => 
+        Time.clock_available = false
+        Ksparov.curr_game.players(1) = new AI(1)
+        Ksparov.curr_game.players(0) = new Pipe.PipePlayer(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
+      case 10 => 
+        Time.clock_available = false
+        Ksparov.curr_game.write_to_the_pipe = "go\n"
+        Ksparov.curr_game.something_to_send = true
+        Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
+        Ksparov.curr_game.players(0) = new Human(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
+      case 11 => 
+        Time.clock_available = false
+        Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
+        Ksparov.curr_game.players(0) = new Human(0)
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")    
     }
 
     // Defines the game as not yet won, and the white player as the first player
@@ -602,6 +646,14 @@ object Ksparov {
 
     // Defines the start time of the game 
     Time.last_time = new java.text.SimpleDateFormat("ss").format(java.util.Calendar.getInstance().getTime)
+
+    // Initializes gnuchess
+    if (n > 7) {
+      Ksparov.curr_game.gnuchess = Runtime.getRuntime.exec("gnuchessx -e")
+      Ksparov.curr_game.send_to_gnuchess.start()
+      Ksparov.curr_game.listen_to_gnuchess.start()
+    }
+
   }
 
   /** The current played game */

@@ -147,11 +147,12 @@ object DrawMenu {
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" =>
 					Ksparov.frame.contents = new DrawGameSelection.Menu (true)
 					Ksparov.frame.peer.setLocationRelativeTo(null)
+				case "<html><div style='text-align : center;'>Jouer une partie<br>avec Gnuchess</html>" => Ksparov.frame.contents = new DrawMenu.Menu
+					Ksparov.frame.contents = new DrawGameSelectionGnuChess.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Charger une partie" =>
                     DrawCharge.define_listgame
                     Ksparov.frame.contents = new DrawCharge.Dcharge
-					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Voir les scores" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Gérer les paramètres" => 
 					Ksparov.frame.contents = new DrawParameters.SubMenus (1)
@@ -171,9 +172,9 @@ object DrawMenu {
         			contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
                     
         		case 3 =>
-        			contents += new Option ("Charger une partie")
+        			contents += new Option ("<html><div style='text-align : center;'>Jouer une partie<br>avec Gnuchess</html>")
         			contents += new BackgroundCase (1, 3)
-        			contents += new Option ("Voir les scores")
+        			contents += new Option ("Charger une partie")
                     
         		case 5 =>
         			contents += new Option ("Gérer les paramètres")
@@ -301,6 +302,86 @@ object DrawGameSelection {
 	}
 }
 
+object DrawGameSelectionGnuChess {
+	/** Title
+	*/
+	class MessageDrawer extends Label {
+		font = Display.text_font
+		background = new Color (200, 200, 200)
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		opaque = true
+		text = "<html><div style='text-align : center;'>Vous avez choisi de jouer avec Gnuchess,<br>veuillez sélectionner le type de jeu !</html>"
+	}
+
+	/** Button for lauching the game, it creates a new game with the right parameters depending on the mode of play 
+	*
+	* @param name The text display by the button
+	* @param num The id of the game_type if this button is chosen
+	*/
+	class Option (name : String, num : Int) extends PrettyBigButton {
+		action = Action (name) {
+			Ksparov.curr_game = new Ksparov.Game (num, 1, false)
+			// Initialize the game
+		    Ksparov.init_game (num)
+    		Ksparov.frame.contents = new DrawBoard.Board
+			Ksparov.frame.peer.setLocationRelativeTo(null)
+		}
+	}
+
+	/** Menu for the type of game selection. 
+	*/
+	class CenterGrid extends GridPanel (7, 3) {
+		for (i <- 0 to 6) {
+			i match {
+				case 1 =>
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess blanc vs <br>IA noire</html>", 8)
+					contents += new BackgroundCase (1, 3)
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess noir vs <br>IA blanche</html>", 9)
+				case 3 =>
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess blanc vs <br>Humain noir</html>", 10)
+					contents += new BackgroundCase (1, 3)
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess noir vs <br>Humain blanc</html>", 11)
+				case 5 =>
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+					contents += new Button {
+						font = Display.text_font
+						border = new javax.swing.border.LineBorder (Color.black, 2)
+						action = Action ("Revenir au menu") {
+							Ksparov.frame.contents = new DrawMenu.Menu
+							Ksparov.frame.peer.setLocationRelativeTo(null)
+						}
+					}
+				case _ =>
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+			}
+		}
+	}
+
+	/** Draw the welcome message with bordercases around. 
+	*/
+	class WelcomeMessage extends BorderPanel {
+		layout (new BackgroundCase (1, 11)) = North
+		layout (new BorderPanel {
+			layout (new BackgroundCase (1, 1)) = West
+			layout (new MessageDrawer) = Center
+			layout (new BackgroundCase (1, 1)) = East
+		}) = South
+
+	}
+
+	/** Final menu with buttons on. 
+	*/
+	class Menu extends BorderPanel {
+		layout (new BackgroundCase (7, 1)) = East
+		layout (new CenterGrid) = Center
+		layout (new BackgroundCase (7, 1)) = West
+		layout (new WelcomeMessage) = North
+	}
+}
+
 /** Draw the chess board of the game */
 object DrawBoard {
 
@@ -408,6 +489,7 @@ object DrawBoard {
   		action = new Action ("") {
 			def apply = {
 				// The click on a case gives the case selected and the grid selected for moving
+				print("Case : " + x.toString + " ; " + y.toString + "\n")
 				Ksparov.curr_game.selected_case = x + y * 8
 				Ksparov.curr_game.selected_grid = grid_id
                 Ksparov.play_move
