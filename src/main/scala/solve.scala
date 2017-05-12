@@ -132,16 +132,25 @@ class AI2 (player : Int) extends Player (player) {
       return p.pos_x == tab(0)._1 && p.pos_y == tab(0)._2
     }
 
-    var piece = Ksparov.curr_game.board.filter(predicate)(0)
-    println(piece.name + piece.coords.toString + tab(1).toString)
+    if (tab(1) != (-1,-1)){
+      var piece = Ksparov.curr_game.board.filter(predicate)(0)
 
     piece.move(tab(1)._1,tab(1)._2,Ksparov.curr_game.board)
+
     DrawActions.draw_game_board(Ksparov.curr_game.board)
     Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
+
     if (Ksparov.curr_game.game_type > 7) {
       Ksparov.curr_game.write_to_the_pipe = (tab(0)._1 + 97).toChar + (tab(0)._2 + 1).toString + (tab(1)._1 + 97).toChar + (tab(1)._2 + 1).toString + "\n"
       print(Ksparov.curr_game.write_to_the_pipe)
       Ksparov.curr_game.something_to_send = true
+    }
+
+    }
+    else {
+      Ksparov.curr_game.game_won = true
+      DrawActions.draw_game_board(Ksparov.curr_game.board)
+      Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
     }
   }
 
