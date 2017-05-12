@@ -41,8 +41,15 @@ class AI (player : Int) extends Player (player) {
           var (i,j) = t(r.nextInt(t.size))
           // Save move
           Save.add_move1((1 - id) * 16 + ind, (i,j))
+          if (Ksparov.curr_game.game_type > 7) {
+            Ksparov.curr_game.write_to_the_pipe = (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString
+          }
           // Play move 
           Ksparov.curr_game.board((1 - id) * 16 + ind).move(i,j,Ksparov.curr_game.board)
+          if (Ksparov.curr_game.game_type > 7) {
+            Ksparov.curr_game.write_to_the_pipe = Ksparov.curr_game.write_to_the_pipe + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString + "\n"
+            Ksparov.curr_game.something_to_send = true
+          }
         }
         // If no move was played and there is no more pieces left, the IA cannot move, thus the game is nulle
         if (!((already_check.find (p => p == false)).nonEmpty) && notdone) {
@@ -84,8 +91,7 @@ class AIMoveThread extends Thread {
   override def run {
     // While threads should be alive
     while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
-      // We wait a time defines in parameters
-      Thread.sleep (Parameters.ai_speed)
+      Thread.sleep(100)
       // If it is our turn, we move a piece
       if (Ksparov.curr_game.ai_turn) {
         Ksparov.play_move
@@ -95,7 +101,7 @@ class AIMoveThread extends Thread {
   }
 }
 
-class AI2 (depth : Int, player : Int) extends Player (player) {
+class AI2 (player : Int) extends Player (player) {
 
   /** True if the ai is in pat */
   var pat = false
@@ -112,7 +118,7 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
 	  }
 	}
 
-    var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, depth)
+    var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, Parameters.ai_speed)
 
     for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 	  for (i <- 0 to Parameters.nb_case_board - 1) {
@@ -126,12 +132,26 @@ class AI2 (depth : Int, player : Int) extends Player (player) {
       return p.pos_x == tab(0)._1 && p.pos_y == tab(0)._2
     }
 
-    var piece = Ksparov.curr_game.board.filter(predicate)(0)
-    println(piece.name + piece.coords.toString + tab(1).toString)
+    if (tab(1) != (-1,-1)){
+      var piece = Ksparov.curr_game.board.filter(predicate)(0)
 
     piece.move(tab(1)._1,tab(1)._2,Ksparov.curr_game.board)
+
     DrawActions.draw_game_board(Ksparov.curr_game.board)
     Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
+
+    if (Ksparov.curr_game.game_type > 7) {
+      Ksparov.curr_game.write_to_the_pipe = (tab(0)._1 + 97).toChar + (tab(0)._2 + 1).toString + (tab(1)._1 + 97).toChar + (tab(1)._2 + 1).toString + "\n"
+      print(Ksparov.curr_game.write_to_the_pipe)
+      Ksparov.curr_game.something_to_send = true
+    }
+
+    }
+    else {
+      Ksparov.curr_game.game_won = true
+      DrawActions.draw_game_board(Ksparov.curr_game.board)
+      Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
+    }
   }
 
   override def check_pat : Boolean = {

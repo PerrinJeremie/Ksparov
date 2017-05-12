@@ -179,7 +179,7 @@ object AlphaBeta {
     var betap = beta 
     var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
     var attackers : Array[List[Piece]] = new Array[List[Piece]] (2)
-    var mv : Array[(Int,Int)] = Array((0,0),(0,0))
+    var mv : Array[(Int,Int)] = Array((0,0),(-1,-1))
     if ( depth == 0 ){
       return (evaluate(board,player), mv)
     } else {
@@ -249,7 +249,7 @@ object AlphaBeta {
     var betap = beta 
     var have_moved_init : (Boolean,Boolean,Boolean,Boolean,Boolean,Boolean) = (false,false,false,false,false,false)
     var attackers : Array[List[Piece]] = new Array[List[Piece]] (2)
-    var mv : Array[(Int,Int)] = Array((0,0),(0,0))
+    var mv : Array[(Int,Int)] = Array((0,0),(-1,-1))
     if ( depth == 0 ){
       return ( -evaluate(board,player), mv)
     } else {

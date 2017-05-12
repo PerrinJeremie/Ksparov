@@ -147,11 +147,12 @@ object DrawMenu {
 				case "<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>" =>
 					Ksparov.frame.contents = new DrawGameSelection.Menu (true)
 					Ksparov.frame.peer.setLocationRelativeTo(null)
+				case "<html><div style='text-align : center;'>Jouer une partie<br>avec Gnuchess</html>" => Ksparov.frame.contents = new DrawMenu.Menu
+					Ksparov.frame.contents = new DrawGameSelectionGnuChess.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Charger une partie" =>
                     DrawCharge.define_listgame
                     Ksparov.frame.contents = new DrawCharge.Dcharge
-					Ksparov.frame.peer.setLocationRelativeTo(null)
-				case "Voir les scores" => Ksparov.frame.contents = new DrawMenu.Menu
 					Ksparov.frame.peer.setLocationRelativeTo(null)
 				case "Gérer les paramètres" => 
 					Ksparov.frame.contents = new DrawParameters.SubMenus (1)
@@ -171,9 +172,9 @@ object DrawMenu {
         			contents += new Option ("<html><div style='text-align : center;'>Jouer aux<br>échecs d'Alice</html>")
                     
         		case 3 =>
-        			contents += new Option ("Charger une partie")
+        			contents += new Option ("<html><div style='text-align : center;'>Jouer une partie<br>avec Gnuchess</html>")
         			contents += new BackgroundCase (1, 3)
-        			contents += new Option ("Voir les scores")
+        			contents += new Option ("Charger une partie")
                     
         		case 5 =>
         			contents += new Option ("Gérer les paramètres")
@@ -298,6 +299,86 @@ object DrawGameSelection {
 		layout (new CenterGrid (alice)) = Center
 		layout (new BackgroundCase (7, 1)) = West
 		layout (new WelcomeMessage (alice)) = North
+	}
+}
+
+object DrawGameSelectionGnuChess {
+	/** Title
+	*/
+	class MessageDrawer extends Label {
+		font = Display.text_font
+		background = new Color (200, 200, 200)
+		border = new javax.swing.border.LineBorder (Color.black, 2)
+		opaque = true
+		text = "<html><div style='text-align : center;'>Vous avez choisi de jouer avec Gnuchess,<br>veuillez sélectionner le type de jeu !</html>"
+	}
+
+	/** Button for lauching the game, it creates a new game with the right parameters depending on the mode of play 
+	*
+	* @param name The text display by the button
+	* @param num The id of the game_type if this button is chosen
+	*/
+	class Option (name : String, num : Int) extends PrettyBigButton {
+		action = Action (name) {
+			Ksparov.curr_game = new Ksparov.Game (num, 1, false)
+			// Initialize the game
+		    Ksparov.init_game (num)
+    		Ksparov.frame.contents = new DrawBoard.Board
+			Ksparov.frame.peer.setLocationRelativeTo(null)
+		}
+	}
+
+	/** Menu for the type of game selection. 
+	*/
+	class CenterGrid extends GridPanel (7, 3) {
+		for (i <- 0 to 6) {
+			i match {
+				case 1 =>
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess blanc vs <br>IA noire</html>", 8)
+					contents += new BackgroundCase (1, 3)
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess noir vs <br>IA blanche</html>", 9)
+				case 3 =>
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess blanc vs <br>Humain noir</html>", 10)
+					contents += new BackgroundCase (1, 3)
+					contents += new Option ("<html><div style='text-align : center;'>Gnuchess noir vs <br>Humain blanc</html>", 11)
+				case 5 =>
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+					contents += new Button {
+						font = Display.text_font
+						border = new javax.swing.border.LineBorder (Color.black, 2)
+						action = Action ("Revenir au menu") {
+							Ksparov.frame.contents = new DrawMenu.Menu
+							Ksparov.frame.peer.setLocationRelativeTo(null)
+						}
+					}
+				case _ =>
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+					contents += new BackgroundCase (1, 3)
+			}
+		}
+	}
+
+	/** Draw the welcome message with bordercases around. 
+	*/
+	class WelcomeMessage extends BorderPanel {
+		layout (new BackgroundCase (1, 11)) = North
+		layout (new BorderPanel {
+			layout (new BackgroundCase (1, 1)) = West
+			layout (new MessageDrawer) = Center
+			layout (new BackgroundCase (1, 1)) = East
+		}) = South
+
+	}
+
+	/** Final menu with buttons on. 
+	*/
+	class Menu extends BorderPanel {
+		layout (new BackgroundCase (7, 1)) = East
+		layout (new CenterGrid) = Center
+		layout (new BackgroundCase (7, 1)) = West
+		layout (new WelcomeMessage) = North
 	}
 }
 
@@ -492,7 +573,8 @@ object DrawBoard {
 	}
 
 	/** Defines a little menu to save, start a new game, come back to the main menu and quit Ksparov */
-	class Header extends GridPanel (2, 2) {
+
+	class Header1 extends GridPanel (2, 2) {
 		// Start a new game button
 		contents += new Button {
 			font = Display.text_font
@@ -525,26 +607,60 @@ object DrawBoard {
 			action = Action ("Revenir au menu principal") {
 				// Stop the threads and wait for them to finish
 				Ksparov.curr_game.thread_in_life = false
-				Ksparov.curr_game.ai_move.join
-				Ksparov.curr_game.timer.join
+				Ksparov.curr_game.ai_move.join				
+                Ksparov.curr_game.timer.join
 				// Draw the main menu 
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
 			}
 		}
-		// Quit Ksparov button
-		contents += new Button {
-			font = Display.text_font
-			action = Action ("Quitter Ksparov") {
-				// Stop the threads and wait for them to finish
-				Ksparov.curr_game.thread_in_life = false
-				Ksparov.curr_game.ai_move.join
-				Ksparov.curr_game.timer.join
-				// Close the frame so quit Ksparov 
-	    		Ksparov.frame.dispose()
-			}
+	  // Change parameters
+	  contents += new Button {
+		font = Display.text_font
+		action = Action ("Gérer les paramètres") {
+		  // Stop the threads and wait for them to finish
+		  Ksparov.curr_game.thread_in_life = false
+		  Ksparov.curr_game.ai_move.join
+		  Ksparov.curr_game.timer.join
+		  // Close the frame so quit Ksparov
+          DrawParameters.where_cb = 1
+          Ksparov.frame.contents = new DrawParameters.SubMenus (2)
+		  Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
+	  }
 	}
+
+  class Header extends GridBagPanel {
+
+    def constraints(x: Int, y: Int, 
+		    gridwidth: Int = 1, gridheight: Int = 1,
+		    weightx: Double = 0.0, weighty: Double = 0.0,
+		    fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both) 
+    : Constraints = {
+      val c = new Constraints
+      c.gridx = x
+      c.gridy = y
+      c.gridwidth = gridwidth
+      c.gridheight = gridheight
+      c.weightx = weightx
+      c.weighty = weighty
+      c.fill = fill
+      c
+    }
+
+    add(new Header1, constraints(0,0))
+    add(new Button {
+      font = Display.text_font
+	  action = Action ("<html><div style='text-align : center;'> Quitter <br> Ksparov </html>") {
+		// Stop the threads and wait for them to finish
+		Ksparov.curr_game.thread_in_life = false
+		Ksparov.curr_game.ai_move.join
+		Ksparov.curr_game.timer.join
+		// Close the frame so quit Ksparov
+	    Ksparov.frame.dispose()
+	  }
+    }, constraints(12,0,gridwidth = 10))
+  }
 
 	/** Defines the label which display game messages passed in argument : mat, pat ... 
 	*
@@ -619,7 +735,7 @@ object DrawBoard {
                     // Creates new players for AI vs Human
     				Ksparov.curr_game.game_type = 2
                     Ksparov.curr_game.players (player_id) = new Human (player_id)
-				    Ksparov.curr_game.players (1 - player_id) = new AI (1 - player_id)
+				    Ksparov.curr_game.players (1 - player_id) = new AI2 (1 - player_id)
                 } else {
                     // Creates new players for Human vs Human
                     Ksparov.curr_game.game_type = 1

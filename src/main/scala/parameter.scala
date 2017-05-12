@@ -200,6 +200,8 @@ object Parameters {
 /** Contains all classes to draw parameters selections. */
 object DrawParameters {
 
+  var where_cb = 0
+
   /** Defines button for the selection of the parameter sub menu. 
   *
   * @param id The id of the submenu
@@ -284,7 +286,24 @@ object DrawParameters {
     font = Display.text_font
     preferredSize = new Dimension (Display.base_size * 9, Display.base_size)
     border = new javax.swing.border.LineBorder (Color.black, 2)
-    action = Action("Appliquer les changements et revenir au menu principal") {
+
+    def fun_cb : Unit = {
+      where_cb match {
+        case 0 => Ksparov.frame.contents = new DrawMenu.Menu
+        case 1 => Ksparov.curr_game.timer = new Time.TimeThread
+                Ksparov.curr_game.ai_move = new AIMoveThread
+                Ksparov.curr_game.thread_in_life = true
+                Ksparov.frame.contents = new DrawBoard.Board
+                Ksparov.curr_game.timer.start
+                Ksparov.curr_game.ai_move.start
+                where_cb = 0
+      }
+    }
+
+    action = Action( where_cb match {
+      case 0 => "Appliquer les changements et revenir au menu principal"
+      case 1 => "Appliquer les changements et revenir à la partie "
+    }) {
       // The action depends on the sub-menu we are in 
       sub_menu_id match {
         
@@ -315,20 +334,20 @@ object DrawParameters {
               Time.periods(i) = new Time.Period (Time.hhmmss_to_int(time_textfields(i).text), move_textfields(i).text.toInt, inc_textfields(i).text.toInt)
             }
             Parameters.write
-            Ksparov.frame.contents = new DrawMenu.Menu
+            fun_cb
             Ksparov.frame.peer.setLocationRelativeTo(null)
           }
 
         // The playability sub-menu
         case 2 =>
           Parameters.write
-          Ksparov.frame.contents = new DrawMenu.Menu
+          fun_cb
           Ksparov.frame.peer.setLocationRelativeTo(null)
 
         // Display sub-menu
         case 1 =>
           Parameters.write
-          Ksparov.frame.contents = new DrawMenu.Menu
+          fun_cb
           Ksparov.frame.peer.setLocationRelativeTo(null)
       }
     }
@@ -455,7 +474,7 @@ object DrawParameters {
         if (sign == "-") {
           variable match {
             // The speed should not be under 0
-            case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 100)
+            case "ai_speed" => Parameters.ai_speed = math.max (0, Parameters.ai_speed - 1)
             // The number of board for alice game is at least 2
             case "nb_alice_board" => Parameters.nb_alice_board = math.max (2, Parameters.nb_alice_board - 1)
             // The number of periods can not be under 0
@@ -463,7 +482,7 @@ object DrawParameters {
           }
         } else {
           variable match {
-            case "ai_speed" => Parameters.ai_speed += 100
+            case "ai_speed" => Parameters.ai_speed += 1
             case "nb_alice_board" => Parameters.nb_alice_board += 1
             case "nb_period" => Time.nb_period += 1
           }
@@ -493,7 +512,7 @@ object DrawParameters {
       contents += new Label {
         preferredSize = Display.dim_big
         font = Display.text_font
-        text = "<html><div style='text-align : center;'>Vitesse de jeu de l'IA<br>en milliseconde</html>"
+        text = "<html><div style='text-align : center;'>Difficulté de l'IA<br>(0 : Aléatoire)</html>"
       }
       contents += new Increment ("ai_speed", 2)
     }) = Center

@@ -328,7 +328,7 @@ object Load {
   /** Resets the local variables at the beginning of the getmove method of a Reproducer */
   def reset_when_parsing : Unit ={
     piece = ""
-    piece_Ch  = new Pawn(0,-1,-1,0)
+    Load.piece_Ch  = new Pawn(0,-1,-1,0)
     pos_init = (0,0)
     pos_fin  = (0,0)
   }
@@ -351,16 +351,109 @@ object Load {
     return (c != '\"' && c != '[')
   }
 
-  /** Represents a robot player which can read from Load.list_of_moves a move and play it, it is he who understands PGN move notation 
-  *
-  * @param n The id of the player
-  */
-  class Reproducer (n : Int) extends Player (n : Int) {
 
-    /** It is a robot */
-    ai = true
+    /** Finds all information related to the move and plays the move once done 
+    *
+    * @param s The move in a string 
+    * @return True the string is a move, False if we did not manage to parse the string
+    */
+    def parse_word (s : String) : Boolean = {
 
-    /** Predicates if char is [a-h] 
+      s match {
+        case resulttag(_*) =>
+          finalresult = s
+          Ksparov.check_game_status(Ksparov.curr_game.curr_player)
+          if (! (s == "*") ) {Ksparov.curr_game.game_won = true; return true} else { return false }
+        case _ => ()
+      }
+
+      var w = s + "$$$$$"
+
+      /* Recherche du type de pièce */
+      w(0).toString match{
+        case droquereg(_*) =>
+          w.substring(0,3) match{
+            case roquereg(_*) =>
+              Ksparov.curr_game.board((1-Ksparov.curr_game.curr_player)*16 +14).move(6,(1-Ksparov.curr_game.curr_player)*7, Ksparov.curr_game.board)
+            case _ =>
+              Ksparov.curr_game.board((1-Ksparov.curr_game.curr_player)*16 + 14).move(2,(1-Ksparov.curr_game.curr_player)*7,Ksparov.curr_game.board)
+          }
+          return true
+        case "K" => piece = "king"; w = w.substring(1, w.length)
+        case "Q" => piece = "queen"; w = w.substring(1, w.length)
+        case "B" => piece = "bishop"; w = w.substring(1, w.length)
+        case "N" => piece = "knight"; w = w.substring(1, w.length)
+        case "R" => piece = "rook"; w = w.substring(1, w.length)
+        case "P" => piece = "pawn"; w = w.substring(1, w.length)
+        case _ => piece = "pawn"
+      }
+
+      /*Desambiguisont le mouvement */
+
+      if ( is_x_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
+        pos_init = (w(0).toInt - 97,0)
+        Load.piece_Ch = Ksparov.curr_game.board.filter(pcolumn)(0)
+        w = w.substring(1, w.length)
+      }
+      else{
+        if( is_y_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
+          pos_init = (0,w(0).toInt - 49)
+          Load.piece_Ch = Ksparov.curr_game.board.filter(pline)(0)
+          w = w.substring(1,w.length)
+        }
+        else{
+          if (is_x_axis(w(0)) && is_y_axis(w(1)) && (w(2) == 'x' || is_x_axis(w(2)))){
+            pos_init = ( w(0).toInt - 97, w(1).toInt - 49)
+            Load.piece_Ch =  Ksparov.curr_game.board.filter(pexactpos)(0)
+            w = w.substring(2,w.length)
+          }
+        }
+      }
+      /* Mange une piéce */
+      if (w(0) == 'x'){
+        w = w.substring(1,w.length)
+      }
+
+      /* Déplacement */
+
+      pos_fin = (w(0).toInt - 97, w(1).toInt - 49)
+
+      if(Load.piece_Ch.coords == (-1,-1)){
+        Load.piece_Ch = Ksparov.curr_game.board.filter(pcangoto)(0)
+      }
+
+      w = w.substring(2,w.length)
+
+      /* Promotion */
+      if (w(0) == '='){
+        w(1) match{
+          case 'Q' => Ksparov.curr_game.selected_promotion = "Queen"
+          case 'N' => Ksparov.curr_game.selected_promotion = "Knight"
+          case 'B' => Ksparov.curr_game.selected_promotion = "Bishop"
+          case 'R' => Ksparov.curr_game.selected_promotion = "Rook"
+        }
+        w = w.substring(2,w.length)
+      }
+
+      /* Mat */
+      w(0).toString match{
+        case mattag(_*) => w = w.substring(1,w.length)
+        case _ => ()
+      }
+
+      /* Comments */
+      w.substring(0,2) match{
+        case spmessage(s) => specialmessage = s
+        case _ => ()
+      }
+
+      Save.add_move1(Ksparov.curr_game.board.indexOf(Load.piece_Ch),pos_fin)
+      Load.piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.curr_game.board)
+      Save.add_move2
+      return true
+
+    }
+/** Predicates if char is [a-h] 
     *
     * @param c The character investigated
     * @return True if the character is between 'a' and 'h'
@@ -420,107 +513,16 @@ object Load {
       return (P.name == piece && (P.player == Ksparov.curr_game.curr_player) && P.pre_move(pos_fin._1,pos_fin._2,Ksparov.curr_game.board)._1)
     }
 
-    /** Finds all information related to the move and plays the move once done 
-    *
-    * @param s The move in a string 
-    * @return True the string is a move, False if we did not manage to parse the string
-    */
-    def parse_word (s : String) : Boolean = {
+  /** Represents a robot player which can read from Load.list_of_moves a move and play it, it is he who understands PGN move notation 
+  *
+  * @param n The id of the player
+  */
+  class Reproducer (n : Int) extends Player (n : Int) {
 
-      s match {
-        case resulttag(_*) =>
-          finalresult = s
-          Ksparov.check_game_status(Ksparov.curr_game.curr_player)
-          if (! (s == "*") ) {Ksparov.curr_game.game_won = true; return true} else { return false }
-        case _ => ()
-      }
+    /** It is a robot */
+    ai = true
 
-      var w = s+ "$$$$$"
-
-      /* Recherche du type de piéce */
-      w(0).toString match{
-        case droquereg(_*) =>
-          w.substring(0,3) match{
-            case roquereg(_*) =>
-              Ksparov.curr_game.board((1-Ksparov.curr_game.curr_player)*16 +14).move(6,(1-Ksparov.curr_game.curr_player)*7, Ksparov.curr_game.board)
-            case _ =>
-              Ksparov.curr_game.board((1-Ksparov.curr_game.curr_player)*16 + 14).move(2,(1-Ksparov.curr_game.curr_player)*7,Ksparov.curr_game.board)
-          }
-          return true
-        case "K" => piece = "king"; w = w.substring(1, w.length)
-        case "Q" => piece = "queen"; w = w.substring(1, w.length)
-        case "B" => piece = "bishop"; w = w.substring(1, w.length)
-        case "N" => piece = "knight"; w = w.substring(1, w.length)
-        case "R" => piece = "rook"; w = w.substring(1, w.length)
-        case "P" => piece = "pawn"; w = w.substring(1, w.length)
-        case _ => piece = "pawn"
-      }
-
-      /*Desambiguisont le mouvement */
-
-      if ( is_x_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
-        pos_init = (w(0).toInt - 97,0)
-        piece_Ch = Ksparov.curr_game.board.filter(pcolumn)(0)
-        w = w.substring(1, w.length)
-      }
-      else{
-        if( is_y_axis(w(0)) && (w(1) == 'x' || is_x_axis(w(1)))){
-          pos_init = (0,w(0).toInt - 49)
-          piece_Ch = Ksparov.curr_game.board.filter(pline)(0)
-          w = w.substring(1,w.length)
-        }
-        else{
-          if (is_x_axis(w(0)) && is_y_axis(w(1)) && (w(2) == 'x' || is_x_axis(w(2)))){
-            pos_init = ( w(0).toInt - 97, w(1).toInt - 49)
-            piece_Ch =  Ksparov.curr_game.board.filter(pexactpos)(0)
-            w = w.substring(2,w.length)
-          }
-        }
-      }
-      /* Mange une piéce */
-      if (w(0) == 'x'){
-        w = w.substring(1,w.length)
-      }
-
-      /* Déplacement */
-
-      pos_fin = (w(0).toInt - 97, w(1).toInt - 49)
-
-      if(piece_Ch.coords == (-1,-1)){
-        piece_Ch = Ksparov.curr_game.board.filter(pcangoto)(0)
-      }
-
-      w = w.substring(2,w.length)
-
-      /* Promotion */
-      if (w(0) == '='){
-        w(1) match{
-          case 'Q' => Ksparov.curr_game.selected_promotion = "Queen"
-          case 'N' => Ksparov.curr_game.selected_promotion = "Knight"
-          case 'B' => Ksparov.curr_game.selected_promotion = "Bishop"
-          case 'R' => Ksparov.curr_game.selected_promotion = "Rook"
-        }
-        w = w.substring(2,w.length)
-      }
-
-      /* Mat */
-      w(0).toString match{
-        case mattag(_*) => w = w.substring(1,w.length)
-        case _ => ()
-      }
-
-      /* Comments */
-      w.substring(0,2) match{
-        case spmessage(s) => specialmessage = s
-        case _ => ()
-      }
-
-      Save.add_move1(Ksparov.curr_game.board.indexOf(piece_Ch),pos_fin)
-      piece_Ch.move(pos_fin._1,pos_fin._2,Ksparov.curr_game.board)
-      Save.add_move2
-      return true
-
-    }
+    
 
     /** the getmove method applies parse_word and prints board*/
     override def getmove : Unit = {
