@@ -960,15 +960,24 @@ object DrawSave {
               case 0 =>
           textFileName.text = ""
           return_type match {
-            case "Menu" => Ksparov.frame.contents = new DrawMenu.Menu
+            case "Menu" => 
+              Ksparov.frame.contents = new DrawMenu.Menu
+              Ksparov.curr_game.gnuthread_in_life = false
+              Ksparov.curr_game.send_to_gnuchess.join
+              Ksparov.curr_game.listen_to_gnuchess.join
               Ksparov.frame.peer.setLocationRelativeTo(null)
-            case "Game" => Ksparov.curr_game.timer = new Time.TimeThread
-                Ksparov.curr_game.ai_move = new AIMoveThread
-                Ksparov.curr_game.thread_in_life = true
-                Ksparov.frame.contents = new DrawBoard.Board
-                Ksparov.curr_game.timer.start
-                Ksparov.curr_game.ai_move.start
-            case "Quit" => Ksparov.frame.dispose()
+            case "Game" => 
+              Ksparov.curr_game.timer = new Time.TimeThread
+              Ksparov.curr_game.ai_move = new AIMoveThread
+              Ksparov.curr_game.thread_in_life = true
+              Ksparov.frame.contents = new DrawBoard.Board
+              Ksparov.curr_game.timer.start
+              Ksparov.curr_game.ai_move.start
+            case "Quit" => 
+              Ksparov.curr_game.gnuthread_in_life = false
+              Ksparov.curr_game.send_to_gnuchess.join
+              Ksparov.curr_game.listen_to_gnuchess.join
+              Ksparov.frame.dispose()
         }
               case -1 =>
                 textFileName.foreground = Color.red

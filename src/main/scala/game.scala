@@ -96,11 +96,18 @@ class Human(n : Int) extends Player(n : Int) {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
       if (Ksparov.curr_game.first_choice_done) {
+        if (Ksparov.curr_game.game_type > 7) {
+          Ksparov.curr_game.write_to_the_pipe = (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._1 + 97).toChar + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._2 + 1).toString
+        }
         /* loads part of the move to be added but has to wait for promotion information */
         Save.add_move1 (Ksparov.curr_game.selected_piece, (x,y))
         /* The variable valid check if the move is valid, and p is the optionnal piece taken */
         var valid = board(Ksparov.curr_game.selected_piece).move(x, y, board)
         if (valid) {
+          if (Ksparov.curr_game.game_type > 7) {
+            Ksparov.curr_game.write_to_the_pipe += (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._1 + 97).toChar + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._2 + 1).toString + "\n"
+            Ksparov.curr_game.something_to_send = true
+          }
           /* the move being valid addit to the list of moves */
           Save.add_move2
           /* If the move is valid, apply the new board */
@@ -306,7 +313,7 @@ object Ksparov {
   /** Array for the dead piece icon, they are enabled for the promotion to select the piece */
   var promotion_buttons = Array(new Array[DrawBoard.DeadCase](4), new Array[DrawBoard.DeadCase](4))
   /** Array of the 2 butons to start to play in a loaded game */
-  var play_buttons = new Array [DrawBoard.PlayButton] (4)
+  var play_buttons = new Array [DrawBoard.PlayButton] (6)
   /** Array of the 32 pieces of the game */
   var board = new Array[Piece](32)
 
@@ -337,6 +344,8 @@ object Ksparov {
   /** The thread that get the AI move */
   var ai_move = new AIMoveThread
 
+  /** True if gnuchess threads shoud be active */
+  var gnuthread_in_life = false
   /** True if there is someting to send via the pipe */
   var something_to_send = false
   /** String of the movment we want to write in the pipe */
@@ -473,6 +482,10 @@ object Ksparov {
         }
       }
     }
+    if (Ksparov.curr_game.game_type > 7 && (Ksparov.curr_game.game_won || Ksparov.curr_game.game_nulle)) {
+      Ksparov.curr_game.write_to_the_pipe = "exit\n"
+      Ksparov.curr_game.something_to_send = true
+    }
   }
 
   /** Apply all the steps of a movement */
@@ -551,7 +564,7 @@ object Ksparov {
     DrawActions.draw_game_board(Ksparov.curr_game.board)
 
     //Initializes the play buttons 
-    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0, "h"), new DrawBoard.PlayButton (0, "ai"), new DrawBoard.PlayButton (1, "h"), new DrawBoard.PlayButton (1, "ai"))   
+    Ksparov.curr_game.play_buttons = Array (new DrawBoard.PlayButton (0, "h"), new DrawBoard.PlayButton (0, "ai"), new DrawBoard.PlayButton (0, "gnu"), new DrawBoard.PlayButton (1, "h"), new DrawBoard.PlayButton (1, "ai"), new DrawBoard.PlayButton (1, "gnu"))   
 
     // Saves the initialisation
     Save.init
@@ -599,8 +612,6 @@ object Ksparov {
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
       case 8 => 
         Time.clock_available = false
-        Ksparov.curr_game.write_to_the_pipe = "go\n"
-        Ksparov.curr_game.something_to_send = true
         Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
         Ksparov.curr_game.players(0) = new AI2(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA noire joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
@@ -608,18 +619,16 @@ object Ksparov {
         Time.clock_available = false
         Ksparov.curr_game.players(1) = new AI2(1)
         Ksparov.curr_game.players(0) = new Pipe.PipePlayer(0)
-        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA noire joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
+        Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA blanche joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
       case 10 => 
         Time.clock_available = false
-        Ksparov.curr_game.write_to_the_pipe = "go\n"
-        Ksparov.curr_game.something_to_send = true
         Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
         Ksparov.curr_game.players(0) = new Human(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
       case 11 => 
         Time.clock_available = false
-        Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
-        Ksparov.curr_game.players(0) = new Human(0)
+        Ksparov.curr_game.players(0) = new Pipe.PipePlayer(0)
+        Ksparov.curr_game.players(1) = new Human(1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les blancs !</html>")    
     }
 
@@ -646,9 +655,14 @@ object Ksparov {
 
     // Initializes gnuchess
     if (n > 7) {
+      Ksparov.curr_game.gnuthread_in_life = true
       Ksparov.curr_game.gnuchess = Runtime.getRuntime.exec("gnuchessx -e")
       Ksparov.curr_game.send_to_gnuchess.start()
       Ksparov.curr_game.listen_to_gnuchess.start()
+      if (n == 8 || n == 10) {
+        Ksparov.curr_game.write_to_the_pipe = "go\n"
+        Ksparov.curr_game.something_to_send = true
+      }
     }
 
   }

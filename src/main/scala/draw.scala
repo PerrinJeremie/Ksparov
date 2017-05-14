@@ -583,9 +583,18 @@ object DrawBoard {
 				Ksparov.curr_game.thread_in_life = false
 				Ksparov.curr_game.ai_move.join
 				Ksparov.curr_game.timer.join
-				// Draw a game selection menu of the same kind of game as the actual one
-	    		Ksparov.frame.contents = new DrawGameSelection.Menu (Ksparov.curr_game.alice_chess)
-				Ksparov.frame.peer.setLocationRelativeTo(null)
+				Ksparov.curr_game.write_to_the_pipe = "exit\n"
+				Ksparov.curr_game.something_to_send = true
+				Ksparov.curr_game.send_to_gnuchess.join
+				Ksparov.curr_game.listen_to_gnuchess.join
+				if (Ksparov.curr_game.game_type > 7) {
+		    		Ksparov.frame.contents = new DrawGameSelectionGnuChess.Menu
+					Ksparov.frame.peer.setLocationRelativeTo(null)
+				} else {
+					// Draw a game selection menu of the same kind of game as the actual one
+		    		Ksparov.frame.contents = new DrawGameSelection.Menu (Ksparov.curr_game.alice_chess)
+					Ksparov.frame.peer.setLocationRelativeTo(null)
+				}
 			}
 		}
 		// Save button
@@ -609,6 +618,10 @@ object DrawBoard {
 				Ksparov.curr_game.thread_in_life = false
 				Ksparov.curr_game.ai_move.join				
                 Ksparov.curr_game.timer.join
+				Ksparov.curr_game.write_to_the_pipe = "exit\n"
+				Ksparov.curr_game.something_to_send = true
+				Ksparov.curr_game.send_to_gnuchess.join
+				Ksparov.curr_game.listen_to_gnuchess.join
 				// Draw the main menu 
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)
@@ -618,14 +631,14 @@ object DrawBoard {
 	  contents += new Button {
 		font = Display.text_font
 		action = Action ("Gérer les paramètres") {
-		  // Stop the threads and wait for them to finish
-		  Ksparov.curr_game.thread_in_life = false
-		  Ksparov.curr_game.ai_move.join
-		  Ksparov.curr_game.timer.join
-		  // Close the frame so quit Ksparov
-          DrawParameters.where_cb = 1
-          Ksparov.frame.contents = new DrawParameters.SubMenus (2)
-		  Ksparov.frame.peer.setLocationRelativeTo(null)
+			// Stop the threads and wait for them to finish
+			Ksparov.curr_game.thread_in_life = false
+			Ksparov.curr_game.ai_move.join
+			Ksparov.curr_game.timer.join
+			// Close the frame so quit Ksparov
+    	    DrawParameters.where_cb = 1
+	        Ksparov.frame.contents = new DrawParameters.SubMenus (2)
+			Ksparov.frame.peer.setLocationRelativeTo(null)
 		}
 	  }
 	}
@@ -654,8 +667,12 @@ object DrawBoard {
 	  action = Action ("<html><div style='text-align : center;'> Quitter <br> Ksparov </html>") {
 		// Stop the threads and wait for them to finish
 		Ksparov.curr_game.thread_in_life = false
+		Ksparov.curr_game.write_to_the_pipe = "exit\n"
+		Ksparov.curr_game.something_to_send = true
 		Ksparov.curr_game.ai_move.join
 		Ksparov.curr_game.timer.join
+		Ksparov.curr_game.send_to_gnuchess.join
+		Ksparov.curr_game.listen_to_gnuchess.join
 		// Close the frame so quit Ksparov
 	    Ksparov.frame.dispose()
 	  }
@@ -717,7 +734,11 @@ object DrawBoard {
                 if (player_type == "ai") {
                     DrawActions.draw_game_messages ("Info PlayButton AI", player_id)
                 } else {
-                    DrawActions.draw_game_messages ("Info PlayButton h", player_id)
+                	if (player_type == "h") {
+	                    DrawActions.draw_game_messages ("Info PlayButton h", player_id)
+	                } else {
+	                    DrawActions.draw_game_messages ("Info PlayButton gnu", player_id)
+	                }
                 }
             case _ : event.MouseExited => DrawActions.draw_game_messages ("Current_turn", Ksparov.curr_game.curr_player)
         }
@@ -737,11 +758,25 @@ object DrawBoard {
                     Ksparov.curr_game.players (player_id) = new Human (player_id)
 				    Ksparov.curr_game.players (1 - player_id) = new AI2 (1 - player_id)
                 } else {
-                    // Creates new players for Human vs Human
-                    Ksparov.curr_game.game_type = 1
-                    Ksparov.curr_game.players (player_id) = new Human (player_id)
-                    Ksparov.curr_game.players (1 - player_id) = new Human (1 - player_id)
-
+                	if (player_type == "gnu") {
+                		Ksparov.curr_game.game_type = 10
+                		Ksparov.curr_game.players (player_id) = new Human (player_id)
+                		Ksparov.curr_game.players (1 - player_id) = new Pipe.PipePlayer (1 - player_id)
+						Ksparov.curr_game.gnuthread_in_life = true
+						Ksparov.curr_game.gnuchess = Runtime.getRuntime.exec("gnuchessx -e")
+						Ksparov.curr_game.send_to_gnuchess.start()
+						Ksparov.curr_game.listen_to_gnuchess.start()
+						Ksparov.curr_game.write_to_the_pipe = "setboard " + FEN.board_to_FEN (Ksparov.curr_game.board) + "\n"
+						if (player_id != Ksparov.curr_game.curr_player) {
+							Ksparov.curr_game.write_to_the_pipe += "go\n"
+						}
+						Ksparov.curr_game.something_to_send = true
+                	} else {
+	    	            // Creates new players for Human vs Human
+    	                Ksparov.curr_game.game_type = 1
+            	        Ksparov.curr_game.players (player_id) = new Human (player_id)
+                	    Ksparov.curr_game.players (1 - player_id) = new Human (1 - player_id)
+                	}
                 }
                 DrawActions.draw_game_messages ("Current_turn", Ksparov.curr_game.curr_player)
 				// Disables play button and set their display as a backgroundcase 
@@ -759,10 +794,19 @@ object DrawBoard {
 	class Border1 extends GridPanel (Parameters.nb_case_board + 2, 3) {
 		for(i <- 0 to Parameters.nb_case_board + 1) {
 			i match {
+				case 1 => 
+                    // Displays if needed
+                    contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                            Ksparov.curr_game.play_buttons (5)
+                        } else { 
+                            new BackgroundCase (1, 1)
+                        })
+                    contents += new BackgroundCase (1, 1)
+                    contents += new BackgroundCase (1, 1)
                 case 2 => 
                     // Displays if needed
                     contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
-                            Ksparov.curr_game.play_buttons (3)
+                            Ksparov.curr_game.play_buttons (4)
                         } else { 
                             new BackgroundCase (1, 1)
                         })
@@ -771,7 +815,7 @@ object DrawBoard {
 				case 3 =>
                     // Displays if needed
 					contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
-                            Ksparov.curr_game.play_buttons (2)
+                            Ksparov.curr_game.play_buttons (3)
                         } else { 
                             new BackgroundCase (1, 1)
                         })
@@ -814,7 +858,7 @@ object DrawBoard {
 				contents += new BackgroundCase (1, 1)
 				contents += new BackgroundCase (1, 1)
 			} else {
-				if (i > 7) {
+				if (i > 8) {
 					contents += new BackgroundCaseWithLabel ((9 - i).toString)
 					contents += new BackgroundCase (1, 1)
 					contents += new BackgroundCase (1, 1)
@@ -862,6 +906,16 @@ object DrawBoard {
                         // Displays if needed
                         contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
                                 Ksparov.curr_game.play_buttons (1)
+                            } else { 
+                                new BackgroundCase (1, 1)
+                            }) 
+                    case 8 =>  
+                    	contents += new BackgroundCaseWithLabel ((9 - i).toString)
+                        contents += new BackgroundCase (1, 1)
+                        contents += new BackgroundCase (1, 1)
+                        // Displays if needed
+                        contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                                Ksparov.curr_game.play_buttons (2)
                             } else { 
                                 new BackgroundCase (1, 1)
                             }) 
@@ -1092,6 +1146,9 @@ object DrawActions {
                 Ksparov.curr_game.message_drawer.foreground = Color.red
 
             case "Info PlayButton h" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Cliquer pour reprendre la partie avec <br> ce joueur contre un humain</html>"
+                Ksparov.curr_game.message_drawer.foreground = Color.red
+
+            case "Info PlayButton gnu" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Cliquer pour reprendre la partie avec <br> ce joueur contre gnuchess</html>"
                 Ksparov.curr_game.message_drawer.foreground = Color.red
 
 		}

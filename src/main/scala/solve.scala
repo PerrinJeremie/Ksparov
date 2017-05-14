@@ -142,7 +142,6 @@ class AI2 (player : Int) extends Player (player) {
 
     if (Ksparov.curr_game.game_type > 7) {
       Ksparov.curr_game.write_to_the_pipe = (tab(0)._1 + 97).toChar + (tab(0)._2 + 1).toString + (tab(1)._1 + 97).toChar + (tab(1)._2 + 1).toString + "\n"
-      print(Ksparov.curr_game.write_to_the_pipe)
       Ksparov.curr_game.something_to_send = true
     }
 

@@ -23,11 +23,16 @@ object Pipe {
 	class SendThread extends Thread {
 		override def run() {
 			var out = new PrintWriter(Ksparov.curr_game.gnuchess.getOutputStream)
-			while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
+			while (Ksparov.curr_game.gnuthread_in_life) {
 				if (Ksparov.curr_game.something_to_send && Ksparov.curr_game.ready_to_gnu) {
+					print("J'écris ça : " + Ksparov.curr_game.write_to_the_pipe + "\n")
 					out.write(Ksparov.curr_game.write_to_the_pipe)
 					out.flush()
+					if (Ksparov.curr_game.write_to_the_pipe == "exit\n") {
+						Ksparov.curr_game.gnuthread_in_life = false
+					}
 					Ksparov.curr_game.something_to_send = false
+					Ksparov.curr_game.write_to_the_pipe = ""
 				} else {
 					Thread.sleep(300)
 				}
@@ -43,14 +48,13 @@ object Pipe {
 
 	class ListenThread extends Thread {
 		override def run {
-			while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
+			while (Ksparov.curr_game.gnuthread_in_life) {
 				Thread.sleep(100)
 				curr_char = Ksparov.curr_game.gnuchess.getInputStream.read().toChar
 				curr_line += curr_char
 				if (curr_char == '\n') {
 					curr_line match {
-						case "Chess\n" => print(curr_line)
-							Ksparov.curr_game.ready_to_gnu = true
+						case "Chess\n" => Ksparov.curr_game.ready_to_gnu = true
 						case promotion(s,l) => 
 							l match {
 								case "q" => Ksparov.curr_game.selected_promotion = "Queen"
@@ -65,7 +69,7 @@ object Pipe {
 							Ksparov.curr_game.new_move_available = true
 							Ksparov.curr_game.last_move_gnuchess = s
     			            Ksparov.play_move
-						case _ => ()
+						case _ => print("j'ai reçu : " + curr_line + "\n")
 					}
 					curr_line = ""
 					curr_char = 'a'

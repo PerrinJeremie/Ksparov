@@ -3,7 +3,7 @@ object FEN{
     val len = g(x).size
     var consec_nulls = 0
     var j = y
-    while(j<len && g(x)(j) == null){
+    while(j < len && g(x)(j) == null){
       consec_nulls +=1
       j += 1
     }
@@ -18,7 +18,7 @@ object FEN{
     for (p<-g){
       var (x,y)=p.coords
       if (Aux.on_board(x,y)){
-        board(7-y)(7-x) = p
+        board(7-y)(x) = p
       }
     }
 
