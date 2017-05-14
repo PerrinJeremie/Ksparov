@@ -659,10 +659,11 @@ object Ksparov {
       Ksparov.curr_game.gnuchess = Runtime.getRuntime.exec("gnuchessx -e")
       Ksparov.curr_game.send_to_gnuchess.start()
       Ksparov.curr_game.listen_to_gnuchess.start()
+      Ksparov.curr_game.write_to_the_pipe = "depth 2\n"
       if (n == 8 || n == 10) {
-        Ksparov.curr_game.write_to_the_pipe = "go\n"
-        Ksparov.curr_game.something_to_send = true
+        Ksparov.curr_game.write_to_the_pipe += "go\n"
       }
+      Ksparov.curr_game.something_to_send = true
     }
 
   }
