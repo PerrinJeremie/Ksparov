@@ -796,7 +796,7 @@ object DrawBoard {
 			i match {
 				case 1 => 
                     // Displays if needed
-                    contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                    contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type) && !Ksparov.curr_game.alice_chess) {
                             Ksparov.curr_game.play_buttons (5)
                         } else { 
                             new BackgroundCase (1, 1)
@@ -914,7 +914,7 @@ object DrawBoard {
                         contents += new BackgroundCase (1, 1)
                         contents += new BackgroundCase (1, 1)
                         // Displays if needed
-                        contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type)) {
+                        contents += (if (Array(6,7).contains(Ksparov.curr_game.game_type) && !Ksparov.curr_game.alice_chess) {
                                 Ksparov.curr_game.play_buttons (2)
                             } else { 
                                 new BackgroundCase (1, 1)
