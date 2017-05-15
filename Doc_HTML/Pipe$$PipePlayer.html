@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>DrawMenu - DrawMenu</title>
-          <meta name="description" content="DrawMenu - DrawMenu" />
-          <meta name="keywords" content="DrawMenu DrawMenu" />
+          <title>PipePlayer - Pipe.PipePlayer</title>
+          <meta name="description" content="PipePlayer - Pipe.PipePlayer" />
+          <meta name="keywords" content="PipePlayer Pipe.PipePlayer" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = 'index.html';
-            var hash = 'DrawMenu$';
+            var hash = 'Pipe$$PipePlayer';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,27 +22,26 @@
    	  </script>
     
         </head>
-        <body class="value">
+        <body class="type">
       <div id="definition">
-        <img src="lib/object_big.png" />
-        
-        <h1>DrawMenu</h1>
+        <img src="lib/class_big.png" />
+        <p id="owner"><a href="Pipe$.html" class="extype" name="Pipe">Pipe</a></p>
+        <h1>PipePlayer</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">DrawMenu</span>
+        <span class="name">PipePlayer</span><span class="result"> extends <a href="Player.html" class="extype" name="Player">Player</a></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Draw the main menu of the application.
-	A menu is an instance of DrawMenu.Menu.</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Player that plays what he receives from the pipe</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="Player.html" class="extype" name="Player">Player</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -60,7 +59,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="DrawMenu"><span>DrawMenu</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="Pipe.PipePlayer"><span>PipePlayer</span></li><li class="in" name="Player"><span>Player</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -78,52 +77,25 @@
 
       <div id="template">
         <div id="allMembers">
-        
-
-        <div id="types" class="types members">
-              <h3>Type Members</h3>
-              <ol><li name="DrawMenu.Menu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="MenuextendsBoxPanel"></a>
-      <a id="Menu:Menu"></a>
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="Pipe.PipePlayer#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(id:Int):Pipe.PipePlayer"></a>
+      <a id="&lt;init&gt;:PipePlayer"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <a href="DrawMenu$$Menu.html"><span class="name">Menu</span></a><span class="result"> extends <span class="extype" name="scala.swing.BoxPanel">BoxPanel</span></span>
+        <span class="name">PipePlayer</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Int">Int</span></span>)</span>
       </span>
       </h4>
-      <p class="comment cmt">The final appearance with the principal menu between two columns of background cases.</p>
-    </li><li name="DrawMenu.MenuGrid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="MenuGridextendsGridPanel"></a>
-      <a id="MenuGrid:MenuGrid"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="DrawMenu$$MenuGrid.html"><span class="name">MenuGrid</span></a><span class="result"> extends <span class="extype" name="scala.swing.GridPanel">GridPanel</span></span>
-      </span>
-      </h4>
-      <p class="comment cmt">The principal menu : for each line there are two buttons and a background between them.</p>
-    </li><li name="DrawMenu.Option" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="OptionextendsPrettyBigButton"></a>
-      <a id="Option:Option"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="DrawMenu$$Option.html"><span class="name">Option</span></a><span class="result"> extends <a href="PrettyBigButton.html" class="extype" name="PrettyBigButton">PrettyBigButton</a></span>
-      </span>
-      </h4>
-      <p class="comment cmt">This is the generic class for each option botton in the main menu,
-	the role of a particular is defined depending on the parameter passed to the class.</p>
+      
     </li></ol>
             </div>
+
+        
 
         
 
@@ -194,6 +166,58 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="Player#actual_period" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="actual_period:Int"></a>
+      <a id="actual_period:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actual_period</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Defines the current period of the player</p><div class="fullcomment"><div class="comment cmt"><p>Defines the current period of the player</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Player#actual_time" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="actual_time:Int"></a>
+      <a id="actual_time:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">actual_time</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Defines the amount of time the player have for its current period</p><div class="fullcomment"><div class="comment cmt"><p>Defines the amount of time the player have for its current period</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Player#ai" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ai:Boolean"></a>
+      <a id="ai:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ai</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">ai true if the player is an Computer player or a Reproducer</p><div class="fullcomment"><div class="comment cmt"><p>ai true if the player is an Computer player or a Reproducer</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Pipe.PipePlayer#ai_promotion" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ai_promotion:Unit"></a>
+      <a id="ai_promotion:Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ai_promotion</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Method that apply the promotion for the AI or the Reproducer</p><div class="fullcomment"><div class="comment cmt"><p>Method that apply the promotion for the AI or the Reproducer</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="Pipe.PipePlayer">PipePlayer</a> → <a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -207,6 +231,58 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="Player#check_boring_game" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="check_boring_game:Boolean"></a>
+      <a id="check_boring_game:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">check_boring_game</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Return true if the game is nulle because there has been 50 boring move</p><div class="fullcomment"><div class="comment cmt"><p>Return true if the game is nulle because there has been 50 boring move</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Pipe.PipePlayer#check_pat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="check_pat:Boolean"></a>
+      <a id="check_pat:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">check_pat</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Method that check if the player is pat or not</p><div class="fullcomment"><div class="comment cmt"><p>Method that check if the player is pat or not</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="Pipe.PipePlayer">PipePlayer</a> → <a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Player#check_triple_repetition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="check_triple_repetition:Boolean"></a>
+      <a id="check_triple_repetition:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">check_triple_repetition</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Return true if the game is nulle because there has been a triple repetition in position</p><div class="fullcomment"><div class="comment cmt"><p>Return true if the game is nulle because there has been a triple repetition in position</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Player#check_trivial_nulle" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="check_trivial_nulle:Boolean"></a>
+      <a id="check_trivial_nulle:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">check_trivial_nulle</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns true if players do not have enough pieces to mate</p><div class="fullcomment"><div class="comment cmt"><p>Returns true if players do not have enough pieces to mate</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -284,6 +360,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="Pipe.PipePlayer#get_piece" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="get_piece:Unit"></a>
+      <a id="get_piece:Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get_piece</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Transform the notation from the pipe to notation for the game</p>
+    </li><li name="Pipe.PipePlayer#getmove" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getmove:Unit"></a>
+      <a id="getmove:Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getmove</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Method that apply the move chose by the player</p><div class="fullcomment"><div class="comment cmt"><p>Method that apply the move chose by the player</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="Pipe.PipePlayer">PipePlayer</a> → <a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -310,6 +412,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="Player#moved" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="moved:Boolean"></a>
+      <a id="moved:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">moved</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if the player has moved</p><div class="fullcomment"><div class="comment cmt"><p>True if the player has moved</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
+    </li><li name="Player#nb_move" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nb_move:Int"></a>
+      <a id="nb_move:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nb_move</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Defines the number of moves played by the player in the current period</p><div class="fullcomment"><div class="comment cmt"><p>Defines the number of moves played by the player in the current period</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Player.html" class="extype" name="Player">Player</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -441,7 +569,9 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="Player">
+              <h3>Inherited from <a href="Player.html" class="extype" name="Player">Player</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

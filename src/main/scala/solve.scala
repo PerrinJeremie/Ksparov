@@ -12,6 +12,7 @@ class AI (player : Int) extends Player (player) {
   var already_check = new Array[Boolean](16)
 
   override def getmove {
+    Thread.sleep(800)
     // All piece are initially possible, so the array is false, but if a piece is dead (x negative), it should not be tried to move
     for (i <- 0 to 15) {
       if (Ksparov.curr_game.board((1 - id) * 16 + i).pos_x < 0) {
@@ -105,6 +106,7 @@ class AIMoveThread extends Thread {
 }
 
 class AI2 (player : Int) extends Player (player) {
+  /** Set the wait time depending on the complexity of the AI */
   def wait_time = {
     if (Parameters.ai_speed < 3) {
       800

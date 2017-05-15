@@ -402,6 +402,38 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="Load#is_x_axis" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="is_x_axis(c:Char):Boolean"></a>
+      <a id="is_x_axis(Char):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">is_x_axis</span><span class="params">(<span name="c">c: <span class="extype" name="scala.Char">Char</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Predicates if char is [a-h]
+</p><div class="fullcomment"><div class="comment cmt"><p>Predicates if char is [a-h]
+</p></div><dl class="paramcmts block"><dt class="param">c</dt><dd class="cmt"><p>The character investigated</p></dd><dt>returns</dt><dd class="cmt"><p>True if the character is between 'a' and 'h'
+</p></dd></dl></div>
+    </li><li name="Load#is_y_axis" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="is_y_axis(c:Char):Boolean"></a>
+      <a id="is_y_axis(Char):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">is_y_axis</span><span class="params">(<span name="c">c: <span class="extype" name="scala.Char">Char</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Predicates if char is [1-8]
+</p><div class="fullcomment"><div class="comment cmt"><p>Predicates if char is [1-8]
+</p></div><dl class="paramcmts block"><dt class="param">c</dt><dd class="cmt"><p>The character investigated</p></dd><dt>returns</dt><dd class="cmt"><p>True if the character is between '1' and '8'
+</p></dd></dl></div>
     </li><li name="Load#list_of_moves" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="list_of_moves:List[String]"></a>
       <a id="list_of_moves:List[String]"></a>
@@ -506,6 +538,70 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="Load#parse_word" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parse_word(s:String):Boolean"></a>
+      <a id="parse_word(String):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">parse_word</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Finds all information related to the move and plays the move once done
+</p><div class="fullcomment"><div class="comment cmt"><p>Finds all information related to the move and plays the move once done
+</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>The move in a string</p></dd><dt>returns</dt><dd class="cmt"><p>True the string is a move, False if we did not manage to parse the string
+</p></dd></dl></div>
+    </li><li name="Load#pcangoto" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pcangoto(P:Piece):Boolean"></a>
+      <a id="pcangoto(Piece):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pcangoto</span><span class="params">(<span name="P">P: <a href="Piece.html" class="extype" name="Piece">Piece</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Predicates if piece can go to pos_fin position
+</p><div class="fullcomment"><div class="comment cmt"><p>Predicates if piece can go to pos_fin position
+</p></div><dl class="paramcmts block"><dt class="param">P</dt><dd class="cmt"><p>The piece investigated</p></dd><dt>returns</dt><dd class="cmt"><p>True if the piece can reach the pos_fin position
+</p></dd></dl></div>
+    </li><li name="Load#pcolumn" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pcolumn(P:Piece):Boolean"></a>
+      <a id="pcolumn(Piece):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pcolumn</span><span class="params">(<span name="P">P: <a href="Piece.html" class="extype" name="Piece">Piece</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Predicates if piece is in column of pos_init
+</p><div class="fullcomment"><div class="comment cmt"><p>Predicates if piece is in column of pos_init
+</p></div><dl class="paramcmts block"><dt class="param">P</dt><dd class="cmt"><p>The piece investigated</p></dd><dt>returns</dt><dd class="cmt"><p>True if the piece is in the column of pos_init
+</p></dd></dl></div>
+    </li><li name="Load#pexactpos" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pexactpos(P:Piece):Boolean"></a>
+      <a id="pexactpos(Piece):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pexactpos</span><span class="params">(<span name="P">P: <a href="Piece.html" class="extype" name="Piece">Piece</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Predicates if piece is in pos_init position
+</p><div class="fullcomment"><div class="comment cmt"><p>Predicates if piece is in pos_init position
+</p></div><dl class="paramcmts block"><dt class="param">P</dt><dd class="cmt"><p>The piece investigated</p></dd><dt>returns</dt><dd class="cmt"><p>True if the piece is at the position of pos_init
+</p></dd></dl></div>
     </li><li name="Load#piece" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="piece:String"></a>
       <a id="piece:String"></a>
@@ -545,6 +641,22 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Recognizes a piece character of PGN</p>
+    </li><li name="Load#pline" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pline(P:Piece):Boolean"></a>
+      <a id="pline(Piece):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pline</span><span class="params">(<span name="P">P: <a href="Piece.html" class="extype" name="Piece">Piece</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Predicates if piece is in pos_init's line
+</p><div class="fullcomment"><div class="comment cmt"><p>Predicates if piece is in pos_init's line
+</p></div><dl class="paramcmts block"><dt class="param">P</dt><dd class="cmt"><p>The piece investigated</p></dd><dt>returns</dt><dd class="cmt"><p>True if the piece is in the line of pos_init
+</p></dd></dl></div>
     </li><li name="Load#pnotspace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="pnotspace(c:Char):Boolean"></a>
       <a id="pnotspace(Char):Boolean"></a>

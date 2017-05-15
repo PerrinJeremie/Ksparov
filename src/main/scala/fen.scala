@@ -11,6 +11,10 @@ object FEN{
     }
     consec_nulls
   }
+  /** Return the string of the FEN notation based on the board given in argument
+  * @param g The board that will be transformed
+  * @return A string in the FEN notation of the board
+  */
   def board_to_FEN(g: Array[Piece]) : String = {
     //Initializing a board array for pratical use
     var board = new Array [ Array[Piece] ] (8)

@@ -5,4 +5,5 @@
 \BOOKMARK [1][-]{section.5}{game.scala ou l'on peut enfin jouer}{}% 5
 \BOOKMARK [1][-]{section.6}{parse.scala ou les dangers de la PGN}{}% 6
 \BOOKMARK [1][-]{section.7}{solve.scala ou l'intelligence limit\351e}{}% 7
-\BOOKMARK [1][-]{section.8}{Les d\351fauts et erreurs connues}{}% 8
+\BOOKMARK [1][-]{section.8}{pipe.scala ou la communication en point fort}{}% 8
+\BOOKMARK [1][-]{section.9}{Les d\351fauts et erreurs connues}{}% 9

@@ -349,6 +349,19 @@
       </span>
       </h4>
       <p class="shortcomment cmt">True if the human player has done his first move, the selection of a piece he owns</p>
+    </li><li name="Ksparov.Game#forfeit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="forfeit:Boolean"></a>
+      <a id="forfeit:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">forfeit</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if IA has forfeited</p>
     </li><li name="Ksparov.Game#game_nulle" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="game_nulle:Boolean"></a>
       <a id="game_nulle:Boolean"></a>
@@ -401,6 +414,45 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="Ksparov.Game#gnuchess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="gnuchess:Process"></a>
+      <a id="gnuchess:Process"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gnuchess</span><span class="result">: <span class="extype" name="java.lang.Process">Process</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Processus to launch gnuchess</p>
+    </li><li name="Ksparov.Game#gnuthread_in_life" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="gnuthread_in_life:Boolean"></a>
+      <a id="gnuthread_in_life:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gnuthread_in_life</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if gnuchess threads shoud be active</p>
+    </li><li name="Ksparov.Game#go_to_send" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="go_to_send:Boolean"></a>
+      <a id="go_to_send:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">go_to_send</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if the command go should be sent after the next move</p>
     </li><li name="Ksparov.Game#grids" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="grids:Array[Array[DrawBoard.Case]]"></a>
       <a id="grids:Array[Array[Case]]"></a>
@@ -466,6 +518,58 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Array of the two kings of the game</p>
+    </li><li name="Ksparov.Game#last_move_arr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="last_move_arr:Int"></a>
+      <a id="last_move_arr:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">last_move_arr</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The arrival case of the last move</p>
+    </li><li name="Ksparov.Game#last_move_dep" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="last_move_dep:Int"></a>
+      <a id="last_move_dep:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">last_move_dep</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The departure case of the last move</p>
+    </li><li name="Ksparov.Game#last_move_gnuchess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="last_move_gnuchess:String"></a>
+      <a id="last_move_gnuchess:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">last_move_gnuchess</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">String of the last move of gnuchess</p>
+    </li><li name="Ksparov.Game#listen_to_gnuchess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="listen_to_gnuchess:Pipe.ListenThread"></a>
+      <a id="listen_to_gnuchess:ListenThread"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">listen_to_gnuchess</span><span class="result">: <a href="Pipe$$ListenThread.html" class="extype" name="Pipe.ListenThread">ListenThread</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Thread to receive from gnuchess</p>
     </li><li name="Ksparov.Game#message_drawer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="message_drawer:DrawBoard.MessageDrawer"></a>
       <a id="message_drawer:MessageDrawer"></a>
@@ -518,6 +622,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="Ksparov.Game#new_move_available" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="new_move_available:Boolean"></a>
+      <a id="new_move_available:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">new_move_available</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"> True if the pipe has sent something new</p>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
@@ -609,6 +726,19 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Array for the dead piece icon, they are enabled for the promotion to select the piece</p>
+    </li><li name="Ksparov.Game#ready_to_gnu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ready_to_gnu:Boolean"></a>
+      <a id="ready_to_gnu:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ready_to_gnu</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if gnuchess is ready to play</p>
     </li><li name="Ksparov.Game#selected_case" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="selected_case:Int"></a>
       <a id="selected_case:Int"></a>
@@ -661,6 +791,32 @@
       </span>
       </h4>
       <p class="shortcomment cmt">The name of the piece selected for the promotion</p>
+    </li><li name="Ksparov.Game#send_to_gnuchess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="send_to_gnuchess:Pipe.SendThread"></a>
+      <a id="send_to_gnuchess:SendThread"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">send_to_gnuchess</span><span class="result">: <a href="Pipe$$SendThread.html" class="extype" name="Pipe.SendThread">SendThread</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Thread to send to gnuchess</p>
+    </li><li name="Ksparov.Game#something_to_send" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="something_to_send:Boolean"></a>
+      <a id="something_to_send:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">something_to_send</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">True if there is someting to send via the pipe</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -700,6 +856,32 @@
       </span>
       </h4>
       <p class="shortcomment cmt">The thread to display the time and the board repetidly</p>
+    </li><li name="Ksparov.Game#tmp_gnu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tmp_gnu:String"></a>
+      <a id="tmp_gnu:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tmp_gnu</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Move in construction for gnuchess</p>
+    </li><li name="Ksparov.Game#tmp_h" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tmp_h:Int"></a>
+      <a id="tmp_h:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tmp_h</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The move in construction for humans</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -770,6 +952,32 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="Ksparov.Game#who_forfeited" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="who_forfeited:Int"></a>
+      <a id="who_forfeited:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">who_forfeited</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Who forfeited</p>
+    </li><li name="Ksparov.Game#write_to_the_pipe" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="write_to_the_pipe:String"></a>
+      <a id="write_to_the_pipe:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">write_to_the_pipe</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">String of the movment we want to write in the pipe</p>
     </li></ol>
             </div>
 

@@ -269,6 +269,12 @@ Si un mouvement est possible, elle choisit alors une des cases possibles aléato
 
 \paragraph{La promotion pour les IA :}La promotion pour les IA se fait de manière aléatoire, l'IA choisit donc une pièce aléatoirement parmi la tour, la dame, le fou ou le cavalier, on applique ensuite la promotion de manière classique.
 
+\section{pipe.scala ou la communication en point fort}
+
+\paragraph{Les threads :}Pour la communication entre notre interface et gnuchess on utilise deux threads : ListenThread et SendThread. SendThread envoi, lorsque l'on indique qu'il y a quelque chose à envoyer, une chaîne de caractères à gnuchess. ListenThread écoute toutes les 100 millisecondes ce que gnuchess renvoi. Il lit ensuite caractère par caractère pour reconstruire la chaîne envoyé et la parse afin de passer les arguments comme il le faut. 
+
+\paragraph{Le joueur PipePlayer :}Ce joueur prend les mouvements donnés par le thread ListenThread et applique les coups conformément. 
+
 \section{Les défauts et erreurs connues}
 
 L'implémentation telle qu'elle est actuellement connaît certaines lourdeurs dans le code. En effet, pour les pièces le code utilise deux variables : une liste de 32 pièces et une liste de 64 cases qui sert à positionner chaque pièce de la première liste. Le code pourrait être modifier pour n'utiliser plus que la liste des 32 pièces. \\
