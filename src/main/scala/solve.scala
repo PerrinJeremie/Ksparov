@@ -137,6 +137,7 @@ class AI2 (player : Int) extends Player (player) {
 
     var tab = AlphaBeta.alphabeta(Ksparov.curr_game.board, Ksparov.curr_game.curr_player, Parameters.ai_speed)
     Ksparov.curr_game.game_won = false
+    Ksparov.curr_game.game_nulle = false
 
     for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 	  for (i <- 0 to Parameters.nb_case_board - 1) {
