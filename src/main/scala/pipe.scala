@@ -53,6 +53,7 @@ object Pipe {
 
 	/** Thread to listen what gnuchess has to say */
 	class ListenThread extends Thread {
+		var bytes = new Array [Byte] (300)
 		/** The current char read*/
 		var curr_char = 'a'
 		/** The current line read */
@@ -65,36 +66,30 @@ object Pipe {
 		override def run {
 			// While threads should be alive
 			while (Ksparov.curr_game.gnuthread_in_life || Ksparov.curr_game.gnuchess.getInputStream.available() != 0) {
-				Thread.sleep(100)
+				Thread.sleep(1000)
 				// Read one char from the stream
-				curr_char = Ksparov.curr_game.gnuchess.getInputStream.read().toChar
-				// Add the char to the line 
-				curr_line += curr_char
-				// If we are at the end of the line
-				if (curr_char == '\n') {
-					print(curr_line + '\n')
-					// Match the line
-					curr_line match {
-						case "Chess\n" => Ksparov.curr_game.ready_to_gnu = true
-						case promotion(s,l) => 
-							l match {
-								case "q" => Ksparov.curr_game.selected_promotion = "Queen"
-								case "b" => Ksparov.curr_game.selected_promotion = "Bishop"
-								case "n" => Ksparov.curr_game.selected_promotion = "Knight"
-								case "r" => Ksparov.curr_game.selected_promotion = "Rook"
-							}
-							Ksparov.curr_game.new_move_available = true
-							Ksparov.curr_game.last_move_gnuchess = s
-    			            Ksparov.play_move
-						case opp_move(s) => 
-							Ksparov.curr_game.new_move_available = true
-							Ksparov.curr_game.last_move_gnuchess = s
-    			            Ksparov.play_move
-						case _ => ()
-					}
-					curr_line = ""
-					curr_char = 'a'
-				}
+				Ksparov.curr_game.gnuchess.getInputStream.read(bytes, 0, Ksparov.curr_game.gnuchess.getInputStream.available)
+				var line = new String(bytes)
+				print(line)
+				// Match the line
+				line match {
+					case "Chess\n" => Ksparov.curr_game.ready_to_gnu = true
+					case promotion(s,l) => 
+						l match {
+							case "q" => Ksparov.curr_game.selected_promotion = "Queen"
+							case "b" => Ksparov.curr_game.selected_promotion = "Bishop"
+							case "n" => Ksparov.curr_game.selected_promotion = "Knight"
+							case "r" => Ksparov.curr_game.selected_promotion = "Rook"
+						}
+						Ksparov.curr_game.new_move_available = true
+						Ksparov.curr_game.last_move_gnuchess = s
+    			        Ksparov.play_move
+					case opp_move(s) => 
+						Ksparov.curr_game.new_move_available = true
+						Ksparov.curr_game.last_move_gnuchess = s
+    			        Ksparov.play_move
+					case _ => print("LAAA\n")
+				}				
 			}
 			Ksparov.curr_game.gnuchess.getInputStream.close()
 		}
