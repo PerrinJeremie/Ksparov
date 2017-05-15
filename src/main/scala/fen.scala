@@ -1,4 +1,6 @@
+/** FEN notation */
 object FEN{
+  /** Returns the number of case without any piece on */
   def consecutive_nulls (g:Array[Array[Piece]],x:Int,y:Int) = {
     val len = g(x).size
     var consec_nulls = 0

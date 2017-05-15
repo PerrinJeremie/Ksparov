@@ -93,7 +93,6 @@ class Human(n : Int) extends Player(n : Int) {
       DrawActions.clear_possible_moves
       DrawActions.draw_possible_moves(board(piece).possible_moves(board), x, y, board(piece).grid)
       Ksparov.curr_game.tmp_h = Ksparov.curr_game.selected_case
-      print("Avant :" + Ksparov.curr_game.tmp_h.toString + "\n")
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
@@ -111,9 +110,7 @@ class Human(n : Int) extends Player(n : Int) {
             Ksparov.curr_game.something_to_send = true
           }
           Ksparov.curr_game.last_move_dep = Ksparov.curr_game.tmp_h
-          print("Après départ :" + Ksparov.curr_game.last_move_dep.toString + "\n")
           Ksparov.curr_game.last_move_arr = Ksparov.curr_game.selected_case
-          print("Après arrivée :" + Ksparov.curr_game.last_move_arr.toString + "\n")
           /* the move being valid addit to the list of moves */
           Save.add_move2
           /* If the move is valid, apply the new board */
@@ -376,6 +373,8 @@ object Ksparov {
   var ready_to_gnu = false
   /** Move in construction for gnuchess */
   var tmp_gnu = ""
+  /** True if the command go should be sent after the next move */
+  var go_to_send = false
 }
 
   /** Set Ksparov.curr_game.selected_piece to the index in the game_board of the given grid of the piece of position passed in argument 
@@ -496,10 +495,6 @@ object Ksparov {
         }
       }
     }
-    if (Ksparov.curr_game.game_type > 7 && (Ksparov.curr_game.game_won || Ksparov.curr_game.game_nulle)) {
-      Ksparov.curr_game.write_to_the_pipe = "exit\n"
-      Ksparov.curr_game.something_to_send = true
-    }
   }
 
   /** Apply all the steps of a movement */
@@ -514,7 +509,10 @@ object Ksparov {
     )
     // Checking if the game has been won.
     if (Ksparov.curr_game.game_won || Ksparov.curr_game.game_nulle || Ksparov.curr_game.promotion) {
-      // If so, don't do anything, just wait for other button to be pressed.
+      if (Ksparov.curr_game.game_type > 7) {
+        Ksparov.curr_game.write_to_the_pipe = "exit\n"
+        Ksparov.curr_game.something_to_send = true
+      }
     } else {
       // Else get the move, and if the player has moved, go on.
       player.getmove
@@ -537,6 +535,11 @@ object Ksparov {
         }
         // Reinitializes the choice for the player 
         Ksparov.curr_game.first_choice_done = false
+        if (Ksparov.curr_game.go_to_send) {
+          Ksparov.curr_game.write_to_the_pipe += "go\n"
+          Ksparov.curr_game.something_to_send = true
+          Ksparov.curr_game.go_to_send = false
+        }
       }
       // If the next player is an IA and we are in Human vs AI, play the AI move in a row.
       if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2)

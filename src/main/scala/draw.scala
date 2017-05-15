@@ -584,6 +584,7 @@ object DrawBoard {
 				Ksparov.curr_game.ai_move.join
 				Ksparov.curr_game.timer.join
 				Ksparov.curr_game.write_to_the_pipe = "exit\n"
+				print("RECOMMENCER \n")
 				Ksparov.curr_game.something_to_send = true
 				Ksparov.curr_game.send_to_gnuchess.join
 				Ksparov.curr_game.listen_to_gnuchess.join
@@ -619,6 +620,7 @@ object DrawBoard {
 				Ksparov.curr_game.ai_move.join				
                 Ksparov.curr_game.timer.join
 				Ksparov.curr_game.write_to_the_pipe = "exit\n"
+				print("REVENIR AU MENU PRINCIPAL \n")
 				Ksparov.curr_game.something_to_send = true
 				Ksparov.curr_game.send_to_gnuchess.join
 				Ksparov.curr_game.listen_to_gnuchess.join
@@ -668,6 +670,7 @@ object DrawBoard {
 		// Stop the threads and wait for them to finish
 		Ksparov.curr_game.thread_in_life = false
 		Ksparov.curr_game.write_to_the_pipe = "exit\n"
+		print("QUITTER \n")
 		Ksparov.curr_game.something_to_send = true
 		Ksparov.curr_game.ai_move.join
 		Ksparov.curr_game.timer.join
@@ -769,6 +772,8 @@ object DrawBoard {
 						Ksparov.curr_game.write_to_the_pipe += "setboard " + FEN.board_to_FEN (Ksparov.curr_game.board) + "\n"
 						if (player_id != Ksparov.curr_game.curr_player) {
 							Ksparov.curr_game.write_to_the_pipe += "go\n"
+						} else {
+							Ksparov.curr_game.go_to_send = true
 						}
 						Ksparov.curr_game.something_to_send = true
                 	} else {
