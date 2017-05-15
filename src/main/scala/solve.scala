@@ -42,12 +42,12 @@ class AI (player : Int) extends Player (player) {
           // Save move
           Save.add_move1((1 - id) * 16 + ind, (i,j))
           if (Ksparov.curr_game.game_type > 7) {
-            Ksparov.curr_game.write_to_the_pipe = (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString
+            Ksparov.curr_game.write_to_the_pipe += (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString
           }
           // Play move 
           Ksparov.curr_game.board((1 - id) * 16 + ind).move(i,j,Ksparov.curr_game.board)
           if (Ksparov.curr_game.game_type > 7) {
-            Ksparov.curr_game.write_to_the_pipe = Ksparov.curr_game.write_to_the_pipe + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString + "\n"
+            Ksparov.curr_game.write_to_the_pipe += (Ksparov.curr_game.board((1-id) * 16 + ind).pos_x + 97).toChar + (Ksparov.curr_game.board((1-id) * 16 + ind).pos_y + 1).toString + "\n"
             Ksparov.curr_game.something_to_send = true
           }
         }
@@ -97,6 +97,9 @@ class AIMoveThread extends Thread {
         Ksparov.play_move
         Ksparov.curr_game.ai_turn = false
       }
+      if (Ksparov.curr_game.game_type == 5) {
+        Ksparov.curr_game.ai_turn = true
+      }
     }
   }
 }
@@ -136,15 +139,16 @@ class AI2 (player : Int) extends Player (player) {
       var piece = Ksparov.curr_game.board.filter(predicate)(0)
 
     piece.move(tab(1)._1,tab(1)._2,Ksparov.curr_game.board)
+    Ksparov.curr_game.last_move_dep = tab(0)._1 + tab(0)._2 * 8
+    Ksparov.curr_game.last_move_arr = tab(1)._1 + tab(1)._2 * 8
 
     DrawActions.draw_game_board(Ksparov.curr_game.board)
     Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
 
     if (Ksparov.curr_game.game_type > 7) {
-      Ksparov.curr_game.write_to_the_pipe = (tab(0)._1 + 97).toChar + (tab(0)._2 + 1).toString + (tab(1)._1 + 97).toChar + (tab(1)._2 + 1).toString + "\n"
+      Ksparov.curr_game.write_to_the_pipe += (tab(0)._1 + 97).toChar + (tab(0)._2 + 1).toString + (tab(1)._1 + 97).toChar + (tab(1)._2 + 1).toString + "\n"
       Ksparov.curr_game.something_to_send = true
     }
-
     }
     else {
       Ksparov.curr_game.game_won = true

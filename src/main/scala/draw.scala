@@ -766,7 +766,7 @@ object DrawBoard {
 						Ksparov.curr_game.gnuchess = Runtime.getRuntime.exec("gnuchessx -e")
 						Ksparov.curr_game.send_to_gnuchess.start()
 						Ksparov.curr_game.listen_to_gnuchess.start()
-						Ksparov.curr_game.write_to_the_pipe = "setboard " + FEN.board_to_FEN (Ksparov.curr_game.board) + "\n"
+						Ksparov.curr_game.write_to_the_pipe += "setboard " + FEN.board_to_FEN (Ksparov.curr_game.board) + "\n"
 						if (player_id != Ksparov.curr_game.curr_player) {
 							Ksparov.curr_game.write_to_the_pipe += "go\n"
 						}
@@ -947,6 +947,10 @@ object DrawActions {
 		Ksparov.curr_game.dead_pieces = Array(new Array[Int](5), new Array[Int](5))
 		// Initilizing the array of cases.
 		DrawBoard.create_grid_cases
+		if (Ksparov.curr_game.last_move_dep > 0 && Ksparov.curr_game.last_move_arr > 0) {
+			Ksparov.curr_game.grids(0)(Ksparov.curr_game.last_move_dep).background = Color.green
+			Ksparov.curr_game.grids(0)(Ksparov.curr_game.last_move_arr).background = Color.green
+		}
 		for (i <- 0 to game_board.length - 1) {
 			/** Coordinates in one dimension. */
 			var coord = game_board(i).pos_x + game_board(i).pos_y * 8
@@ -1029,6 +1033,10 @@ object DrawActions {
 					Ksparov.curr_game.grids(k)(i).background = Color.white
 				}
 			}
+		}
+		if (Ksparov.curr_game.last_move_dep > 0 && Ksparov.curr_game.last_move_arr > 0) {
+			Ksparov.curr_game.grids(0)(Ksparov.curr_game.last_move_dep).background = Color.green
+			Ksparov.curr_game.grids(0)(Ksparov.curr_game.last_move_arr).background = Color.green
 		}
 	}
 

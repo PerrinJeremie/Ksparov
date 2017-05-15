@@ -25,7 +25,7 @@ object Pipe {
 			var out = new PrintWriter(Ksparov.curr_game.gnuchess.getOutputStream)
 			while (Ksparov.curr_game.gnuthread_in_life) {
 				if (Ksparov.curr_game.something_to_send && Ksparov.curr_game.ready_to_gnu) {
-					print("J'écris ça : " + Ksparov.curr_game.write_to_the_pipe + "\n")
+					print("J'envoi " + Ksparov.curr_game.write_to_the_pipe + '\n')
 					out.write(Ksparov.curr_game.write_to_the_pipe)
 					out.flush()
 					if (Ksparov.curr_game.write_to_the_pipe == "exit\n") {
@@ -69,7 +69,7 @@ object Pipe {
 							Ksparov.curr_game.new_move_available = true
 							Ksparov.curr_game.last_move_gnuchess = s
     			            Ksparov.play_move
-						case _ => print("j'ai reçu : " + curr_line + "\n")
+						case _ => ()
 					}
 					curr_line = ""
 					curr_char = 'a'
@@ -89,6 +89,7 @@ object Pipe {
 
 		def get_piece = {
 			var gnu_move = Ksparov.curr_game.last_move_gnuchess
+			Ksparov.curr_game.last_move_dep = gnu_move(0).toInt - 97 + (gnu_move(1).asDigit - 1) * 8
 			Ksparov.get_piece_of_pos (gnu_move(0).toInt - 97, gnu_move(1).asDigit - 1, 0)
 		}
 
@@ -97,6 +98,7 @@ object Pipe {
 				get_piece
 				var gnu_move = Ksparov.curr_game.last_move_gnuchess
 				Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).move(gnu_move(2).toInt - 97, gnu_move(3).asDigit - 1, Ksparov.curr_game.board)
+				Ksparov.curr_game.last_move_arr = gnu_move(2).toInt - 97 + (gnu_move(3).asDigit - 1) * 8
 				DrawActions.draw_game_board(Ksparov.curr_game.board)
 				Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
 				Ksparov.curr_game.new_move_available = false

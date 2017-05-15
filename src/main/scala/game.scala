@@ -92,12 +92,14 @@ class Human(n : Int) extends Player(n : Int) {
       piece = Ksparov.curr_game.selected_piece
       DrawActions.clear_possible_moves
       DrawActions.draw_possible_moves(board(piece).possible_moves(board), x, y, board(piece).grid)
+      Ksparov.curr_game.tmp_h = Ksparov.curr_game.selected_case
+      print("Avant :" + Ksparov.curr_game.tmp_h.toString + "\n")
     } else {
       /* Because we cannot move on a piece own by the player, we can enter in the else here.
          Second click, checking if the first has been done. */
       if (Ksparov.curr_game.first_choice_done) {
         if (Ksparov.curr_game.game_type > 7) {
-          Ksparov.curr_game.write_to_the_pipe = (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._1 + 97).toChar + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._2 + 1).toString
+          Ksparov.curr_game.tmp_gnu = (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._1 + 97).toChar + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._2 + 1).toString
         }
         /* loads part of the move to be added but has to wait for promotion information */
         Save.add_move1 (Ksparov.curr_game.selected_piece, (x,y))
@@ -105,9 +107,13 @@ class Human(n : Int) extends Player(n : Int) {
         var valid = board(Ksparov.curr_game.selected_piece).move(x, y, board)
         if (valid) {
           if (Ksparov.curr_game.game_type > 7) {
-            Ksparov.curr_game.write_to_the_pipe += (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._1 + 97).toChar + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._2 + 1).toString + "\n"
+            Ksparov.curr_game.write_to_the_pipe += Ksparov.curr_game.tmp_gnu + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._1 + 97).toChar + (Ksparov.curr_game.board(Ksparov.curr_game.selected_piece).coords._2 + 1).toString + "\n"
             Ksparov.curr_game.something_to_send = true
           }
+          Ksparov.curr_game.last_move_dep = Ksparov.curr_game.tmp_h
+          print("Après départ :" + Ksparov.curr_game.last_move_dep.toString + "\n")
+          Ksparov.curr_game.last_move_arr = Ksparov.curr_game.selected_case
+          print("Après arrivée :" + Ksparov.curr_game.last_move_arr.toString + "\n")
           /* the move being valid addit to the list of moves */
           Save.add_move2
           /* If the move is valid, apply the new board */
@@ -300,6 +306,12 @@ object Ksparov {
   var promoted_piece = new Pawn (0, 0, 0, 0)
   /** The name of the piece selected for the promotion */
   var selected_promotion = ""
+  /** The departure case of the last move */
+  var last_move_dep = -1
+  /** The arrival case of the last move */
+  var last_move_arr = -1
+  /** The move in construction for humans */
+  var tmp_h = 0
 
   /** Type of game chosen : 0 for Human vs Human, 1 for Human vs AI and 2 for AI vs AI... */
   var game_type = type_id
@@ -362,6 +374,8 @@ object Ksparov {
   var gnuchess = Runtime.getRuntime.exec("echo")
   /** True if gnuchess is ready to play */
   var ready_to_gnu = false
+  /** Move in construction for gnuchess */
+  var tmp_gnu = ""
 }
 
   /** Set Ksparov.curr_game.selected_piece to the index in the game_board of the given grid of the piece of position passed in argument 
@@ -525,7 +539,9 @@ object Ksparov {
         Ksparov.curr_game.first_choice_done = false
       }
       // If the next player is an IA and we are in Human vs AI, play the AI move in a row.
-      if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2) ) {
+      if ((Ksparov.curr_game.players(Ksparov.curr_game.curr_player).ai && Ksparov.curr_game.game_type == 2)
+          || (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).id == 0 && Ksparov.curr_game.game_type == 8)
+          || (Ksparov.curr_game.players(Ksparov.curr_game.curr_player).id == 1 && Ksparov.curr_game.game_type == 9)) {
         Ksparov.curr_game.ai_turn = true
       }
     }
@@ -579,11 +595,11 @@ object Ksparov {
         // Case of random colors for the human player in a game Human vs AI
         if (scala.util.Random.nextInt(2) == 0) {
           Ksparov.curr_game.players(0) = new Human(0)
-          Ksparov.curr_game.players(1) = new AI(1)
+          Ksparov.curr_game.players(1) = new AI2(1)
           Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
         } else {
           Ksparov.curr_game.players(1) = new Human(1)
-          Ksparov.curr_game.players(0) = new AI(0)
+          Ksparov.curr_game.players(0) = new AI2(0)
           Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenu dans Ksparov, <br> vous jouez les blancs !</html>")
         }
       case 3 =>
@@ -598,7 +614,7 @@ object Ksparov {
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Bienvenue dans Ksparov, vous jouez les noirs,<br>cliquez pour lancer la partie !</div></html>")
       case 5 =>
         Ksparov.curr_game.players(1) = new AI2(1)
-        Ksparov.curr_game.players(0) = new AI(0)
+        Ksparov.curr_game.players(0) = new AI2(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode IA vs IA : <br>cliquez pour voir le prochain coup !</html>")
       case 6 =>
         Time.clock_available = false
@@ -611,22 +627,18 @@ object Ksparov {
         Ksparov.curr_game.players(0) = new Load.Reproducer(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Mode Spectateur : <br>cliquez pour voir le premier coup !</html>")
       case 8 => 
-        Time.clock_available = false
         Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
         Ksparov.curr_game.players(0) = new AI2(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA noire joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
       case 9 => 
-        Time.clock_available = false
         Ksparov.curr_game.players(1) = new AI2(1)
         Ksparov.curr_game.players(0) = new Pipe.PipePlayer(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Une IA blanche joue contre gnuchess, <br> cliquez pour voir les coups de l'IA !</html>")
       case 10 => 
-        Time.clock_available = false
         Ksparov.curr_game.players(1) = new Pipe.PipePlayer(1)
         Ksparov.curr_game.players(0) = new Human(0)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les noirs !</html>")
       case 11 => 
-        Time.clock_available = false
         Ksparov.curr_game.players(0) = new Pipe.PipePlayer(0)
         Ksparov.curr_game.players(1) = new Human(1)
         Ksparov.curr_game.message_drawer = new DrawBoard.MessageDrawer ("<html><div style='text-align : center;'>Vous jouez contre gnuchess, <br> vous jouez les blancs !</html>")    
@@ -659,7 +671,7 @@ object Ksparov {
       Ksparov.curr_game.gnuchess = Runtime.getRuntime.exec("gnuchessx -e")
       Ksparov.curr_game.send_to_gnuchess.start()
       Ksparov.curr_game.listen_to_gnuchess.start()
-      Ksparov.curr_game.write_to_the_pipe = "depth 2\n"
+      Ksparov.curr_game.write_to_the_pipe += "depth 2\n"
       if (n == 8 || n == 10) {
         Ksparov.curr_game.write_to_the_pipe += "go\n"
       }
