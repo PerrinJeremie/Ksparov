@@ -51,20 +51,20 @@ object Pipe {
 		}
 	}
 
-	/** The current char read*/
-	var curr_char = 'a'
-	/** The current line read */
-	var curr_line = ""
-	/** The regexpr for gnuchess moves */
-	val opp_move = new Regex("""My move is : (.*)\n""")
-	/** The regexpr for gnuchess promotion */
-	val promotion = new Regex("""My move is : (.*)([q|r|b|n])\n""")
-
 	/** Thread to listen what gnuchess has to say */
 	class ListenThread extends Thread {
+		/** The current char read*/
+		var curr_char = 'a'
+		/** The current line read */
+		var curr_line = ""
+		/** The regexpr for gnuchess moves */
+		val opp_move = new Regex("""My move is : (.*)\n""")
+		/** The regexpr for gnuchess promotion */
+		val promotion = new Regex("""My move is : (.*)([q|r|b|n])\n""")
+	
 		override def run {
 			// While threads should be alive
-			while (Ksparov.curr_game.gnuthread_in_life || !Ksparov.curr_game.gnuchess.getInputStream.empty) {
+			while (Ksparov.curr_game.gnuthread_in_life || Ksparov.curr_game.gnuchess.getInputStream.available() != 0) {
 				Thread.sleep(100)
 				// Read one char from the stream
 				curr_char = Ksparov.curr_game.gnuchess.getInputStream.read().toChar
