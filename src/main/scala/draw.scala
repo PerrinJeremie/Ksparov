@@ -624,6 +624,7 @@ object DrawBoard {
 				Ksparov.curr_game.something_to_send = true
 				Ksparov.curr_game.send_to_gnuchess.join
 				Ksparov.curr_game.listen_to_gnuchess.join
+				Ksparov.curr_game = null
 				// Draw the main menu 
 				Ksparov.frame.contents = new DrawMenu.Menu
 				Ksparov.frame.peer.setLocationRelativeTo(null)

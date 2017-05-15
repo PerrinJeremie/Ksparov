@@ -88,26 +88,12 @@ class AI (player : Int) extends Player (player) {
 
 /** Thread to make the ai move, wait a certain time before the move */
 class AIMoveThread extends Thread {
-
-  def wait_time = {
-    if (Parameters.ai_speed < 3) {
-      800
-    } else {
-      if (Parameters.ai_speed == 4) {
-        500
-      } else {
-        0
-      }
-    }
-  }
-
   override def run {
     // While threads should be alive
     while (Ksparov.curr_game.thread_in_life && !Ksparov.curr_game.game_nulle && !Ksparov.curr_game.game_won) {
       Thread.sleep(100)
       // If it is our turn, we move a piece
       if (Ksparov.curr_game.ai_turn) {
-        Thread.sleep(wait_time)
         Ksparov.play_move
         Ksparov.curr_game.ai_turn = false
       }
@@ -119,6 +105,17 @@ class AIMoveThread extends Thread {
 }
 
 class AI2 (player : Int) extends Player (player) {
+  def wait_time = {
+    if (Parameters.ai_speed < 3) {
+      800
+    } else {
+      if (Parameters.ai_speed == 3  ) {
+        600
+      } else {
+        0
+      }
+    }
+  }
 
   /** True if the ai is in pat */
   var pat = false
@@ -126,7 +123,7 @@ class AI2 (player : Int) extends Player (player) {
   ai = true
 
   override def getmove {
-
+    Thread.sleep(wait_time)
     for (k <- 0 to Ksparov.curr_game.nb_grid - 1) {
 	  for (i <- 0 to Parameters.nb_case_board - 1) {
 		for (j <- 0 to Parameters.nb_case_board - 1) {

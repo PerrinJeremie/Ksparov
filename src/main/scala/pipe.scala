@@ -64,7 +64,7 @@ object Pipe {
 	class ListenThread extends Thread {
 		override def run {
 			// While threads should be alive
-			while (Ksparov.curr_game.gnuthread_in_life) {
+			while (Ksparov.curr_game.gnuthread_in_life || !Ksparov.curr_game.gnuchess.getInputStream.empty) {
 				Thread.sleep(100)
 				// Read one char from the stream
 				curr_char = Ksparov.curr_game.gnuchess.getInputStream.read().toChar
@@ -96,6 +96,7 @@ object Pipe {
 					curr_char = 'a'
 				}
 			}
+			Ksparov.curr_game.gnuchess.getInputStream.close()
 		}
 	}
 
