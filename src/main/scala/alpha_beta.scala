@@ -122,17 +122,23 @@ object Evals {
 
 }
 
-/**
-  * 
-  */
+/** Contains the alphabeta functions which implement the alphabeta algorithm*/
 object AlphaBeta {
 
+  /** Stores the evluation function used, so as to be able to change it */
   var evaluate : (Array[Piece],Int) => Int = Evals.Simple_Eval.evaluate _
 
+  /** The player which promotes in the algorithms, used only for simulation */
   var playerprom : Int = 0
 
+  /** Saves the number of boring moved at the beginning of the evaluation */
   var save_boring : Int = 0
 
+  /** The main alphabeta function which calls the recursive subroutine : alphaBetaMax
+    * @param board the initial board
+    * @param player the id of the player 
+    * @param depth the depth to research 
+    */
   def alphabeta(board : Array[Piece], player : Int, depth : Int) : Array[(Int,Int)] = {
     playerprom = player 
 
@@ -145,32 +151,13 @@ object AlphaBeta {
     return i
   }
 
-  def undo_move (mv : (Int, Boolean, Int, Option[Piece], (Int,Int), (Int,Int),(Int,Int)),board : Array[Piece], player : Int): Unit = {
-    if (mv._1 != 0) {
-      board((1-player)*16 + 14).pos_x = 4
-      if (mv._1 == 1){
-        board((1-player)*16 + 8).pos_x = 0
-      } else{
-        board((1-player)*16 + 9).pos_x = 7
-      }
-    } else {
-      if (mv._2){
-        board(mv._3) =  new Pawn(player,mv._5._1,mv._5._2,0)
-      } else {
-        board(mv._3).pos_x = mv._5._1
-        board(mv._3).pos_y = mv._5._2
-      }
-      mv._4 match{
-        case None => ()
-        case Some(p) =>
-            p.pos_x = mv._7._1
-            p.pos_y = mv._7._2
-          }
-      }
-
-    }
-  
-
+  /** The max part of the alphabeta algorithm
+    * @param board the initial board
+    * @param current lower bound
+    * @param current higher bound
+    * @param player the id of the player 
+    * @param depth the depth to research 
+    */
   def alphaBetaMax( board : Array[Piece],alpha : Int, beta : Int, player : Int, depth : Int) : (Int,Array[(Int,Int)]) = {
     var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int,Int)](32) 
     var pawns : Array[Boolean] = new Array[Boolean](8)
@@ -241,6 +228,14 @@ object AlphaBeta {
     }
   }
 
+
+  /** The min part of the alphabeta algorithm
+    * @param board the initial board
+    * @param current lower bound
+    * @param current higher bound
+    * @param player the id of the player 
+    * @param depth the depth to research 
+    */
   def alphaBetaMin( board : Array[Piece],alpha : Int, beta : Int, player : Int, depth : Int) : (Int,Array[(Int,Int)]) = {
     var old_pos : Array[(Int,Int,Int)] = new Array[(Int,Int,Int)](32) 
     var pawns : Array[Boolean] = new Array[Boolean](8)

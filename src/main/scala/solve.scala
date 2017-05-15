@@ -105,6 +105,7 @@ class AIMoveThread extends Thread {
   }
 }
 
+/** The IA player which uses alphabeta */
 class AI2 (player : Int) extends Player (player) {
   /** Set the wait time depending on the complexity of the AI */
   def wait_time = {
