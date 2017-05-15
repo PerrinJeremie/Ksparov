@@ -375,6 +375,10 @@ object Ksparov {
   var tmp_gnu = ""
   /** True if the command go should be sent after the next move */
   var go_to_send = false
+  /** True if IA has forfeited */
+  var forfeit = false
+  /** Who forfeited */
+  var who_forfeited = 0 
 }
 
   /** Set Ksparov.curr_game.selected_piece to the index in the game_board of the given grid of the piece of position passed in argument 
@@ -450,6 +454,12 @@ object Ksparov {
       Save.whowins = player
       Ksparov.curr_game.game_won = true
     } else {
+
+      if (Ksparov.curr_game.forfeit){
+        DrawActions.draw_game_messages ("Forfeit", Ksparov.curr_game.who_forfeited)
+      Save.whowins = 1 - Ksparov.curr_game.who_forfeited 
+      Ksparov.curr_game.game_won = true
+      } else {
       /* Check if there is pat. */
       if (Ksparov.curr_game.players(player).check_pat) {
         Save.whowins = -1
@@ -496,6 +506,7 @@ object Ksparov {
       }
     }
   }
+}
 
   /** Apply all the steps of a movement */
   def play_move {

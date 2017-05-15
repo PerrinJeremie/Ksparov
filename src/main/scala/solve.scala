@@ -164,7 +164,8 @@ class AI2 (player : Int) extends Player (player) {
     }
     }
     else {
-      Ksparov.curr_game.game_won = true
+      Ksparov.curr_game.forfeit = true
+      Ksparov.curr_game.who_forfeited = player
       DrawActions.draw_game_board(Ksparov.curr_game.board)
       Ksparov.curr_game.players(Ksparov.curr_game.curr_player).moved = true
     }

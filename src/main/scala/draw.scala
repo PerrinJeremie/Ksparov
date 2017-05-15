@@ -1096,6 +1096,10 @@ object DrawActions {
 					Ksparov.curr_game.message_drawer.foreground = Color.red
 			}
 
+            // Draw if IA has forfeited 
+          case "Forfeit" => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Forfait,<br>" + (if (player == 0) {Load.infos("White")} else {Load.infos("Black")}) + " gagne la partie !</html>"
+					Ksparov.curr_game.message_drawer.foreground = Color.red
+
 			// Draw if an AI cannot move (this option has only been implemented for IA).
 			case "Pat" => Ksparov.curr_game.game_type match {
 				case 6 => Ksparov.curr_game.message_drawer.text = "<html><div style='text-align : center;'>Pat : la partie est nulle,<br>"+ joueur_string +" ne peut plus bouger !</html>"
