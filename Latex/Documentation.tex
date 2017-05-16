@@ -257,9 +257,9 @@ La seconde méthode consiste à ouvrir un explorateur de fichier pour sélection
 
 Dans les deux cas l'utilisateur peut choisir deux façons de charger le fichier : soit il commence par le premier mouvement présent dans le fichier, soit il va directement à la fin du fichier ce qui permet de reprendre immédiatement le fichier là où il en était. 
 
-\section{solve.scala ou l'intelligence limitée}
+\section{solve.scala où l'intelligence limitée rencontre celle plus développée}
 
-\paragraph{L'intelligence artificielle :}Pour le moment l'intelligence artificielle est encore pas très au point puisqu'elle choisit aléatoirement ses coups à chaque mouvement, mais elle permet de jouer contre quelqu'un. Son code a malgré tout été relativement optimisé. 
+\paragraph{AI, L'intelligence artificielle aléatoire :}Pour le moment l'intelligence artificielle est encore pas très au point puisqu'elle choisit aléatoirement ses coups à chaque mouvement, mais elle permet de jouer contre quelqu'un. Son code a malgré tout été relativement optimisé. 
 
 \paragraph{La méthode \textit{get\_move} de l'IA :}L'IA choisit son coup aléatoirement parmi les différents mouvements possible. Elle commence donc par choisir une pièce aléatoirement entre ses pièces et elle choisit ensuite lequel de ses mouvements elle applique. \\ 
 
@@ -267,7 +267,14 @@ Plus précisément, la méthode maintient un tableau de booléen à jour défini
 
 Si un mouvement est possible, elle choisit alors une des cases possibles aléatoirement, sinon, si aucun mouvement n'a été appliqué, on vérifie s'il reste des mouvement possibles (s'il existe une case à \textit{false} dans \textit{already\_check}), si tel est le cas on boucle, sinon l'IA est en pat. 
 
-\paragraph{La promotion pour les IA :}La promotion pour les IA se fait de manière aléatoire, l'IA choisit donc une pièce aléatoirement parmi la tour, la dame, le fou ou le cavalier, on applique ensuite la promotion de manière classique.
+\paragraph{AI2, une "vraie" intelligence :}Ce joueur utilise une implémentation de l'algorithme AlphaBeta pour décider quelle piéce jouer. Le paramètre de profondeur à laquelle se fait la recherche est \textit{ai\_speed}, que l'on peut régler depuis les réglages qui sont maintenant accessibles en cours de partie.
+
+\paragraph{La méthode \textit{get\_move} de AI2} Aprés avoir désactiver le clic sur les cases, la fonction fait appelle à la routine \textit{alphabeta} de l'objet \textit{AlphaBeta} ce qui fait tourner l'algorithme de décision sur le plateau courant.\\
+Le mouvement retourner est alors joué si valide. Il peut ne pas l'être si l'AI se rend compte que l'échec et mat est inévitable, auquel cas elle déclare forfait.\\
+Si le mouvement est valide, alors elle le transmet (si nécessaire) à la sortie pour être envoyé au Chess Engine auquel elle est connectée.
+  
+
+\paragraph{La promotion pour les IA :}La promotion pour les IA est implémentée par une méthode spécifique, qui choisit aléatoirement pour AI, et spécifiquement pour AI2, la piéce vers laquelle on promeut, on applique ensuite la promotion de manière classique.
 
 \section{pipe.scala ou la communication en point fort}
 
