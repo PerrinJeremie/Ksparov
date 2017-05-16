@@ -153,8 +153,8 @@ object AlphaBeta {
 
   /** The max part of the alphabeta algorithm
     * @param board the initial board
-    * @param current lower bound
-    * @param current higher bound
+    * @param alpha current lower bound
+    * @param beta current higher bound
     * @param player the id of the player 
     * @param depth the depth to research 
     */
@@ -231,8 +231,8 @@ object AlphaBeta {
 
   /** The min part of the alphabeta algorithm
     * @param board the initial board
-    * @param current lower bound
-    * @param current higher bound
+    * @param alpha current lower bound
+    * @param beta current higher bound
     * @param player the id of the player 
     * @param depth the depth to research 
     */

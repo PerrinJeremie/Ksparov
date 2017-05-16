@@ -39,7 +39,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Contains the alphabeta functions which implement the alphabeta algorithm</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -150,7 +150,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="AlphaBeta#alphaBetaMax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="AlphaBeta#alphaBetaMax" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="alphaBetaMax(board:Array[Piece],alpha:Int,beta:Int,player:Int,depth:Int):(Int,Array[(Int,Int)])"></a>
       <a id="alphaBetaMax(Array[Piece],Int,Int,Int,Int):(Int,Array[(Int,Int)])"></a>
       <h4 class="signature">
@@ -162,8 +162,9 @@
         <span class="name">alphaBetaMax</span><span class="params">(<span name="board">board: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>, <span name="alpha">alpha: <span class="extype" name="scala.Int">Int</span></span>, <span name="beta">beta: <span class="extype" name="scala.Int">Int</span></span>, <span name="player">player: <span class="extype" name="scala.Int">Int</span></span>, <span name="depth">depth: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Array">Array</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)])</span>
       </span>
       </h4>
-      
-    </li><li name="AlphaBeta#alphaBetaMin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">The max part of the alphabeta algorithm</p><div class="fullcomment"><div class="comment cmt"><p>The max part of the alphabeta algorithm</p></div><dl class="paramcmts block"><dt class="param">board</dt><dd class="cmt"><p>the initial board</p></dd><dt class="param">alpha</dt><dd class="cmt"><p>current lower bound</p></dd><dt class="param">beta</dt><dd class="cmt"><p>current higher bound</p></dd><dt class="param">player</dt><dd class="cmt"><p>the id of the player</p></dd><dt class="param">depth</dt><dd class="cmt"><p>the depth to research
+</p></dd></dl></div>
+    </li><li name="AlphaBeta#alphaBetaMin" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="alphaBetaMin(board:Array[Piece],alpha:Int,beta:Int,player:Int,depth:Int):(Int,Array[(Int,Int)])"></a>
       <a id="alphaBetaMin(Array[Piece],Int,Int,Int,Int):(Int,Array[(Int,Int)])"></a>
       <h4 class="signature">
@@ -175,8 +176,9 @@
         <span class="name">alphaBetaMin</span><span class="params">(<span name="board">board: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>, <span name="alpha">alpha: <span class="extype" name="scala.Int">Int</span></span>, <span name="beta">beta: <span class="extype" name="scala.Int">Int</span></span>, <span name="player">player: <span class="extype" name="scala.Int">Int</span></span>, <span name="depth">depth: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Array">Array</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)])</span>
       </span>
       </h4>
-      
-    </li><li name="AlphaBeta#alphabeta" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">The min part of the alphabeta algorithm</p><div class="fullcomment"><div class="comment cmt"><p>The min part of the alphabeta algorithm</p></div><dl class="paramcmts block"><dt class="param">board</dt><dd class="cmt"><p>the initial board</p></dd><dt class="param">alpha</dt><dd class="cmt"><p>current lower bound</p></dd><dt class="param">beta</dt><dd class="cmt"><p>current higher bound</p></dd><dt class="param">player</dt><dd class="cmt"><p>the id of the player</p></dd><dt class="param">depth</dt><dd class="cmt"><p>the depth to research
+</p></dd></dl></div>
+    </li><li name="AlphaBeta#alphabeta" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="alphabeta(board:Array[Piece],player:Int,depth:Int):Array[(Int,Int)]"></a>
       <a id="alphabeta(Array[Piece],Int,Int):Array[(Int,Int)]"></a>
       <h4 class="signature">
@@ -188,7 +190,8 @@
         <span class="name">alphabeta</span><span class="params">(<span name="board">board: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>, <span name="player">player: <span class="extype" name="scala.Int">Int</span></span>, <span name="depth">depth: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The main alphabeta function which calls the recursive subroutine : alphaBetaMax</p><div class="fullcomment"><div class="comment cmt"><p>The main alphabeta function which calls the recursive subroutine : alphaBetaMax</p></div><dl class="paramcmts block"><dt class="param">board</dt><dd class="cmt"><p>the initial board</p></dd><dt class="param">player</dt><dd class="cmt"><p>the id of the player</p></dd><dt class="param">depth</dt><dd class="cmt"><p>the depth to research
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -259,7 +262,7 @@
         <span class="name">evaluate</span><span class="result">: (<span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>], <span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Stores the evluation function used, so as to be able to change it</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -369,7 +372,7 @@
         <span class="name">playerprom</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The player which promotes in the algorithms, used only for simulation</p>
     </li><li name="AlphaBeta#save_boring" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="save_boring:Int"></a>
       <a id="save_boring:Int"></a>
@@ -382,7 +385,7 @@
         <span class="name">save_boring</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Saves the number of boring moved at the beginning of the evaluation</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -409,19 +412,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="AlphaBeta#undo_move" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="undo_move(mv:(Int,Boolean,Int,Option[Piece],(Int,Int),(Int,Int),(Int,Int)),board:Array[Piece],player:Int):Unit"></a>
-      <a id="undo_move((Int,Boolean,Int,Option[Piece],(Int,Int),(Int,Int),(Int,Int)),Array[Piece],Int):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">undo_move</span><span class="params">(<span name="mv">mv: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Option">Option</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>], (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>), (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>), (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>))</span>, <span name="board">board: <span class="extype" name="scala.Array">Array</span>[<a href="Piece.html" class="extype" name="Piece">Piece</a>]</span>, <span name="player">player: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
