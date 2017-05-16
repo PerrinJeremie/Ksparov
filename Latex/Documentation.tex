@@ -272,7 +272,6 @@ Si un mouvement est possible, elle choisit alors une des cases possibles aléato
 \paragraph{La méthode \textit{get\_move} de AI2} Aprés avoir désactiver le clic sur les cases, la fonction fait appelle à la routine \textit{alphabeta} de l'objet \textit{AlphaBeta} ce qui fait tourner l'algorithme de décision sur le plateau courant.\\
 Le mouvement retourner est alors joué si valide. Il peut ne pas l'être si l'AI se rend compte que l'échec et mat est inévitable, auquel cas elle déclare forfait.\\
 Si le mouvement est valide, alors elle le transmet (si nécessaire) à la sortie pour être envoyé au Chess Engine auquel elle est connectée.
-  
 
 \paragraph{La promotion pour les IA :}La promotion pour les IA est implémentée par une méthode spécifique, qui choisit aléatoirement pour AI, et spécifiquement pour AI2, la piéce vers laquelle on promeut, on applique ensuite la promotion de manière classique.
 
@@ -281,6 +280,13 @@ Si le mouvement est valide, alors elle le transmet (si nécessaire) à la sortie
 \paragraph{Les threads :}Pour la communication entre notre interface et gnuchess on utilise deux threads : ListenThread et SendThread. SendThread envoi, lorsque l'on indique qu'il y a quelque chose à envoyer, une chaîne de caractères à gnuchess. ListenThread écoute toutes les 100 millisecondes ce que gnuchess renvoi. Il lit ensuite caractère par caractère pour reconstruire la chaîne envoyé et la parse afin de passer les arguments comme il le faut. 
 
 \paragraph{Le joueur PipePlayer :}Ce joueur prend les mouvements donnés par le thread ListenThread et applique les coups conformément. 
+
+\section{alphabeta.scala ou la puissance de calcul est un atout}
+
+\paragraph{L'objet Evals}Cet objet a pour but de recenser  les différentes fonctions d'évaluations et les méthodes pour agir sur celles ci, afin de modifier leurs comportement ou le score retourné. En pratique, une seule fonction d'évaluation a était implémentée, celle que l'on trouve sur le site ChessProgramming à la rubrique Simple Evaluation Function.
+
+\paragraph{L'objet AlphaBeta} Ici, pas de surprise, on implémente AlphaBetaMax et AlphaBetaMin les deux sous routines mutuellement récursives de l'algorithme AlphaBeta. Le point clé est de bien capturer l'état courant du plateau ( variables booléenes qui décrivent la capacité de certaines piéces à faire certain coups y compris), afin de faire le backtracking sans faute. Puis de bien restaurer le plateau à cet état.\\
+Si le backtracking peut être difficile à proprement implémenter à cause de la compléxité d'un jeu, l'algorithme AlphaBeta dans sa structure est lui trés simple à coder.  
 
 \section{Les défauts et erreurs connues}
 
